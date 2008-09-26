@@ -1,0 +1,17 @@
+---
+development: &defaults
+  # These are the settings for repository :default
+  adapter:  mysql
+  database: rubytime_dev
+  username: root
+  password: 
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+
+test:
+  <<:       *defaults
+  database: rubytime_test
+
+production:
+  <<:       *defaults
+  database: rubytime_prod
