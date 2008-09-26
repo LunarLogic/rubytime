@@ -1,0 +1,17 @@
+<h1>Users controller, index action</h1>
+
+<p>Edit this file in <tt>app/views/users/index.html.erb</tt></p>
+
+<table>
+  <tr>
+  </tr>
+
+<% for user in @users %>
+  <tr>
+    <td><%= link_to 'Show', url(:user, user) %></td>
+    <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'New', url(:new_user) %>

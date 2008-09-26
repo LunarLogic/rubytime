@@ -1,0 +1,11 @@
+<h1>Users controller, new action</h1>
+
+<p>Edit this file in <tt>app/views/users/new.html.erb</tt></p>
+
+<%= form_for(@user, :action => url(:users) ) do %>
+  <p>
+    <%= submit "Create" %>
+  </p>
+<% end =%>
+
+<%= link_to 'Back', url(:users) %>

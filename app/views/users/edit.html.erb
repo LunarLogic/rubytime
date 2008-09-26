@@ -1,0 +1,12 @@
+<h1>Users controller, edit action</h1>
+
+<p>Edit this file in <tt>app/views/users/edit.html.erb</tt></p>
+
+<%= form_for(@user, :action => url(:user, @user)) do %>
+  <p>
+    <%= submit "Update" %>
+  </p>
+<% end =%>
+
+<%= link_to 'Show', url(:user, @user) %> |
+<%= link_to 'Back', url(:users) %>
