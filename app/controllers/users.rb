@@ -1,5 +1,7 @@
 class Users < Application
   # provides :xml, :yaml, :js
+  before :login_required
+  before :admin_required, :only => [:new, :create, :destroy, :index]
 
   def index
     @users = User.all

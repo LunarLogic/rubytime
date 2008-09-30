@@ -21,12 +21,19 @@ describe User do
   it "should be admin" do
     Admin.new.is_admin?.should be_true
   end
+  
+  it "shouldn't create user without name" do
+    user = User.gen :name => nil
+    user.save.should be_false
+    user.errors.on(:name).should_not be_nil
+  end
 end
 
 describe Admin do 
   it "should create default admin" do
     before_count = Admin.count
-    Admin.create_account!.should be_true
+    admin = Admin.create_account
+    admin.should be_true
     Admin.count.should == before_count + 1
   end
 end

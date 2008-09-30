@@ -103,7 +103,6 @@ module Utype
       if session[:user_id]
         u = User.first(:id => session[:user_id])
         self.current_user = u
-        User.current = u
       end
     end
 
@@ -111,7 +110,6 @@ module Utype
       if params[:login] && params[:password]
         u = User.authorize(params[:login], params[:password])
         self.current_user = u
-        User.current = u
       end
     end
 

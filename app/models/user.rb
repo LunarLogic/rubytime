@@ -14,6 +14,7 @@ class User
   attr_accessor :password_confirmation
 
   validates_length :name, :min => 3
+
   validates_length :password, :min => 6 , :if => :password_required?
   validates_is_confirmed :password
   
