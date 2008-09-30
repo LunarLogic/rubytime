@@ -41,6 +41,9 @@ $KCODE = 'UTF8'
 # uncomment this.
 # Merb.push_path(:lib, Merb.root / "lib") # uses **/*.rb as path glob.
 
+Gem.clear_paths
+Gem.path.unshift(Merb.root / "gems")
+
 # ==== Dependencies
 
 # These are a few, but not all, of the standard merb-more dependencies:
@@ -58,6 +61,8 @@ $KCODE = 'UTF8'
 # dependency "merb_param_protection"  # Lets you have better control over your query string params and param logging
 # dependency "merb_stories"           # Provides rspec helper methods for your application
 
+dependencies %w(dm-validations dm-timestamps dm-aggregates merb_has_flash merb-assets merb_helpers dm-sweatshop)
+
 # Miscellaneous dependencies:
 #
 # Specify more than one dependency at a time with the #dependencies method:
@@ -74,6 +79,7 @@ Merb::BootLoader.after_app_loads do
   # For example, the magic_admin gem uses the app's model classes. This requires that the models be 
   # loaded already. So, we can put the magic_admin dependency here:
   # dependency "magic_admin"
+  # Application.send(:include, Utype::AuthenticatedSystem)
 end
 
 #
