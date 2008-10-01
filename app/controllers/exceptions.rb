@@ -10,4 +10,8 @@ class Exceptions < Application
     render :format => :html
   end
 
+  # handle Forbidden exceptins (403)
+  def forbidden
+    "Permission denied"
+  end
 end

@@ -3,6 +3,8 @@
 
 module Utype
   module AuthenticatedSystem
+    class AccessDenied < StandardError; end
+    
     protected
     # Returns true or false if the user is logged in.
     # Preloads @current_user with the user model if they're logged in.
@@ -53,9 +55,9 @@ module Utype
     #   skip_before_filter :login_required
     #
     def login_required
-      authorized? || throw(:halt, :access_denied)
+      authorized? || throw(:halt, :redirect_to_login)
     end
-
+    
     # Redirect as appropriate when an access request fails.
     #
     # The default action is to redirect to the login screen.
@@ -64,7 +66,7 @@ module Utype
     # behavior in case the user is not authorized
     # to access the requested action.  For example, a popup window might
     # simply close itself.
-    def access_denied
+    def redirect_to_login
       case content_type
       when :html
         store_location
@@ -73,7 +75,7 @@ module Utype
         headers["Status"]             = "Unauthorized"
         headers["WWW-Authenticate"]   = %(Basic realm="Web Password")
         set_status(401)
-        render :text => "Couldn't authenticate you"
+        "Couldn't authenticate you"
       end
     end
 
