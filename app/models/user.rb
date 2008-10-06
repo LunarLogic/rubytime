@@ -4,11 +4,13 @@ class User
   include DataMapper::Resource
 
   property :id,            Serial
-  property :name,          String, :nullable => false, :uniq => true 
+  property :name,          String, :nullable => false, :unique => true 
   property :type,          Discriminator
   property :password_hash, String
-  property :login,         String, :nullable => false, :uniq => true 
-  property :email,         String, :nullable => false, :uniq => true, :format => :email_address
+  property :login,         String, :nullable => false, :unique => true 
+  property :email,         String, :nullable => false, :unique => true, :format => :email_address
+  property :active,        Boolean, :nullable => false, :default => true
+  property :created_at,    DateTime
 
   attr_accessor :password
   attr_accessor :password_confirmation
@@ -27,7 +29,7 @@ class User
       Digest::MD5.hexdigest(string_fo_encryption)
     end
   
-    def authorize(login, password)
+    def authenticate(login, password)
       User.first :login => login, :password_hash => User.encrypt(password)
     end
   end
