@@ -1,7 +1,10 @@
 class Users < Application
   # provides :xml, :yaml, :js
+  
   before :login_required
   before :admin_required, :only => [:new, :create, :destroy, :index]
+  before :get_user, :only => [:edit, :update, :show, :destroy] 
+  before :check_authorization, :only => [:edit, :update, :show]
 
   def index
     @users = User.all
@@ -9,8 +12,6 @@ class Users < Application
   end
 
   def show
-    @user = User.get(params[:id])
-    raise NotFound unless @user
     display @user
   end
 
@@ -22,8 +23,6 @@ class Users < Application
 
   def edit
     only_provides :html
-    @user = User.get(params[:id])
-    raise NotFound unless @user
     render
   end
 
@@ -37,8 +36,6 @@ class Users < Application
   end
 
   def update
-    @user = User.get(params[:id])
-    raise NotFound unless @user
     if @user.update_attributes(params[:user]) || !@user.dirty?
       redirect url(:user, @user)
     else
@@ -47,13 +44,20 @@ class Users < Application
   end
 
   def destroy
-    @user = User.get(params[:id])
-    raise NotFound unless @user
     if @user.destroy
       redirect url(:user)
     else
       raise BadRequest
     end
   end
+  
+  protected
+  
+  def get_user
+    raise NotFound unless @user = User.get(params[:id]) 
+  end
 
+  def check_authorization
+    raise Forbidden unless @user.editable_by?(current_user)
+  end
 end # Users

@@ -45,7 +45,7 @@ describe Sessions do
    
    it 'should logout correctly' do
      user = User.gen
-     user.save.should be_true
+     user.save!
      
      controller = dispatch_to(Sessions, :destroy) do |controller| 
        controller.session[:user_id] = user.id 
