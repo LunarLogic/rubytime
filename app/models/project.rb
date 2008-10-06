@@ -9,4 +9,6 @@ class Project
   property :created_at,   DateTime
   
   belongs_to :client
+  has n, :activities
+  has n, :users, :through => :activities
 end

@@ -20,6 +20,8 @@ class User
   validates_length :password, :min => 6 , :if => :password_required?
   validates_is_confirmed :password
   
+  has n, :activities
+  
   before :save do 
     self.password_hash = User.encrypt(self.password) if self.password
   end
