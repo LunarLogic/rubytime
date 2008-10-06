@@ -34,10 +34,16 @@ describe Users do
     proc { dispatch_to_as(Users, :edit, haxor, { :id => haxor.another.id }) }.should raise_forbidden
   end
   
-  it "update action should be successful for admin" do
+  it "update action should redirect to show" do
     user = User.first
-    controller = dispatch_to_as_admin(Users, :update, { :id => User.first, :user => { :name => "Jola", :role => "tester" } })
-    controller.should be_successful
+    controller = dispatch_to_as_admin(Users, :update, { 
+      :id => User.first.id, :user => { :name => "Jola", :role => "Tester" } })
+    controller.should redirect_to(url(:user, user))
+  end
+  
+  it "shouldn't allow User user to delete users" do
+    haxor = User.not_admin.first
+    proc { dispatch_to_as(Users, :destroy, haxor, {}) }.should raise_forbidden
   end
   
   it "should render not found for nonexisting user id" do

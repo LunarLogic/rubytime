@@ -12,8 +12,6 @@ class Users < Application
   end
 
   def show
-    @user = User.get(params[:id])
-    raise NotFound unless @user
     display @user
   end
 
@@ -25,7 +23,6 @@ class Users < Application
 
   def edit
     only_provides :html
-    raise NotFound unless @user
     render
   end
 
