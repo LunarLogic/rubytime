@@ -8,6 +8,7 @@
 
 <% for user in @users %>
   <tr>
+    <td><%= user.name %></td>
     <td><%= link_to 'Show', url(:user, user) %></td>
     <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
   </tr>

@@ -1,6 +1,6 @@
 class Sessions < Application
   def create
-    if user = User.authorize(params[:login], params[:password])
+    if user = User.authenticate(params[:login], params[:password])
       session[:user_id] = user.id
       flash[:notice] = "Successfully loged in."
       redirect "/"
