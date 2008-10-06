@@ -25,6 +25,12 @@ class User
   validates_is_confirmed :password, :if => :password_required?
   validates_with_method :role, :method => :validate_role
   
+  has n, :activities
+  
+  before :save do 
+    self.password_hash = User.encrypt(self.password) if self.password
+  end
+
   class << self
     def authenticate(login, password)
       return nil unless user = User.first(:login => login)
