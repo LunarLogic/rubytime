@@ -9,38 +9,36 @@ class User
   property :id,            Serial
   property :name,          String, :nullable => false, :unique => true 
   property :type,          Discriminator
-  property :password_hash, String
+  property :password,      BCryptHash, :nullable => false
   property :login,         String, :nullable => false, :unique => true 
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
   property :role,          String, :nullable => false, :default => ROLES.first
   property :created_at,    DateTime
 
-  attr_accessor :password
   attr_accessor :password_confirmation
+  attr_accessor :password_changed
 
   validates_length :name, :min => 3
 
   validates_length :password, :min => 6 , :if => :password_required?
-  validates_is_confirmed :password
+  validates_is_confirmed :password, :if => :password_required?
   validates_with_method :role, :method => :validate_role
   
-  before :save do 
-    self.password_hash = User.encrypt(self.password) if self.password
-  end
-
   class << self
-    def encrypt(string_fo_encryption)
-      Digest::MD5.hexdigest(string_fo_encryption)
-    end
-  
     def authenticate(login, password)
-      User.first :login => login, :password_hash => User.encrypt(password)
+      return nil unless user = User.first(:login => login)
+      user.password == password ? user : nil
     end
+  end
+  
+  def password=(new_password)
+     password_changed = true
+     attribute_set :password, new_password
   end
   
   def password_required?
-    new_record? || self.password_hash.blank?
+    new_record? || password_changed
   end
   
   def is_admin?
