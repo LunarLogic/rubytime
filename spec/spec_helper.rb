@@ -22,4 +22,5 @@ end
 
 DataMapper.auto_migrate!
 
+require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/sweatshop"

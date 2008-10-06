@@ -14,4 +14,8 @@ class Exceptions < Application
   def forbidden
     "Permission denied"
   end
+  
+  def object_not_found_error
+    
+  end
 end

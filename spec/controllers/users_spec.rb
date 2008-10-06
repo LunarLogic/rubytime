@@ -1,15 +1,14 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Users do
-  
   before :all do 
     Admin.create_account if Admin.count == 0
-    User.gen.save! if User.count(:type.not => "Admin") == 0
   end
   
+  before(:each) { User.gen if User.count(:type.not => "Admin") == 0 }
+  
   it "should redirect from new when user is not admin" do
-    controller = dispatch_to_as_user(Users, :new)
-    controller.should redirect_to(:controller => "Exceptions", :action => "forbidden")
+    lambda { dispatch_to_as_user(Users, :new) }.should raise_forbidden
   end
 
   it "Should render new" do
@@ -23,6 +22,28 @@ describe Users do
     dispatch_to_as_admin(Users, :index)
   end
   
+  it "should render edit if user is admin" do
+    user = User.first
+    User.should_receive(:get).with(user.id.to_s).and_return(user)
+    dispatch_to_as_admin(Users, :edit, { :id => user.id }).should be_successful
+  end
+  
+  it "should raise forbidden from edit if user is not admin and trying to edit another user" do
+    haxor = User.gen
+    haxor.is_admin?.should be_false
+    proc { dispatch_to_as(Users, :edit, haxor, { :id => haxor.another.id }) }.should raise_forbidden
+  end
+  
+  it "update action should be successful for admin" do
+    user = User.first
+    controller = dispatch_to_as_admin(Users, :update, { :id => User.first, :user => { :name => "Jola", :role => "tester" } })
+    controller.should be_successful
+  end
+  
+  it "should render not found for nonexisting user id" do
+    proc { dispatch_to_as_admin(Users, :show, { :id => 1234567 }) }.should raise_not_found
+  end
+  
   private
   
   def dispatch_to_as_admin(controller_klass, action, params = {}, &blk)
@@ -30,7 +51,7 @@ describe Users do
   end
   
   def dispatch_to_as_user(controller_klass, action, params = {}, &blk)
-    dispatch_to_as(controller_klass, action, User.first(:type.not => "Admin"), params, &blk)
+    dispatch_to_as(controller_klass, action, User.not_admin.first, params, &blk)
   end
   
   def dispatch_to_as(controller_klass, action, user, params = {}, &blk)
@@ -40,5 +61,13 @@ describe Users do
       blk.call(controller) if block_given?
       controller
     end
+  end
+  
+  def raise_not_found
+    raise_error Merb::Controller::NotFound
+  end
+  
+  def raise_forbidden
+    raise_error Merb::Controller::Forbidden
   end
 end
