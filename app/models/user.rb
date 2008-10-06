@@ -27,15 +27,9 @@ class User
   
   has n, :activities
   
-  before :save do 
-    self.password_hash = User.encrypt(self.password) if self.password
-  end
-
-  class << self
-    def authenticate(login, password)
-      return nil unless user = User.first(:login => login)
-      user.password == password ? user : nil
-    end
+  def self.authenticate(login, password)
+    return nil unless user = User.first(:login => login)
+    user.password == password ? user : nil
   end
   
   def password=(new_password)
