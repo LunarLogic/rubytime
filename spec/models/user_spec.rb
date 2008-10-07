@@ -37,6 +37,26 @@ describe User do
   end
 end
 
+describe Client do
+  before(:all) { User.all.destroy!; Project.all.destroy! }
+  
+  it "shouldn't be admin" do
+    Client.new.is_admin?.should be_false 
+  end
+  
+  it "should get list of its projects" do
+    client = Client.gen
+    project1 = Project.gen
+    project1.client.should == client
+    project2 = Project.gen
+    project3 = Project.gen
+    client.projects.size.should == 3
+    client.projects.should include(project1)
+    client.projects.should include(project2)
+    client.projects.should include(project3)
+  end
+end
+
 describe Admin do 
   it "should create default admin" do
     before_count = Admin.count

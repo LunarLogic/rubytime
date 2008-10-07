@@ -16,3 +16,7 @@ test:
 production:
   <<:       *defaults
   database: rubytime_prod
+
+rake:
+  <<:       *defaults
+  database: rubytime_dev

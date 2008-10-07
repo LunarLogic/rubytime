@@ -11,7 +11,7 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
-  validates_within :minutes, :set => 1..1000, :message => "are out of range"
+  validates_within :minutes, :set => 1..1000, :message => "is out of range"
 
   belongs_to :project
   belongs_to :user

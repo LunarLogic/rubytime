@@ -17,6 +17,6 @@ class Sessions < Application
   def destroy
     session[:user_id] = nil
     flash[:notice] = "Successfully logged out."
-    redirect "/"
+    redirect url(:login)
   end
 end
