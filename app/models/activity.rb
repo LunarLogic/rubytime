@@ -19,6 +19,6 @@ class Activity
   
   
   def locked?
-    !!(self.invoice && self.invoice.locked?)
+    !!(self.invoice && self.invoice.issued?)
   end
 end

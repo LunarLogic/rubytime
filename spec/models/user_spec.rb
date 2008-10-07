@@ -4,9 +4,7 @@ describe User do
   before(:all) { User.all.destroy! }
   
   it "should create user" do
-    before_save_count = User.count
-    User.make.save.should be_true
-    User.count.should be(before_save_count + 1)
+    lambda { User.make.save.should be_true }.should change(User, :count).by(1)
   end
   
   
@@ -46,10 +44,10 @@ describe Client do
   
   it "should get list of its projects" do
     client = Client.gen
-    project1 = Project.gen
+    project1 = Project.gen(:client => client)
     project1.client.should == client
-    project2 = Project.gen
-    project3 = Project.gen
+    project2 = Project.gen(:client => client)
+    project3 = Project.gen(:client => client)
     client.projects.size.should == 3
     client.projects.should include(project1)
     client.projects.should include(project2)
@@ -59,10 +57,7 @@ end
 
 describe Admin do 
   it "should create default admin" do
-    before_count = Admin.count
-    admin = Admin.create_account
-    admin.should be_true
-    Admin.count.should == before_count + 1
+    lambda { Admin.create_account.should be_true }.should change(Admin, :count).by(1)
   end
   
   it "should be admin" do

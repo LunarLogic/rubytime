@@ -4,7 +4,7 @@ class Project
   property :id,           Serial
   property :name,         String, :nullable => false, :unique => true
   property :description,  Text
-  property :user_id,    Integer, :nullable => false
+  property :user_id,      Integer, :nullable => false
   property :active,       Boolean, :nullable => false, :default => true
   property :created_at,   DateTime
   

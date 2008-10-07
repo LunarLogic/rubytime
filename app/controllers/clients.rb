@@ -1,9 +1,10 @@
 class Clients < Application
 
-  # ...and remember, everything returned from an action
-  # goes to the client...
+  before :login_required
+  before :admin_required
+  
   def index
     render
   end
   
-end
+end # Clients
