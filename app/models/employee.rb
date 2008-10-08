@@ -1,3 +1,7 @@
 class Employee < User
-  property :role, Enum[:developer, :tester, :project_manager], :default => :developer
+  property :role_id, Integer
+  
+  belongs_to :role
+  
+  validates_present :role_id
 end

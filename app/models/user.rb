@@ -10,6 +10,7 @@ class User
   property :login,         String, :nullable => false, :unique => true 
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
+  property :admin,         Boolean, :nullable => false, :default => false
   property :created_at,    DateTime
 
   attr_accessor :password_confirmation
@@ -37,7 +38,7 @@ class User
   end
   
   def is_admin?
-    self.instance_of? Admin
+    !self.instance_of? ClientUser && self.admin?
   end
   
   def editable_by?(user)

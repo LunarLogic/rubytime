@@ -1,1 +1,11 @@
-You're in index of the Projects controller.
+<h1>List of projects</h1>
+
+<% if @projects.empty? %>
+  No projects.
+<% else %>
+  <% @projects.each do |project| %>
+    <%= project.name %>
+  <% end %>
+<% end %>
+
+<%= link_to 'Create new project', url(:new_project) %>

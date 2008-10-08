@@ -12,26 +12,27 @@ namespace :rubytime do
 
     # developers
     1.upto(3) do |i|
-      unless User.first(:login => "dev#{i}")
+      unless Employee.first(:login => "dev#{i}")
         puts "creating developer account: dev#{i} with pass \"#{pass}\""
-        User.create(:name => "Developer #{i}", :login => "dev#{i}", :password => pass, :password_confirmation => pass, :email => "dev#{i}@tt666.com")
+        Employee.create(:name => "Developer #{i}", :login => "dev#{i}", :password => pass, :password_confirmation => pass, :email => "dev#{i}@tt666.com", :role => :developer)
       end
     end
 
     # cleints
-    ["apple", "orange", "banana"].each do |name|
-      unless Client.first(:login => name)
-        puts "creating client account: #{name} with pass \"#{pass}\""
-        Client.create(:name => name.camel_case, :login => name, :password => pass, :password_confirmation => pass, :email => "#{name}@tt666.com")
+    ["Apple", "Orange", "Banana"].each do |name|
+      unless Client.first(:name => name)
+        puts "creating client and account: #{name} with pass \"#{pass}\""
+        Client.create(:name => name)
+        #ClientUser.create, :login => name, :password => pass, :password_confirmation => pass, :email => "#{name}@tt666.com")
       end
     end
 
     # projects    
-    ["apple", "orange", "banana"].each do |client_name|
-      project_name = "Big project for #{client_name.camel_case}"
+    ["Apple", "Orange", "Banana"].each do |client_name|
+      project_name = "Big project for #{client_name}"
       unless Project.first(:name => project_name)
         puts "creating project: #{project_name}"
-        client = Client.first(:login => client_name)
+        client = Client.first(:name => client_name)
         Project.create(:client => client, :name => project_name)
       end
     end

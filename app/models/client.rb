@@ -8,4 +8,8 @@ class Client
   
   has n, :projects
   has n, :invoices
+  
+  def self.active
+    all(:active => true)
+  end
 end
