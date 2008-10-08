@@ -1,9 +1,5 @@
 class User
-  def self.not_admin
-    all :type.not => "Admin"
-  end
-  
-  def another
-    User.first :id.not => self.id
+  def another(same_sti_type = true)
+    (same_sti_type ? self.class : User).first :id.not => self.id
   end
 end

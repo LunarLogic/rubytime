@@ -24,3 +24,4 @@ DataMapper.auto_migrate!
 
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/sweatshop"
+require Merb.root / "spec/controller_specs_helper"

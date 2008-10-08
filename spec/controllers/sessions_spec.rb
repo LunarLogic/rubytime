@@ -1,6 +1,8 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Sessions do
+  include ControllerSpecsHelper
+  
   it "should route to Sessions#new from '/login'" do
      request_to("/login") do |params|
        params[:controller].should == "Sessions"
@@ -32,6 +34,21 @@ describe Sessions do
    it 'should try to login with wrong data' do
      controller = dispatch_to(Sessions, :create, {:login => 'not-existing', :password => 'wrong-password'})
      controller.should redirect_to("/login")
+   end
+   
+   it "should redirect admin to activities" do
+     Admin.create_account.should(be_true) if Admin.count == 0
+     dispatch_to_as_admin(Sessions, :index).should redirect_to(url(:activities))
+   end
+   
+   it "should redirect employee to new activity" do
+     Employee.gen if Employee.count == 0
+     dispatch_to_as_employee(Sessions, :index).should redirect_to(url(:new_activity))
+   end
+
+   it "should redirect client to activities" do
+     ClientUser.gen if ClientUser.count == 0
+     dispatch_to_as_client(Sessions, :index).should redirect_to(url(:activities))
    end
 
    it 'should login correctly' do

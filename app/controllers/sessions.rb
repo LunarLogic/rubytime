@@ -1,5 +1,5 @@
 class Sessions < Application
-  before :login_required
+  before :login_required, :only => [:index, :destroy]
   
   def create
     if user = User.authenticate(params[:login], params[:password])
@@ -13,12 +13,13 @@ class Sessions < Application
   end
   
   def index
-    if current_user.instance_of? User
-      redirect url(:new_activity)
-    elsif current_user.instance_of? ClientUser
-      redirect url(:new_activity)
-    elsif current_user.instance_of? Admin
+    case current_user
+    when Admin
       redirect url(:activities)
+    when ClientUser
+      redirect url(:activities)
+    when Employee
+      redirect url(:new_activity)
     else
       raise Forbidden
     end
