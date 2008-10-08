@@ -11,7 +11,7 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
-  validates_within :minutes, :set => 1..1000, :message => "are out of range"
+  validates_within :minutes, :set => 1..1000, :message => "is out of range"
 
   belongs_to :project
   belongs_to :user
@@ -19,6 +19,6 @@ class Activity
   
   
   def locked?
-    !!(self.invoice && self.invoice.locked?)
+    !!(self.invoice && self.invoice.issued?)
   end
 end

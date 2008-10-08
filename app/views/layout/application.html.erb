@@ -3,17 +3,39 @@
   <head>
     <title>Rubytime</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="/stylesheets/master.css" type="text/css" media="screen" charset="utf-8" />
+    <%= css_include_tag 'master' %>
+    <%= css_include_tag 'tmp' %>
+    <%= css_include_tag 'datepicker/ui.datepicker' %>
+    <%= js_include_tag 'lib/jquery-1.2.6' %>
+    <%= js_include_tag 'lib/ui.datepicker' %>
+    <%= js_include_tag 'application' %>
   </head>
   <body>
-    <div id="flash">
-      <div class="notice">
-        <%= flash[:notice] %>
-      </div>
-      <div class="error">
-        <%= flash[:error] %>
+    <div id="header">
+      <div id="userinfo">
+        <% if current_user %>
+        Welcome, <%= current_user.name %> &nbsp;&nbsp;&nbsp;&nbsp;
+        <%= link_to 'Preferences', '' %> | <%= link_to 'Logout', url(:logout) %>
+        <% end %>
       </div>
     </div>
-    <%= catch_content :for_layout %>
+    <div id="menubar"></div>
+    <div id="content">
+      <div id="left_column">
+        <div id="flash">
+          <div class="notice">
+            <%= flash[:notice] %>
+          </div>
+          <div class="error">
+            <%= flash[:error] %>
+          </div>
+        </div>
+        <%= catch_content :for_layout %>
+      </div>
+      <div id="right_column">
+        <h2>Filter:</h2>
+      </div>
+      <div class="clear"></div>
+    </div>
   </body>
 </html>
