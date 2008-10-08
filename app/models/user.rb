@@ -1,4 +1,4 @@
-require 'digest'
+require Merb.root / "lib/rubytime/md5_hash"
 
 class User
   include DataMapper::Resource
@@ -9,7 +9,7 @@ class User
   property :id,            Serial
   property :name,          String, :nullable => false, :unique => true 
   property :type,          Discriminator
-  property :password,      BCryptHash, :nullable => false
+  property :password,      Rubytime::DatamapperTypes::MD5Hash, :nullable => false
   property :login,         String, :nullable => false, :unique => true 
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
