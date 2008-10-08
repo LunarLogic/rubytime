@@ -23,7 +23,7 @@ class User
 
   validates_length :password, :min => 6 , :if => :password_required?
   validates_is_confirmed :password, :if => :password_required?
-  validates_with_method :role, :method => :validate_role
+  validates_within :role, :set => ROLES, :message => "should be one of these: #{ROLES.inspect}."
   
   has n, :activities
   
@@ -47,11 +47,5 @@ class User
   
   def editable_by?(user)
     user == self || user.is_admin?
-  end
-  
-  protected
-  
-  def validate_role
-    ROLES.include?(self.role) ? true : [false, "Role should be one of these: #{ROLES.inspect}."]
   end
 end

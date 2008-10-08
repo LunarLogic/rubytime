@@ -11,11 +11,7 @@ User.fixture {{
 }}
 
 Client.fixture {{
-  :name => (name = /\w{4,12}/.gen),
-  :login => name,
-  :email => "#{name}@klyjencka_kiszonka.com",
-  :password => (password = /\w{6,20}/.gen), 
-  :password_confirmation => password
+  :name => /\w{5,20}/.gen
 }}
 
 Project.fixture {{
@@ -33,5 +29,6 @@ Activity.fixture {{
 
 Invoice.fixture {{
   :name => /200\d-\d{2}-\d{2}/.gen,
-  :client => Client.gen
+  :client => Client.gen,
+  :user => User.gen
 }}

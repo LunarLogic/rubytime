@@ -4,11 +4,11 @@ class Project
   property :id,           Serial
   property :name,         String, :nullable => false, :unique => true
   property :description,  Text
-  property :user_id,      Integer, :nullable => false
+  property :client_id,      Integer, :nullable => false
   property :active,       Boolean, :nullable => false, :default => true
   property :created_at,   DateTime
   
-  belongs_to :client, :child_key => [:user_id]
+  belongs_to :client
   has n, :activities
   has n, :users, :through => :activities
 end

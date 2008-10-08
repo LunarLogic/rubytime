@@ -12,6 +12,20 @@ describe User do
     User.new.is_admin?.should be_false 
   end
   
+  it "should validate user role" do
+    user = User.make
+    %w(kiszka stefan).each do |r|
+      user.role = r
+      user.save.should be_false
+      user.errors.on(:role).should_not be_nil
+    end
+
+    User::ROLES.each do |r|
+      user.role = r
+      user.save.should be_true
+    end
+  end
+  
   it "shouldn't create user without name" do
     user = User.gen :name => nil
     user.save.should be_false
@@ -35,11 +49,11 @@ describe User do
   end
 end
 
-describe Client do
+describe ClientUser do
   before(:all) { User.all.destroy!; Project.all.destroy! }
   
   it "shouldn't be admin" do
-    Client.new.is_admin?.should be_false 
+    ClientUser.new.is_admin?.should be_false 
   end
   
   it "should get list of its projects" do

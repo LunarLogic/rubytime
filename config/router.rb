@@ -22,15 +22,13 @@
 Merb.logger.info("Compiling routes...")
 
 Merb::Router.prepare do |r|
-  r.match("/login").to(:controller => "sessions", :action => "new").name(:login)
-  r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
-  
   r.resources :sessions
   r.resources :users
   r.resources :activities
 
   r.default_routes
   
-  # Change this for your home page to be available at /
-  r.match('/').to(:controller => 'front', :action =>'index')
+  r.match("/login").to(:controller => "sessions", :action => "new").name(:login)
+  r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
+  r.match('/').to(:controller => 'sessions', :action =>'index').name(:root)
 end
