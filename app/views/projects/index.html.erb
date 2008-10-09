@@ -4,8 +4,10 @@
   No projects.
 <% else %>
   <% @projects.each do |project| %>
-    <%= project.name %>
+    <p><%= project.name %></p>
   <% end %>
 <% end %>
 
-<%= link_to 'Create new project', url(:new_project) %>
+<p>
+  <%= link_to 'Create new project', url(:new_project) %>
+</p>

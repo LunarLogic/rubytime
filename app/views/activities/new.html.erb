@@ -3,10 +3,10 @@
 <%= error_messages_for(@activity) %>
 
 <%= form_for @activity do %>
-  Date:<br/>
-  <%= text_field :date, :class => 'datepicker' %><br/>
   Project:<br/>
   <%= select :project_id, :collection => @projects.map { |p| [p.id, p.name] } %><br/>
+  Date:<br/>
+  <%= text_field :date, :class => 'datepicker' %><br/>
   Time spent:<br/>
   <%= text_field :minutes %><br/>
   Comments:<br/>

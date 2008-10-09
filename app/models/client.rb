@@ -5,6 +5,7 @@ class Client
   property :name,         String, :nullable => false
   property :description,  Text
   property :email,        String
+  property :active,       Boolean, :nullable => false, :default => true
   
   has n, :projects
   has n, :invoices

@@ -1,0 +1,9 @@
+<h1><%= @project.new_record? ? 'Create new project' : "Editing project: #{@project.name}" %></h1>
+
+<%= form_for @project do %>
+  <p><%= text_field :name %></p>
+  <p><%= text_area :description %></p>
+  <p><%= select :client_id, :collection => @clients.map { |c| [c.id, c.name] } %></p>
+  <p><%= check_box :active %></p>
+  <%= submit 'Save' %>
+<% end =%>

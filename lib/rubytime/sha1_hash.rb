@@ -1,12 +1,12 @@
-require 'digest/md5'
+require 'digest/sha1'
 
 module Rubytime
   module DatamapperTypes
-    class MD5Hash < DataMapper::Type
+    class SHA1Hash < DataMapper::Type
       
       class Password
         def self.encrypt(password)
-          Digest::MD5::hexdigest password
+          Digest::SHA1::hexdigest(password)
         end
         
         def initialize(password)
@@ -24,7 +24,7 @@ module Rubytime
       
       
       primitive String
-      size 60
+      size 40
       
       def self.load(value, property)
         if value.nil?

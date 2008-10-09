@@ -2,10 +2,9 @@ desc "add testing users"
 namespace :rubytime do
   task :kickstart => :merb_env do
     
-    developer = Role.first(:name => "Developer")
-    developer = Role.create(:name => "Developer") unless developer
+    developer = Role.first(:name => "Developer") || Role.create(:name => "Developer")
     
-    pass = "tt1234"
+    pass = "asdf1234"
 
     # developers
     1.upto(3) do |i|
@@ -14,7 +13,13 @@ namespace :rubytime do
         Employee.create(:name => "Developer #{i}", :login => "dev#{i}", :password => pass, :password_confirmation => pass, :email => "dev#{i}@tt666.com", :role => developer)
       end
     end
-
+    
+    # admin
+    unless Employee.first(:login => "admin")
+      puts "creating admin account: admin with pass \"#{pass}\""
+      Employee.create(:name => "Admin Adminiusz", :login => "admin", :password => pass, :password_confirmation => pass, :email => "admin@tt666.com", :role => developer, :admin => true)
+    end
+    
     # cleints
     ["Apple", "Orange", "Banana"].each do |name|
       unless Client.first(:name => name)
