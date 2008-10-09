@@ -90,4 +90,6 @@ label {
 
 p span.description {
   font-style: italic;
+  color: #555;
+  font-size: 8pt;
 }
