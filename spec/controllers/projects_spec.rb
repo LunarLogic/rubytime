@@ -86,4 +86,12 @@ describe Projects do
     controller.should be_successful
     controller.should_not redirect_to(url(:projects))
   end
+  
+  it "shouldn't update nonexistent project" do
+    lambda { dispatch_to_as_admin(Projects, :update, :id => 12345678, :project => {})}.should raise_not_found
+  end
+  
+  # destroy
+  
+  # TODO
 end
