@@ -2,12 +2,8 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Users do
   include ControllerSpecsHelper
-  
-  before :all do 
-    Admin.create_account if Admin.count == 0
-  end
-  
-  before(:each) { Employee.gen if Employee.count == 0 }
+
+  before(:each) { prepare_users }
   
   it "should redirect from new when user is not admin" do
     lambda { dispatch_to_as_employee(Users, :new) }.should raise_forbidden
@@ -25,9 +21,8 @@ describe Users do
   end
   
   it "should render edit if user is admin" do
-    user = User.first
-    User.should_receive(:get).with(user.id.to_s).and_return(user)
-    dispatch_to_as_admin(Users, :edit, { :id => user.id }).should be_successful
+    User.should_receive(:get).with(@employee.id.to_s).and_return(@employee)
+    dispatch_to_as_admin(Users, :edit, { :id => @employee.id }).should be_successful
   end
   
   it "should raise forbidden from edit if user is not admin and trying to edit another user" do
@@ -37,19 +32,19 @@ describe Users do
   end
   
   it "update action should redirect to show" do
-    user = User.first
+    role = Role.gen
     controller = dispatch_to_as_admin(Users, :update, { 
-      :id => User.first.id, :user => { :name => "Jola", :role => "Tester" } })
-    controller.should redirect_to(url(:user, user))
+      :id => @employee.id , :user => { :name => "Jola", :role_id => role.id } })
+    controller.should redirect_to(url(:user, @employee))
+    @employee.reload.role.should == role
   end
   
   it "shouldn't allow User user to delete users" do
-    haxor = Employee.first
-    proc { dispatch_to_as(Users, :destroy, haxor, {}) }.should raise_forbidden
+    proc { dispatch_to_as_employee(Users, :destroy, { :id => @client }) }.should raise_forbidden
+    proc { dispatch_to_as_client(Users, :destroy, { :id => @employee }) }.should raise_forbidden
   end
   
   it "should render not found for nonexisting user id" do
     proc { dispatch_to_as_admin(Users, :show, { :id => 1234567 }) }.should raise_not_found
-  end
-  
+  end  
 end

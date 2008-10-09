@@ -1,8 +1,7 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Employee do
-  before(:all) { User.all.destroy! }
-  
+
   it "should create user" do
     lambda { Employee.make.save.should be_true }.should change(Employee, :count).by(1)
   end
@@ -10,20 +9,6 @@ describe Employee do
   
   it "shouldn't be admin" do
     Employee.new.is_admin?.should be_false 
-  end
-  
-  it "should validate user role" do
-    user = Employee.make
-    %w(kiszka stefan).each do |r|
-      user.role = r
-      user.save.should be_false
-      user.errors.on(:role).should_not be_nil
-    end
-
-    User::ROLES.each do |r|
-      user.role = r
-      user.save.should be_true
-    end
   end
   
   it "shouldn't create user without name" do
@@ -35,8 +20,9 @@ describe Employee do
   it "should be editable by himself and admin" do
     user = Employee.gen
     user.editable_by?(user).should be_true
-    user.editable_by?(Admin.gen).should be_true
-    user.editable_by?(User.gen).should be_false
+    user.editable_by?(Employee.gen(:admin)).should be_true
+    user.editable_by?(Employee.gen).should be_false
+    user.editable_by?(ClientUser.gen).should be_false
   end
   
   it "should create user with given password and authenticate" do 
@@ -49,7 +35,7 @@ describe Employee do
   end
   
   it "should be admin" do
-    Employee.new(:admin => true).is_admin?.should be_true
+    Employee.make(:admin).is_admin?.should be_true
   end
 end
 
@@ -58,6 +44,12 @@ describe ClientUser do
   
   it "shouldn't be admin" do
     ClientUser.new.is_admin?.should be_false 
+  end
+  
+  it "should have client" do
+    client_user = ClientUser.make(:client => nil)
+    client_user.save.should be_false
+    client_user.errors.on(:client).should_not be_nil
   end
   
   it "should get list of its projects" do

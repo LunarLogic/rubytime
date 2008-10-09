@@ -38,7 +38,7 @@ class User
   end
   
   def is_admin?
-    !self.instance_of? ClientUser && self.admin?
+    (!self.instance_of?(ClientUser)) && self.admin?
   end
   
   def editable_by?(user)

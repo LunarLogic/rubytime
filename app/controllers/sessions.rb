@@ -14,12 +14,10 @@ class Sessions < Application
   
   def index
     case current_user
-    when Admin
-      redirect url(:activities)
     when ClientUser
       redirect url(:activities)
     when Employee
-      redirect url(:new_activity)
+      redirect current_user.is_admin? ? url(:activities) : url(:new_activity)
     else
       raise Forbidden
     end

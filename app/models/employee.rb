@@ -3,5 +3,5 @@ class Employee < User
   
   belongs_to :role
   
-  validates_present :role_id
+  validates_present :role
 end

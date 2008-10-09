@@ -3,6 +3,8 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 describe Sessions do
   include ControllerSpecsHelper
   
+  before(:each) { prepare_users }
+  
   it "should route to Sessions#new from '/login'" do
      request_to("/login") do |params|
        params[:controller].should == "Sessions"
@@ -37,31 +39,29 @@ describe Sessions do
    end
    
    it "should redirect admin to activities" do
-     Admin.create_account.should(be_true) if Admin.count == 0
+     employee = Employee.gen(:admin)
      dispatch_to_as_admin(Sessions, :index).should redirect_to(url(:activities))
    end
    
    it "should redirect employee to new activity" do
-     Employee.gen if Employee.count == 0
+     Employee.gen
      dispatch_to_as_employee(Sessions, :index).should redirect_to(url(:new_activity))
    end
 
    it "should redirect client to activities" do
-     ClientUser.gen if ClientUser.count == 0
+     ClientUser.gen
      dispatch_to_as_client(Sessions, :index).should redirect_to(url(:activities))
    end
 
    it 'should login correctly' do
-     Admin.create_account if Admin.count == 0
-     controller = dispatch_to(Sessions, :create, {
-       :login => Rubytime::Config::ADMIN[:login], :password => Rubytime::Config::ADMIN[:password] })
+     controller = dispatch_to(Sessions, :create, {:login => @admin.login, :password => @admin.password })
      controller.session[:user_id].should_not be_nil
      controller.flash[:notice].should_not be_nil
      controller.should redirect_to("/")
    end
    
    it 'should logout correctly' do
-     user = User.gen
+     user = Employee.gen
      user.save!
      
      controller = dispatch_to(Sessions, :destroy) do |controller| 
