@@ -2,7 +2,8 @@ class Projects < Application
 
   before :login_required
   before :admin_required
-  before :get_project, :only => [:edit, :update, :destroy]
+  before :load_project, :only => [:edit, :update, :destroy]
+  before :load_clients, :only => [:new, :create, :edit, :update]
   
   def index
     @projects = Project.all(:order => [:name])
@@ -10,30 +11,27 @@ class Projects < Application
   end
   
   def new
-    @clients = Client.active
     @project = Project.new
     render :edit
   end
   
   def create
-    @clients = Client.active
     @project = Project.new(params[:project])
     if @project.save
-      redirect url(:project, @project)
+      redirect url(:projects)
     else
       render :edit
     end
   end
   
   def edit
-    @clients = Client.active
     render
   end
   
   def update
-    @project.update_attributes(params[:project])
-    if @project.save
-      redirect url(:project, @project)
+    
+    if !@project.dirty? || @project.update_attributes(params[:project])
+      redirect url(:projects)
     else
       render :edit
     end
@@ -41,13 +39,16 @@ class Projects < Application
   
   def destroy
     @project.destroy
-    redirect url(:projects)
   end
   
   protected
-  def get_project
+  def load_project
     @project = Project.get(params[:id])
     raise NotFound unless @project
+  end
+  
+  def load_clients
+    @clients = Client.active
   end
   
 end # Projects

@@ -3,9 +3,14 @@
 <% if @projects.empty? %>
   No projects.
 <% else %>
+  <table id="projects">
   <% @projects.each do |project| %>
-    <p><%= project.name %></p>
+    <tr>
+      <td><%= project.name %></td>
+      <td><%= link_to 'Edit', url(:edit_project, project) %> | <%= link_to 'Remove', url(:project, project), :class => :delete %></td>
+    </tr>
   <% end %>
+  </table>
 <% end %>
 
 <p>

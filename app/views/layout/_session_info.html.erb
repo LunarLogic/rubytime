@@ -1,0 +1,4 @@
+<% if current_user %>
+  Welcome, <%= current_user.name %> &nbsp;&nbsp;&nbsp;&nbsp;
+  <%= link_to 'Preferences', '' %> | <%= link_to 'Logout', url(:logout) %>
+<% end %>

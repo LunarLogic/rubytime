@@ -1,7 +1,7 @@
 body {
   margin: 0 0;
   background-color: #dddddd;
-  color: #333;
+  color: #555;
   font-family: 'Lucida Grande';
 }
 
@@ -76,4 +76,18 @@ div.error {
 #userinfo a {
   color: white;
   background-color: transparent;
+}
+
+label {
+  color:#555555;
+  display:block;
+  float:left;
+  font-weight:bold;
+  margin-right:20px;
+  text-align:right;
+  width:70px;
+}
+
+p span.description {
+  font-style: italic;
 }
