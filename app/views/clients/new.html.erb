@@ -23,13 +23,13 @@
           <%= text_field :email, :label => "Email" %>
         </p>
         <p>
-          <%= text_field :password, :label => "Password" %>
-          <span>
-            <%= @client_user.password %>
+          <%= password_field :password, :label => "Password" %>
+          <span id="generated_password">
+            Generated password: <%= @client_user.password %>
           </span>
         </p>
         <p>
-          <%= text_field :password_confirmation, :label => "Confirm password" %>
+          <%= password_field :password_confirmation, :label => "Confirm password" %>
         </p>
         
     <% end %>

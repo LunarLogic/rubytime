@@ -21,8 +21,25 @@ describe Clients, "index action" do
     end
     
     dispatch_to_as_admin(Clients, :new).should be_successful
-    dispatch_to_as_admin(Clients, :create, :client => { :name => "Kiszonka Inc."}).should be_successful
     dispatch_to_as_admin(Clients, :index).should be_successful
+    proc do
+      proc do
+        email = "kiszonka@company.com"
+        name  = "kiszonka"
+        password = "passw0rd"
+        
+        dispatch_to_as_admin(Clients, :create, 
+          :client => { :name => name, :email => email },
+          :client_user => { 
+            :login => name,
+            :email => email,
+            :password => password, 
+            :password_confirmation => password
+          }
+        ).should be_successful
+      end.should change(Client, :count)
+    end.should change(ClientUser.count)
+
   end
 
 
