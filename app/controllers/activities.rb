@@ -2,7 +2,7 @@ class Activities < Application
 
   before :login_required
   before :admin_required, :only => [:index]
-  before :get_projects, :only => [:new, :edit, :create]
+  before :load_projects, :only => [:new, :edit, :create]
 
   def index
     render
@@ -14,7 +14,6 @@ class Activities < Application
   end
   
   def create
-    p params[:activity]
     @activity = Activity.new(params[:activity])
     @activity.user = current_user
     if @activity.save
@@ -34,7 +33,7 @@ class Activities < Application
   end
   
   protected
-  def get_projects
+  def load_projects
     @projects = Project.all
   end
   

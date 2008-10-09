@@ -29,8 +29,7 @@ class Projects < Application
   end
   
   def update
-    
-    if !@project.dirty? || @project.update_attributes(params[:project])
+    if @project.update_attributes(params[:project]) || !@project.dirty? 
       redirect url(:projects)
     else
       render :edit

@@ -5,6 +5,10 @@ describe Users do
 
   before(:each) { prepare_users }
   
+  it "shouldn't show index for guest" do
+    dispatch_to_as_guest(Users, :index).should redirect_to(url(:login))
+  end
+
   it "should redirect from new when user is not admin" do
     lambda { dispatch_to_as_employee(Users, :new) }.should raise_forbidden
   end

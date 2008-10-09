@@ -9,6 +9,7 @@ module ControllerSpecsHelper
     @admin.save.should be_true
     @employee.save.should be_true
     @client_user.save.should be_true
+    @client = Client.gen
   end
   
   def dispatch_to_as_admin(controller_klass, action, params = {}, &blk)
@@ -21,6 +22,10 @@ module ControllerSpecsHelper
   
   def dispatch_to_as_client(controller_klass, action, params = {}, &blk)
     dispatch_to_as(controller_klass, action, @client_user || ClientUser.first, params, &blk)
+  end
+
+  def dispatch_to_as_guest(controller_klass, action, params = {}, &blk)
+    dispatch_to_as(controller_klass, action, nil, params, &blk)
   end
   
   def dispatch_to_as(controller_klass, action, user, params = {}, &blk)

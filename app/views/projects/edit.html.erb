@@ -4,25 +4,18 @@
 
 <%= form_for @project do %>
   <p>
-    <label for="project_name">Name</label>
-    <%= text_field :name %>
-    <span class="description"></span>
+    <%= text_field :name, :label => "Name" %>
   </p>
   <p>
-    <label for="project_description">Description</label>
-    <%= text_area :description %>
-    <span class="description"></span>
+    <%= text_area :description, :label => "Description" %>
   </p>
   <p>
-    <label for="project_client_id">Client</label>
-    <%= select :client_id, :collection => @clients.map { |c| [c.id, c.name] } %>
-    <span class="description"></span>
+    <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
   </p>
   <% unless @project.new_record? %>
     <p>
       <label for="project_active">Active?</label>
       <%= check_box :active %>
-      <span class="description"></span>
     </p>
   <% end %>
   <p>
