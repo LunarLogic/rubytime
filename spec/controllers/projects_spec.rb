@@ -5,25 +5,23 @@ describe Projects do
   
   before(:each) { prepare_users; Project.all.destroy! }
   
-  # index
-
-  it "shouldn't show index for guest" do
-    dispatch_to_as_guest(Projects, :index).should redirect_to(url(:login))
+  # all actions
+  
+  it "shouldn't show any action for guest, employee and client's user" do
+    [:index, :new, :create, :edit, :update, :destroy].each do |action|
+      dispatch_to_as_guest(Projects, action).should redirect_to(url(:login))
+      lambda { dispatch_to_as_employee(Projects, action)}.should raise_forbidden
+      lambda { dispatch_to_as_client(Projects, action)}.should raise_forbidden
+    end
   end
+
+  # index
 
   it "should show index for admin" do
     controller = dispatch_to_as_admin(Projects, :index)
     controller.should be_successful
   end
 
-  it "shouldn't show index for employee" do
-    lambda { dispatch_to_as_employee(Projects, :index)}.should raise_forbidden
-  end
-
-  it "shouldn't show index for client's user" do
-    lambda { dispatch_to_as_client(Projects, :index)}.should raise_forbidden
-  end
-  
   # new
   
   it "should show new project form" do
@@ -93,5 +91,9 @@ describe Projects do
   
   # destroy
   
+  it "shouldn't delete nonexistent project" do
+    lambda { dispatch_to_as_admin(Projects, :destroy, :id => 12345678)}.should raise_not_found
+  end
+
   # TODO
 end
