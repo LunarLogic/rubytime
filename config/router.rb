@@ -29,6 +29,7 @@ Merb::Router.prepare do |r|
   r.resources :users
   r.resources :activities
   r.resources :projects
+  r.resources :clients
 
   r.default_routes
   

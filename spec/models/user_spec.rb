@@ -1,5 +1,16 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
+describe User do
+  it "should generate password" do
+    user = User.new
+    user.password.should be_nil
+    user.password_confirmation.should be_nil
+    user.generate_password!
+    user.password.should_not be_nil
+    user.password_confirmation.should_not be_nil
+  end
+end
+
 describe Employee do
 
   it "should create user" do

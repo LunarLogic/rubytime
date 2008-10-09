@@ -4,12 +4,13 @@ Gem.clear_paths
 Gem.path.unshift(Merb.root / "gems")
 
 dependencies %w(dm-validations dm-timestamps dm-aggregates merb_has_flash merb-assets merb_helpers dm-sweatshop dm-types)
+dependency Merb.root / "lib/rubytime/sha1_hash"
 
 Merb::BootLoader.after_app_loads do
-  # For example, the magic_admin gem uses the app's model classes. This requires that the models be 
-  # loaded already. So, we can put the magic_admin dependency here:
-  # dependency "magic_admin"
-  # Application.send(:include, Utype::AuthenticatedSystem)
+  dependency Merb.root / "lib/rubytime/misc"
+  dependency Merb.root / "lib/rubytime/authenticated_system"
+
+  Application.send(:include, Utype::AuthenticatedSystem)
 end
 
 use_orm :datamapper

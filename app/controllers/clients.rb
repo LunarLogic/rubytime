@@ -4,6 +4,9 @@ class Clients < Application
   before :admin_required
   
   def new
+    @client_user = ClientUser.new
+    @client_user.generate_password!
+    @client = Client.new
     render
   end
   

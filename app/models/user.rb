@@ -1,5 +1,3 @@
-require Merb.root / "lib/rubytime/sha1_hash"
-
 class User
   include DataMapper::Resource
   
@@ -43,5 +41,11 @@ class User
   
   def editable_by?(user)
     user == self || user.is_admin?
+  end
+  
+  def generate_password!
+    if password.nil? && password_confirmation.nil?
+      self.password = self.password_confirmation = Rubytime::Misc.generate_password 
+    end
   end
 end
