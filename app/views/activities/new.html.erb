@@ -3,15 +3,23 @@
 <%= error_messages_for(@activity) %>
 
 <%= form_for @activity do %>
-  Project:<br/>
-  <%= select :project_id, :collection => @projects.map { |p| [p.id, p.name] } %><br/>
-  Date:<br/>
-  <%= text_field :date, :class => 'datepicker' %><br/>
-  Time spent:<br/>
-  <%= text_field :minutes %><br/>
-  Comments:<br/>
-  <%= text_area :comments %><br/>
-  <br/>
-  <%= submit "Add" %>
+  <p>
+    <%= select :project_id, :label => "Project", :collection => { 
+      "Recent projects" => @recent_projects.map { |p| [p.id, p.name] }, 
+      "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
+  </p>
+  <p>
+    <%= text_field :date, :label => "Date", :class => 'datepicker' %>
+  </p>
+  <p>
+    <%= text_field :minutes, :label => "Time spent" %>
+    <span class="description">ie: 7:30 or 7.5 for seven hours and thirty minutes</span>
+  </p>
+  <p>
+    <%= text_area :comments, :label => "Comments" %>
+  </p>
+  <p>
+    <label>&nbsp;</label>
+    <%= submit "Add" %> | <%= link_to 'Cancel', url(:new_activity) %>
+  </p>
 <% end =%> 
-

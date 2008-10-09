@@ -34,7 +34,8 @@ class Activities < Application
   
   protected
   def load_projects
-    @projects = Project.all
+    @recent_projects = Project.all
+    @other_projects = Project.all - @recent_projects
   end
   
 end # Activities
