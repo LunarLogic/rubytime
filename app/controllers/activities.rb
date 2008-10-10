@@ -1,4 +1,5 @@
 class Activities < Application
+  RECENT_ACTIVITIES_LIMIT = 3
 
   before :login_required
   before :admin_required, :only => [:index]
@@ -34,8 +35,8 @@ class Activities < Application
   
   protected
   def load_projects
-    @recent_projects = Project.all
-    @other_projects = Project.all - @recent_projects
+    @recent_projects = current_user.projects.active.all(:order => [:created_at.desc], :limit => RECENT_ACTIVITIES_LIMIT)
+    @other_projects = Project.active - @recent_projects
   end
   
 end # Activities

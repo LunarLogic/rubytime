@@ -31,14 +31,16 @@ describe Projects do
   # create
   
   it "should create new record successfully and redirect to index" do
-    controller = dispatch_to_as_admin(Projects, :create, { 
-      :project => { 
-        :name => "Jola", 
-        :description => "Jolanta", 
-        :client_id => @client.id 
-      }
-    })
-    controller.should redirect_to(url(:projects))
+    proc do
+      controller = dispatch_to_as_admin(Projects, :create, { 
+        :project => { 
+          :name => "Jola", 
+          :description => "Jolanta", 
+          :client_id => @client.id 
+        }
+      })
+      controller.should redirect_to(url(:projects))
+    end.should change(Project, :count)
   end
 
   it "should should not create record and show errors when invalid data" do

@@ -5,6 +5,10 @@ class Projects < Application
   before :load_project, :only => [:edit, :update, :destroy]
   before :load_clients, :only => [:new, :create, :edit, :update]
   
+#  def self.recent(limit = 3)
+#    all(:order => )
+#  end
+  
   def index
     @projects = Project.all(:order => [:name])
     render

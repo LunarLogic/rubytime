@@ -4,7 +4,12 @@ describe Activity do
   before(:all) { Activity.all.destroy!; Invoice.all.destroy! }
   
   it "should be created" do
-    lambda { Activity.make.save.should be_true }.should change(Activity, :count).by(1)
+    lambda do
+      activity = Activity.make
+      activity.project.save.should be_true
+      activity.user.save.should be_true
+      activity.save.should be_true 
+    end.should change(Activity, :count).by(1)
   end
   
   it "should not be locked when does not belong to invoice" do

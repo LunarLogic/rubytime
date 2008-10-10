@@ -3,6 +3,9 @@ module ControllerSpecsHelper
   private
   
   def prepare_users
+    # cleanup db because
+    User.all.destroy!
+    
     @admin = Employee.make(:admin)
     @employee = Employee.make
     @client_user = ClientUser.make

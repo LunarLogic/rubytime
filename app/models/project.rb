@@ -11,4 +11,8 @@ class Project
   belongs_to :client
   has n, :activities
   has n, :users, :through => :activities
+  
+  def self.active
+    all(:active => true)
+  end
 end

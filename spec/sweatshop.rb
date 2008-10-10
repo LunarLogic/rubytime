@@ -3,7 +3,7 @@ def random_date(start_date, end_date)
 end
 
 Employee.fixture {{
-  :name => (name = /\w{3,15}/.gen),
+  :name => (name = /\w{6,15}/.gen),
   :login => name,
   :email => "#{name}@kiszonka.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -12,7 +12,7 @@ Employee.fixture {{
 }}
 
 Employee.fixture(:admin) {{
-  :name => (name = /\w{3,15}/.gen),
+  :name => (name = /\w{6,15}/.gen),
   :login => name,
   :email => "#{name}@kiszonka.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -44,8 +44,8 @@ Project.fixture {{
 }}
 
 Activity.fixture {{
-  :user => Employee.gen,
-  :project => Project.gen,
+  :user => Employee.make,
+  :project => Project.make,
   :date => random_date(Date.today - 15, Date.today - 5),
   :minutes => 30 + rand * 100,
   :comments => /(\w{3,8}\s){1,5}/.gen

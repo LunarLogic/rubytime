@@ -20,6 +20,7 @@ class User
   validates_is_confirmed :password, :if => :password_required?
   
   has n, :activities
+  has n, :projects, :through => :activities #, :unique => true
   
   def self.authenticate(login, password)
     return nil unless user = User.first(:login => login)
