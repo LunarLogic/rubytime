@@ -10,6 +10,12 @@
     <input type="password" name="password"/>
   </p>
   <p>
+    <label for="password">&nbsp;</label>
     <input type="submit" value="Login">
   </p>
 </form>
+
+<p>
+  <br/>
+  Forgot your password? Click <%= link_to 'here', url(:password_reset) %>
+</p>

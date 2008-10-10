@@ -17,6 +17,9 @@ class Activity
   belongs_to :user
   belongs_to :invoice
   
+  def self.recent(limit)
+    all(:order => [:created_at.desc], :limit => limit)
+  end
   
   def locked?
     !!(self.invoice && self.invoice.issued?)

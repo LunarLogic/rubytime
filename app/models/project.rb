@@ -15,4 +15,5 @@ class Project
   def self.active
     all(:active => true)
   end
+  
 end

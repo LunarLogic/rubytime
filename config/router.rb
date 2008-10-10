@@ -24,6 +24,7 @@ Merb.logger.info("Compiling routes...")
 Merb::Router.prepare do |r|
   r.match("/login").to(:controller => "sessions", :action => "new").name(:login)
   r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
+  r.match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
   
   r.resources :sessions
   r.resources :users
