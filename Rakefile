@@ -1,12 +1,9 @@
 require 'rubygems'
-require 'rake'
 require 'rake/rdoctask'
-require 'rake/testtask'
-require 'spec/rake/spectask'
-require 'fileutils'
 
-require "merb-core"
+require 'merb-core'
 require 'merb-core/tasks/merb'
+
 include FileUtils
 
 # Load the basic runtime dependencies; this will include 
@@ -22,10 +19,19 @@ tasks_path = File.join(File.dirname(__FILE__), "lib", "tasks")
 rake_files = Dir["#{tasks_path}/*.rake"]
 rake_files.each{|rake_file| load rake_file }
 
-desc "start runner environment"
+desc "Start runner environment"
 task :merb_env do
   Merb.start_environment(:environment => init_env, :adapter => 'runner')
 end
+
+
+require 'spec/rake/spectask'
+require 'merb-core/test/tasks/spectasks'
+desc 'Default: run spec examples'
+task :default => 'spec'
+
+
+
 
 ##############################################################################
 # ADD YOUR CUSTOM TASKS IN /lib/tasks
