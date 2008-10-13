@@ -14,7 +14,7 @@ class Clients < Application
     @client = Client.new(params[:client])
     @client_user = ClientUser.new(params[:client_user].merge(:client => @client))
     begin
-      @client.transaction.link(@client_user) do 
+      @client.transaction.link(@client_user) do # TODO: refactor transaction
         raise "save_error" unless @client.save
         raise "save_error" unless @client_user.save
       end
@@ -30,6 +30,10 @@ class Clients < Application
   end
   
   def index
+    render
+  end
+  
+  def edit
     render
   end
   
