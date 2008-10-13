@@ -19,6 +19,13 @@ class User
   validates_length :password, :min => 6 , :if => :password_required?
   validates_is_confirmed :password, :if => :password_required?
   
+<<<<<<< HEAD:app/models/user.rb
+=======
+  has n, :activities #, :order => [:created_at.desc] - this order doesn't currently work when used in through relation below 
+                     # according to lighthouse it's a bug in DM
+  has n, :projects, :through => :activities
+  
+>>>>>>> a8ad00dcc70e559f94f7364860bb51616a1c5cd2:app/models/user.rb
   def self.authenticate(login, password)
     return nil unless user = User.first(:login => login)
     user.password == password ? user : nil
