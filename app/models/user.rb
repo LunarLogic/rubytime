@@ -19,9 +19,6 @@ class User
   validates_length :password, :min => 6 , :if => :password_required?
   validates_is_confirmed :password, :if => :password_required?
   
-  has n, :activities #, :order => [:created_at.desc]
-  has n, :projects, :through => :activities #, :unique => true
-  
   def self.authenticate(login, password)
     return nil unless user = User.first(:login => login)
     user.password == password ? user : nil

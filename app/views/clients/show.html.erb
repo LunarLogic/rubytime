@@ -1,0 +1,40 @@
+<h1>Client</h1>
+<p>
+  <%= link_to "Edit", url(:edit_client, @client) %>
+</p>
+<p>
+  Name: <%= @client.name %>
+</p>
+<p>
+  Description: <%= @client.description %>
+</p>     
+<p>
+  Email: <%= @client.email %>
+</p>
+<p>
+  Active: <%= @client.active ? "Yes" : "No" %>
+</p>
+
+
+<h2>Client's projects:</h2>
+<table>
+  <% @client.projects.each do |project| %>
+    <tr>
+      <th><%= project.name %></th>
+      <th><%= link_to "Show", url(:project, project) %></th>
+      <th><%= link_to "Edit", url(:edit_project, project) %></th>
+    </tr>
+  <% end %>
+</table>
+
+<h2>Client's users:'</h2>
+<table>
+  <% @client.client_users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.login %></td>
+      <td><%= link_to "Show", url(:user, user) %></td>
+      <td><%= link_to "Edit", url(:edit_user, user) %></td>
+    </tr>
+  <% end %>
+</table>

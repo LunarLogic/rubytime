@@ -9,7 +9,7 @@ dependency Merb.root / "lib/rubytime/sha1_hash"
 Merb::BootLoader.after_app_loads do
   dependency Merb.root / "lib/rubytime/misc"
   dependency Merb.root / "lib/rubytime/authenticated_system"
-
+  dependency Merb.root / "lib/rubytime/config"
   Application.send(:include, Utype::AuthenticatedSystem)
 end
 

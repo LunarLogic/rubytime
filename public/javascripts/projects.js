@@ -1,4 +1,3 @@
-
 var Projects = {
   init: function() {
     Projects.initRemoveProject();
