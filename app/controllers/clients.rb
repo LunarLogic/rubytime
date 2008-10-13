@@ -11,7 +11,22 @@ class Clients < Application
   end
   
   def create
-    render
+    @client = Client.new(params[:client])
+    @client_user = ClientUser.new(params[:client_user].merge(:client => @client))
+    begin
+      @client.transaction.link(@client_user) do 
+        raise "save_error" unless @client.save
+        raise "save_error" unless @client_user.save
+      end
+    rescue => ex
+      if ex.to_s == "save_error"
+        render :template => "new"
+      else
+        raise ex
+      end
+    else
+      redirect url(:clients)
+    end
   end
   
   def index

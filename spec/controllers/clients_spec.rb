@@ -19,7 +19,9 @@ describe Clients, "index action" do
         send("dispatch_to_as_#{user_type}".to_sym, Clients, :create, :client => { :name => "Kiszonka Inc."}) 
       end.should raise_forbidden
     end
-    
+  end
+  
+  it "should allow admin to create client and display index" do
     dispatch_to_as_admin(Clients, :new).should be_successful
     dispatch_to_as_admin(Clients, :index).should be_successful
     proc do
@@ -31,14 +33,14 @@ describe Clients, "index action" do
         dispatch_to_as_admin(Clients, :create, 
           :client => { :name => name, :email => email },
           :client_user => { 
+            :name => name, 
             :login => name,
             :email => email,
             :password => password, 
             :password_confirmation => password
           }
-        ).should be_successful
-      end #.should change(Client, :count)
-    end #.should change(ClientUser, :count)
-
+        ).should redirect_to(url(:clients))
+      end.should change(Client, :count)
+    end.should change(ClientUser, :count)
   end
 end
