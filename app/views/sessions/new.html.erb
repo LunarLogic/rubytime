@@ -1,21 +1,21 @@
-<h1>Login</h1>
+<h2>Login</h2>
 
 <form action="<%= url :sessions %>" method="post">
-  <p>
-    <label for="login">Login</label>
-    <input type="text" name="login"/>
-  </p>
-  <p>  
-    <label for="password">Password</label>
-    <input type="password" name="password"/>
-  </p>
-  <p>
-    <label for="password">&nbsp;</label>
-    <input type="submit" value="Login">
-  </p>
+  <fieldset>
+    <p>
+      <label for="login">Login</label>
+      <input type="text" name="login"/>
+    </p>
+    <p>  
+      <label for="password">Password</label>
+      <input type="password" name="password"/>
+    </p>
+    <p class="buttons">
+      <input type="submit" value="Login" class="button" />
+    </p>
+  </fieldset>
 </form>
 
 <p>
-  <br/>
   Forgot your password? Click <%= link_to 'here', url(:password_reset) %>
 </p>

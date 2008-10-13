@@ -3,8 +3,9 @@
   <head>
     <title>Rubytime</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <%= css_include_tag 'reset' %>
     <%= css_include_tag 'master' %>
-    <%= css_include_tag 'tmp' %>
+    <%= css_include_tag 'forms' %>
     <%= css_include_tag 'datepicker/ui.datepicker' %>
     
     <%= js_include_tag 'lib/jquery-1.2.6' %>
@@ -16,13 +17,18 @@
   </head>
   <body>
     <div id="header">
-      <div id="userinfo">
-        <%= partial 'layout/session_info' %>
+      <div class="wrapper">
+        <h1 class="logo"><img src="/images/logo.png" alt="Rubytime" title="Rubytime, a simple time tracking application"/></h1>
+        <dl id="userinfo">
+          <%= partial 'layout/session_info' %>
+        </dl>
+        <ul id="menu">
+        
+        </ul>
       </div>
     </div>
-    <div id="menubar"></div>
-    <div id="content">
-      <div id="left_column">
+    <div id="content" class="wrapper clearfix">
+      <div id="primary">
         <div id="flash">
           <div class="notice">
             <%= flash[:notice] %>
@@ -33,10 +39,11 @@
         </div>
         <%= catch_content :for_layout %>
       </div>
-      <div id="right_column">
-        <h2>Filter:</h2>
+      <div id="secondary">
+        <div class="box">
+          <h3>Filter</h3>
+        </div>
       </div>
-      <div class="clear"></div>
     </div>
   </body>
 </html>

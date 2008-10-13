@@ -1,55 +1,3 @@
-body {
-  margin: 0 0;
-  background-color: #dddddd;
-  color: #555;
-  font-family: 'Lucida Grande';
-}
-
-h1 {
-  color: #0b2e4c;
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-family: 'Lucida Grande';
-}
-
-h2 {
-  color: #20407b;
-  font-weight: bold;
-  margin-bottom: 10px;
-  font-family: 'Lucida Grande';
-}
-
-.clear {
-  clear: both;
-}
-
-#header {
-  background-image: url(/images/tmp/header.png);
-  background-color: #0b3f6f;
-  background-repeat: no-repeat;
-  height: 100px;
-}
-
-#menubar {
-  background-image: url(/images/tmp/menubar.png);
-  height: 41px;
-}
-
-#content {
-  margin: 0 120px 0 120px;
-  background-color: white;
-  padding: 40px;
-}
-
-#left_column {
-  float: left;
-}
-
-#right_column {
-  float: right;
-  width: 300px;
-}
-
 div.error {
   margin-bottom: 15px;
 }
@@ -76,16 +24,6 @@ div.error {
 #userinfo a {
   color: white;
   background-color: transparent;
-}
-
-label {
-  color:#555555;
-  display:block;
-  float:left;
-  font-weight:bold;
-  margin-right:20px;
-  text-align:right;
-  width:70px;
 }
 
 p span.description {
