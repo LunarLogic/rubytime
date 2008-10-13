@@ -18,12 +18,10 @@ end
 Merb::BootLoader.before_app_loads do
   # This will get executed after dependencies have been loaded but before your app's classes have loaded.
   require Merb.root / "lib/rubytime/sha1_hash"
+  require Merb.root / "lib/rubytime/authenticated_system"
 end
  
 Merb::BootLoader.after_app_loads do
   # This will get executed after your app's classes have been loaded.
   require Merb.root / "lib/rubytime/misc"
-  require Merb.root / "lib/rubytime/authenticated_system"
-
-  Application.send(:include, Utype::AuthenticatedSystem)
 end
