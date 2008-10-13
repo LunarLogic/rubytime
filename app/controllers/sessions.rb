@@ -5,7 +5,7 @@ class Sessions < Application
     if user = User.authenticate(params[:login], params[:password])
       session[:user_id] = user.id
       flash[:notice] = "Successfully loged in."
-      redirect "/"
+      redirect url(:root)
     else
       flash[:error] = "Bad login or password."
       redirect url(:login)

@@ -3,42 +3,60 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 describe Clients, "index action" do
   include ControllerSpecsHelper
 
-  before(:all) { prepare_users }
-
-  it "shouldn't allow Employee or Client to create a client and shouldn't display index" do
+  before(:each) { prepare_users }
+  
+  before(:all) { @client = Client.gen }
+  
+  it "shouldn't allow Employee or Client to create a client, display index or render edit" do
     %w(client employee).each do |user_type|
-      proc do  
-        send("dispatch_to_as_#{user_type}".to_sym, Clients, :new) 
-      end.should raise_forbidden
+      method_name = "dispatch_to_as_#{user_type}".to_sym
       
-      proc do
-         send("dispatch_to_as_#{user_type}".to_sym, Clients, :index) 
-      end.should raise_forbidden
+      proc { send(method_name, Clients, :new) }.should raise_forbidden
       
-      proc do
-        send("dispatch_to_as_#{user_type}".to_sym, Clients, :create, :client => { :name => "Kiszonka Inc."}) 
-      end.should raise_forbidden
+      proc { send(method_name, Clients, :index) }.should raise_forbidden
+      
+      proc { send(method_name, Clients, :edit, :id => @client.id) }.should raise_forbidden
+      
+      proc { send(method_name, Clients, :create, :client => { :name => "Kiszonka Inc."}) }.should raise_forbidden
     end
+  end
+  
+  it("should render new for admin") { dispatch_to_as_admin(Clients, :new).should be_successful }
+  
+  it("should render edit for admin") { dispatch_to_as_admin(Clients, :edit, :id => @client.id).should be_successful }
+
+  it("should render new for admin") { dispatch_to_as_admin(Clients, :index).should be_successful }
     
-    dispatch_to_as_admin(Clients, :new).should be_successful
-    dispatch_to_as_admin(Clients, :index).should be_successful
+  it "should allow admin to create new client and create client user for this client" do
     proc do
       proc do
-        email = "kiszonka@company.com"
-        name  = "kiszonka"
-        password = "passw0rd"
-        
         dispatch_to_as_admin(Clients, :create, 
-          :client => { :name => name, :email => email },
-          :client_user => { 
-            :login => name,
-            :email => email,
-            :password => password, 
-            :password_confirmation => password
-          }
+          :client => Client.gen_attrs,
+          :client_user => ClientUser.gen_attrs(:without_client)
+        ).should redirect_to(url(:clients))
+      end.should change(Client, :count)
+    end.should change(ClientUser, :count)
+  end
+  
+  it "should render new with errors and not save objects when client is invalid" do
+    proc do
+      proc do
+        dispatch_to_as_admin(Clients, :create,
+          :client => { :name => "", :email => "" },
+          :client_user => ClientUser.gen_attrs(:without_client)
         ).should be_successful
-      end #.should change(Client, :count)
-    end #.should change(ClientUser, :count)
-
+      end.should_not change(Client, :count)
+    end.should_not change(ClientUser, :count)
+  end
+  
+  it "should render new with errors and not save objects when ClientUser is invalid" do
+    proc do
+      proc do
+        dispatch_to_as_admin(Clients, :create,
+          :client => Client.gen_attrs, 
+          :client_user => { :name => "John" }
+        ).should be_successful
+      end.should_not change(Client, :count)
+    end.should_not change(ClientUser, :count)
   end
 end

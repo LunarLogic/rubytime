@@ -1,5 +1,6 @@
 class Application < Merb::Controller
-
+  include Utype::AuthenticatedSystem
+  
   protected
   
   def admin_required

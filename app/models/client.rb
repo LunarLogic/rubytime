@@ -9,6 +9,7 @@ class Client
   
   has n, :projects
   has n, :invoices
+  has n, :client_users
   
   def self.active
     all(:active => true)
