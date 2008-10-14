@@ -10,8 +10,7 @@ describe User do
     user.password_confirmation.should_not be_nil
   end
   
-  it "should check login format" do
-  end
+  it "should check login format"
 end
 
 describe Employee do

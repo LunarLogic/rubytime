@@ -1,25 +1,7 @@
-<<<<<<< HEAD:config/init.rb
-$KCODE = 'UTF8'
-
-Gem.clear_paths
-Gem.path.unshift(Merb.root / "gems")
-
-dependencies %w(dm-validations dm-timestamps dm-aggregates merb_has_flash merb-assets merb_helpers dm-sweatshop dm-types)
-dependency Merb.root / "lib/rubytime/sha1_hash"
-
-Merb::BootLoader.after_app_loads do
-  dependency Merb.root / "lib/rubytime/misc"
-  dependency Merb.root / "lib/rubytime/authenticated_system"
-  dependency Merb.root / "lib/rubytime/config"
-  Application.send(:include, Utype::AuthenticatedSystem)
-end
-
-=======
 # Go to http://wiki.merbivore.com/pages/init-rb
  
 require 'config/dependencies.rb'
  
->>>>>>> a8ad00dcc70e559f94f7364860bb51616a1c5cd2:config/init.rb
 use_orm :datamapper
 use_test :rspec
 use_template_engine :erb
@@ -42,6 +24,7 @@ Merb::BootLoader.after_app_loads do
   # This will get executed after your app's classes have been loaded.
   require Merb.root / "lib/rubytime/misc"
   require Merb.root / "lib/rubytime/authenticated_system"
+  require Merb.root / "lib/rubytime/config"
 
   Application.send(:include, Utype::AuthenticatedSystem)
 end
