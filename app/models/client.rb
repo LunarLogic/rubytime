@@ -11,7 +11,15 @@ class Client
   has n, :invoices
   has n, :client_users
   
+  before :destroy, :destroy_client_users
+  
   def self.active
     all(:active => true)
+  end
+  
+  protected 
+  
+  def destroy_client_users
+    client_users.destroy!
   end
 end

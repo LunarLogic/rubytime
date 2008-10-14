@@ -10,7 +10,16 @@ describe User do
     user.password_confirmation.should_not be_nil
   end
   
-  it "should check login format" do
+  it "should validate login format" do
+    ["stefan)(*&^%$)", "foo bar", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "][;'/.,?><!@#}{}]"].each do |login|
+      user = Employee.make(:login => login)
+      user.save.should(be_false)
+      user.errors.on(:login).should_not(be_nil)
+    end
+    
+    %w(maciej-lotkowski stefan_ks bob kiszka123 12foo123).each do |login|
+      Employee.make(:login => login).save.should be_true
+    end
   end
 end
 
@@ -46,6 +55,10 @@ describe Employee do
     user = Employee.make :login => login, :password => pass, :password_confirmation => pass
     user.save.should be_true
     User.authenticate(login, pass).should == User.get(user.id)
+  end
+  
+  it "should return nil for authentication with bad login or password" do
+    User.authenticate("bad-login", "bad-password").should be_nil
   end
   
   it "should be admin" do
