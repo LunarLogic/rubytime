@@ -17,4 +17,4 @@ dependency "dm-observer", "0.9.7"
 # dependency "merb-auth", "0.9.9"          # An authentication slice (Merb's equivalent to Rails' restful authentication)
 
 #dependency "dm-migrations" #, "0.9.7"   # Make incremental changes to your database.
-dependency "randexp", "0.1.3"
+dependency "randexp", ">=0.1.3"
