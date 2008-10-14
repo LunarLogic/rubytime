@@ -5,7 +5,7 @@ class User
   property :name,          String, :nullable => false, :unique => true 
   property :type,          Discriminator
   property :password,      Rubytime::DatamapperTypes::SHA1Hash, :nullable => false
-  property :login,         String, :nullable => false, :unique => true 
+  property :login,         String, :nullable => false, :unique => true, :format => /^[\w_-]{3,20}$/
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
   property :admin,         Boolean, :nullable => false, :default => false

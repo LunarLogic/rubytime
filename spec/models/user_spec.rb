@@ -10,7 +10,17 @@ describe User do
     user.password_confirmation.should_not be_nil
   end
   
-  it "should check login format"
+  it "should validate login format" do
+    ["stefan)(*&^%$)", "foo bar", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "][;'/.,?><!@#}{}]"].each do |login|
+      user = Employee.make(:login => login)
+      user.save.should(be_false)
+      user.errors.on(:login).should_not(be_nil)
+    end
+    
+    %w(maciej-lotkowski stefan_ks bob kiszka123 12foo123).each do |login|
+      Employee.make(:login => login).save.should be_true
+    end
+  end
 end
 
 describe Employee do
