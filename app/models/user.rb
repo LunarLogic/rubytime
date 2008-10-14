@@ -24,8 +24,9 @@ class User
   has n, :projects, :through => :activities
   
   def self.authenticate(login, password)
-    return nil unless user = User.first(:login => login)
-    user.password == password ? user : nil
+    User.first(:login => login, :password => password)# || nil
+#    return nil unless user = User.first(:login => login)
+ #   user.password == password ? user : nil
   end
   
   def password=(new_password)

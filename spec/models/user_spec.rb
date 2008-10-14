@@ -57,6 +57,10 @@ describe Employee do
     User.authenticate(login, pass).should == User.get(user.id)
   end
   
+  it "should return nil for authentication with bad login or password" do
+    User.authenticate("bad-login", "bad-password").should be_nil
+  end
+  
   it "should be admin" do
     Employee.make(:admin).is_admin?.should be_true
   end
