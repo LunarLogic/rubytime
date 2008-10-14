@@ -1,7 +1,21 @@
 <h1>Users controller, show action</h1>
-
-<p>Edit this file in <tt>app/views/users/show.html.erb</tt></p>
-
-
+<p>
+  Name: <%= @user.name %>
+</p>
+<p>
+  Login: <%= @user.login %>
+</p>
+<p>
+  Email: <%= @user.email %>
+</p>
+<p>
+  Active: <%= @user.active ? "Yes" : "No" %>
+</p>
+<p>
+  Admin: <%= @user.admin ? "Yes" : "No" %>
+</p>
+<p>
+  Created at: <%= format_time @user.created_at %>
+</p>
 <%= link_to 'Edit',  url(:edit_user,  @user) %> |
 <%= link_to 'Back', url(:users) %>

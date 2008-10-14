@@ -75,9 +75,13 @@ describe Clients, "index action" do
 
   it "should update client and redirect to show" do
     client = Client.gen
-    controller = dispatch_to_as_admin(Clients, :update, :id => client.id, :client => { :name => "new name"})
-    controller.should redirect_to(url(:client, client))
-    client.reload.name.should == "new name"
+    proc do
+      proc do
+        controller = dispatch_to_as_admin(Clients, :update, :id => client.id, :client => { :name => "new name"})
+        controller.should redirect_to(url(:client, client))
+        client.reload.name.should == "new name"
+      end.should_not change(Client, :count)
+    end.should_not change(ClientUser, :count)
   end
   
   it "should destroy client and client's users" do

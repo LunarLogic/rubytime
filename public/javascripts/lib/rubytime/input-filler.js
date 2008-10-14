@@ -6,7 +6,7 @@ $.fn.extend({
     else {
       var target = this;
       function sourceChanged(e) {
-        target.attr('value', source.attr('value'));
+        target.attr('value', source.attr('value').replace(/\W+/g, "-"));
       };
       source.keyup(sourceChanged);
       target.change(function() {

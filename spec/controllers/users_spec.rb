@@ -51,4 +51,14 @@ describe Users do
   it "should render not found for nonexisting user id" do
     proc { dispatch_to_as_admin(Users, :show, { :id => 1234567 }) }.should raise_not_found
   end  
+  
+  it "should not change password when posted blank" do
+    previous_password = @employee.reload.password
+    controller = dispatch_to_as_admin(Users, :update, {
+      :id => @employee.id,
+      :user => { :password => "", :password_confirmation => "" } 
+    })
+    controller.should redirect_to(url(:user, @employee.id))
+    previous_password.should == @employee.reload.password
+  end
 end

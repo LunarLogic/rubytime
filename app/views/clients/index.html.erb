@@ -1,4 +1,4 @@
-<p>Clients:</p>
+<h1>Clients:</h1>
 <table>
   <tr>
     <td>Name</td>
@@ -7,3 +7,5 @@
   </tr>
   <%= partial :client, :with => @clients %>
 </table>
+
+<%= link_to "Create new client", url(:new_client) %>

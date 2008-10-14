@@ -5,6 +5,8 @@ module Rubytime
     class SHA1Hash < DataMapper::Type
       
       class Password
+        attr_accessor :hash
+        
         def self.encrypt(password)
           Digest::SHA1::hexdigest(password)
         end
@@ -14,7 +16,14 @@ module Rubytime
         end
         
         def ==(password)
-          @hash == Password.encrypt(password)
+          case password
+          when String
+            @hash == Password.encrypt(password)
+          when Password
+            @hash == password.hash
+          else
+            raise ArgumentError.new("@password should be either String or Rubytime::DataMapper::SHA1Hash::Password.")
+          end
         end
         
         def to_s

@@ -1,7 +1,9 @@
 <p>
   Client:
 </p>
-<%= form_for @client do %>
+<%= error_messages_for @client  %>
+<%= form_for @client, :action => url(:clients) do %>
+  
   <p>
     <%= text_field :name, :label => "Name" %>
   </p>

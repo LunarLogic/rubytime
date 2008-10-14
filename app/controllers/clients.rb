@@ -45,11 +45,10 @@ class Clients < Application
   
   def update
     if @client.update_attributes(params[:client]) || !@client.dirty?
-      redirect url(:client, @client)
+      redirect resource(@client)
     else
       raise BadRequest
     end
-
   end
   
   def destroy
