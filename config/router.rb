@@ -21,18 +21,19 @@
 
 Merb.logger.info("Compiling routes...")
 
-Merb::Router.prepare do |r|
-  r.match("/login").to(:controller => "sessions", :action => "new").name(:login)
-  r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
-  r.match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
+Merb::Router.prepare do
+  match("/login").to(:controller => "sessions", :action => "new").name(:login)
+  match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
+  match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
   
-  r.resources :sessions
-  r.resources :users
-  r.resources :activities
-  r.resources :projects
-  r.resources :clients
+  resources :sessions
+  resources :users
+  resources :activities
+  resources :clients
+  resources :projects
+  resources :roles
 
-  r.default_routes
+  default_routes
   
-  r.match('/').to(:controller => 'sessions', :action =>'index').name(:root)
+  match('/').to(:controller => 'sessions', :action =>'index').name(:root)
 end

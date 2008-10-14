@@ -9,6 +9,7 @@ dependency "dm-timestamps", "0.9.7"   # Automatically populate created_at, creat
 dependency "dm-types" , "0.9.7"        # Provides additional types, including csv, json, yaml.
 dependency "dm-validations", "0.9.7"  # Validation framework
 dependency "dm-sweatshop"
+dependency "dm-observer", "0.9.7"
 
 # dependency "merb-action-args", "0.9.9"   # Provides support for querystring arguments to be passed in to controller actions
 # dependency "merb-cache", "0.9.9"         # Provides your application with caching functions 
@@ -16,3 +17,4 @@ dependency "dm-sweatshop"
 # dependency "merb-auth", "0.9.9"          # An authentication slice (Merb's equivalent to Rails' restful authentication)
 
 #dependency "dm-migrations" #, "0.9.7"   # Make incremental changes to your database.
+dependency "randexp", "0.1.3"

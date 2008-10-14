@@ -7,12 +7,12 @@
   <% @projects.each do |project| %>
     <tr>
       <td><%= project.name %></td>
-      <td><%= link_to 'Edit', url(:edit_project, project) %> | <%= link_to 'Remove', url(:project, project), :class => :delete %></td>
+      <td><%= link_to 'Edit', resource(project, :edit) %> | <%= link_to 'Remove', resource(project), :class => :delete %></td>
     </tr>
   <% end %>
   </table>
 <% end %>
 
 <p>
-  <%= link_to 'Create new project', url(:new_project) %>
+  <%= link_to 'Create new project', resource(:project) %>
 </p>
