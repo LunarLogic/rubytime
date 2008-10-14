@@ -7,7 +7,6 @@ class Clients < Application
   def new
     @client_user = ClientUser.new
     @client_user.generate_password!
-    p @client_user.email
     @client = Client.new
     render :template => "clients/edit"
   end
@@ -20,7 +19,7 @@ class Clients < Application
     @client = Client.new(params[:client])
     @client_user = ClientUser.new(params[:client_user].merge(:client => @client))
     begin
-      @client.transaction.link(@client_user) do # TODO: refactor transaction
+      DataMapper::Transaction.new(@client, @client_user) do # TODO: refactor transaction
         raise "save_error" unless @client.save
         raise "save_error" unless @client_user.save
       end
