@@ -1,0 +1,66 @@
+/* common elements */
+fieldset label {
+  width:100px;
+  margin-right:10px;
+  text-align:right;
+  line-height:24px;
+  display:block;
+  float:left;
+}
+
+fieldset input {
+  display:block;
+  float:left;
+  border:1px solid #ccc;
+  color:#888;
+  line-height:24px;
+  font-size:14px;
+  height:24px;
+  background:#fff url(/images/input-text-bg.png) 0 0 repeat-x;
+}
+
+fieldset input:focus, fieldset input.focus {
+  border:1px solid #222;
+  color:#222;
+}
+
+fieldset p:after {
+    content:"."; 
+    display:block; 
+    height:0; 
+    clear:both; 
+    visibility:hidden;
+}
+
+fieldset p {
+    display:inline-block;
+}
+
+fieldset p {
+    display:block;
+    min-height:0;
+    margin-bottom:10px;
+}
+
+* html .clearfix {
+    height:1px;
+}
+
+fieldset p.buttons {
+  padding-left:110px;
+}
+
+fieldset p.buttons .button {
+  margin-right:10px;
+}
+
+.button {
+  background:#afbe09 url(/images/button.png) 0 0 repeat-x;
+  line-height:16px;
+  height:24px;
+  border:1px solid #95a208;
+  color:#444;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}

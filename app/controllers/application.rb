@@ -1,5 +1,4 @@
 class Application < Merb::Controller
-
   protected
   
   def admin_required
