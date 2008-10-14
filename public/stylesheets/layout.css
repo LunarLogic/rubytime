@@ -164,6 +164,10 @@
   background:url(/images/icons/add.png) 0 10px no-repeat;
 }
 
+#menu .add-activity a:hover {
+  color:#fff;
+}
+
 #add_activity {
   width:300px;
   background:#157ee2;
