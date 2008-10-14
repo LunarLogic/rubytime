@@ -41,6 +41,11 @@ h3 {
 }
 
 /* common elements */
+.hidden {
+  display:none;
+  visibility:hidden;
+}
+
 .box {
   background:#eee;
   border:1px solid #ddd;
@@ -48,40 +53,15 @@ h3 {
 }
 
 h1.logo {
-  position:absolute;
-  top:0;
-  left:-70px;
+  margin:0 0 0 -70px;
 }
 
-/* layout */
-.wrapper {
-  width:960px;
-  margin:0 auto;
+a {
+  color:#0f5ba3;
+  text-decoration:underline;
 }
 
-#header {
-  background:url(/images/header.png) 0 0 repeat-x;
-  height: 140px;
-}
-
-#header .wrapper {
-  position:relative;
-}
-
-#content {
-  width:920px;
-  background:#fff url(/images/bottom.png) bottom center no-repeat;
-  padding:20px 20px 45px 20px;
-  color:#444;
-  font-size:12px;
-}
-
-#primary {
-  float:left;
-  width:620px;
-}
-
-#secondary {
-  width:300px;
-  float:left;
+a:hover {
+  color:#0b3f6f;
+  text-decoration:none;
 }
