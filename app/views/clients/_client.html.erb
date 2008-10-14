@@ -1,0 +1,7 @@
+<tr>
+  <td><%= client.name  %></td>
+  <td><%= client.email %></td>
+  <td><%= client.active ? "Yes" : "No" %></td>
+  <td><%= link_to "Show", url(:client, client) %></td>
+  <td><%= link_to "Edit", url(:edit_client, client) %></td>
+</tr>

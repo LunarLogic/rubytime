@@ -1,0 +1,16 @@
+<h1><%= @project.name %></h1>
+
+<%= link_to "Edit", url(:edit_project, @project) %>
+
+<p>
+  Description: <%= @project.description %>
+</p>
+<p>
+  Active: <%= @project.active %>
+</p>
+<p>
+  Client: <%= link_to @project.client.name, url(:client, @project.client) %>
+</p>
+<p>
+  Created at: <%= format_time @project.created_at %>
+</p>

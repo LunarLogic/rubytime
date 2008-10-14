@@ -2,11 +2,16 @@ class Clients < Application
 
   before :login_required
   before :admin_required
+  before :get_client, :only => [:show, :edit, :destroy, :update]
   
   def new
     @client_user = ClientUser.new
     @client_user.generate_password!
     @client = Client.new
+    render :template => "clients/edit"
+  end
+  
+  def show
     render
   end
   
@@ -14,13 +19,13 @@ class Clients < Application
     @client = Client.new(params[:client])
     @client_user = ClientUser.new(params[:client_user].merge(:client => @client))
     begin
-      @client.transaction.link(@client_user) do # TODO: refactor transaction
+      DataMapper::Transaction.new(@client, @client_user) do # TODO: refactor transaction
         raise "save_error" unless @client.save
         raise "save_error" unless @client_user.save
       end
     rescue => ex
       if ex.to_s == "save_error"
-        render :template => "new"
+        render :template => "clients/edit"
       else
         raise ex
       end
@@ -30,6 +35,7 @@ class Clients < Application
   end
   
   def index
+    @clients = Client.all
     render
   end
   
@@ -37,4 +43,23 @@ class Clients < Application
     render
   end
   
+  def update
+    if @client.update_attributes(params[:client]) || !@client.dirty?
+      redirect url(:client, @client)
+    else
+      raise BadRequest
+    end
+
+  end
+  
+  def destroy
+    @client.destroy
+    redirect url(:clients)
+  end
+  
+  protected
+  
+  def get_client
+    raise NotFound unless @client = Client.get(params[:id])
+  end
 end # Clients

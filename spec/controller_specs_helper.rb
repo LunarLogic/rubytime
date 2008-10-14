@@ -32,9 +32,6 @@ module ControllerSpecsHelper
   end
   
   def dispatch_to_as(controller_klass, action, user, params = {}, &blk)
-    # if user.is_a?(String) || user.is_a?(Symbol)
-    #   send "dispatch_to_as_#{user}".to_sym, controller_klass, action, params, &blk
-    # else
     dispatch_to(controller_klass, action, params) do |controller|
       controller.stub! :render
       controller.stub!(:current_user).and_return(user)

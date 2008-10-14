@@ -5,7 +5,7 @@ class User
   property :name,          String, :nullable => false, :unique => true 
   property :type,          Discriminator
   property :password,      Rubytime::DatamapperTypes::SHA1Hash, :nullable => false
-  property :login,         String, :nullable => false, :unique => true 
+  property :login,         String, :nullable => false, :unique => true, :format => /^[\w_-]{3,20}$/
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
   property :admin,         Boolean, :nullable => false, :default => false
@@ -24,8 +24,9 @@ class User
   has n, :projects, :through => :activities
   
   def self.authenticate(login, password)
-    return nil unless user = User.first(:login => login)
-    user.password == password ? user : nil
+    User.first(:login => login, :password => password)# || nil
+#    return nil unless user = User.first(:login => login)
+ #   user.password == password ? user : nil
   end
   
   def password=(new_password)

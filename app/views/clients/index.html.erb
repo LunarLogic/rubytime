@@ -1,1 +1,9 @@
-You're in index of the Clients controller.
+<p>Clients:</p>
+<table>
+  <tr>
+    <td>Name</td>
+    <td>Email</td>
+    <td>Active</td>
+  </tr>
+  <%= partial :client, :with => @clients %>
+</table>
