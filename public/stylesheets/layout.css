@@ -28,6 +28,7 @@
   padding:20px 20px 45px 20px;
   color:#444;
   font-size:12px;
+  position:relative;
 }
 
 #primary {
@@ -98,6 +99,10 @@
   text-decoration:none;
 }
 
+#menu dt a:hover {
+  color:#76bcff;
+}
+
 #menu dd {
   position:absolute;
   bottom:0;
@@ -138,5 +143,48 @@
 
 #menu .floor-2 li.selected a {
   color:#000;
+  font-weight:900;
+}
+
+/* add new activity button + popup */
+#menu .add-activity {
+  position:absolute;
+  top:0;
+  right:0;
+  font-size:12px;
+  background:url(/images/add-activity-button-bg.png) 0 0 repeat-x;
+  border-left:1px solid #083056;
+  border-right:1px solid #083056;
+  margin:0;
+}
+
+#menu .add-activity a {
+  color:#fff;
+  padding-left:20px;
+  background:url(/images/icons/add.png) 0 10px no-repeat;
+}
+
+#menu .add-activity a:hover {
+  color:#fff;
+}
+
+#add_activity {
+  width:300px;
+  background:#157ee2;
+  position:absolute;
+  top:-25px;
+  right:0;
+  border-left:1px solid #083056;
+  border-right:1px solid #083056;
+  border-bottom:1px solid #083056;
+  padding:10px;
+}
+
+#add_activity legend, #add_activity p {
+  color:#fff;
+}
+
+#add_activity legend {
+  font-size:13px;
   font-weight:900;
 }
