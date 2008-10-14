@@ -26,6 +26,6 @@ end
 Merb::BootLoader.after_app_loads do
   # This will get executed after your app's classes have been loaded.
   require Merb.root / "lib/rubytime/misc"
-
+  require Merb.root / "app/models/observers/user_observer.rb"
   Application.send(:include, Utype::AuthenticatedSystem)
 end

@@ -56,7 +56,7 @@ describe Employee do
     user.save.should be_true
     User.authenticate(login, pass).should == User.get(user.id)
   end
-  
+
   it "should return nil for authentication with bad login or password" do
     User.authenticate("bad-login", "bad-password").should be_nil
   end
