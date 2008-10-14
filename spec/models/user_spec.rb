@@ -21,6 +21,14 @@ describe User do
       Employee.make(:login => login).save.should be_true
     end
   end
+  
+  it "shouldn't authenticate incative user" do
+    password = "awsumpass"
+    login = "awsum-stefan"
+    emplyee = Employee.make(:active => false, :login => login, :password => password, :password_confirmation => password)
+    emplyee.save.should be_true
+    User.authenticate(login, password).should be_nil
+  end
 end
 
 describe Employee do

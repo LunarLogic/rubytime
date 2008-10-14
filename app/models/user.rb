@@ -24,7 +24,7 @@ class User
   has n, :projects, :through => :activities
   
   def self.authenticate(login, password)
-    User.first(:login => login, :password => password)
+    User.first(:login => login, :password => password, :active => true)
   end
   
   def password=(new_password)
