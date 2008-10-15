@@ -33,7 +33,7 @@ namespace :rubytime do
     # client users
     ["Apple", "Orange", "Banana"].each do |name|
       client = Client.first(:name => name)
-      unless ClientUser.first(:client => client)
+      unless ClientUser.first(:client_id => client.id)
         puts "creating client user's account: #{name.downcase} with pass \"#{pass}\""
         ClientUser.create(:name => "#{name}'s user", :login => name.downcase, :password => pass, :password_confirmation => pass, :email => "#{name}@tt666.com", :client => client)
       end
