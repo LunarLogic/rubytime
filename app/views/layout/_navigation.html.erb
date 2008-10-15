@@ -12,6 +12,13 @@
               <% end %>
             </ul>
           </dd>
+          <% unless current_user.instance_of?(ClientUser) %>
+            <dt class="add-activity">
+              <a href="#add_activity">
+                Add new activity
+              </a>
+            </dt>
+          <% end %>
         </dl>
 <!--        
           <dt class="selected">
@@ -58,9 +65,4 @@
               <li><a href="#">Sit</a></li>
             </ul>
           </dd>
-          <dt class="add-activity">
-            <a href="#add_activity">
-              Add new activity
-            </a>
-          </dt>
 --> 

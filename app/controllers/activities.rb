@@ -10,7 +10,7 @@ class Activities < Application
   
   def new
     @activity = Activity.new(:date => Date.today)
-    render
+    render :layout => false
   end
   
   def create
@@ -19,7 +19,7 @@ class Activities < Application
     if @activity.save
       "ok!"
     else
-      render :new
+      render :new, :layout => false
     end
   end
   

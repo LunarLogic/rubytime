@@ -1,25 +1,26 @@
-<h1>New activity</h1>
-
 <%= error_messages_for(@activity) %>
 
-<%= form_for @activity do %>
-  <p>
-    <%= select :project_id, :label => "Project", :collection => { 
-      "Recent projects" => @recent_projects.map { |p| [p.id, p.name] }, 
-      "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
-  </p>
-  <p>
-    <%= text_field :date, :label => "Date", :class => 'datepicker' %>
-  </p>
-  <p>
-    <%= text_field :minutes, :label => "Time spent" %>
-    <span class="description">ie: 7:30 or 7.5 for seven hours and thirty minutes</span>
-  </p>
-  <p>
-    <%= text_area :comments, :label => "Comments" %>
-  </p>
-  <p>
-    <label>&nbsp;</label>
-    <%= submit "Add" %> | <%= link_to 'Cancel', url(:new_activity) %>
-  </p>
+<%= form_for @activity, :action => resource(:activities), :id => "add_activity_form" do %>
+  <fieldset>
+    <legend>New activity</legend>
+    <p>
+      <%= text_field :date, :label => "Date", :class => 'datepicker' %>
+    </p>
+    <p>
+      <%= select :project_id, :label => "Project", :collection => { 
+        "Recent projects" => @recent_projects.map { |p| [p.id, p.name] }, 
+        "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
+    </p>
+    <p>
+      <%= text_field :minutes, :label => "Time spent" %>
+      <span class="description">ie: 7:30 or 7.5 for seven hours and thirty minutes</span>
+    </p>
+    <p>
+      <%= text_area :comments, :label => "Comments" %>
+    </p>
+    <p>
+      <label>&nbsp;</label>
+      <%= submit "OK", :class => "button" %>
+    </p>
+  </fieldset>
 <% end =%> 

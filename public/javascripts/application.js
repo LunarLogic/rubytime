@@ -21,7 +21,32 @@ jQuery.extend({
     }
 });
 
+/*
+$.ajaxSetup({
+    error:
+});
+*/
+
+function addOnSubmit() {
+  $("#add_activity_form").submit(function() {
+      var params = $("#add_activity_form").serializeArray();
+      $("#add_activity").load('/activities', params, function(responseText, textStatus) {
+          //alert(textStatus);
+          addOnSubmit();
+      });
+      return false;
+  });
+}
+
 $(function() {
     $(".datepicker").datepicker({
       dateFormat: "yy-mm-dd", showOn: "both", buttonImage: "/images/calendar.gif", buttonImageOnly: true });
+    
+    $(".add-activity a").click(function() {
+        $("#add_activity").load("/activities/new", {}, function() {
+          addOnSubmit();
+          $("#add_activity").fadeIn();
+        });
+        return false;
+    });
 });
