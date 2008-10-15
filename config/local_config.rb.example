@@ -1,5 +1,2 @@
-module Rubytime
-  CONFIG = {
-    :mail_from => "rubytime@localhost"
-  }
-end
+Rubytime::CONFIG[:mail_from] = "rubytime@localhost"
+Rubytime::CONFIG[:site_url] = "http://localhost:4000"
