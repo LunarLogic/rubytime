@@ -6,4 +6,9 @@ class UserMailer < Merb::MailController
     render_mail
   end
   
+  def welcome
+    @user = params[:user]
+    @url = Rubytime::CONFIG[:site_url]
+    render_mail
+  end
 end

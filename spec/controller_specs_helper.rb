@@ -41,6 +41,23 @@ module ControllerSpecsHelper
     # end
   end
   
+  def describe_mail(mailer, template, &block) 
+    describe "/#{mailer.to_s.downcase}/#{template}" do 
+      before :each do 
+        @mailer_class, @template = mailer, template 
+        @assigns = {} 
+      end 
+   
+      def deliver(send_params={}, mail_params={}) 
+        mail_params = {:from => "from@example.com", :to => "to@example.com", :subject => "Subject Line"}.merge(mail_params) 
+        @mailer_class.new(send_params).dispatch_and_deliver @template.to_sym, mail_params 
+        @mail = Merb::Mailer.deliveries.last 
+      end 
+   
+      instance_eval &block 
+    end 
+  end 
+  
   def raise_not_found
     raise_error Merb::Controller::NotFound
   end

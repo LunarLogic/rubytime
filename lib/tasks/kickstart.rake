@@ -2,6 +2,8 @@ desc "add testing users"
 namespace :rubytime do
   task :kickstart => :merb_env do
     
+    Merb::Mailer.delivery_method = :test_send
+
     developer = Role.first(:name => "Developer") || Role.create(:name => "Developer")
     
     pass = "asdf1234"
@@ -20,15 +22,23 @@ namespace :rubytime do
       Employee.create(:name => "Admin Adminiusz", :login => "admin", :password => pass, :password_confirmation => pass, :email => "admin@tt666.com", :role => developer, :admin => true)
     end
     
-    # cleints
+    # clients
     ["Apple", "Orange", "Banana"].each do |name|
       unless Client.first(:name => name)
-        puts "creating client and account: #{name} with pass \"#{pass}\""
+        puts "creating client #{name}"
         Client.create(:name => name)
-        #ClientUser.create, :login => name, :password => pass, :password_confirmation => pass, :email => "#{name}@tt666.com")
       end
     end
 
+    # client users
+    ["Apple", "Orange", "Banana"].each do |name|
+      client = Client.first(:name => name)
+      unless ClientUser.first(:client => client)
+        puts "creating client user's account: #{name.downcase} with pass \"#{pass}\""
+        ClientUser.create(:name => "#{name}'s user", :login => name.downcase, :password => pass, :password_confirmation => pass, :email => "#{name}@tt666.com", :client => client)
+      end
+    end
+    
     # projects    
     ["Apple", "Orange", "Banana"].each do |client_name|
       project_name = "Big project for #{client_name}"

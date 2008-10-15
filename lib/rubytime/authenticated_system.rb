@@ -110,7 +110,7 @@ module Utype
 
     def login_from_params
       if params[:login] && params[:password]
-        u = User.authorize(params[:login], params[:password])
+        u = User.authenticate(params[:login], params[:password])
         self.current_user = u
       end
     end

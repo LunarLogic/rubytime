@@ -32,6 +32,7 @@ Merb::Router.prepare do
   resources :clients
   resources :projects
   resources :roles
+  resources :invoices
 
   default_routes
   

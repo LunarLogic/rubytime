@@ -38,18 +38,22 @@ describe Sessions do
      controller.should redirect_to("/login")
    end
    
-   it "should redirect admin to activities" do
-     employee = Employee.gen(:admin)
-     dispatch_to_as_admin(Sessions, :index).should redirect_to(url(:activities))
-   end
+   # it "should redirect admin to activities" do
+   #   employee = Employee.gen(:admin)
+   #   dispatch_to_as_admin(Sessions, :index).should redirect_to(url(:activities))
+   # end
    
-   it "should redirect employee to new activity" do
-     Employee.gen
-     dispatch_to_as_employee(Sessions, :index).should redirect_to(url(:new_activity))
-   end
+   # it "should redirect employee to new activity" do
+   #   Employee.gen
+   #   dispatch_to_as_employee(Sessions, :index).should redirect_to(url(:new_activity))
+   # end
 
-   it "should redirect client to activities" do
-     ClientUser.gen
+   it "should any user to activities" do
+     #employee = Employee.gen(:admin)
+     #Employee.gen
+     #ClientUser.gen
+     dispatch_to_as_admin(Sessions, :index).should redirect_to(url(:activities))
+     dispatch_to_as_employee(Sessions, :index).should redirect_to(url(:activities))
      dispatch_to_as_client(Sessions, :index).should redirect_to(url(:activities))
    end
 

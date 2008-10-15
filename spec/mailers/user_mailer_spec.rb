@@ -28,12 +28,14 @@ describe UserMailer, "#notify_on_event email template" do
     clear_mail_deliveries
     
     # instantiate some fixture objects
+    @user = Employee.gen
   end
     
   it "includes welcome phrase in email text" do
-    #violated "Mailer controller deserves to have specs, too."
-    
-    # UserMailer.dispatch_and_deliver(:notify_on_event, {}, { :name => "merb-mailer user" })
-    # last_delivered_mail.text.should =~ /Hello, merb-mailer user!/
+    deliver :welcome, {}, :user => @user, :url => Rubytime::CONFIG[:site_url]
+    last_delivered_mail.text.should =~ /#{@user.name}, welcome/
+    last_delivered_mail.text.should =~ /login: #{@user.login}/
+    last_delivered_mail.text.should =~ /password: #{@user.password}/
+    # last_delivered_mail.text.should =~ /#{Rubytime::CONFIG[:site_url]}/
   end
 end

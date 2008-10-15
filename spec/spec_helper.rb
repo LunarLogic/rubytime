@@ -19,6 +19,7 @@ Spec::Runner.configure do |config|
   config.include(Merb::Test::ControllerHelper)
 end
 
+Merb::Mailer.delivery_method = :test_send
 DataMapper.auto_migrate!
 
 require Merb.root / "spec/model_extensions"

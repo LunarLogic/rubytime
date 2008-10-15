@@ -4,7 +4,7 @@ class UserObserver
   observe User
 
   after :create do
-#    Merb::Mailer.new(:to => self.email, :from => "rubytime", :subject => ..., :text => "Users with no HTML rendering mail clients will see this").deliver! 
-#    puts self
+    #m = UserMailer.new(:to => self.email, :from => Rubytime::CONFIG[:mail_from], :subject => "Welcome to Rubytime!")
+    #m.dispatch_and_deliver(:welcome, :user => self)
   end
 end

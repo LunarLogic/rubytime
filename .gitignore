@@ -2,3 +2,5 @@ config/database.yml
 log/*
 coverage/*
 spec/controllers/log/*
+config/local_config.rb
+

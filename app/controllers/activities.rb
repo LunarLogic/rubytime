@@ -2,7 +2,6 @@ class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
 
   before :login_required
-  before :admin_required, :only => [:index]
   before :load_projects, :only => [:new, :edit, :create]
 
   def index

@@ -1,0 +1,5 @@
+module Rubytime
+  CONFIG = {
+    :mail_from => "rubytime@localhost"
+  }
+end
