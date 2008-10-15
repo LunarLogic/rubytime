@@ -22,12 +22,19 @@ describe User do
     end
   end
   
-  it "shouldn't authenticate incative user" do
+  it "shouldn't authenticate inactive user" do
     password = "awsumpass"
     login = "awsum-stefan"
     emplyee = Employee.make(:active => false, :login => login, :password => password, :password_confirmation => password)
     emplyee.save.should be_true
     User.authenticate(login, password).should be_nil
+  end
+
+  it "should send welcome email to new user" do
+    proc do
+      Employee.gen
+    end.should change(Merb::Mailer.deliveries, :size).by(1)
+    Merb::Mailer.deliveries.last.text.should include("welcome") 
   end
 end
 

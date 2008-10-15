@@ -13,15 +13,28 @@ require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 
+DataMapper.auto_migrate!
+
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
   config.include(Merb::Test::ControllerHelper)
+  
+  config.before(:each) do
+    repository(:default) do
+      User.all.destroy!
+      Client.all.destroy!
+      Project.all.destroy!
+      Role.all.destroy!
+      Activity.all.destroy!
+      Invoice.all.destroy!
+    end
+  end
 end
 
 Merb::Mailer.delivery_method = :test_send
-DataMapper.auto_migrate!
 
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/sweatshop"
 require Merb.root / "spec/controller_specs_helper"
+require Merb.root / "spec/mail_controller_specs_helper"
