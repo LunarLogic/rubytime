@@ -10,4 +10,11 @@ describe Client do
       client.destroy
     end.should change(ClientUser, :count).by(-client_users_count)
   end
+  
+  it "should find active clients" do
+    3.times { Client.gen }
+    2.times { Client.gen(:active => false) }
+    Client.count.should == 5
+    Client.active.count.should == 3
+  end
 end

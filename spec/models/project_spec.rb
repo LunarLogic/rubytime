@@ -6,4 +6,11 @@ describe Project do
   it "should be created" do
     lambda { Project.make.save.should be_true }.should change(Project, :count).by(1)
   end
+  
+  it "should find active projects" do
+    3.times { Project.gen }
+    2.times { Project.gen(:active => false) }
+    Project.count.should == 5
+    Project.active.count.should == 3
+  end
 end

@@ -27,4 +27,13 @@ describe Activity do
     activity = Activity.gen(:invoice => invoice)
     activity.locked?.should be_true
   end
+  
+  it "should find n recent activities" do
+    10.downto(1) { |i| Activity.gen(:date => Date.today-(i*2), :user => Employee.gen, :project => Project.gen ) }
+    recent_activities = Activity.recent(3)
+    recent_activities.size.should == 3
+    recent_activities[0].date.should == Date.today-2
+    recent_activities[1].date.should == Date.today-4
+    recent_activities[2].date.should == Date.today-6
+  end
 end

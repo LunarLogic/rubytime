@@ -18,7 +18,7 @@ class Activity
   belongs_to :invoice
   
   def self.recent(limit)
-    all(:order => [:created_at.desc], :limit => limit)
+    all(:order => [:date.desc], :limit => limit)
   end
   
   def locked?
