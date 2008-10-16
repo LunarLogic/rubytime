@@ -19,7 +19,7 @@ class Activities < Application
     if @activity.save
       "ok!"
     else
-      render :new, :layout => false
+      render :new, :layout => false #, :status => 400
     end
   end
   

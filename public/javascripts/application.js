@@ -21,14 +21,17 @@ jQuery.extend({
     }
 });
 
-/*
+
 $.ajaxSetup({
-    error:
+    error: function(responseText, textStatus) {
+      //alert('kurde blade');
+    }
 });
-*/
+
 
 function addOnSubmit() {
   $("#add_activity_form").submit(function() {
+      $("#add_activity_form input[type=submit]").attr("disabled", "false");
       var params = $("#add_activity_form").serializeArray();
       $("#add_activity").load('/activities', params, function(responseText, textStatus) {
           //alert(textStatus);
