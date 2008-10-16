@@ -81,4 +81,8 @@ describe Users do
       employee.reload.role.should == role
     end
   end
+  
+  it "should update name, login and not update password" do
+    
+  end
 end

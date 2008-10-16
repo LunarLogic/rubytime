@@ -36,6 +36,7 @@ class Users < Application
   end
 
   def update
+    #@user.role
     if @user.update_attributes(params[:user]) || !@user.dirty?
       redirect url(:user, @user)
     else

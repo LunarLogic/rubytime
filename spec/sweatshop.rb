@@ -21,6 +21,18 @@ Employee.fixture(:admin) {{
   :role => Role.gen
 }}
 
+
+Employee.fixture(:with_activities) {{
+  :name => (name = /\w{6,15}/.gen),
+  :login => name,
+  :email => "#{name}@kiszonka.com",
+  :password => (password = /\w{6,20}/.gen), 
+  :password_confirmation => password,
+  :admin => true,
+  :role => Role.gen,
+  :activities => (5..10).of { Activity.gen(:without_user) }
+}}
+
 ClientUser.fixture(:without_client) {{
   :name => (name = /\w{3,15}/.gen),
   :login => name,
@@ -54,6 +66,13 @@ Project.fixture {{
 Activity.fixture {{
   :user => Employee.gen,
   :project => Project.gen,
+  :date => random_date(Date.today - 15, Date.today - 5),
+  :minutes => 30 + rand * 100,
+  :comments => /(\w{3,8}\s){1,5}/.gen
+}}
+
+Activity.fixture(:without_user) {{
+  :project => Project.gen, 
   :date => random_date(Date.today - 15, Date.today - 5),
   :minutes => 30 + rand * 100,
   :comments => /(\w{3,8}\s){1,5}/.gen

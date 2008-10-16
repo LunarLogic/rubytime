@@ -6,4 +6,9 @@ class Employee < User
   has n, :projects, :through => :activities
   
   validates_present :role
+  
+  before :destroy do
+    throw :halt if activities.count > 0
+  end
+  
 end
