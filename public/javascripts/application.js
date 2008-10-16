@@ -1,18 +1,31 @@
 
+$.ajaxSetup({
+    error: function(responseText, textStatus) {
+      //alert('kurde blade');
+    }
+});
+
+
 function addOnSubmit() {
   $("#add_activity_form").submit(function() {
+      $("#add_activity_form input[type=submit]").attr("disabled", "false");
       var params = $("#add_activity_form").serializeArray();
-      $("#add_activity").load('/activities', params, function(responseText, textStatus) {
-          //alert(textStatus);
-          addOnSubmit();
+      $("#add_activity").load($("#add_activity_form").url(), params, function(responseText, textStatus) {
+          if (responseText == '') {
+            $("#add_activity").hide();
+            alert('Activity added successfully!');
+          } else {
+            addOnSubmit();
+          }
       });
       return false;
   });
 }
 
 $(function() {
-    $(".datepicker").datepicker({
+    /*$(".datepicker").datepicker({
       dateFormat: "yy-mm-dd", showOn: "both", buttonImage: "/images/calendar.gif", buttonImageOnly: true });
+    */
     
     $(".add-activity a").click(function() {
         $("#add_activity").load("/activities/new", {}, function() {

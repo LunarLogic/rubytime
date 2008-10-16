@@ -1,25 +1,26 @@
 <h1><%= @project.new_record? ? 'Create new project' : "Editing project: #{@project.name}" %></h1>
 
 <%= error_messages_for(@project) %>
-
 <%= form_for @project, :action => resource(@project.id ? @project : :projects) do %>
-  <p>
-    <%= text_field :name, :label => "Name" %>
-  </p>
-  <p>
-    <%= text_area :description, :label => "Description" %>
-  </p>
-  <p>
-    <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
-  </p>
-  <% unless @project.new_record? %>
+  <fieldset>
     <p>
-      <label for="project_active">Active?</label>
-      <%= check_box :active %>
+      <%= text_field :name, :label => "Name" %>
     </p>
-  <% end %>
-  <p>
-    <label>&nbsp;</label>
-    <%= submit 'Save' %> | <%= link_to 'Cancel', resource(:projects) %>
-  </p>
+    <p>
+      <%= text_area :description, :label => "Description" %>
+    </p>
+    <p>
+      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+    </p>
+    <% unless @project.new_record? %>
+      <p>
+        <label for="project_active">Active?</label>
+        <%= check_box :active %>
+      </p>
+    <% end %>
+    <p>
+      <label>&nbsp;</label>
+      <%= submit 'Save', :class => "button" %> | <%= link_to 'Cancel', resource(:projects) %>
+    </p>
+  </fieldset>
 <% end =%>

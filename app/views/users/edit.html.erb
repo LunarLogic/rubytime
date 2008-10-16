@@ -2,32 +2,30 @@
 
 <%= error_messages_for @user %>
 <%= form_for(@user, :action => url(:users) ) do %>
-  <% fields_for :user do #TODO: hack for proper input names based on base class name - get rid ot it %>
-    <p>
-      <%= text_field :name, :label => "Name" %>
-    </p>
-    <p>
-      <%= text_field :login, :label => "Login" %>
-    </p>
-    <p>
-      <%= text_field :email, :label => "Email" %>
-    </p>
-    <p>
-      <%= password_field :password, :label => "Password", :value => nil %>
-    </p>
-    <p>
-      <%= password_field :password_confirmation, :label => "Password confirmation", :value => nil %>
-    </p>
-    <p>
-      <%= check_box :active, :label => "Active" %>
-    </p>
-    <p>
-      <%= select :role_id, :collection => Role.for_select %>
-    </p>
-    <p>
-      <%= submit "Submit" %>
-    </p>
-  <% end %>
+  <fieldset>
+    <% fields_for :user do #TODO: hack for proper input names based on base class name - get rid ot it %>
+      <p>
+        <%= text_field :name, :label => "Name" %>
+      </p>
+      <p>
+        <%= text_field :login, :label => "Login" %>
+      </p>
+      <p>
+        <%= text_field :email, :label => "Email" %>
+      </p>
+      <p>
+        <%= password_field :password, :label => "Password", :value => nil %>
+      </p>
+      <p>
+        <%= password_field :password_confirmation, :label => "Password confirmation", :value => nil %>
+      </p>
+    
+      <p>
+        <label>&nbsp;</label>
+        <%= submit "Save", :class => "button" %>
+      </p>
+    <% end %>
+  </fieldset>
 <% end =%>
 
 <%= link_to 'Show', url(:user, @user) %> |
