@@ -56,7 +56,7 @@ describe Users do
     previous_password = @employee.reload.password
     controller = dispatch_to_as_admin(Users, :update, {
       :id => @employee.id,
-      :user => { :password => "", :password_confirmation => "" } 
+      :user => { :password => "", :password_confirmation => "", :name => "stefan 123" } 
     })
     controller.should redirect_to(url(:user, @employee.id))
     previous_password.should == @employee.reload.password
@@ -66,6 +66,7 @@ describe Users do
     @employee.active.should be_true
     controller = dispatch_to_as_admin(Users, :update, { :id => @employee.id, :user => { :active => 0 } })
     controller.should redirect_to(url(:user, @employee.id))
+    # controller.instance_variable_get(:@employee).dirty?.should 
     @employee.reload.active.should be_false
   end
   

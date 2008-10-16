@@ -11,6 +11,10 @@ require "merb-mailer"
 require "dm-core"
 require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
 
+def Merb.root 
+  File.dirname(__FILE__) / ".."
+end
+
 # this loads all plugins required in your init file so don't add them
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
@@ -35,6 +39,7 @@ Spec::Runner.configure do |config|
 end
 
 Merb::Mailer.delivery_method = :test_send
+
 
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/sweatshop"

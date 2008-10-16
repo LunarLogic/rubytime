@@ -4,7 +4,7 @@ class User
   property :id,            Serial
   property :name,          String, :nullable => false, :unique => true 
   property :type,          Discriminator
-  property :password,      Rubytime::DatamapperTypes::SHA1Hash, :nullable => false
+  property :password_hash, Rubytime::DatamapperTypes::SHA1Hash, :nullable => false
   property :login,         String, :nullable => false, :unique => true, :format => /^[\w_-]{3,20}$/
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
@@ -12,8 +12,8 @@ class User
   property :created_at,    DateTime
 
   attr_accessor :password_confirmation
-  attr_accessor :password_changed
-
+  attr_accessor :password
+  
   validates_length :name, :min => 3
 
   validates_length :password, :min => 6 , :if => :password_required?
@@ -24,16 +24,16 @@ class User
   has n, :projects, :through => :activities
   
   def self.authenticate(login, password)
-    User.first(:login => login, :password => password, :active => true)
+    User.first(:login => login, :password_hash => password, :active => true)
   end
   
   def password=(new_password)
-     password_changed = true
-     attribute_set :password, new_password
+    self.password_hash = new_password unless new_password.blank?
+    @password = new_password
   end
   
   def password_required?
-    new_record? || password_changed
+    new_record? || !password.blank? || !password_confirmation.blank? 
   end
   
   def is_admin?

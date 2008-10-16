@@ -39,7 +39,7 @@ class Users < Application
     if @user.update_attributes(params[:user]) || !@user.dirty?
       redirect url(:user, @user)
     else
-      raise BadRequest
+      render :edit
     end
   end
 

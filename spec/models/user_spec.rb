@@ -36,6 +36,17 @@ describe User do
     end.should change(Merb::Mailer.deliveries, :size).by(1)
     Merb::Mailer.deliveries.last.text.should include("welcome") 
   end
+
+  it "should required password" do
+    Employee.new.password_required?.should be_true
+    user = Employee.get(Employee.gen.id) #prevent from keeping password_confirmation set
+    user.password_required?.should be_false
+    user.password = "kiszka"
+    user.password_required?.should be_true
+    user = ClientUser.gen
+    user.password_confirmation = "aaaaaa"
+    user.password_required?.should be_true
+  end
 end
 
 describe Employee do
