@@ -18,7 +18,12 @@
     <p>
       <%= password_field :password_confirmation, :label => "Password confirmation", :value => nil %>
     </p>
-  
+    <p>
+      <%= check_box :active, :label => "Active" %>
+    </p>
+    <p>
+      <%= select :role_id, :collection => Role.for_select %>
+    </p>
     <p>
       <%= submit "Submit" %>
     </p>

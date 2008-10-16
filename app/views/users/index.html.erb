@@ -11,6 +11,7 @@
     <td><%= user.name %></td>
     <td><%= link_to 'Show', url(:user, user) %></td>
     <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
+    <td><%= link_to "Remove", url(:user, user), :class => "delete_row" %></td>
   </tr>
 <% end %>
 </table>

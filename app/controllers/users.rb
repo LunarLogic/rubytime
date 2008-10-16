@@ -45,7 +45,7 @@ class Users < Application
 
   def destroy
     if @user.destroy
-      redirect url(:user)
+      ""
     else
       raise BadRequest
     end

@@ -52,8 +52,8 @@ Project.fixture {{
 }}
 
 Activity.fixture {{
-  :user => Employee.make,
-  :project => Project.make,
+  :user => Employee.gen,
+  :project => Project.gen,
   :date => random_date(Date.today - 15, Date.today - 5),
   :minutes => 30 + rand * 100,
   :comments => /(\w{3,8}\s){1,5}/.gen

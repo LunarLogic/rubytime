@@ -7,6 +7,8 @@ if (local_gem_dir = File.join(File.dirname(__FILE__), '..', 'gems')) && $BUNDLE.
 end
 
 require "merb-core"
+require "merb-mailer"
+require "dm-core"
 require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
 
 # this loads all plugins required in your init file so don't add them

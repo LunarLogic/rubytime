@@ -61,4 +61,23 @@ describe Users do
     controller.should redirect_to(url(:user, @employee.id))
     previous_password.should == @employee.reload.password
   end
+  
+  it "should udpate active property" do
+    @employee.active.should be_true
+    controller = dispatch_to_as_admin(Users, :update, { :id => @employee.id, :user => { :active => 0 } })
+    controller.should redirect_to(url(:user, @employee.id))
+    @employee.reload.active.should be_false
+  end
+  
+  it "shouldn't allow user to update role" do
+    admin = Role.create! :name => "Adminz0r"
+    dev   = Role.create! :name => "Devel0per"
+    employee = Employee.gen(:role => dev)
+    
+    [admin, dev].each do |role|
+      controller = dispatch_to_as(Users, :update, employee.another, { :id => employee.id, :user => { :role_id => role.id} })
+      controller.should redirect_to(url(:user, employee.id))
+      employee.reload.role.should == role
+    end
+  end
 end

@@ -38,7 +38,6 @@ module ControllerSpecsHelper
       blk.call(controller) if block_given?
       controller
     end
-    # end
   end
   
   def describe_mail(mailer, template, &block) 

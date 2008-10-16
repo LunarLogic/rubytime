@@ -14,9 +14,12 @@ describe Activities, "index action" do
     p1 = Project.gen
     p2 = Project.gen
     p3 = Project.gen
-    2.times { Activity.make(:user => employee, :project => p1, :created_at => Date.today - 2).save } # p1 is least recent project from all three
-    2.times { Activity.make(:user => employee, :project => p2, :created_at => Date.today).save } # p2 is most recent project
-    2.times { Activity.make(:user => employee, :project => p3, :created_at => Date.today - 1).save } # p3 is second most recent project
+    # p1 is least recent project from all three
+    2.times { Activity.make(:user => employee, :project => p1, :created_at => Date.today - 2).save }
+    # p2 is most recent project
+    2.times { Activity.make(:user => employee, :project => p2, :created_at => Date.today).save }
+    # p3 is second most recent project
+    2.times { Activity.make(:user => employee, :project => p3, :created_at => Date.today - 1).save }
     
     # 15 projects, each with 1 activity by other employee
     15.times do
@@ -36,6 +39,6 @@ describe Activities, "index action" do
     recent_projects[2].should == p1
     
     other_projects = controller.instance_variable_get(:@other_projects)
-    other_projects.size.should == 15 # (3 + 15 + 1) - (3 recent + 1 inactive)
+    other_projects.size.should == Project.active.count - 3# (3 + 15 + 1) - (3 recent + 1 inactive)
   end
 end
