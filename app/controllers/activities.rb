@@ -17,9 +17,9 @@ class Activities < Application
     @activity = Activity.new(params[:activity])
     @activity.user = current_user
     if @activity.save
-      "ok!"
+      ""
     else
-      render :new, :layout => false #, :status => 400
+      render :new, :layout => false
     end
   end
   
