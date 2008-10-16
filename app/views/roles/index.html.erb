@@ -17,10 +17,11 @@
 <br/>
 <br/>
 
-<%= error_messages_for(@role) %>
-
 <%= form_for @role, :action => resource(@role.id ? @role : :roles)  do %>
-  <p>
-    <%= text_field :name, :label => "Add new role" %> <%= submit 'Add' %>
-  </p>
+  <fieldset>
+    <p>
+      <%= text_field :name, :label => "Add new role" %>
+      <%= submit 'Add', :class => "button" %>
+    </p>
+  </fieldset>
 <% end =%>

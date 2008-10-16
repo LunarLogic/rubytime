@@ -1,45 +1,45 @@
-<p>
-  Client:
-</p>
 <%= error_messages_for @client  %>
 <%= form_for @client, :action => url(:clients) do %>
-  
-  <p>
-    <%= text_field :name, :label => "Name" %>
-  </p>
-  <p>
-    <%= text_area :description, :label => "Description" %>
-  </p>
-  <p>
-    <%= text_field :email, :label => "Email" %>
-  </p>
-  <% if @client.new_record? %>
+  <fieldset>
+    <legend>Client</legend>
     <p>
-      Default user for client:
+      <%= text_field :name, :label => "Name" %>
     </p>
-    <% fields_for @client_user do %>
+    <p>
+      <%= text_area :description, :label => "Description" %>
+    </p>
+    <p>
+      <%= text_field :email, :label => "Email" %>
+    </p>
+    <% if @client.new_record? %>
       <p>
-        <%= text_field :login, :label => "Login" %>
+        Default user for client:
       </p>
+      <% fields_for @client_user do %>
+        <p>
+          <%= text_field :login, :label => "Login" %>
+        </p>
+        <p>
+          <%= text_field :email, :label => "Email" %>
+        </p>
+        <p>
+          <%= password_field :password, :label => "Password" %>
+          <span id="generated_password">
+            Generated password: <%= @client_user.password %>
+          </span>
+        </p>
+        <p>
+          <%= password_field :password_confirmation, :label => "Confirm password" %>
+        </p>
+      <% end %>
+    <% else %>
       <p>
-        <%= text_field :email, :label => "Email" %>
-      </p>
-      <p>
-        <%= password_field :password, :label => "Password" %>
-        <span id="generated_password">
-          Generated password: <%= @client_user.password %>
-        </span>
-      </p>
-      <p>
-        <%= password_field :password_confirmation, :label => "Confirm password" %>
+        <%= text_field  :active, :label => "Active"%>
       </p>
     <% end %>
-  <% else %>
     <p>
-      <%= text_field  :active, :label => "Active"%>
+      <label>&nbsp;</label>
+      <%= submit "Save", :class => "button" %>
     </p>
-  <% end %>
-  <p>
-    <%= submit "Submit" %>
-  </p>
+  </fieldset>
 <% end =%>
