@@ -7,7 +7,8 @@
   <% @projects.each do |project| %>
     <tr>
       <td><%= project.name %></td>
-      <td><%= link_to 'Edit', resource(project, :edit) %> | <%= link_to 'Remove', resource(project), :class => :delete %></td>
+      <td><%= link_to 'Edit', resource(project, :edit) %> | 
+      <%= link_to 'Remove', resource(project), :class => "delete_row" %></td>
     </tr>
   <% end %>
   </table>
