@@ -7,7 +7,7 @@
   <% @roles.each do |role| %>
     <tr>
       <td><%= role.name %></td>
-      <td><%= link_to 'Edit', resource(role, :edit) %> | <%= link_to 'Remove', resource(role), :class => :delete %></td>
+      <td><%= link_to 'Remove', resource(role), :class => "delete_row" %></td>
     </tr>
   <% end %>
   </table>
@@ -17,12 +17,10 @@
 <br/>
 <br/>
 
-<h1>Add new role</h1>
-
 <%= error_messages_for(@role) %>
 
 <%= form_for @role, :action => resource(@role.id ? @role : :roles)  do %>
   <p>
-    <%= text_field :name, :label => "Name" %> <%= submit 'Add' %>
+    <%= text_field :name, :label => "Add new role" %> <%= submit 'Add' %>
   </p>
 <% end =%>
