@@ -44,25 +44,23 @@ describe Activities, "index action" do
   
   it "should add new activity" do
     Employee.gen
-    controller = dispatch_to_as_employee(Activities, :create, :activity => { 
+    response = dispatch_to_as_employee(Activities, :create, :activity => { 
       :date => Date.today,
       :project_id => Project.gen.id,
       :hours => "7",
       :comments => "this & that",
     })
-    # controller.status.should == 201 # always returns 200, bug in merb?
-    # controller.rack_response[0].should == 201
+    response.status.should == 201
   end
   
   it "should not add invalid activity" do
     Employee.gen
-    controller = dispatch_to_as_employee(Activities, :create, :activity => { 
+    response = dispatch_to_as_employee(Activities, :create, :activity => { 
       :date => Date.today,
       :project_id => Project.gen.id,
       :hours => "6:30",
       :comments => "",
     })
-    # controller.status.should == 200 # always returns 200, bug in merb?
-    # controller.rack_response[0].should == 200
+    response.status.should == 200
   end
 end
