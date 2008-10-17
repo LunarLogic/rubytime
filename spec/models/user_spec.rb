@@ -47,6 +47,15 @@ describe User do
     user.password_confirmation = "aaaaaa"
     user.password_required?.should be_true
   end
+
+  it "shouldn't allow to delete it if there is a related invoice or activity" do
+    employee = Employee.gen(:with_activities)
+    employee.reload
+    
+    proc do
+      employee.destroy
+    end.should_not change(User, :count)
+  end
 end
 
 describe Employee do
