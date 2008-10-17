@@ -10,8 +10,11 @@ module ControllerSpecsHelper
     @employee = Employee.make
     @client_user = ClientUser.make
     @admin.save.should be_true
+    p @admin.errors unless @admin.valid?
     @employee.save.should be_true
+    p @employee.errors unless @employee.valid?
     @client_user.save.should be_true
+    p @client_user.errors unless @client_user.valid?
     @client = Client.gen
   end
   

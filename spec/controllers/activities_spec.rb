@@ -39,6 +39,30 @@ describe Activities, "index action" do
     recent_projects[2].should == p1
     
     other_projects = controller.instance_variable_get(:@other_projects)
-    other_projects.size.should == Project.active.count - 3# (3 + 15 + 1) - (3 recent + 1 inactive)
+    other_projects.size.should == Project.active.count - 3
+  end
+  
+  it "should add new activity" do
+    Employee.gen
+    controller = dispatch_to_as_employee(Activities, :create, :activity => { 
+      :date => Date.today,
+      :project_id => Project.gen.id,
+      :hours => "7",
+      :comments => "this & that",
+    })
+    # controller.status.should == 201 # always returns 200, bug in merb?
+    # controller.rack_response[0].should == 201
+  end
+  
+  it "should not add invalid activity" do
+    Employee.gen
+    controller = dispatch_to_as_employee(Activities, :create, :activity => { 
+      :date => Date.today,
+      :project_id => Project.gen.id,
+      :hours => "6:30",
+      :comments => "",
+    })
+    # controller.status.should == 200 # always returns 200, bug in merb?
+    # controller.rack_response[0].should == 200
   end
 end

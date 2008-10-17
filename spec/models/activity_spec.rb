@@ -36,4 +36,26 @@ describe Activity do
     recent_activities[1].date.should == Date.today-4
     recent_activities[2].date.should == Date.today-6
   end
+  
+  it "should parse time correctly" do
+    a = Activity.new(:hours => 5)
+    a.minutes.should == 5 * 60
+
+    a = Activity.new(:hours => "6")
+    a.minutes.should == 6 * 60
+
+    a = Activity.new(:hours => "7:15")
+    a.minutes.should == 7 * 60 + 15
+
+    a = Activity.new(:hours => " 8.5")
+    a.minutes.should == 8 * 60 + 30
+
+    a = Activity.new(:hours => "9,5 ")
+    a.minutes.should == 9 * 60 + 30
+
+    a = Activity.new(:hours => "jola")
+    a.minutes.should be_nil
+    a.valid?
+    a.errors[:hours].size.should == 1
+  end
 end
