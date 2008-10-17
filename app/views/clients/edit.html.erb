@@ -1,5 +1,5 @@
 <%= error_messages_for @client  %>
-<%= form_for @client, :action => url(:clients) do %>
+<%= form_for @client, :action => url(:client, @client) do %>
   <fieldset>
     <legend>Client</legend>
     <p>
@@ -34,7 +34,7 @@
       <% end %>
     <% else %>
       <p>
-        <%= text_field  :active, :label => "Active"%>
+        <%= check_box  :active, :label => "Active"%>
       </p>
     <% end %>
     <p>
