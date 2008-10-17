@@ -54,6 +54,11 @@ Client.fixture {{
   :name => /\w{5,20}/.gen
 }}
 
+Client.fixture(:with_invoices) {{
+  :name => /\w{5,20}/.gen,
+  :invoices => (5..10).of { Invoice.gen(:without_client) }
+}}
+
 Role.fixture {{
   :name => /\w{3,10}/.gen
 }}
@@ -81,5 +86,10 @@ Activity.fixture(:without_user) {{
 Invoice.fixture {{
   :name => /200\d-\d{2}-\d{2}/.gen,
   :client => Client.gen,
+  :user => Employee.gen
+}}
+
+Invoice.fixture(:without_client) {{
+  :name => /200\d-\d{2}-\d{2}/.gen,
   :user => Employee.gen
 }}
