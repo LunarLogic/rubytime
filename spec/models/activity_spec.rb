@@ -48,10 +48,18 @@ describe Activity do
     a.minutes.should == 7 * 60 + 15
 
     a = Activity.new(:hours => " 8.5")
-    a.minutes.should == 8 * 60 + 30
+    a.minutes.should == 8.5 * 60
+
+    a = Activity.new(:hours => " 8.90")
+    a.minutes.should == 8.9 * 60
 
     a = Activity.new(:hours => "9,5 ")
     a.minutes.should == 9 * 60 + 30
+
+    a = Activity.new(:hours => "1:80")
+    a.minutes.should be_nil
+    a.valid?
+    a.errors[:hours].size.should == 1
 
     a = Activity.new(:hours => "jola")
     a.minutes.should be_nil

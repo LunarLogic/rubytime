@@ -12,8 +12,11 @@ class Project
   has n, :activities
   has n, :users, :through => :activities
   
+  before :destroy do
+    throw :halt if activities.count > 0
+  end
+
   def self.active
     all(:active => true)
   end
-  
 end

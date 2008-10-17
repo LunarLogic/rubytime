@@ -41,8 +41,11 @@ class Projects < Application
   end
   
   def destroy
-    @project.destroy
-    ""
+    if @project.destroy
+      render "", :status => 200, :layout => false
+    else
+      render "This project has activities. Couldn't delete.", :status => 400 , :layout => false
+    end
   end
   
   protected
