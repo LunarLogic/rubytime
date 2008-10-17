@@ -1,5 +1,5 @@
 <%= error_messages_for @client  %>
-<%= form_for @client, :action => url(:client, @client) do %>
+<%= form_for @client, :action => resource(@client.new_record? ? :clients : @client), :id => "client_form" do %>
   <fieldset>
     <legend>Client</legend>
     <p>
