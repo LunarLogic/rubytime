@@ -7,8 +7,9 @@ class Sessions < Application
       flash[:notice] = "Successfully loged in."
       redirect url(:root)
     else
-      flash[:error] = "Bad login or password."
-      redirect url(:login)
+      flash.now[:error] = "Bad login or password."
+      # redirect url(:login)
+      render :new
     end
   end
   

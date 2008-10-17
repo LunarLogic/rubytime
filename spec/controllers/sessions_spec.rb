@@ -35,10 +35,10 @@ describe Sessions do
 
    it 'should try to login with wrong data' do
      controller = dispatch_to(Sessions, :create, {:login => 'not-existing', :password => 'wrong-password'})
-     controller.should redirect_to("/login")
+     controller.should be_successful
    end
 
-   it "should any user to activities" do
+   it "should redirect any user to activities" do
      dispatch_to_as_admin(Sessions, :index).should redirect_to(url(:activities))
      dispatch_to_as_employee(Sessions, :index).should redirect_to(url(:activities))
      dispatch_to_as_client(Sessions, :index).should redirect_to(url(:activities))

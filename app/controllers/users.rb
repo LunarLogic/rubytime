@@ -36,6 +36,7 @@ class Users < Application
   end
 
   def update
+    @user.inspect # fix for dm's validation bug
     if @user.update_attributes(params[:user]) || !@user.dirty?
       redirect url(:user, @user)
     else
