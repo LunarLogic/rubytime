@@ -16,6 +16,7 @@ class Activity
   attr_reader :hours
   
   validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
+  validates_with_method :hours, :method => :check_max_hours
 
   belongs_to :project
   belongs_to :user
@@ -32,15 +33,14 @@ class Activity
   # specify hours as strings in following formats:
   # "7" "7,5" "7.5" "7:30"
   def hours=(hours)
-    value = hours.to_s.strip
-    @hours = value
-    if value =~ HOURS_REGEX
-      if value =~ /^\d+$/
-        self.minutes = value.to_i * 60
-      elsif value =~ /^\d+[\.,]\d+$/
-        self.minutes = value.sub(/,/, '.').to_f * 60
-      elsif value =~ /^(\d+):(\d+)$/
-        self.minutes = $1.to_i * 60 + $2.to_i
+    time = hours.to_s.strip
+    @hours = time
+    if time =~ HOURS_REGEX
+      if time.index(':')
+        h, m = time.split(/:/)
+        self.minutes = h.to_i * 60 + m.to_i
+      else
+        self.minutes = time.gsub(/,/, '.').to_f * 60
       end
     else
       self.minutes = nil
@@ -53,5 +53,13 @@ class Activity
   # an invoice and that invoice has been already issued.
   def locked?
     !!(self.invoice && self.invoice.issued?)
+  end
+  
+  protected
+  
+  # Checks if hours for this activity are under 24 hours
+  def check_max_hours
+    return true unless minutes
+    minutes / 60 <= 24 ? true : [false, "Hours must be under 24"]
   end
 end
