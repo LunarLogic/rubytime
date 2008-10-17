@@ -11,6 +11,10 @@ class Client
   has n, :invoices
   has n, :client_users
   
+  before :destroy do
+    throw :halt if invoices.count > 0 
+  end
+  
   before :destroy, :destroy_client_users
   
   def self.active

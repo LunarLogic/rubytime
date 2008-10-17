@@ -7,7 +7,7 @@ describe Client do
     client_users_count = client.client_users.count
     
     proc do
-      client.destroy
+      client.destroy.should be_true
     end.should change(ClientUser, :count).by(-client_users_count)
   end
   
@@ -16,5 +16,14 @@ describe Client do
     2.times { Client.gen(:active => false) }
     Client.count.should == 5
     Client.active.count.should == 3
+  end
+  
+  it "Shouldn't allow to delete client with invoices" do
+    client = Client.gen(:with_invoices).reload
+    client.invoices.count.should > 0
+    
+    proc do
+      client.destroy.should be_nil
+    end.should_not change(Client, :count)
   end
 end
