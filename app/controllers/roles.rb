@@ -27,8 +27,12 @@ class Roles < Application
   end
   
   def destroy
-    # @role.destroy
-    ""
+    raise NotFound unless @role = Role.get(params[:id])
+    if @role.destroy
+      render_success
+    else
+      render_failure "Users with this role exist. Couldn't delete."
+    end
   end
 
   protected
