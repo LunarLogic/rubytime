@@ -35,8 +35,8 @@ module ControllerSpecsHelper
   end
   
   def dispatch_to_as(controller_klass, action, user, params = {}, &blk)
-    dispatch_to(controller_klass, action, params) do |controller|
-      controller.stub! :render
+     dispatch_to(controller_klass, action, params) do |controller|
+      #controller.stub! :render
       controller.stub!(:current_user).and_return(user)
       blk.call(controller) if block_given?
       controller

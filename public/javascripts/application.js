@@ -1,8 +1,9 @@
-
-$.ajaxSetup({
-    error: function(responseText, textStatus) {
-      alert(responseText);
-    }
+$(function() {
+  $.ajaxSetup({
+      error: function(xhr) {
+        Rubytime.errorFromXhr(xhr);
+      }
+  });
 });
 
 function addOnSubmitForActivityPopup() {
@@ -51,8 +52,10 @@ $(function() {
         success: function() { 
           row.remove(); 
         },
-        error: function() { 
-          target.click(handler); row.enableLinks(); 
+        error: function(xhr) { 
+          target.click(handler); 
+          row.enableLinks(); 
+          Rubytime.errorFromXhr(xhr);
         }
       });
     };

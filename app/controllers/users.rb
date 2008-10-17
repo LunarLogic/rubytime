@@ -8,7 +8,7 @@ class Users < Application
 
   def index
     @users = User.all
-    display @users
+   display @users
   end
 
   def show
@@ -46,9 +46,9 @@ class Users < Application
 
   def destroy
     if @user.destroy
-      ""
+      render "", :status => 200, :layout => false  
     else
-      raise BadRequest
+      render "This user has activities. Couldn't delete.", :status => 400 , :layout => false
     end
   end
   

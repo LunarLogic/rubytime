@@ -20,7 +20,7 @@ describe Users do
   end
   
   it "should fetch all users" do
-    User.should_receive(:all)
+    User.should_receive(:all).and_return([Employee.gen, Employee.gen, ClientUser.gen])
     dispatch_to_as_admin(Users, :index)
   end
   
@@ -81,8 +81,11 @@ describe Users do
       employee.reload.role.should == role
     end
   end
-  
-  it "should update name, login and not update password" do
-    
+
+  it "shouldnt destroy user which has activities" do
+    user = Employee.gen(:with_activities)
+    proc do
+      dispatch_to_as_admin(Users, :destroy, { :id => user.id}).status.should == 400
+    end.should_not change(User, :count)
   end
 end
