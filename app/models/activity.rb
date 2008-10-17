@@ -1,5 +1,5 @@
 class Activity
-  HOURS_REGEX = /^\d+([\.,:]\d+)?$/
+  HOURS_REGEX = /^\d+([\.,]\d+|:[0-5]\d)?$/
 
   include DataMapper::Resource
   

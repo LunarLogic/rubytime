@@ -42,10 +42,11 @@ jQuery.fn.extend((function() {
     },
     
     focusFirstBlank: function() {
+      var focused = false;
       this.find("input[type=text], input[type=password], textarea").each(function() {
-          if (this.value == "") {
+          if (!focused && this.value == "") {
             $(this).focus();
-            return;
+            focused = true;
           }
       });    
     }
