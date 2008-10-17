@@ -57,5 +57,9 @@ describe Activity do
     a.minutes.should be_nil
     a.valid?
     a.errors[:hours].size.should == 1
+    
+    a = Activity.new(:minutes => 123)
+    a.valid?
+    a.errors[:hours].should be_nil
   end
 end
