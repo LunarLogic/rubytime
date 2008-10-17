@@ -87,7 +87,16 @@ describe Clients, "index action" do
   it "should destroy client and client's users" do
     client = Client.gen
     proc do
-      dispatch_to_as_admin(Clients, :destroy, :id => client.id).should redirect_to(url(:clients))
+      dispatch_to_as_admin(Clients, :destroy, :id => client.id).status.should == 200
     end.should change(Client, :count)
+  end
+  
+  it "Shouldn't destroy client and client's users if he has any invoices" do
+    client = Client.gen(:with_invoices)
+    proc do
+      proc do
+        dispatch_to_as_admin(Clients, :destroy, :id => client.id).status.should == 400
+      end.should_not change(Client, :count)
+    end.should_not change(ClientUser, :count)
   end
 end

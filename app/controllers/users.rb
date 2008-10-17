@@ -46,9 +46,9 @@ class Users < Application
 
   def destroy
     if @user.destroy
-      render "", :status => 200, :layout => false  
+      render_success
     else
-      render "This user has activities. Couldn't delete.", :status => 400 , :layout => false
+      render_failure "Couldn't delete user which has activities"
     end
   end
   

@@ -52,8 +52,11 @@ class Clients < Application
   end
   
   def destroy
-    @client.destroy
-    redirect url(:clients)
+    if @client.destroy
+      render_success
+    else
+      render_failure("Couldn't delete client which has invoices")
+    end 
   end
   
   protected
