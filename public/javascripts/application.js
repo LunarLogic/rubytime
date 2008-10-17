@@ -1,12 +1,12 @@
 
 $.ajaxSetup({
     error: function(responseText, textStatus) {
-      //alert('kurde blade');
+      alert(responseText);
     }
 });
 
-
-function addOnSubmit() {
+function addOnSubmitForActivityPopup() {
+  $("#add_activity_form").focusFirstBlank();
   $("#add_activity_form").submit(function() {
       $("#add_activity_form input[type=submit]").attr("disabled", "false");
       var params = $("#add_activity_form").serializeArray();
@@ -15,7 +15,7 @@ function addOnSubmit() {
             $("#add_activity").hide();
             alert('Activity added successfully!');
           } else {
-            addOnSubmit();
+            addOnSubmitForActivityPopup();
           }
       });
       return false;
@@ -29,8 +29,7 @@ $(function() {
     
     $(".add-activity a").click(function() {
         $("#add_activity").load("/activities/new", {}, function() {
-          addOnSubmit();
-          $("#add_activity").fadeIn();
+          $("#add_activity").fadeIn("normal", addOnSubmitForActivityPopup);
         });
         return false;
     });

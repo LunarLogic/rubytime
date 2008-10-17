@@ -39,6 +39,16 @@ jQuery.fn.extend((function() {
 
     url: function() {
       return this.attr('href') || this.attr('action');
+    },
+    
+    focusFirstBlank: function() {
+      var focused = false;
+      this.find("input[type=text], input[type=password], textarea").each(function() {
+          if (!focused && this.value == "") {
+            $(this).focus();
+            focused = true;
+          }
+      });    
     }
   };
 })());
