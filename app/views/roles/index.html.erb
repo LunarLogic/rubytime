@@ -17,7 +17,7 @@
 <br/>
 <br/>
 
-<%= form_for @role, :action => resource(@role.id ? @role : :roles)  do %>
+<%= form_for @role, :action => resource(@role.id ? @role : :roles), :id => "role_form" do %>
   <fieldset>
     <p>
       <%= text_field :name, :label => "Add new role" %>

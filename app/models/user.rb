@@ -1,5 +1,6 @@
 class User
   include DataMapper::Resource
+  include Rubytime::ValidationGenerator  
   
   property :id,            Serial
   property :name,          String, :nullable => false, :unique => true 

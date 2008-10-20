@@ -1,6 +1,6 @@
 <h1>Users controller, new action</h1>
 <%= error_messages_for @user %>
-<%= form_for(@user, :action => url(:users) ) do %>
+<%= form_for(@user, :action => url(:users), :id => "user_form") do %>
   <p>
     <%= text_field :name, :label => "Name" %>
   </p>
