@@ -1,12 +1,28 @@
+// TODO clean up application.js
 $(function() {
   $.ajaxSetup({
       error: function(xhr) {
         Rubytime.errorFromXhr(xhr);
       }
   });
+  
+  function hoursFormat(value, element, params) {
+    return this.optional(element) || (/^\d+([\.,]\d+|:[0-5]\d)?$/).test(value);
+  };
+  $.validator.addMethod('hours', hoursFormat, "Please enter hours in format like 3:45 or 2,5.");
 });
 
 function addOnSubmitForActivityPopup() {
+  $("#add_activity_form").validate({
+    rules: {
+      "activity[hours]": {
+        hours: true
+      },
+      "activity[comments]": {
+        required: true
+      }
+    }
+  });
   $("#add_activity_form").focusFirstBlank();
   $("#add_activity_form").submit(function() {
       $("#add_activity_form input[type=submit]").attr("disabled", "false");

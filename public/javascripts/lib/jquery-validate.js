@@ -213,9 +213,10 @@ $.extend($.validator, {
 			}
 		},
 		onkeyup: function(element) {
-			if ( element.name in this.submitted || element == this.lastElement ) {
+		  // ML: hack for 'live' validation 
+      // if ( element.name in this.submitted || element == this.lastElement ) {
 				this.element(element);
-			}
+      // }
 		},
 		onclick: function(element) {
 			if ( element.name in this.submitted )

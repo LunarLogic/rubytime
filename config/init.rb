@@ -21,6 +21,7 @@ Merb::BootLoader.before_app_loads do
   require Merb.root / "lib/rubytime/sha1_hash"
   require Merb.root / "lib/rubytime/authenticated_system"
   require Merb.root / "lib/rubytime/config"
+  require Merb.root / "lib/rubytime/validation_generator"
 end
 
 Merb::BootLoader.after_app_loads do
