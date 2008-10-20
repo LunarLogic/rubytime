@@ -2,10 +2,10 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Activities, "index action" do
   include ControllerSpecsHelper
-
+  
   it "should show 3 recent and rest of projects when adding new activity" do
-    Project.all.destroy!
-    Activity.all.destroy!
+    #Project.all.destroy!
+    #Activity.all.destroy!
     
     employee = Employee.gen
     other_employee = Employee.gen
@@ -62,5 +62,39 @@ describe Activities, "index action" do
       :comments => "",
     })
     response.status.should == 200
+  end
+
+  it "should not add activity for other user if he isn't admin" do
+    @employee = Employee.gen
+    other_user = Employee.gen
+    proc do
+      proc do
+        response = dispatch_to_as_employee(Activities, :create, :activity => { 
+          :date => Date.today,
+          :project_id => Project.gen.id,
+          :hours => "7",
+          :comments => "this & that",
+          :user_id => other_user.id
+        })
+        response.status.should == 201
+      end.should change(@employee.activities, :count).by(1)
+    end.should_not change(other_user.activities, :count)
+  end
+  
+  it "should add activity for other user if he is admin" do
+    @admin = Employee.gen(:admin)
+    other_user = Employee.gen
+    proc do
+      proc do
+        response = dispatch_to_as_admin(Activities, :create, :activity => { 
+          :date => Date.today,
+          :project_id => Project.gen.id,
+          :hours => "7",
+          :comments => "this & that",
+          :user_id => other_user.id
+        })
+        response.status.should == 201
+      end.should_not change(@admin.activities, :count)
+    end.should change(other_user.activities, :count).by(1)
   end
 end

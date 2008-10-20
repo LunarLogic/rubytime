@@ -1,1 +1,11 @@
-You're in index of the Activities controller.
+<% throw_content :secondary, partial(:filter) %>
+
+<h1>Activities</h1>
+
+<% @activities.each do |activity| %>
+  <%= activity.project.name %>, 
+  <%= activity.date %>: 
+  <%= activity.user.name %> 
+  (<%= activity.minutes / 60.0 %>h)
+  <br/>
+<% end %>

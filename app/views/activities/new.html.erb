@@ -3,6 +3,11 @@
 <%= form_for @activity, :action => resource(:activities), :id => "add_activity_form" do %>
   <fieldset>
     <legend>New activity</legend>
+    <% if current_user.is_admin? %>
+      <p>
+        <%= select :user_id, :label => "User", :collection =>  @users.map { |u| [u.id, u.name] } %>
+      </p>
+    <% end %>
     <p>
       <%= text_field :date, :label => "Date", :class => 'datepicker' %>
     </p>
