@@ -1,16 +1,21 @@
 <%= form_for @search_criteria, :action => "/activities", :method => :get do %>
 <fieldset>
   <p>
-    <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "All" %>
+    <%= select :client_id, :label => "Client", 
+               :collection => @search_criteria.clients.map { |c| [c.id, c.name] }, :prompt => "All" %>
   </p>
   <p>
-    <%= select :project_id, :label => "Project", :collection => @projects.map { |p| [p.id, p.name] }, :prompt => "All" %>
+    <%= select :project_id, :label => "Project", 
+               :collection => @search_criteria.projects.map { |p| [p.id, p.name] }, :prompt => "All" %>
   </p>
   <p>
-    <%= select :role_id, :label => "Role", :collection => @roles.map { |r| [r.id, r.name] }, :prompt => "All" %>
+    <%= select :role_id, :label => "Role", :collection => @search_criteria.roles.map { |r| [r.id, r.name] }, :prompt => "All" %>
   </p>
   <p>
-    <%= select :user_id, :label => "User", :collection => @users.map { |u| [u.id, u.name] }, :prompt => "All" %>
+    <%= select :user_id_0, :label => "User", :collection => @search_criteria.users.map { |u| [u.id, u.name] }, :prompt => "All" %>
+  </p>
+  <p>
+    <%= select :user_id_1, :label => "User", :collection => @search_criteria.users.map { |u| [u.id, u.name] }, :prompt => "All" %>
   </p>
   <p>
     <%= text_field :date_from, :label => "From", :class => 'datepicker', :size => 9 %>
@@ -18,9 +23,11 @@
   <p>
     <%= text_field :date_to, :label => "To", :class => 'datepicker', :size => 9  %>
   </p>
-    <p>
-    <label for="search_criteria_invoiced">Invoiced?</label>
-    <%= check_box :invoiced  %>
+  <p>
+    <label>Include</label>
+    <%= radio_group :invoiced, [{ :value => "all", :label => "All" }, 
+                                { :value => "invoiced", :label => "Invoiced" }, 
+                                { :value => "not_invoiced", :label => "Not invoiced" }] %>
   </p>
   <p>
     <label>&nbsp;</label>

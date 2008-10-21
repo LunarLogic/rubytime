@@ -68,3 +68,7 @@ fieldset p.buttons .button {
 form input.error, form textarea.error  {
   border: 1px solid red;
 }
+
+label.radio {
+  width: auto;
+}

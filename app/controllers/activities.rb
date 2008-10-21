@@ -7,10 +7,10 @@ class Activities < Application
 
   def index
     @search_criteria = SearchCriteria.new(params[:search_criteria])
-    @clients = @search_criteria.clients
-    @projects = @search_criteria.projects
-    @roles = @search_criteria.roles
-    @users = @search_criteria.users
+    #@clients = @search_criteria.clients
+    #@projects = @search_criteria.projects
+    #@roles = @search_criteria.roles
+    #@users = @search_criteria.users
     @activities = @search_criteria.activities
     # p @search_criteria
     if request.xhr?

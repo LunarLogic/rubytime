@@ -4,11 +4,12 @@ class SearchCriteria # < OpenStruct
   attr_reader :client_id
   attr_reader :project_id
   attr_reader :role_id
-  attr_reader :user_id
-  attr_reader :invoiced
+  #attr_reader :user_id
+  attr_accessor :invoiced
   attr_reader :errors
   
   def initialize(attrs)
+    @invoiced = "all"
     attrs && attrs.each do |attr, value|
       send("#{attr}=", value)
     end
@@ -43,18 +44,15 @@ class SearchCriteria # < OpenStruct
     @date_to = Date.parse(date) rescue nil
   end
   
-  def invoiced=(bool)
-    @invoiced = (bool == "1" ? true : false)
-  end
-  
   def clients
     Client.active.all(:order => [:name])
   end
   
   def projects
-    projects_conditions = {}
-    projects_conditions = { :client_id => @client_id } unless @client_id.blank? 
-    Project.active.all({:order => [:name]}.merge(projects_conditions))
+    return @projects if @projects
+    conditions = {}
+    conditions.merge!(:client_id => @client_id) unless @client_id.nil? 
+    @projects = Project.active.all({:order => [:name]}.merge(conditions))
   end
   
   def roles
@@ -63,18 +61,30 @@ class SearchCriteria # < OpenStruct
   
   def users
     return @users if @users
-    users_conditions = {}
-    users_conditions = { :role_id => @role_id } unless @role_id.blank? 
-    @users = Employee.active.all({:order => [:name]}.merge(users_conditions))
+    conditions = {}
+    conditions.merge!(:role_id => @role_id) unless @role_id.nil? 
+    @users = Employee.active.all({:order => [:name]}.merge(conditions))
   end
   
   def activities
-    user_ids = @user_id.blank? ? self.users.map { |u| u.id } : @user_id
+    user_ids = @user_id || self.users.map { |u| u.id } 
+    project_ids = @project_id || self.projects.map { |p| p.id }
     conditions = {}
     conditions.merge!(:user_id => user_ids) 
-    conditions.merge!(:project_id => @project_id) unless @project_id.blank? 
-    conditions.merge!(:date.gte => @date_from) unless @date_from.blank? 
-    conditions.merge!(:date.lte => @date_to) unless @date_to.blank?
+    conditions.merge!(:project_id => project_ids) 
+    conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
+    conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
+    if @invoiced == "invoiced"
+      conditions.merge!(:invoice_id.not => nil)
+    elsif @invoiced == "not_invoiced"
+      conditions.merge!(:invoice_id => nil)
+    end
     Activity.all({:order => [:date.desc]}.merge(conditions))
+  end
+  
+  def method_missing(name, *args)
+    if name.to_s =~ /(user|project|client|role)_id_(\d+)/
+      nil
+    end
   end
 end
