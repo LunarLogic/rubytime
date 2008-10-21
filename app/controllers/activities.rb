@@ -7,6 +7,12 @@ class Activities < Application
 
   def index
     @search_criteria = SearchCriteria.new(params[:search_criteria])
+    #@search_criteria.client_id << "" if @search_criteria.client_id.empty?
+    #@search_criteria.project_id << "" if @search_criteria.project_id.empty?
+    #@search_criteria.role_id << "" if @search_criteria.role_id.empty?
+    #@search_criteria.user_id << "" if @search_criteria.user_id.empty?
+
+    
     #@clients = @search_criteria.clients
     #@projects = @search_criteria.projects
     #@roles = @search_criteria.roles

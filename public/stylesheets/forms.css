@@ -72,3 +72,14 @@ form input.error, form textarea.error  {
 label.radio {
   width: auto;
 }
+
+.add_criterium img {
+}
+
+.remove_criterium {
+  display: none;
+}
+
+.add_criterium {
+  display: none;
+}
