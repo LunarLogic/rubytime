@@ -59,6 +59,13 @@ describe User do
 end
 
 describe Employee do
+  it "should have calendar viewable by himself and admin" do
+    employee = Employee.gen
+    admin = Employee.gen(:admin => true)
+    employee.calendar_viewable?(employee).should be_true
+    employee.calendar_viewable?(admin).should be_true
+    employee.calendar_viewable?(Employee.gen).should be_false
+  end
 
   it "should create user" do
     lambda { Employee.make.save.should be_true }.should change(Employee, :count).by(1)

@@ -103,8 +103,19 @@ describe Activities, "index action" do
     request_to("/users/3/calendar", :get).should route_to(Activities, :calendar)
   end
   
-  it "should be be successful for user who wants to see his activites in calendar" do
-    @emplyee = Employee.pick || Employee.gen
-    dispatch_to_as(Activities, :calendar, @emplyee).should be_successful
+  it "should be successful for user requesting for his calendar" do
+    prepare_users
+    controller = as(@employee).dispatch_to(Activities, :calendar, :user_id => @employee.id).should be_successful
+  end
+  
+  it "should be successful for admin requesting for user's calendar" do
+    prepare_users    
+    as(:admin).dispatch_to(Activities, :calendar, :user_id => @employee.id).should be_successful
+  end
+  
+  it "should raise forbidden for trying to view other's calendars" do
+    block_should(raise_forbidden) do
+      as(Employee.gen).dispatch_to(Activities, :calendar, :user_id => Employee.gen.id)
+    end
   end
 end

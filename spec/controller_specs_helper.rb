@@ -29,6 +29,7 @@ module ControllerSpecsHelper
     end
   end
   
+  #TODO: move to SpecsHelper to make it available in models spec
   class BlockMatcher
     def initialize()
       @matchers = []

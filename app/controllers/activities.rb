@@ -2,9 +2,11 @@ class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
 
   before :login_required
-  before :load_projects, :only => [:new, :edit, :create]
-  before :load_users, :only => [:new, :edit, :create]
-
+  before :load_projects,              :only => [:new, :edit, :create]
+  before :load_users,                 :only => [:new, :edit, :create]
+  before :load_user,                   :only => [:calendar] 
+  before :check_calendar_viewability, :only => [:calendar]
+  
   def index
     @search_criteria = SearchCriteria.new(params[:search_criteria])
     @clients = @search_criteria.clients
@@ -44,12 +46,19 @@ class Activities < Application
   def destroy
   end
 
-
   def calendar
-    
+    render
   end
   
   protected
+  
+  def check_calendar_viewability
+    raise Forbidden unless @user.calendar_viewable?(current_user)
+  end
+  
+  def load_user
+    raise NotFound unless @user = User.get(params[:user_id])
+  end
   
   def load_projects
     @recent_projects = current_user.projects.active.sort_by { |p| p.activities.recent(1).first.created_at }
