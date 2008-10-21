@@ -6,17 +6,16 @@ describe Users do
   before(:each) { prepare_users }
   
   it "shouldn't show index for guest" do
-    dispatch_to_as_guest(Users, :index).should redirect_to(url(:login))
+    as(:guest).dispatch_to(Users, :index).should redirect_to(url(:login))
   end
 
   it "should redirect from new when user is not admin" do
-    lambda { dispatch_to_as_employee(Users, :new) }.should raise_forbidden
+    block_should(raise_forbidden) { as(:employee).dispatch_to(Users, :new) }
   end
 
   it "Should render new" do
     User.should_receive(:new)
-    controller = dispatch_to_as_admin(Users, :new)
-    controller.should be_successful
+    as(:admin).dispatch_to(Users, :new).should be_successful
   end
   
   it "should fetch all users" do
@@ -26,35 +25,44 @@ describe Users do
   
   it "should render edit if user is admin" do
     User.should_receive(:get).with(@employee.id.to_s).and_return(@employee)
-    dispatch_to_as_admin(Users, :edit, { :id => @employee.id }).should be_successful
+    as(:admin).dispatch_to(Users, :edit, { :id => @employee.id }).should be_successful
   end
   
   it "should raise forbidden from edit if user is not admin and trying to edit another user" do
     haxor = Employee.gen
     haxor.is_admin?.should be_false
-    proc { dispatch_to_as(Users, :edit, haxor, { :id => haxor.another.id }) }.should raise_forbidden
+    
+    block_should(raise_forbidden) do
+      as(haxor).dispatch_to(Users, :edit, { :id => haxor.another.id })
+    end
   end
   
   it "update action should redirect to show" do
     role = Role.gen
-    controller = dispatch_to_as_admin(Users, :update, { 
+    controller = as(:admin).dispatch_to(Users, :update, { 
       :id => @employee.id , :user => { :name => "Jola", :role_id => role.id } })
     controller.should redirect_to(url(:user, @employee))
     @employee.reload.role.should == role
   end
   
   it "shouldn't allow User user to delete users" do
-    proc { dispatch_to_as_employee(Users, :destroy, { :id => @client }) }.should raise_forbidden
-    proc { dispatch_to_as_client(Users, :destroy, { :id => @employee }) }.should raise_forbidden
+    block_should(raise_forbidden) do
+      as(:employee).dispatch_to(Users, :destroy, { :id => @client })
+    end
+    block_should(raise_forbidden) do
+      as(:client).dispatch_to(Users, :destroy, { :id => @employee })
+    end
   end
   
   it "should render not found for nonexisting user id" do
-    proc { dispatch_to_as_admin(Users, :show, { :id => 1234567 }) }.should raise_not_found
+    block_should(raise_not_found) do
+      as(:admin).dispatch_to(Users, :show, { :id => 1234567 })
+    end
   end  
   
   it "should not change password when posted blank" do
     previous_password = @employee.reload.password
-    controller = dispatch_to_as_admin(Users, :update, {
+    controller = as(:admin).dispatch_to(Users, :update, {
       :id => @employee.id,
       :user => { :password => "", :password_confirmation => "", :name => "stefan 123" } 
     })
@@ -64,19 +72,19 @@ describe Users do
   
   it "should udpate active property" do
     @employee.active.should be_true
-    controller = dispatch_to_as_admin(Users, :update, { :id => @employee.id, :user => { :active => 0 } })
+    controller = as(:admin).dispatch_to(Users, :update, { :id => @employee.id, :user => { :active => 0 } })
     controller.should redirect_to(url(:user, @employee.id))
     # controller.instance_variable_get(:@employee).dirty?.should 
     @employee.reload.active.should be_false
   end
   
   it "shouldn't allow user to update role" do
-    admin = Role.create! :name => "Adminz0r"
-    dev   = Role.create! :name => "Devel0per"
+    admin    = Role.create! :name => "Adminz0r"
+    dev      = Role.create! :name => "Devel0per"
     employee = Employee.gen(:role => dev)
     
     [admin, dev].each do |role|
-      controller = dispatch_to_as(Users, :update, employee.another, { :id => employee.id, :user => { :role_id => role.id} })
+      controller = as(employee.another).dispatch_to(Users, :update, { :id => employee.id, :user => { :role_id => role.id} })
       controller.should redirect_to(url(:user, employee.id))
       employee.reload.role.should == role
     end
@@ -84,8 +92,8 @@ describe Users do
 
   it "shouldnt destroy user which has activities" do
     user = Employee.gen(:with_activities)
-    proc do
-      dispatch_to_as_admin(Users, :destroy, { :id => user.id}).status.should == 400
-    end.should_not change(User, :count)
+    block_should_not(change(User, :count)) do
+      as(:admin).dispatch_to(Users, :destroy, { :id => user.id}).status.should == 400
+    end
   end
 end

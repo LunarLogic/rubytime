@@ -8,9 +8,6 @@ describe Activities, "index action" do
   end
   
   it "should show 3 recent and rest of projects when adding new activity" do
-    #Project.all.destroy!
-    #Activity.all.destroy!
-    
     employee = Employee.gen
     other_employee = Employee.gen
     
@@ -104,5 +101,10 @@ describe Activities, "index action" do
   
   it "should match /users/3/calendar to Activites#calendar with user_id = 3" do
     request_to("/users/3/calendar", :get).should route_to(Activities, :calendar)
+  end
+  
+  it "should be be successful for user who wants to see his activites in calendar" do
+    @emplyee = Employee.pick || Employee.gen
+    dispatch_to_as(Activities, :calendar, @emplyee).should be_successful
   end
 end

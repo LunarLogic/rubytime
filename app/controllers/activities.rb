@@ -43,8 +43,14 @@ class Activities < Application
   
   def destroy
   end
+
+
+  def calendar
+    
+  end
   
   protected
+  
   def load_projects
     @recent_projects = current_user.projects.active.sort_by { |p| p.activities.recent(1).first.created_at }
     @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
