@@ -3,19 +3,31 @@ class Activities < Application
 
   before :login_required
   before :load_projects, :only => [:new, :edit, :create]
+  before :load_users, :only => [:new, :edit, :create]
 
   def index
-    render
+    @search_criteria = SearchCriteria.new(params[:search_criteria])
+    @clients = @search_criteria.clients
+    @projects = @search_criteria.projects
+    @roles = @search_criteria.roles
+    @users = @search_criteria.users
+    @activities = @search_criteria.activities
+    # p @search_criteria
+    if request.xhr?
+      partial :filter_form
+    else
+      render
+    end
   end
   
   def new
-    @activity = Activity.new(:date => Date.today)
+    @activity = Activity.new(:date => Date.today, :user => current_user)
     render :layout => false
   end
   
   def create
     @activity = Activity.new(params[:activity])
-    @activity.user = current_user
+    @activity.user = current_user unless current_user.is_admin?
     if @activity.save
       render "", :status => 201, :layout => false 
     else
@@ -25,10 +37,10 @@ class Activities < Application
   
   def edit
   end
-
+  
   def update
   end
-
+  
   def destroy
   end
   
@@ -40,4 +52,7 @@ class Activities < Application
     @other_projects = Project.active - @recent_projects
   end
   
+  def load_users
+    @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
+  end
 end # Activities

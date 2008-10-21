@@ -27,7 +27,9 @@ Merb::Router.prepare do
   match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
   
   resources :sessions
-  resources :users
+  resources :users do |user|
+    user.resources :callendar, :controller => "activities"
+  end
   resources :activities
   resources :clients
   resources :projects

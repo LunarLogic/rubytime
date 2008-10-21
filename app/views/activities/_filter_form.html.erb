@@ -1,0 +1,30 @@
+<%= form_for @search_criteria, :action => "/activities", :method => :get do %>
+<fieldset>
+  <p>
+    <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "All" %>
+  </p>
+  <p>
+    <%= select :project_id, :label => "Project", :collection => @projects.map { |p| [p.id, p.name] }, :prompt => "All" %>
+  </p>
+  <p>
+    <%= select :role_id, :label => "Role", :collection => @roles.map { |r| [r.id, r.name] }, :prompt => "All" %>
+  </p>
+  <p>
+    <%= select :user_id, :label => "User", :collection => @users.map { |u| [u.id, u.name] }, :prompt => "All" %>
+  </p>
+  <p>
+    <%= text_field :date_from, :label => "From", :class => 'datepicker', :size => 9 %>
+  </p>
+  <p>
+    <%= text_field :date_to, :label => "To", :class => 'datepicker', :size => 9  %>
+  </p>
+    <p>
+    <label for="search_criteria_invoiced">Invoiced?</label>
+    <%= check_box :invoiced  %>
+  </p>
+  <p>
+    <label>&nbsp;</label>
+    <%= submit "Filter", :class => "button" %>
+  </p>
+</fieldset>
+<% end =%>

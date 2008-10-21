@@ -24,6 +24,10 @@ class User
                      # according to lighthouse it's a bug in DM
   has n, :projects, :through => :activities
     
+  def self.active
+    all(:active => true)
+  end
+
   def self.authenticate(login, password)
     User.first(:login => login, :password_hash => password, :active => true)
   end
