@@ -48,6 +48,10 @@ class User
     user == self || user.is_admin?
   end
   
+  def calendar_viewable?(user)
+    user == self || user.is_admin?
+  end
+  
   def generate_password!
     if password.nil? && password_confirmation.nil?
       self.password = self.password_confirmation = Rubytime::Misc.generate_password 

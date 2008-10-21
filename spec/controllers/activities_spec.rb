@@ -8,9 +8,6 @@ describe Activities, "index action" do
   end
   
   it "should show 3 recent and rest of projects when adding new activity" do
-    #Project.all.destroy!
-    #Activity.all.destroy!
-    
     employee = Employee.gen
     other_employee = Employee.gen
     
@@ -104,5 +101,21 @@ describe Activities, "index action" do
   
   it "should match /users/3/calendar to Activites#calendar with user_id = 3" do
     request_to("/users/3/calendar", :get).should route_to(Activities, :calendar)
+  end
+  
+  it "should be successful for user requesting for his calendar" do
+    prepare_users
+    controller = as(@employee).dispatch_to(Activities, :calendar, :user_id => @employee.id).should be_successful
+  end
+  
+  it "should be successful for admin requesting for user's calendar" do
+    prepare_users    
+    as(:admin).dispatch_to(Activities, :calendar, :user_id => @employee.id).should be_successful
+  end
+  
+  it "should raise forbidden for trying to view other's calendars" do
+    block_should(raise_forbidden) do
+      as(Employee.gen).dispatch_to(Activities, :calendar, :user_id => Employee.gen.id)
+    end
   end
 end
