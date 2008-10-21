@@ -2,6 +2,8 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Activities, "index action" do
   include ControllerSpecsHelper
+  
+  before_all()
 
   it "should show 3 recent and rest of projects when adding new activity" do
     Project.all.destroy!
@@ -62,5 +64,9 @@ describe Activities, "index action" do
       :comments => "",
     })
     response.status.should == 200
+  end
+
+  it "should match /users/3/callendar to Activites#callendar with user_id = 3" do
+    request_to("/users")
   end
 end
