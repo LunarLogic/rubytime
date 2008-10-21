@@ -3,10 +3,10 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 describe Activities, "index action" do
   include ControllerSpecsHelper
   
-  before(:all) do
-    
+  it "should should match /activities to Activity#index" do
+    request_to("/activities", :get).should route_to(Activities, :index)
   end
-
+  
   it "should show 3 recent and rest of projects when adding new activity" do
     #Project.all.destroy!
     #Activity.all.destroy!
@@ -102,7 +102,7 @@ describe Activities, "index action" do
     end.should change(other_user.activities, :count).by(1)
   end
   
-  it "should match /users/3/callendar to Activites#callendar with user_id = 3" do
-    request_to("/users")
+  it "should match /users/3/calendar to Activites#calendar with user_id = 3" do
+    request_to("/users/3/calendar", :get).should route_to(Activities, :calendar)
   end
 end

@@ -25,11 +25,10 @@ Merb::Router.prepare do
   match("/login").to(:controller => "sessions", :action => "new").name(:login)
   match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
   match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
-  
+  match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
+
+  resources :users
   resources :sessions
-  resources :users do |user|
-    user.resources :callendar, :controller => "activities"
-  end
   resources :activities
   resources :clients
   resources :projects

@@ -8,7 +8,7 @@ class Users < Application
 
   def index
     @users = User.all
-   display @users
+    display @users
   end
 
   def show
