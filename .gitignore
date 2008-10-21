@@ -1,3 +1,4 @@
+nbproject
 config/database.yml
 log/*
 coverage/*
