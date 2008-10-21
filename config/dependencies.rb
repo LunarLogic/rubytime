@@ -1,3 +1,6 @@
+Gem.clear_paths
+Gem.path.unshift(Merb.root / "gems")
+
 dependency "merb-assets", "0.9.9"        # Provides link_to, asset_path, auto_link, image_tag methods (and lots more)
 dependency "merb-helpers", "0.9.9"       # Provides the form, date/time, and other helpers
 dependency "merb-mailer", "0.9.9"        # Integrates mail support via Merb Mailer
