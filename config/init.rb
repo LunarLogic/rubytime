@@ -25,5 +25,6 @@ Merb::BootLoader.after_app_loads do
   # This will get executed after your app's classes have been loaded.
   require Merb.root / "lib/rubytime/misc"
   require Merb.root / "config/local_config.rb"
+  require 'chronic'
   Application.send(:include, Utype::AuthenticatedSystem)
 end

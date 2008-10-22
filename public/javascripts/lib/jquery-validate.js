@@ -208,9 +208,9 @@ $.extend($.validator, {
 			}
 		},
 		onfocusout: function(element) {
-			if ( !this.checkable(element) && (element.name in this.submitted || !this.optional(element)) ) {
+      // if ( !this.checkable(element) && (element.name in this.submitted || !this.optional(element)) ) {
 				this.element(element);
-			}
+      // }
 		},
 		onkeyup: function(element) {
 		  // ML: hack for 'live' validation 
@@ -219,7 +219,7 @@ $.extend($.validator, {
       // }
 		},
 		onclick: function(element) {
-			if ( element.name in this.submitted )
+      // if ( element.name in this.submitted )
 				this.element(element);
 		},
 		highlight: function( element, errorClass ) {

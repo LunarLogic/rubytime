@@ -1,10 +1,10 @@
 class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
-
+    
   before :login_required
   before :load_projects,              :only => [:new, :edit, :create]
   before :load_users,                 :only => [:new, :edit, :create]
-  before :load_user,                   :only => [:calendar] 
+  before :load_user,                  :only => [:calendar] 
   before :check_calendar_viewability, :only => [:calendar]
   
   def index

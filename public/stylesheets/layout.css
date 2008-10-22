@@ -188,3 +188,33 @@
   font-size:13px;
   font-weight:900;
 }
+
+table#calendar { 
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+table#calendar thead {
+  background-color: #C1E1FF;
+}
+
+table#calendar tbody td {
+  border: 1px solid gray;
+  width: 80px;
+  height: 40px
+}
+
+table#calendar .day_of_the_month {
+  background-color: #C1E1FF;
+  border-bottom: 1px solid gray;
+  text-align: center;
+}
+
+table#calendar .activities {
+  padding: 4px;
+  height: 100%;
+}
+
+table#calendar .today .activities{
+  background-color: yellow;
+}

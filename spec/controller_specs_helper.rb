@@ -80,18 +80,22 @@ module ControllerSpecsHelper
   end
 
   def dispatch_to_as_admin(controller_klass, action, params = {}, &blk)
+    Merb.logger <<  "dispatch_to_as_admin is deprecated - user as(:admin).dispatch_to instead"
     as(:admin).dispatch_to(controller_klass, action, params, &blk)
   end
   
   def dispatch_to_as_employee(controller_klass, action, params = {}, &blk)
+    Merb.logger <<  "dispatch_to_as_employee is deprecated - user as(:employee).dispatch_to instead"
     as(:employee).dispatch_to(controller_klass, action, params, &blk)
   end
   
   def dispatch_to_as_client(controller_klass, action, params = {}, &blk)
+    Merb.logger <<  "dispatch_to_as_client is deprecated - user as(:client).dispatch_to instead"    
     as(:client).dispatch_to(controller_klass, action, params, &blk)
   end
 
   def dispatch_to_as_guest(controller_klass, action, params = {}, &blk)
+    Merb.logger <<  "dispatch_to_as_guest is deprecated - user as(:guest).dispatch_to instead"
     as(:guest).dispatch_to(controller_klass, action, params, &blk)
   end
   
