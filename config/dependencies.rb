@@ -1,6 +1,6 @@
-dependency "merb-assets", "0.9.9"        # Provides link_to, asset_path, auto_link, image_tag methods (and lots more)
-dependency "merb-helpers", "0.9.9"       # Provides the form, date/time, and other helpers
-dependency "merb-mailer", "0.9.9"        # Integrates mail support via Merb Mailer
+dependency "merb-assets", "0.9.10"        # Provides link_to, asset_path, auto_link, image_tag methods (and lots more)
+dependency "merb-helpers", "0.9.10"       # Provides the form, date/time, and other helpers
+dependency "merb-mailer", "0.9.10"        # Integrates mail support via Merb Mailer
 dependency "merb_has_flash"
 
 dependency "dm-core", "0.9.7"         # The datamapper ORM
