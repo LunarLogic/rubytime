@@ -83,3 +83,8 @@ label.radio {
 .add_criterium {
   display: none;
 }
+
+table.ui-datepicker td.ui-datepicker-current-day a {
+  background: white;
+  font-weight: bold;
+}

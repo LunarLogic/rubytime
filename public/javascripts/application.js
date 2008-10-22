@@ -40,9 +40,10 @@ function addOnSubmitForActivityPopup() {
 }
 
 $(function() {
-    /*$(".datepicker").datepicker({
-      dateFormat: "yy-mm-dd", showOn: "both", buttonImage: "/images/calendar.gif", buttonImageOnly: true });
-    */
+    $(".datepicker").datepicker({
+      dateFormat: "yy-mm-dd", duration: "", showOn: "both", 
+      buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
+    
     
     $(".add-activity a").click(function() {
         $("#add_activity").load("/activities/new", {}, function() {
