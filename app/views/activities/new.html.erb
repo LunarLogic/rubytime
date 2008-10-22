@@ -5,7 +5,7 @@
     <legend>New activity</legend>
     <% if current_user.is_admin? %>
       <p>
-        <%= select :user_id, :label => "User", :collection =>  @users.map { |u| [u.id, u.name] } %>
+        <%# select :user_id, :label => "User", :collection =>  @users.map { |u| [u.id, u.name] } %>
       </p>
     <% end %>
     <p>

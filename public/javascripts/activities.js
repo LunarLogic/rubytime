@@ -29,7 +29,7 @@ var Activities = {
     var currentParagraph = $(this).parents("p");
     var parent = currentParagraph.parent();
     currentParagraph.remove();
-    parent.find("p a.add_criterium:last").show();
+    parent.find("p."+currentParagraph.attr("class")+" a.add_criterium:last").show();
   }
 }  
 
