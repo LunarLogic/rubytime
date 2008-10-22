@@ -27,11 +27,11 @@ Merb::Router.prepare do
   match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
   match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
 
-  resources :users
+  resources :users, :collection => { "with_roles" => :get }
   resources :sessions
   resources :activities
   resources :clients
-  resources :projects
+  resources :projects, :collection => { "for_clients" => :get }
   resources :roles
   resources :invoices
 

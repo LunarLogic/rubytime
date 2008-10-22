@@ -1,37 +1,9 @@
-<%= form_for @search_criteria, :action => "/activities", :method => :get do %>
+<%= form_for @search_criteria, :action => "/activities/filter", :method => :get do %>
 <fieldset>
-  <% clients_collection = @search_criteria.clients.map { |c| [c.id, c.name] } %>
-  <% @search_criteria.client_id.size.times do |i| %>
-    <p class="client">
-      <%= select :"client_id_#{i}", :label => "Client", :class => "client_combo", 
-                                    :collection => clients_collection, :prompt => "All" %>
-      <%= criteria_icons(i, @search_criteria.client_id.size) %>
-    </p>
-  <% end %>
-  
-  <% projects_collection = @search_criteria.projects.map { |p| [p.id, p.name] } %>
-  <% @search_criteria.project_id.size.times do |i| %>
-    <p class="project">
-      <%= select :"project_id_#{i}", :label => "Project", :collection => projects_collection, :prompt => "All" %>
-      <%= criteria_icons(i, @search_criteria.project_id.size) %>
-    </p>
-  <% end %>
-  
-  <% roles_collection = @search_criteria.roles.map { |r| [r.id, r.name] } %>
-  <% @search_criteria.role_id.size.times do |i| %>
-    <p class="role">
-      <%= select :"role_id_#{i}", :label => "Role", :class => "role_combo", :collection => roles_collection, :prompt => "All" %>
-      <%= criteria_icons(i, @search_criteria.role_id.size) %>
-    </p>
-  <% end %>
-  
-  <% users_collection = @search_criteria.users.map { |u| [u.id, u.name] } %>
-  <% @search_criteria.user_id.size.times do |i| %>
-    <p class="user">
-      <%= select :"user_id_#{i}", :label => "User", :collection => users_collection, :prompt => "All" %>
-      <%= criteria_icons(i, @search_criteria.user_id.size) %>
-    </p>
-  <% end %>
+  <%= partial(:criteria_group, :with => :client, :as => :group) %>
+  <%= partial(:criteria_group, :with => :project, :as => :group) %>
+  <%= partial(:criteria_group, :with => :role, :as => :group) %>
+  <%= partial(:criteria_group, :with => :user, :as => :group) %>
   
   <p>
     <%= text_field :date_from, :label => "From", :class => 'datepicker', :size => 9 %>

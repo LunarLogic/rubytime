@@ -52,6 +52,12 @@ class Users < Application
     end
   end
   
+  def with_roles
+    only_provides :json
+    @search_criteria = SearchCriteria.new(params[:search_criteria])
+    display @search_criteria.users.map { |u| { :id => u.id, :name => u.name } }
+  end
+  
   protected
   
   def get_user
