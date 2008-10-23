@@ -1,9 +1,7 @@
-<% collection = @search_criteria.send(group.to_s.pluralize).map { |c| [c.id, c.name] } %>
-<% @search_criteria.send("#{group}_id").size.times do |i| %>
-  <p class="<%= group %>">
-    <%= select :"#{group}_id_#{i}", :label => group.to_s.camel_case, :class => "#{group}_combo", 
-                                  :collection => collection, :prompt => "All" %>
-    <%= link_to(image_tag("icons/minus.png"), "#", :class => "remove_criterium") %>
-    <%= link_to(image_tag("icons/plus.png"), "#", :class => "add_criterium") %> 
-  </p>
-<% end %>
+<p class="<%= group %>">
+  <%= select :"#{group}_id_0", :label => group.to_s.camel_case, :class => "#{group}_combo", 
+                               :collection => @search_criteria.send(group.to_s.pluralize).map { |o| [o.id, o.name] }, 
+                               :prompt => "All" %>
+  <%= link_to(image_tag("icons/minus.png"), "#", :class => "remove_criterium") %>
+  <%= link_to(image_tag("icons/plus.png"), "#", :class => "add_criterium") %> 
+</p>

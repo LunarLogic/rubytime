@@ -1,7 +1,7 @@
 class Projects < Application
 
   before :login_required
-  before :admin_required
+  before :admin_required, :exclude => [:for_clients]
   before :load_project, :only => [:edit, :update, :destroy, :show]
   before :load_clients, :only => [:new, :create, :edit, :update]
   
@@ -50,7 +50,7 @@ class Projects < Application
   
   def for_clients
     only_provides :json
-    @search_criteria = SearchCriteria.new(params[:search_criteria])
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     display @search_criteria.projects.map { |p| { :id => p.id, :name => p.name } }
   end
 
