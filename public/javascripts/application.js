@@ -44,11 +44,17 @@ $(function() {
       dateFormat: "yy-mm-dd", duration: "", showOn: "both", 
       buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
     
-    
     $(".add-activity a").click(function() {
-        $("#add_activity").load("/activities/new", {}, function() {
-          $("#add_activity").fadeIn("normal", addOnSubmitForActivityPopup);
-        });
+        var form = $("#add_activity_form");
+        if (form.length > 0) {
+          // hide the form
+          $("#add_activity").fadeOut(function() { form.remove() });
+        } else {
+          // show the form
+          $("#add_activity").load("/activities/new", {}, function() {
+            $("#add_activity").fadeIn("normal", addOnSubmitForActivityPopup);
+          });
+        }
         return false;
     });
 });
