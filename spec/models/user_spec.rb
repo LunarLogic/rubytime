@@ -71,6 +71,9 @@ describe Employee do
     lambda { Employee.make.save.should be_true }.should change(Employee, :count).by(1)
   end
   
+  it "should be an employee" do
+    Employee.make.is_employee?.should be_true
+  end
   
   it "shouldn't be admin" do
     Employee.new.is_admin?.should be_false 
@@ -131,5 +134,9 @@ describe ClientUser do
     client.projects.should include(project1)
     client.projects.should include(project2)
     client.projects.should include(project3)
+  end
+
+  it "shouldn't be an employee" do
+    ClientUser.make.is_employee?.should be_false
   end
 end

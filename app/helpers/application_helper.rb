@@ -4,14 +4,15 @@ module Merb
       time.strftime Rubytime::CONFIG[:time_format]
     end
     
-    def main_menu_items_for(user, controller_name)
+    #TODO remove user argument since current_user is available
+    def main_menu_items_for(user, controller_name) 
       return [] unless user
       main_menu = []
       
       selected = ['activities'].include?(controller_name)
       main_menu << { :title => "Activities", :path => resource(:activities), :selected => selected }
       
-      if user.is_admin? || user.instance_of?(ClientUser)
+      if user.is_admin? || user.is_client_user?
         selected = ['invoices'].include?(controller_name)
         main_menu << { :title => "Invoices", :path => resource(:invoices), :selected => selected }
       end
@@ -36,6 +37,10 @@ module Merb
         sub_menu << { :title => "Issued", :path => resource(:invoices), :selected => true }
         sub_menu << { :title => "Not issued", :path => resource(:invoices) }
       when 'activities'
+        if current_user.is_employee?
+          sub_menu << { :title => "Calendar", :path => url(:user_calendar, current_user.id), 
+                        :selected => action_name == 'calendar' }
+        end
       end
       sub_menu
     end

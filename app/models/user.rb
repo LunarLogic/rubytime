@@ -48,6 +48,10 @@ class User
     self.instance_of?(ClientUser)
   end
   
+  def is_employee?
+    self.instance_of?(Employee)
+  end
+  
   def editable_by?(user)
     user == self || user.is_admin?
   end

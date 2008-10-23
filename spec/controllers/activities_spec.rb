@@ -121,7 +121,7 @@ describe Activities, "index action" do
   it "should render calendar for current month if no date given in the request" do
     repository(:default) do # repository block for using identity map to good account
       employee = Employee.gen
-      employee.activities.should_receive(:for).with(:this_month)
+      employee.activities.should_receive(:for).with(:this_month).and_return([])
       as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id }).should be_successful
     end
   end
@@ -130,7 +130,7 @@ describe Activities, "index action" do
     repository(:default) do # same as above
       employee = Employee.gen
       year, month = %w(2007 10) # values in params are passed as strings
-      employee.activities.should_receive(:for).with(:year => year, :month => month)
+      employee.activities.should_receive(:for).with(:year => year, :month => month).and_return([])
       controller = as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id, :month => month, :year => year })
       controller.should be_successful
     end
