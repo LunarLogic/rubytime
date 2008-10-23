@@ -12,8 +12,8 @@ module Merb
       tags
     end
   
-    def activities_calendar
-      calendar_table(:year => Date.today.year, :month => Date.today.month, :first_day_of_week => 1) do |date|
+    def activities_calendar(year = Date.today.year, month = Date.today.month)
+      calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         %(<div class="day_of_the_month">#{date.mday}</div><div class="activities"></div>)
       end 
     end

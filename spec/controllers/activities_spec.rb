@@ -1,7 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Activities, "index action" do
-  include ControllerSpecsHelper
   
   it "should should match /activities to Activity#index" do
     request_to("/activities", :get).should route_to(Activities, :index)
@@ -117,5 +116,11 @@ describe Activities, "index action" do
     block_should(raise_forbidden) do
       as(Employee.gen).dispatch_to(Activities, :calendar, :user_id => Employee.gen.id)
     end
+  end
+
+  it "should render calendar for particular month" do
+    user = Employee.gen
+    # user.should_receive(:all).
+ # Activity.gen(:without_user)
   end
 end

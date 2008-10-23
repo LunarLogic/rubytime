@@ -27,6 +27,14 @@ class Activity
     all(:order => [:date.desc], :limit => n_)
   end
   
+  def self.for(options = {})
+    year  = options[:year] || Date.today.year
+    month = options[:month] || Date.today.month 
+    first_day, last_day = [Date.civil(year, month, 1), Date.civil(year, month, -1)]
+        
+    all :order => [:date.desc], :date.gt => first_day, :date.lt => last_day
+  end
+  
   # Sets hours and minutes properties
   #
   # It automatically converts hours to minutes allowing to 

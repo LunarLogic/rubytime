@@ -1,8 +1,6 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Activity do
-  before(:all) { Activity.all.destroy!; Invoice.all.destroy! }
-  
   it "should be created" do
     lambda do
       activity = Activity.make
@@ -32,9 +30,9 @@ describe Activity do
     10.downto(1) { |i| Activity.gen(:date => Date.today-(i*2), :user => Employee.gen, :project => Project.gen ) }
     recent_activities = Activity.recent(3)
     recent_activities.size.should == 3
-    recent_activities[0].date.should == Date.today-2
-    recent_activities[1].date.should == Date.today-4
-    recent_activities[2].date.should == Date.today-6
+    recent_activities[0].date.should == Date.today - 2
+    recent_activities[1].date.should == Date.today - 4
+    recent_activities[2].date.should == Date.today - 6
   end
   
   it "should parse time correctly" do

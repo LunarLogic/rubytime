@@ -1,8 +1,6 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Sessions do
-  include ControllerSpecsHelper
-  
   before(:each) { prepare_users }
   
   it "should route to Sessions#new from '/login'" do

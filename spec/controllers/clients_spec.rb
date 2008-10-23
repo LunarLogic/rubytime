@@ -1,8 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Clients, "index action" do
-  include ControllerSpecsHelper
-
   before(:each) { prepare_users }
   
   before(:all) { @client = Client.gen }
