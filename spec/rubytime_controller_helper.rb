@@ -95,6 +95,10 @@ module Rubytime
       def raise_forbidden
         raise_error Merb::Controller::Forbidden
       end
+
+      def raise_bad_request
+        raise_error Merb::Controller::BadRequest
+      end
     end
   end # Test
 end # Rubytime

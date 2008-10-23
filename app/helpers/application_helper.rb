@@ -35,6 +35,7 @@ module Merb
       when 'invoices'
         sub_menu << { :title => "Issued", :path => resource(:invoices), :selected => true }
         sub_menu << { :title => "Not issued", :path => resource(:invoices) }
+      when 'activities'
       end
       sub_menu
     end
