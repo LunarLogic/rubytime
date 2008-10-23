@@ -3,7 +3,10 @@ class Activities < Application
     
   before :login_required
   before :load_projects,              :only => [:new, :edit, :create]
-  before :load_users,                 :only => [:new, :edit, :create]
+  before :load_all_users,             :only => [:new, :edit, :create] # currently it needs to be named load_all_users 
+                                                                      # instead of just load_users, because of bug 
+                                                                      # (or design fault) in merb (1.0rc2) which confuses  
+                                                                      # load_users with load_user
   before :load_user,                  :only => [:calendar] 
   before :check_calendar_viewability, :only => [:calendar]
   
@@ -64,7 +67,7 @@ class Activities < Application
     @other_projects = Project.active - @recent_projects
   end
   
-  def load_users
+  def load_all_users
     @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
   end
 end # Activities
