@@ -75,4 +75,43 @@ describe Activity do
     a.valid?
     a.errors[:hours].should be_nil
   end
+
+  it "should raise an ArgumentError when #for called with something else than :now or Hash with :year and :month" do
+    args = [ :kiszonka, 
+             :nuwee, 
+             { :foo => "bar", :year => 123 },
+             { :month => 2, :kiszka => "ki5zk4"},
+             [:year, :month] ]
+    args.each do |arg|
+      block_should(raise_argument_error) { Employee.gen(:with_activities).activities.for(arg) }
+    end
+  end
+  
+  it "should raise an ArgumentError when #for called with :month not included in 1..12 or future year" do
+    [ { :month => 0, :year => 2007 },
+      { :month => 13, :year => 2004 },
+      { :month => 10, :year => Date.today.year + 1 } ].each do |date|
+        block_should(raise_argument_error) { Employee.gen(:with_activities).activities.for(date) }
+      end
+  end
+
+  it "should return activities for given month" do
+    day_number = Date.today.mday
+    employee = Employee.gen
+    previous_month_count = 8
+    this_month_count = 10
+    
+    previous_month = (month = Date.today.month) == 1 ? 12 : month -1
+    year = previous_month == 12 ? Date.today.year - 1 : Date.today.year
+     
+    previous_month_count.times do 
+      Activity.make(:without_user, :user => employee, :date => Date.today - (day_number + rand(25))).save.should be_true
+    end
+    this_month_count.times do
+      Activity.make(:without_user, :user => employee, :date => Date.today - (rand(day_number) - 1)).save.should be_true
+    end
+    # WTF? why it does work sometimes and sometimes doesn't?
+    employee.reload.activities.for(:this_month).count.should == this_month_count
+    employee.reload.activities.for(:year => year, :month => previous_month).count.should == previous_month_count
+  end
 end

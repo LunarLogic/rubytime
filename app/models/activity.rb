@@ -27,12 +27,21 @@ class Activity
     all(:order => [:date.desc], :limit => n_)
   end
   
-  def self.for(options = {})
-    year  = options[:year] || Date.today.year
-    month = options[:month] || Date.today.month 
-    first_day, last_day = [Date.civil(year, month, 1), Date.civil(year, month, -1)]
-        
-    all :order => [:date.desc], :date.gt => first_day, :date.lt => last_day
+  # Needed only for User#activities
+  def self.for(time)
+    year, month = case time
+                  when :this_month
+                    [Date.today.year, Date.today.month]
+                  when Hash
+                    [time[:year], time[:month]]
+                  end
+
+    raise ArgumentError.new("You have to pass either :now or a Hash with :year and :month") if year.nil? || month.nil?
+    if !(1..12).include?(month) || year > Date.today.year
+      raise ArgumentError.new("Month should be in range 1-12 and year not greater than #{Date.today.year}") 
+    end
+    
+    all :order => [:date.desc], :date.gt => Date.civil(year, month, 1), :date.lt => Date.civil(year, month, -1)
   end
   
   # Sets hours and minutes properties

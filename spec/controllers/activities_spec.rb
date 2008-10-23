@@ -120,7 +120,7 @@ describe Activities, "index action" do
 
   it "should render calendar for particular month" do
     user = Employee.gen
-    # user.should_receive(:all).
- # Activity.gen(:without_user)
+    user.activities.should_receive(:for).with(:this_month)
+    as(user).dispatch_to(Activities, :calendar).should be_successful
   end
 end

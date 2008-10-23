@@ -34,6 +34,10 @@ module Rubytime
       def block_should_not(matcher, &blk)
         BlockMatcher.new.and_not(matcher, &blk)
       end
+
+      def raise_argument_error
+        raise_error ArgumentError
+      end
     end
   end
 end
