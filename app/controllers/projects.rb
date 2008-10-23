@@ -48,6 +48,12 @@ class Projects < Application
     end
   end
   
+  def for_clients
+    only_provides :json
+    @search_criteria = SearchCriteria.new(params[:search_criteria])
+    display @search_criteria.projects.map { |p| { :id => p.id, :name => p.name } }
+  end
+
   protected
 
   def load_project

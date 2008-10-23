@@ -1,0 +1,8 @@
+<% collection = @search_criteria.send(group.to_s.pluralize).map { |c| [c.id, c.name] } %>
+<% @search_criteria.send("#{group}_id").size.times do |i| %>
+  <p class="<%= group %>">
+    <%= select :"#{group}_id_#{i}", :label => group.to_s.camel_case, :class => "#{group}_combo", 
+                                  :collection => collection, :prompt => "All" %>
+    <%= criteria_icons(i, @search_criteria.send("#{group}_id").size) %>
+  </p>
+<% end %>
