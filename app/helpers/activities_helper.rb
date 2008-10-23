@@ -3,15 +3,6 @@ require 'date'
 module Merb
   module ActivitiesHelper
 
-    def criteria_icons(i, size)
-      tags = ""
-      tags << link_to(image_tag("icons/minus.png"), "#", :class => "remove_criterium")
-                                                     #:style => "display: #{ i > 0 ? 'inline' : '' }")
-      tags << link_to(image_tag("icons/plus.png"), "#", :class => "add_criterium") 
-                                                    #:style => "display: #{ i == size-1 ? 'inline' : '' }")
-      tags
-    end
-  
     def activities_calendar(year = Date.today.year, month = Date.today.month)
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         %(<div class="day_of_the_month">#{date.mday}</div><div class="activities"></div>)

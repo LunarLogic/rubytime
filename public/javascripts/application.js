@@ -25,7 +25,6 @@ function addOnSubmitForActivityPopup() {
   });
   $("#add_activity_form").focusFirstBlank();
   $("#add_activity_form").submit(function() {
-      $("#add_activity_form input[type=submit]").attr("disabled", "false");
       var params = $("#add_activity_form").serializeArray();
       $("#add_activity").load($("#add_activity_form").url(), params, function(responseText, textStatus) {
           if (responseText == '') {
@@ -35,6 +34,7 @@ function addOnSubmitForActivityPopup() {
             addOnSubmitForActivityPopup();
           }
       });
+      $("#add_activity_form input[type=submit]").attr("disabled", "true");
       return false;
   });
 }

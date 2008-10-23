@@ -9,10 +9,10 @@ var Activities = {
   _addOnFilterSubmit: function() {
     var form = $("#activities_filter form:first");
     form.submit(function() {
-      //form.find("input[type=submit]").attr("disabled", "true");
+      //form.find("input[type=submit]").attr("disabled", "true"); // it would prevent form to submit in IE probably
       var params = form.serializeArray();
       $("#primary").load(form.url(), params, function() {
-        //form.find("input[type=submit]").attr("disabled", "false");
+        //form.find("input[type=submit]").removeAttr("disabled");
       });
       return false;
     });

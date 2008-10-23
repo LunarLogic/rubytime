@@ -3,6 +3,7 @@
   <p class="<%= group %>">
     <%= select :"#{group}_id_#{i}", :label => group.to_s.camel_case, :class => "#{group}_combo", 
                                   :collection => collection, :prompt => "All" %>
-    <%= criteria_icons(i, @search_criteria.send("#{group}_id").size) %>
+    <%= link_to(image_tag("icons/minus.png"), "#", :class => "remove_criterium") %>
+    <%= link_to(image_tag("icons/plus.png"), "#", :class => "add_criterium") %> 
   </p>
 <% end %>
