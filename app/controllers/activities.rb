@@ -47,6 +47,17 @@ class Activities < Application
   end
 
   def calendar
+    date = if params.has_key?("year") && params.has_key?("month")
+             { :year => params[:year], :month => params[:month] }
+           else
+             :this_month
+           end
+    @activities = begin
+                    @user.activities.for(date)
+                  rescue ArgumentError
+                    raise BadRequest
+                  end
+    @activities_by_date = @activities.group_by { |a| a.date }
     render
   end
   
