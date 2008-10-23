@@ -9,10 +9,10 @@ var Activities = {
   _addOnFilterSubmit: function() {
     var form = $("#activities_filter form:first");
     form.submit(function() {
-      //form.find("input[type=submit]").attr("disabled", "true");
+      //form.find("input[type=submit]").attr("disabled", "true"); // it would prevent form to submit in IE probably
       var params = form.serializeArray();
       $("#primary").load(form.url(), params, function() {
-        //form.find("input[type=submit]").attr("disabled", "false");
+        //form.find("input[type=submit]").removeAttr("disabled");
       });
       return false;
     });
@@ -46,7 +46,7 @@ var Activities = {
     }
   },
 
-  _updateIcons: function(group, select) {
+  _updateIcons: function(group) {
     var criteria = $("p." + group);
     if (criteria.length == 1) { 
       // single criteria of this kind
@@ -68,16 +68,12 @@ var Activities = {
       $("p." + group + " a.remove_criterium:not(:first)").show();
 
       // show '+' button
-      if (select && (Activities._getUnselectedOptions(group, select).length == 0)) {
-        $("p." + group + " a.add_criterium:last").hide();
-      } else {
-        $("p." + group + " a.add_criterium:last").show();
-      }
+      $("p." + group + " a.add_criterium:last").show();
     }
   },
-  
+
   _getUnselectedOptions: function(group, select) {
-    var siblingSelects = select.parent().parent().find("p." + group + " select");
+    var siblingSelects = select.parent().siblings("p." + group).find("select");
     var unselected = select.find("option").filter(function() {
       return siblingSelects.find("option:selected[value="+$(this).val()+"]").length == 0;
     });
@@ -117,11 +113,12 @@ var Activities = {
 
     // hide, insert into dom, select first unselected item and finally show
     newParagraph.hide().insertAfter(currentParagraph);
-    Activities._getUnselectedOptions(group, select).filter(":first").attr("selected", "selected"); // TODO: remove option from option:first
+    var unselected = Activities._getUnselectedOptions(group, select);
+    unselected.filter(":first").attr("selected", "selected");
     newParagraph.show();
     
     Activities._reloadOtherCriteria(group);
-    Activities._updateIcons(group, select);
+    Activities._updateIcons(group);
 
     return false;
   },
@@ -130,9 +127,9 @@ var Activities = {
     var currentParagraph = $(this).parents("p");
     var group = currentParagraph.attr("class");
     currentParagraph.remove();
-    Activities._updateIcons(group);
     Activities._reloadOtherCriteria(group);
-
+    Activities._updateIcons(group);
+    
     return false;
   }
 }  

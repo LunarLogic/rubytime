@@ -1,9 +1,16 @@
 <%= form_for @search_criteria, :action => "/activities/filter", :method => :get do %>
 <fieldset>
-  <%= partial(:criteria_group, :with => :client, :as => :group) %>
+
+  <% unless current_user.is_client_user? %>
+    <%= partial(:criteria_group, :with => :client, :as => :group) %>
+  <% end %>
+  
   <%= partial(:criteria_group, :with => :project, :as => :group) %>
-  <%= partial(:criteria_group, :with => :role, :as => :group) %>
-  <%= partial(:criteria_group, :with => :user, :as => :group) %>
+  
+  <% if current_user.is_admin? || current_user.is_client_user? %>
+    <%= partial(:criteria_group, :with => :role, :as => :group) %>
+    <%= partial(:criteria_group, :with => :user, :as => :group) %>
+  <% end %>
   
   <p>
     <%= text_field :date_from, :label => "From", :class => 'datepicker', :size => 9 %>

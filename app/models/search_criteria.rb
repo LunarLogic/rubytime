@@ -2,13 +2,14 @@ class SearchCriteria # < OpenStruct
   attr_reader :date_from
   attr_reader :date_to
   #attr_reader :client_id
-  #attr_reader :project_id
-  #attr_reader :role_id
+  attr_reader :project_id
+  attr_reader :role_id
   #attr_reader :user_id
   attr_accessor :invoiced
   attr_reader :errors
   
-  def initialize(attrs)
+  def initialize(attrs, current_user)
+    @current_user = current_user
     @invoiced = "all"
     @user_id = []
     @role_id = []
@@ -20,15 +21,16 @@ class SearchCriteria # < OpenStruct
     @errors = DataMapper::Validate::ValidationErrors.new
   end
   
-  [:user_id, :role_id, :client_id, :project_id].each do |attr|
-    define_method attr do
-      value = instance_variable_get("@#{attr}")
-      value.empty? ? [""] : value
-    end
+  def client_ids
+    @current_user.is_client_user? ? [@current_user.client_id] : @client_id
   end
-
-  def user_id
-    @user_id.empty? ? [""] : @user_id
+  
+  def user_ids
+    if @current_user.is_admin? || @current_user.is_client_user?
+      @user_id.empty? ? self.users.map { |u| u.id } : @user_id
+    else
+      [@current_user.id]
+    end
   end
 
   def date_from=(date)
@@ -46,7 +48,7 @@ class SearchCriteria # < OpenStruct
   def projects
     return @projects if @projects
     conditions = {}
-    conditions.merge!(:client_id => @client_id) unless @client_id.empty? 
+    conditions.merge!(:client_id => self.client_ids) unless self.client_ids.empty?
     @projects = Project.active.all({:order => [:name]}.merge(conditions))
   end
   
@@ -57,16 +59,14 @@ class SearchCriteria # < OpenStruct
   def users
     return @users if @users
     conditions = {}
-    p @role_id
     conditions.merge!(:role_id => @role_id) unless @role_id.empty? 
     @users = Employee.active.all({:order => [:name]}.merge(conditions))
   end
   
   def activities
-    user_ids = @user_id.empty? ? self.users.map { |u| u.id } : @user_id
     project_ids = @project_id.empty? ? self.projects.map { |p| p.id } : @project_id
     conditions = {}
-    conditions.merge!(:user_id => user_ids) 
+    conditions.merge!(:user_id => self.user_ids) 
     conditions.merge!(:project_id => project_ids) 
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
@@ -87,7 +87,8 @@ class SearchCriteria # < OpenStruct
       collection.compact!
       arg
     else # getter
-      collection.send("[]", i)
+      #collection.send("[]", i)
+      nil
     end
   end
 end

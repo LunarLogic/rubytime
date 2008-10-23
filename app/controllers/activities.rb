@@ -11,13 +11,13 @@ class Activities < Application
   before :check_calendar_viewability, :only => [:calendar]
   
   def index
-    @search_criteria = SearchCriteria.new(params[:search_criteria])
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @activities = @search_criteria.activities
     render
   end
   
   def filter
-    @search_criteria = SearchCriteria.new(params[:search_criteria])
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @activities = @search_criteria.activities
     render :index, :layout => false
   end
