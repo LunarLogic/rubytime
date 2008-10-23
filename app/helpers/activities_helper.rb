@@ -5,6 +5,7 @@ module Merb
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         html =  %(<div class="day_of_the_month">#{date.mday}</div><div class="activities">)
         html << @activities_by_date[date].map { |a| a.comments }.join("\n") unless @activities_by_date[date].nil?
+        html << %(<a class="add_activity" id="#{format_date date}">+</a>)
         html << "</div>"
       end 
     end

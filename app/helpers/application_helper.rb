@@ -4,6 +4,10 @@ module Merb
       time.strftime Rubytime::CONFIG[:time_format]
     end
     
+    def format_date(date)
+      date.strftime Rubytime::CONFIG[:date_format]
+    end
+    
     #TODO remove user argument since current_user is available
     def main_menu_items_for(user, controller_name) 
       return [] unless user

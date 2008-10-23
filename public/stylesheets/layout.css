@@ -215,6 +215,6 @@ table#calendar .activities {
   height: 100%;
 }
 
-table#calendar .today .activities{
-  background-color: yellow;
+table#calendar a.add_activity {
+  display: block;
 }

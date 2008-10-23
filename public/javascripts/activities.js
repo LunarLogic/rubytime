@@ -1,9 +1,21 @@
 var Activities = {
   init: function() {
     Activities._addOnFilterSubmit();
-    $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() { Activities.onSelectChanged($(this)) });
+    $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() { Activities.onSelectChanged($(this)); });
     $(".add_criterium").click(Activities.addCriterium);
     $(".remove_criterium").click(Activities.removeCriterium);
+    $("#calendar_container").click(Activities._showAddActivity);
+  },
+  
+  _showAddActivity: function(e) {
+    var target = $(e.target);
+    if(target.hasClass('add_activity'))
+      // TODO: extract showing activities form this from here and application.js 
+      var activityFormContainer = $("#add_activity");
+      activityFormContainer.load("/activities/new", {}, function() {
+        activityFormContainer.find('#activity_date').attr('value', target.attr('id'));
+        activityFormContainer.fadeIn("normal", addOnSubmitForActivityPopup);
+      });
   },
   
   _addOnFilterSubmit: function() {
@@ -54,7 +66,7 @@ var Activities = {
       var first_select = $("p." + group + " select:first");
       if (first_select.val() == '') { 
         // 'All' selected - hiding '+' button
-        first_select.siblings('a.add_criterium').hide()
+        first_select.siblings('a.add_criterium').hide();
       } else { 
         // particular item selected - showing '+' button
         first_select.siblings('a.add_criterium').show();
@@ -103,8 +115,8 @@ var Activities = {
     // remove blank 'All' option
     newParagraph.find("option[value='']").remove();
     
-    var select = newParagraph.find("select")
-    var label = newParagraph.find("label")
+    var select = newParagraph.find("select");
+    var label = newParagraph.find("label");
     
     // increment id of new paragraph
     select.attr("id", select.attr("id").replace(currentCriteriumNumber, newCriteriumNumber ));
@@ -132,6 +144,6 @@ var Activities = {
     
     return false;
   }
-}  
+};
 
 $(Activities.init);
