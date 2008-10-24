@@ -54,7 +54,7 @@ class SearchCriteria
   # Returns all projects for found clients  
   def all_projects(conditions={})
     return @all_projects if @all_projects
-    conditions.merge!(:client_id => self.found_clients.map(&:id)) unless self.found_clients.empty?
+    conditions.merge!(:client_id => get_ids(self.found_clients)) unless self.found_clients.empty?
     @all_projects = Project.active.all({ :order => [:name] }.merge(conditions))
   end
   
@@ -65,7 +65,7 @@ class SearchCriteria
   # Returns all users for found roles
   def all_users(conditions={})
     return @all_users if @all_users
-    conditions.merge!(:role_id => self.found_roles.map(&:id)) unless self.found_roles.empty? 
+    conditions.merge!(:role_id => get_ids(self.found_roles)) unless self.found_roles.empty? 
     @all_users = Employee.active.all({ :order => [:name] }.merge(conditions))
   end
   
@@ -105,12 +105,16 @@ class SearchCriteria
   
   def found_activities
     conditions = {}
-    conditions.merge!(:user_id => self.found_users.map(&:id)) 
-    conditions.merge!(:project_id => self.found_projects.map(&:id)) 
+    conditions.merge!(:user_id => get_ids(self.found_users)) 
+    conditions.merge!(:project_id => get_ids(self.found_projects)) 
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
     @invoiced == "invoiced" ? conditions.merge!(:invoice_id.not => nil) : conditions.merge!(:invoice_id => nil)
     Activity.all({:order => [:date.desc]}.merge(conditions))
   end
 
+protected
+  def get_ids(collection) # does symbol to proc work in merb?
+    collection.map { |o| o.id }
+  end
 end
