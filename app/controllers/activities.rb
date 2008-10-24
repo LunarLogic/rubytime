@@ -12,16 +12,13 @@ class Activities < Application
   
   def index
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    #@clients = @search_criteria.selected_clients #Client.active.all(:order => [:name])
-    #@projects = @search_criteria.all_projects_for_selected_clients #Client.active.all(:order => [:name])
-    #@roles = Role
-    @activities = @search_criteria.activities
+    @activities = @search_criteria.found_activities
     render
   end
   
   def filter
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    @activities = @search_criteria.activities
+    @activities = @search_criteria.found_activities
     render :index, :layout => false
   end
   

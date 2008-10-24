@@ -52,6 +52,14 @@ class User
     self.instance_of?(Employee)
   end
   
+  def can_see_users?
+    self.is_admin? || self.is_client_user?
+  end
+
+  def can_see_clients?
+    self.is_admin? || self.is_employee? 
+  end
+  
   def editable_by?(user)
     user == self || user.is_admin?
   end

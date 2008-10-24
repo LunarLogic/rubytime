@@ -117,3 +117,7 @@ table.activities td.summary {
 table.activities td.right {
   text-align: right;
 }
+
+p.selection {
+  font-weight: bold;
+}
