@@ -88,3 +88,32 @@ table.ui-datepicker td.ui-datepicker-current-day a {
   background: white;
   font-weight: bold;
 }
+
+table.activities {
+  width: 100%;
+}
+
+table.activities th {
+  background-color: #C1E1FF;
+  font-weight: bold;
+}
+
+table.activities td, table.activities th {
+  padding: 10px;
+}
+
+table.activities tr.odd td {
+}
+
+table.activities tr.even td {
+  background-color: #EEEEEE;
+}
+
+table.activities td.summary {
+  background-color: #C1E1FF;
+  font-weight: bold;
+}
+
+table.activities td.right {
+  text-align: right;
+}

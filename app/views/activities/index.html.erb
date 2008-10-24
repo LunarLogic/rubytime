@@ -6,11 +6,31 @@
   No activities found for selected critieria. 
 <% else %>
   Found <%= @activities.size %> matching activities.<br/><br/>
-  <% @activities.each do |activity| %>
-    <%= activity.project.name %>, 
-    <%= activity.date %>: 
-    <%= activity.user.name %> 
-    (<%= activity.minutes / 60.0 %>h)
-    <br/>
-  <% end %>
+  <table class="activities" cellspacing="0" cellpadding="0">
+    <tr>
+      <th>Project (Client)</th>
+      <th>User (Role)</th>
+      <th>Date</th>
+      <th>Hours</th>
+    </tr>
+    <% @activities.each_with_index do |activity,i| %>
+      <tr class="<%= i % 2 == 0 ? 'odd' : 'even' %>">
+        <td>
+          <%= link_to(activity.project.name, url(:project, activity.project)) %>
+          (<%= link_to(activity.project.client.name, url(:client, activity.project.client)) %>)
+        </td>
+        <td>
+          <%= link_to(activity.user.name, url(:user, activity.user)) %>
+          (<%= activity.user.role.name %>)
+        </td>
+        <td><%= activity.date %></td>
+        <td class="right"><%= format_minutes(activity.minutes) %></td>
+      </tr>
+    <% end %>
+    <tr class="odd">
+      <td colspan="2"></td>
+      <td class="summary">Sum:</td>
+      <td class="summary right"><%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %></td>
+    </tr>
+  </table>
 <% end %>

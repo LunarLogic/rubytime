@@ -5,6 +5,10 @@ var Activities = {
     $(".add_criterium").click(Activities.addCriterium);
     $(".remove_criterium").click(Activities.removeCriterium);
     $("#calendar_container").click(Activities._showAddActivity);
+    Activities._updateIcons('client');
+    Activities._updateIcons('project');
+    Activities._updateIcons('role');
+    Activities._updateIcons('user');
   },
   
   _showAddActivity: function(e) {
@@ -39,6 +43,7 @@ var Activities = {
       }
       $("p." + group + ":not(:first)").remove();
       $("p." + group + " select").html(options);
+      Activities._updateIcons(group);
     });
   },
 
@@ -99,8 +104,8 @@ var Activities = {
       // remove additional criteria of the same kind
       currentParagraph.siblings("p." + group).remove();
     }
-    Activities._updateIcons(currentParagraph.attr("class"));
     Activities._reloadOtherCriteria(group);
+    Activities._updateIcons(currentParagraph.attr("class"));
   },
   
   addCriterium: function() {

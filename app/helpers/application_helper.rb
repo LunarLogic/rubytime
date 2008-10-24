@@ -7,7 +7,12 @@ module Merb
     def format_date(date)
       date.strftime Rubytime::CONFIG[:date_format]
     end
-    
+
+    def format_minutes(minutes)
+      return "0" unless minutes
+      format("%d:%.2d", minutes / 60, minutes % 60)
+    end
+  
     #TODO remove user argument since current_user is available
     def main_menu_items_for(user, controller_name) 
       return [] unless user
