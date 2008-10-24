@@ -6,6 +6,11 @@
   No activities found for selected critieria. 
 <% else %>
   Found <%= @activities.size %> matching activities.<br/><br/>
+  
+  <%# if @search_criteria.user_ids.size == 1 %>
+    <strong>User: <%= @search_criteria.selected_users.first.name %></strong><br/> 
+  <%# end %>
+  
   <table class="activities" cellspacing="0" cellpadding="0">
     <tr>
       <th>Project (Client)</th>

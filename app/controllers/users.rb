@@ -52,10 +52,11 @@ class Users < Application
     end
   end
   
+  # Returns all users matching current selected roles
   def with_roles
     only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    display @search_criteria.users.map { |u| { :id => u.id, :name => u.name } }
+    display @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } }
   end
   
   protected
