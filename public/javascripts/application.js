@@ -1,4 +1,9 @@
 // TODO clean up application.js
+var EVENTS = {
+  activities_changed: 'activitites:changed',
+  add_activity_clicked: 'activitites:add_clicked'
+};
+
 $(function() {
   $.ajaxSetup({
       error: function(xhr) {
@@ -29,7 +34,7 @@ function addOnSubmitForActivityPopup() {
       $("#add_activity").load($("#add_activity_form").url(), params, function(responseText, textStatus) {
           if (responseText == '') {
             $("#add_activity").hide();
-            alert('Activity added successfully!');
+            $(document).trigger(EVENTS.activities_changed);
           } else {
             addOnSubmitForActivityPopup();
           }
@@ -44,15 +49,18 @@ $(function() {
       dateFormat: "yy-mm-dd", duration: "", showOn: "both", 
       buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
     
-    $(".add-activity a").click(function() {
+    $(".add-activity a").click(function() { $(document).trigger(EVENTS.add_activity_clicked); });
+    $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
         var form = $("#add_activity_form");
-        if (form.length > 0) {
-          // hide the form
-          $("#add_activity").fadeOut(function() { form.remove() });
+
+        // don't hide form if memory.date which means click on calendar form
+        if (form.length > 0 && !memory && !memory.date) {
+          $("#add_activity").fadeOut(function() { form.remove(); });
         } else {
-          // show the form
           $("#add_activity").load("/activities/new", {}, function() {
             $("#add_activity").fadeIn("normal", addOnSubmitForActivityPopup);
+            if (memory && memory.date)
+              $('#activity_date').attr('value', memory.date);
           });
         }
         return false;
