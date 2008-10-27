@@ -54,6 +54,7 @@ class Users < Application
   
   # Returns all users matching current selected roles
   def with_roles
+    raise Forbidden unless current_user.is_admin? || current_user.is_client_user?
     only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     display @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } }

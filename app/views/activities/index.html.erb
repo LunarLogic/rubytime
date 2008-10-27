@@ -44,7 +44,7 @@
         <th>User</th>
       <% end %>
       <th>Date</th>
-      <th>Hours</th>
+      <th class="right">Hours</th>
     </tr>
     <% @activities.each_with_index do |activity,i| %>
       <tr class="<%= i % 2 == 0 ? 'odd' : 'even' %>">

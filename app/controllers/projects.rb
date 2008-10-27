@@ -50,6 +50,7 @@ class Projects < Application
   
   # Returns all projects matching current selected clients
   def for_clients
+    raise Forbidden if current_user.is_client_user?
     only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     display @search_criteria.all_projects.map { |p| { :id => p.id, :name => p.name } }

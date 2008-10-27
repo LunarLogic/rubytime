@@ -8,6 +8,7 @@ class Client
   property :active,       Boolean, :nullable => false, :default => true
   
   has n, :projects
+  has n, :activities, :through => :projects
   has n, :invoices
   has n, :client_users
   

@@ -1,5 +1,5 @@
 <p class="<%= group %>">
-  <%= select :"#{group}_id_0", :label => group.to_s.camel_case, :class => "#{group}_combo", 
+  <%= select :name => "search_criteria[#{group}_id][]", :label => group.to_s.camel_case, :class => "#{group}_combo", 
                                :collection => @search_criteria.send("all_#{group.to_s.pluralize}").map { |o| [o.id, o.name] }, 
                                :prompt => "All" %>
   <%= link_to(image_tag("icons/minus.png"), "#", :class => "remove_criterium") %>
