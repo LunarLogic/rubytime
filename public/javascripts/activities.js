@@ -4,22 +4,30 @@ var Activities = {
     $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() { Activities.onSelectChanged($(this)); });
     $(".add_criterium").click(Activities.addCriterium);
     $(".remove_criterium").click(Activities.removeCriterium);
-    $("#calendar_container").click(Activities._showAddActivity);
+    $("div[id$=calendar][id^=users]").click(Activities._showAddActivity);
     Activities._updateIcons('client');
     Activities._updateIcons('project');
     Activities._updateIcons('role');
     Activities._updateIcons('user');
+    $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
+    $(document).bind(EVENTS.activities_changed, function() { alert('Activity added successfully!'); });
   },
   
   _showAddActivity: function(e) {
     var target = $(e.target);
     if(target.hasClass('add_activity'))
+      $(document).trigger(EVENTS.add_activity_clicked, { date: target.attr('id') });
       // TODO: extract showing activities form this from here and application.js 
-      var activityFormContainer = $("#add_activity");
-      activityFormContainer.load("/activities/new", {}, function() {
-        activityFormContainer.find('#activity_date').attr('value', target.attr('id'));
-        activityFormContainer.fadeIn("normal", addOnSubmitForActivityPopup);
-      });
+      // var activityFormContainer = $("#add_activity");
+      // activityFormContainer.load("/activities/new", {}, function() {
+      //   activityFormContainer.find('#activity_date').attr('value', target.attr('id'));
+      //   activityFormContainer.fadeIn("normal", addOnSubmitForActivityPopup);
+      // });
+  },
+  
+  _reloadCalendar: function(e) {
+    var container = $("div[id$=calendar][id^=user]");
+    container.load('/' + container.attr('id').replace(/_/g, '/'));
   },
   
   _addOnFilterSubmit: function() {

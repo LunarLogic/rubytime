@@ -47,18 +47,23 @@ class Activities < Application
   end
 
   def calendar
-    date = if params.has_key?("year") && params.has_key?("month")
+    @date = if params.has_key?("year") && params.has_key?("month")
              { :year => params[:year], :month => params[:month] }
            else
              :this_month
            end
-    @activities = begin
-                    @user.activities.for(date)
+    @activities = begin 
+                    @user.activities.for(@date) 
                   rescue ArgumentError
                     raise BadRequest
                   end
-    @activities_by_date = @activities.group_by { |a| a.date }
-    render
+    @activities_by_date = @activities.group_by { |activity| activity.date }
+    
+    if request.xhr?
+      partial 'calendar_table'
+    else
+      render
+    end
   end
   
   protected

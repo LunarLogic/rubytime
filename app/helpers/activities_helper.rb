@@ -1,10 +1,15 @@
 module Merb
   module ActivitiesHelper
 
-    def activities_calendar(year = Date.today.year, month = Date.today.month)
+    def activities_calendar(options = {})
+      raise ArgumentError.new("options[:activities] is a mandatory argument") unless options.has_key?(:activities)
+      year = options[:year] || Date.today.year
+      month = options[:month] || Date.today.month
+      activities = options[:activities]
+      
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         html =  %(<div class="day_of_the_month">#{date.mday}</div><div class="activities">)
-        html << @activities_by_date[date].map { |a| a.comments }.join("\n") unless @activities_by_date[date].nil?
+        html << activities[date].map { |a| a.comments }.join("\n") unless activities[date].nil?
         html << %(<a class="add_activity" id="#{format_date date}">+</a>)
         html << "</div>"
       end 
@@ -16,7 +21,7 @@ module Merb
       raise(ArgumentError, "No year given")  unless options.has_key?(:year)
       raise(ArgumentError, "No month given") unless options.has_key?(:month)
     
-      block ||= Proc.new {|d| nil}
+      block ||= Proc.new { |d| nil }
     
       defaults = {
         :table_id => "calendar", 
