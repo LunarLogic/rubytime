@@ -111,8 +111,6 @@ var Activities = {
   addCriterium: function() {
     var currentParagraph = $(this).parents("p");
     var group = currentParagraph.attr("class");
-    var currentCriteriumNumber = $(this).prevAll("select").attr("id").match("\\d+")[0];
-    var newCriteriumNumber = currentCriteriumNumber * 1 + 1;
     
     // clone current paragraph to new (with events)
     var newParagraph = currentParagraph.clone(true);
@@ -123,11 +121,6 @@ var Activities = {
     var select = newParagraph.find("select");
     var label = newParagraph.find("label");
     
-    // increment id of new paragraph
-    select.attr("id", select.attr("id").replace(currentCriteriumNumber, newCriteriumNumber ));
-    select.attr("name", select.attr("name").replace(currentCriteriumNumber, newCriteriumNumber));
-    label.attr("for", label.attr("for").replace(currentCriteriumNumber, newCriteriumNumber));
-
     // hide, insert into dom, select first unselected item and finally show
     newParagraph.hide().insertAfter(currentParagraph);
     var unselected = Activities._getUnselectedOptions(group, select);

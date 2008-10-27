@@ -95,5 +95,20 @@ describe Projects do
     lambda { dispatch_to_as_admin(Projects, :destroy, :id => 12345678)}.should raise_not_found
   end
 
-  # TODO
+  # get projects for clients
+  
+  it "should allow admin to see projects for specific clients" do
+    as(:admin).dispatch_to(Projects, :for_clients, :search_criteria => {}).status.should == 200
+  end
+  
+  it "should allow employee to see projects for specific clients" do
+    as(:employee).dispatch_to(Projects, :for_clients, :search_criteria => {}).status.should == 200
+  end
+
+  it "shouldn't allow client to see projects for specific clients" do
+    block_should(raise_forbidden) do
+      as(:client).dispatch_to(Projects, :for_clients, :search_criteria => {})
+    end
+  end
+
 end

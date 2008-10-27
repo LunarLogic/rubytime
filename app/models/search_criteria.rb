@@ -31,17 +31,10 @@ class SearchCriteria
     @date_to = Date.parse(date) rescue nil
   end
   
-  # Accessors for multiple user_id_X, project_id_X, client_id_X and role_id_X properties
-  def method_missing(name, arg=nil)
-    return super unless name.to_s =~ /(user|project|client|role)_id_(\d+)/
-    i = $2.to_i
-    collection = instance_variable_get("@selected_#{$1}_ids")
-    if arg # setter
-      collection.send("[]=", i, arg.to_i) unless arg.blank?
-      collection.compact!
-      arg
-    else # getter
-      collection.send("[]", i)
+  # Setters for multiple user_id[], project_id[], client_id[] and role_id[] properties
+  [:user, :client, :project, :role].each do |prop|
+    define_method "#{prop}_id=" do |value|
+      instance_variable_set("@selected_#{prop}_ids", value.reject { |v| v.blank? })
     end
   end
 

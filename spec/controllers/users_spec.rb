@@ -94,4 +94,18 @@ describe Users do
       as(:admin).dispatch_to(Users, :destroy, { :id => user.id}).status.should == 400
     end
   end
+  
+  it "should allow admin to see users for specific role" do
+    as(:admin).dispatch_to(Users, :with_roles, :search_criteria => {}).status.should == 200
+  end
+  
+  it "should allow client to see users for specific role" do
+    as(:client).dispatch_to(Users, :with_roles, :search_criteria => {}).status.should == 200
+  end
+
+  it "shouldn't allow employee to see users" do
+    block_should(raise_forbidden) do
+      as(:employee).dispatch_to(Users, :with_roles, :search_criteria => {})
+    end
+  end
 end

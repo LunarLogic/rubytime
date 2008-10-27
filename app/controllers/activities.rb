@@ -11,14 +11,12 @@ class Activities < Application
   before :check_calendar_viewability, :only => [:calendar]
   
   def index
-    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    @activities = @search_criteria.found_activities
+    find_activities
     render
   end
   
   def filter
-    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    @activities = @search_criteria.found_activities
+    find_activities
     render :index, :layout => false
   end
   
@@ -62,6 +60,11 @@ class Activities < Application
   end
   
   protected
+  
+  def find_activities
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
+    @activities = @search_criteria.found_activities
+  end
   
   def check_calendar_viewability
     raise Forbidden unless @user.calendar_viewable?(current_user)
