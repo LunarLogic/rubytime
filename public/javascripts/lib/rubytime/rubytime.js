@@ -8,5 +8,9 @@ var Rubytime ={
       Rubytime.error(xhr.responseText);
     if(xhr.status >= 500)
       Rubytime.error("Ooops! Something went wrong.");
+  },
+  
+  notice: function(message) {
+    alert(message);
   }
 };

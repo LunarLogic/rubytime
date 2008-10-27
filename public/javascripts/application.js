@@ -31,10 +31,12 @@ function addOnSubmitForActivityPopup() {
   $("#add_activity_form").focusFirstBlank();
   $("#add_activity_form").submit(function() {
       var params = $("#add_activity_form").serializeArray();
+      var date = $('#activity_date').attr('value').split(/\D/g);
       $("#add_activity").load($("#add_activity_form").url(), params, function(responseText, textStatus) {
           if (responseText == '') {
+            // TODO: parse date rather than split - user ui.datapicker method for parsing?
             $("#add_activity").hide();
-            $(document).trigger(EVENTS.activities_changed);
+            $(document).trigger(EVENTS.activities_changed, { month: date[1], year: date[2]});
           } else {
             addOnSubmitForActivityPopup();
           }
@@ -52,7 +54,6 @@ $(function() {
     $(".add-activity a").click(function() { $(document).trigger(EVENTS.add_activity_clicked); });
     $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
         var form = $("#add_activity_form");
-
         // don't hide form if memory.date which means click on calendar form
         if (form.length > 0 && !memory && !memory.date) {
           $("#add_activity").fadeOut(function() { form.remove(); });

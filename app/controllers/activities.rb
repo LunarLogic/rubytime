@@ -47,13 +47,22 @@ class Activities < Application
   end
 
   def calendar
-    @date = if params.has_key?("year") && params.has_key?("month")
-             { :year => params[:year], :month => params[:month] }
+    # TODO refactor
+    date = if params.has_key?("year") && params.has_key?("month")
+             @year, @month = params[:year].to_i, params[:month].to_i
+             { :year => @year, :month => @month }
            else
+             @year, @month = Date.today.year, Date.today.month
              :this_month
            end
+    # TODO extract method
+    @next_month     = @month == 12 ? 1 : @month.next
+    @next_year      = @month == 12 ? @year.next : @year
+    @previous_month = @month == 1 ? 12 : @month.pred
+    @previous_year  = @month == 1 ? @year.pred : @year
+    
     @activities = begin 
-                    @user.activities.for(@date) 
+                    @user.activities.for date
                   rescue ArgumentError
                     raise BadRequest
                   end

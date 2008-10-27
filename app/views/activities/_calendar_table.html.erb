@@ -1,0 +1,7 @@
+<div id="months_navigation" class="clearfix">
+  <%= link_to "Previous", url(:user_calendar, @user.id, :month => @previous_month, :year => @previous_year), 
+      :id => "previous_month" %>
+  <%= link_to "Next", url(:user_calendar, @user.id, :month => @next_month, :year => @next_year), :id => "next_month" %>
+</div>
+
+<%= activities_calendar :activities => @activities_by_date, :year => @year, :month => @month %>
