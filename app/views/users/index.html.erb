@@ -1,19 +1,17 @@
 <h1>Users controller, index action</h1>
 
-<p>Edit this file in <tt>app/views/users/index.html.erb</tt></p>
-
 <table>
   <tr>
   </tr>
-
-<% @users.each do |user| %>
-  <tr>
-    <td><%= user.name %></td>
-    <td><%= link_to 'Show', url(:user, user) %></td>
-    <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
-    <td><%= link_to "Remove", url(:user, user), :class => "delete_row" %></td>
-  </tr>
-<% end %>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= link_to 'Show', url(:user, user) %></td>
+      <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
+      <td><%= link_to "Remove", url(:user, user), :class => "delete_row" %></td>
+      <td><%= link_to "Calendar", url(:user_calendar, user) %></td>
+    </tr>
+  <% end %>
 </table>
 
 <%= link_to 'New', url(:new_user) %>
