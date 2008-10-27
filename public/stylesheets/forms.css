@@ -114,8 +114,9 @@ table.activities td.summary {
   font-weight: bold;
 }
 
-table.activities td.right {
+table.activities .right {
   text-align: right;
+  width: 70px;
 }
 
 p.selection {

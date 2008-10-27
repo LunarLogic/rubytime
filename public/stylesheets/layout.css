@@ -33,7 +33,8 @@
 
 #primary {
   float:left;
-  width:620px;
+  width:600px;
+  padding: 0 10px;
 }
 
 #secondary {
