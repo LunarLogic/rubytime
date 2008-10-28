@@ -83,4 +83,5 @@
       <td class="summary right">Sum: <%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %></td>
     </tr>
   </table>
+  <%= link_to "Export this list to CSV", url(:activities) + "?" + params.reject { |k,v| k =~ /^(id|action|controller)$/}.to_params + ";csv" %>
 <% end %>

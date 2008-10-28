@@ -1,4 +1,4 @@
-<%= form_for @search_criteria, :action => "/activities/filter", :method => :get do %>
+<%= form_for @search_criteria, :action => "/activities", :method => :get do %>
 <fieldset>
 
   <% if current_user.can_see_clients? %>

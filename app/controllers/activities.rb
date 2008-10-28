@@ -9,15 +9,17 @@ class Activities < Application
                                                                       # load_users with load_user
   before :load_user,                  :only => [:calendar] 
   before :check_calendar_viewability, :only => [:calendar]
-  
+
+
   def index
-    find_activities
-    render
-  end
-  
-  def filter
-    find_activities
-    render :index, :layout => false
+    provides :csv
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
+    @activities = @search_criteria.found_activities
+    if content_type == :csv || request.xhr?
+      render :index, :layout => false
+    else
+      render
+    end
   end
   
   def new
@@ -65,11 +67,6 @@ class Activities < Application
   end
   
   protected
-  
-  def find_activities
-    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    @activities = @search_criteria.found_activities
-  end
   
   def check_calendar_viewability
     raise Forbidden unless @user.calendar_viewable?(current_user)
