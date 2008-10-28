@@ -102,7 +102,12 @@ class SearchCriteria
     conditions.merge!(:project_id => get_ids(self.found_projects)) 
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
-    @invoiced == "invoiced" ? conditions.merge!(:invoice_id.not => nil) : conditions.merge!(:invoice_id => nil)
+    case @invoiced
+    when "invoiced"
+      conditions.merge!(:invoice_id.not => nil)
+    when "not_invoiced"
+      conditions.merge!(:invoice_id => nil)
+    end
     Activity.all({:order => [:date.desc]}.merge(conditions))
   end
 
