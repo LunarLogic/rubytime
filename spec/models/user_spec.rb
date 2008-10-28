@@ -31,9 +31,9 @@ describe User do
   end
 
   it "should send welcome email to new user" do
-    proc do
+    block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
       Employee.gen
-    end.should change(Merb::Mailer.deliveries, :size).by(1)
+    end
     Merb::Mailer.deliveries.last.text.should include("welcome") 
   end
 
@@ -49,22 +49,18 @@ describe User do
   end
 
   it "shouldn't allow to delete it if there is a related invoice or activity" do
-    employee = Employee.gen(:with_activities)
-    employee.reload
-    
-    proc do
-      employee.destroy
-    end.should_not change(User, :count)
+    block_should_not(change User, :count) do
+      fx(:jola).destroy
+    end
   end
 end
 
 describe Employee do
   it "should have calendar viewable by himself and admin" do
-    employee = Employee.gen
-    admin = Employee.gen(:admin => true)
+    employee = fx(:jola)
     employee.calendar_viewable?(employee).should be_true
-    employee.calendar_viewable?(admin).should be_true
-    employee.calendar_viewable?(Employee.gen).should be_false
+    employee.calendar_viewable?(fx(:admin)).should be_true
+    employee.calendar_viewable?(fx(:stefan)).should be_false
   end
 
   it "should create user" do
@@ -86,11 +82,11 @@ describe Employee do
   end
   
   it "should be editable by himself and admin" do
-    user = Employee.gen
+    user = fx(:jola)
     user.editable_by?(user).should be_true
-    user.editable_by?(Employee.gen(:admin)).should be_true
-    user.editable_by?(Employee.gen).should be_false
-    user.editable_by?(ClientUser.gen).should be_false
+    user.editable_by?(fx(:admin)).should be_true
+    user.editable_by?(fx(:stefan)).should be_false
+    user.editable_by?(fx(:orange_user1)).should be_false
   end
   
   it "should create user with given password and authenticate" do 
@@ -112,31 +108,17 @@ describe Employee do
 end
 
 describe ClientUser do
-  before(:all) { User.all.destroy!; Project.all.destroy! }
-  
   it "shouldn't be admin" do
     ClientUser.new.is_admin?.should be_false 
   end
   
+  it "shouldn't be an employee" do
+    ClientUser.make.is_employee?.should be_false
+  end
+
   it "should have client" do
     client_user = ClientUser.make(:client => nil)
     client_user.save.should be_false
     client_user.errors.on(:client).should_not be_nil
-  end
-  
-  it "should get list of its projects" do
-    client = Client.gen
-    project1 = Project.gen(:client => client)
-    project1.client.should == client
-    project2 = Project.gen(:client => client)
-    project3 = Project.gen(:client => client)
-    client.projects.size.should == 3
-    client.projects.should include(project1)
-    client.projects.should include(project2)
-    client.projects.should include(project3)
-  end
-
-  it "shouldn't be an employee" do
-    ClientUser.make.is_employee?.should be_false
   end
 end

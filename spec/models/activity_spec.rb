@@ -3,31 +3,30 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 describe Activity do
   it "should be created" do
     lambda do
-      activity = Activity.make
-      activity.project.save.should be_true
-      activity.user.save.should be_true
+      activity = Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan))
+      #activity.project.save.should be_true
+      #activity.user.save.should be_true
       activity.save.should be_true 
     end.should change(Activity, :count).by(1)
   end
   
   it "should not be locked when does not belong to invoice" do
-    activity = Activity.gen
-    activity.locked?.should be_false
+    fx(:jolas_activity1).locked?.should be_false
   end
 
   it "should not be locked when invoice is not locked" do
-    activity = Activity.gen(:invoice => Invoice.gen)
-    activity.locked?.should be_false
+    #activity = Activity.gen(:invoice => Invoice.gen)
+    fx(:jolas_invoiced_activity).locked?.should be_false
   end
   
   it "should be locked when invoice is locked" do
-    invoice = Invoice.gen(:issued_at => DateTime.now)
-    activity = Activity.gen(:invoice => invoice)
-    activity.locked?.should be_true
+    #invoice = Invoice.gen(:issued_at => DateTime.now)
+    #activity = Activity.gen(:invoice => invoice)
+    fx(:jolas_locked_activity).locked?.should be_true
   end
   
   it "should find n recent activities" do
-    10.downto(1) { |i| Activity.gen(:date => Date.today-(i*2), :user => Employee.gen, :project => Project.gen ) }
+    10.downto(1) { |i| Activity.gen(:date => Date.today-(i*2)) }
     recent_activities = Activity.recent(3)
     recent_activities.size.should == 3
     recent_activities[0].date.should == Date.today - 2
@@ -83,7 +82,7 @@ describe Activity do
              { :month => 2, :kiszka => "ki5zk4"},
              [:year, :month] ]
     args.each do |arg|
-      block_should(raise_argument_error) { Employee.gen(:with_activities).activities.for(arg) }
+      block_should(raise_argument_error) { fx(:jola).activities.for(arg) }
     end
   end
   
@@ -91,7 +90,7 @@ describe Activity do
     [ { :month => 0, :year => 2007 },
       { :month => 13, :year => 2004 },
       { :month => 10, :year => Date.today.year + 1 } ].each do |date|
-        block_should(raise_argument_error) { Employee.gen(:with_activities).activities.for(date) }
+        block_should(raise_argument_error) { fx(:jola).activities.for(date) }
       end
   end
 
@@ -105,10 +104,10 @@ describe Activity do
     year = previous_month == 12 ? Date.today.year - 1 : Date.today.year
      
     previous_month_count.times do 
-      Activity.make(:without_user, :user => employee, :date => Date.today - (day_number + rand(25))).save.should be_true
+      Activity.make(:user => employee, :date => Date.today - (day_number + rand(25))).save.should be_true
     end
     this_month_count.times do
-      Activity.make(:without_user, :user => employee, :date => Date.today - (rand(day_number) - 1)).save.should be_true
+      Activity.make(:user => employee, :date => Date.today - (rand(day_number) - 1)).save.should be_true
     end
     # WTF? why it does work sometimes and sometimes doesn't?
     employee.reload.activities.for(:this_month).count.should == this_month_count

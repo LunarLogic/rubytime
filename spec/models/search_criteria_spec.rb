@@ -1,14 +1,7 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe SearchCriteria do
-  before(:each) do
-    # User.all.destroy!
-    # Client.all.destroy!
-    # Project.all.destroy!
-    # Role.all.destroy!
-    # Activity.all.destroy!
-    # Invoice.all.destroy!
-    
+  before(:all) do
     @client1 = Client.gen
     @client2 = Client.gen
     @client3 = Client.gen
@@ -58,9 +51,10 @@ describe SearchCriteria do
   # admin
   
   it "should return all activities (for admin)" do
-    sc = SearchCriteria.new({}, @admin)
+    user = fx(:admin)
+    sc = SearchCriteria.new({}, user)
     sc.should have(48).found_activities
-    sc = SearchCriteria.new({ :project_id => [""], :user_id => [""] }, @admin)
+    sc = SearchCriteria.new({ :project_id => [""], :user_id => [""] }, user)
     sc.should have(48).found_activities
   end
 

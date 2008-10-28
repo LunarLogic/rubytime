@@ -1,10 +1,8 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Invoice do
-  before(:all) { }
-  
   it "should be created" do
-    lambda { Invoice.make.save.should be_true }.should change(Invoice, :count).by(1)
+    lambda { Invoice.make(:client => fx(:orange), :user => fx(:koza)).save.should be_true }.should change(Invoice, :count).by(1)
   end
   
   it "should be issued if issued_at date is set" do
