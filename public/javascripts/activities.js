@@ -4,30 +4,40 @@ var Activities = {
     $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() { Activities.onSelectChanged($(this)); });
     $(".add_criterium").click(Activities.addCriterium);
     $(".remove_criterium").click(Activities.removeCriterium);
-    $("div[id$=calendar][id^=users]").click(Activities._showAddActivity);
     Activities._updateIcons('client');
     Activities._updateIcons('project');
     Activities._updateIcons('role');
     Activities._updateIcons('user');
-    $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
-    $(document).bind(EVENTS.activities_changed, function() { alert('Activity added successfully!'); });
+    if (!Activities._calendarContainer().blank()) {
+      Activities._calendarContainer().click(Activities._dispatchClick);
+      $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
+    }
+    $(document).bind(EVENTS.activities_changed, Activities._reloadList);
+    $(document).bind(EVENTS.activities_changed, function() { Rubytime.notice('Activity added successfully!'); });
   },
   
-  _showAddActivity: function(e) {
+  _dispatchClick: function(e) {
     var target = $(e.target);
-    if(target.hasClass('add_activity'))
-      $(document).trigger(EVENTS.add_activity_clicked, { date: target.attr('id') });
-      // TODO: extract showing activities form this from here and application.js 
-      // var activityFormContainer = $("#add_activity");
-      // activityFormContainer.load("/activities/new", {}, function() {
-      //   activityFormContainer.find('#activity_date').attr('value', target.attr('id'));
-      //   activityFormContainer.fadeIn("normal", addOnSubmitForActivityPopup);
-      // });
+    if (target.hasClass('add_activity')) {
+      var memo = { date: target.attr('id'), user_id: $.getDbId(Activities._calendarContainer().attr('id')) };
+      $(document).trigger(EVENTS.add_activity_clicked, memo);
+    } else if ((/previous_month|next_month/).test(target.attr('id')))
+      $("div[id$=calendar][id^=users]").load(target.url());
+    return false;
   },
   
-  _reloadCalendar: function(e) {
-    var container = $("div[id$=calendar][id^=user]");
-    container.load('/' + container.attr('id').replace(/_/g, '/'));
+  _reloadCalendar: function(e, memory) {
+    var container = Activity._calendarContainer();
+    container.load('/' + container.attr('id').replace(/_/g, '/'), memory ? memory : {});
+  },
+  
+  _reloadList: function(e) {
+    $('#activities_filter form:first').submit();
+  },
+  
+  
+  _calendarContainer: function() {
+    return $("div[id$=calendar][id^=users]");
   },
   
   _addOnFilterSubmit: function() {

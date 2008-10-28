@@ -17,5 +17,9 @@
 <p>
   Created at: <%= format_time @user.created_at %>
 </p>
-<%= link_to 'Edit',  url(:edit_user,  @user) %> |
+<p>
+  <%= link_to "Show calendar", url(:user_calendar, @user) %>
+</p>
+
+</p><%= link_to 'Edit',  url(:edit_user,  @user) %> |
 <%= link_to 'Back', url(:users) %>

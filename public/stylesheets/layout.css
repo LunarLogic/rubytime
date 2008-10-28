@@ -219,3 +219,45 @@ table#calendar .activities {
 table#calendar a.add_activity {
   display: block;
 }
+table#calendar .month_name th {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  padding: 3px;
+}
+
+a#next_month {
+  float: right;
+}
+
+a#previous_month {
+  float: left;
+}
+
+div#months_navigation {
+  padding-bottom: 10px;
+}
+
+/* clearfix - http://www.webtoolkit.info/css-clearfix.html */
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+
+.clearfix {
+  display: inline-block;
+}
+
+html[xmlns] .clearfix {
+  display: block;
+}
+
+* html .clearfix {
+  height: 1%;
+}

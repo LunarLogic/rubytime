@@ -11,11 +11,13 @@ module Rubytime
         def and(matcher, &blk)
           @matchers << [:should, matcher]
           run(&blk) if block_given?
+          self
         end
   
         def and_not(matcher, &blk)
           @matchers << [:should_not, matcher]
           run(&blk) if block_given?      
+          self
         end
   
         private
