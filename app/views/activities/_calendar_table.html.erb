@@ -1,3 +1,6 @@
+<% if @user != current_user  %>
+  <h1><%= @user.name %> (<%= @user.role.name %>)</h1>
+<% end %>
 <div id="months_navigation" class="clearfix">
   <%= link_to "Previous", url(:user_calendar, @user.id, :month => @previous_month, :year => @previous_year), 
       :id => "previous_month" %>

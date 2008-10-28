@@ -9,7 +9,7 @@
       <td><%= link_to 'Show', url(:user, user) %></td>
       <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
       <td><%= link_to "Remove", url(:user, user), :class => "delete_row" %></td>
-      <td><%= link_to "Calendar", url(:user_calendar, user) %></td>
+      <td><%= link_to_calendar user %></td>
     </tr>
   <% end %>
 </table>

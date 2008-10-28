@@ -46,3 +46,9 @@ jQuery.fn.extend((function() {
     }
   };
 })());
+
+jQuery.extend({
+  getDbId: function(s) {
+    return s.match(/\d+/)[0];
+  }
+});

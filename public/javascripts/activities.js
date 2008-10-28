@@ -18,15 +18,16 @@ var Activities = {
   
   _dispatchClick: function(e) {
     var target = $(e.target);
-    if (target.hasClass('add_activity'))    
-      $(document).trigger(EVENTS.add_activity_clicked, { date: target.attr('id') });
-    else if ((/previous_month|next_month/).test(target.attr('id')))
+    if (target.hasClass('add_activity')) {
+      var memo = { date: target.attr('id'), user_id: $.getDbId(Activities._calendarContainer().attr('id')) };
+      $(document).trigger(EVENTS.add_activity_clicked, memo);
+    } else if ((/previous_month|next_month/).test(target.attr('id')))
       $("div[id$=calendar][id^=users]").load(target.url());
     return false;
   },
   
   _reloadCalendar: function(e, memory) {
-    var container = $("div[id$=calendar][id^=user]");
+    var container = Activity._calendarContainer();
     container.load('/' + container.attr('id').replace(/_/g, '/'), memory ? memory : {});
   },
   

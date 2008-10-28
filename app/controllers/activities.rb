@@ -7,7 +7,8 @@ class Activities < Application
                                                                       # instead of just load_users, because of bug 
                                                                       # (or design fault) in merb (1.0rc2) which confuses  
                                                                       # load_users with load_user
-  before :load_user,                  :only => [:calendar] 
+  before :load_user,                  :only => [:calendar]
+  before :try_load_user,              :only => [:new] 
   before :check_calendar_viewability, :only => [:calendar]
   
   def index
@@ -21,7 +22,7 @@ class Activities < Application
   end
   
   def new
-    @activity = Activity.new(:date => Date.today, :user => current_user)
+    @activity = Activity.new(:date => Date.today, :user => current_user.is_admin? ? @user : current_user)
     render :layout => false
   end
   
@@ -44,8 +45,8 @@ class Activities < Application
   def destroy
   end
 
+  # TODO refactor
   def calendar
-    # TODO refactor
     date = if params.has_key?("year") && params.has_key?("month")
              @year, @month = params[:year].to_i, params[:month].to_i
              { :year => @year, :month => @month }
@@ -54,11 +55,10 @@ class Activities < Application
              :this_month
            end
            
-    # TODO extract method
-    @next_month     = @month == 12 ? 1 : @month.next
-    @next_year      = @month == 12 ? @year.next : @year
+    @next_month       = @month == 12 ? 1 : @month.next
+    @next_year        = @month == 12 ? @year.next : @year
     if @month == 12 && @year == Date.today.year
-      @next_year = @next_month = nil
+      @next_year      = @next_month = nil
     else
       @previous_month = @month == 1 ? 12 : @month.pred
       @previous_year  = @month == 1 ? @year.pred : @year
@@ -90,7 +90,11 @@ class Activities < Application
   end
   
   def load_user
-    raise NotFound unless @user = User.get(params[:user_id])
+    raise NotFound unless try_load_user
+  end
+
+  def try_load_user
+    @user = User.get(params[:user_id])
   end
   
   def load_projects

@@ -67,18 +67,16 @@ describe Activities, "index action" do
   it "should not add activity for other user if he isn't admin" do
     @employee = Employee.gen
     other_user = Employee.gen
-    proc do
-      proc do
-        response = dispatch_to_as_employee(Activities, :create, :activity => { 
-          :date => Date.today,
-          :project_id => Project.gen.id,
-          :hours => "7",
-          :comments => "this & that",
-          :user_id => other_user.id
-        })
-        response.status.should == 201
-      end.should change(@employee.activities, :count).by(1)
-    end.should_not change(other_user.activities, :count)
+    block_should(change(@employee.activities, :count).by(1)).and_not(change other_user.activities, :count) do
+      response = dispatch_to_as_employee(Activities, :create, :activity => { 
+        :date => Date.today,
+        :project_id => Project.gen.id,
+        :hours => "7",
+        :comments => "this & that",
+        :user_id => other_user.id
+      })
+      response.status.should == 201
+    end
   end
   
   it "should add activity for other user if he is admin" do
@@ -119,7 +117,7 @@ describe Activities, "index action" do
   end
 
   it "should render calendar for current month if no date given in the request" do
-    repository(:default) do # repository block for using identity map to good account
+    repository(:default) do # identity map doesn't work outside repository block
       employee = Employee.gen
       employee.activities.should_receive(:for).with(:this_month).and_return([])
       as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id }).should be_successful
@@ -129,7 +127,7 @@ describe Activities, "index action" do
   it "should render calendar for given month" do
     repository(:default) do # same as above
       employee = Employee.gen
-      year, month = %w(2007 10) # values in params are passed as strings
+      year, month = 2007, 10 # values in params are passed as strings
       employee.activities.should_receive(:for).with(:year => year, :month => month).and_return([])
       controller = as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id, :month => month, :year => year })
       controller.should be_successful

@@ -58,7 +58,9 @@ $(function() {
         if (form.length > 0 && !memory && !memory.date) {
           $("#add_activity").fadeOut(function() { form.remove(); });
         } else {
-          $("#add_activity").load("/activities/new", {}, function() {
+          var user_id = memory && memory.user_id; 
+          // TODO should be done via GET
+          $("#add_activity").load("/activities/new", { user_id: user_id }, function() {
             $("#add_activity").fadeIn("normal", addOnSubmitForActivityPopup);
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
