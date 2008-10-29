@@ -1,67 +1,51 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
-describe Activities, "index action" do
+describe Activities do
   
-  it "should should match /activities to Activity#index" do
+  it "should should match /activities to Activities#index" do
     request_to("/activities", :get).should route_to(Activities, :index)
   end
   
   it "should show 3 recent and rest of projects when adding new activity" do
-    employee = Employee.gen
-    other_employee = Employee.gen
+    jola = fx(:jola) #jola has 3 activities for orange project
     
-    # three projects with activities by this employee
-    p1 = Project.gen
-    p2 = Project.gen
-    p3 = Project.gen
-    # p1 is least recent project from all three
-    2.times { Activity.make(:user => employee, :project => p1, :created_at => Date.today - 2).save }
-    # p2 is most recent project
-    2.times { Activity.make(:user => employee, :project => p2, :created_at => Date.today).save }
-    # p3 is second most recent project
-    2.times { Activity.make(:user => employee, :project => p3, :created_at => Date.today - 1).save }
+    # 2.times { Activity.make(:user => employee, :project => p1, :created_at => Date.today - 2).save }
+    # 2.times { Activity.make(:user => employee, :project => p2, :created_at => Date.today).save }
+    # 2.times { Activity.make(:user => employee, :project => p3, :created_at => Date.today - 1).save }
     
     # 15 projects, each with 1 activity by other employee
-    15.times do
-      project = Project.gen
-      Activity.make(:user => other_employee, :project => project).save
-    end
+    # 15.times do
+    #   project = Project.gen
+    #   Activity.make(:user => other_employee, :project => project).save
+    # end
     
     # one inactive project
-    Project.gen(:active => false)
     
-    controller = dispatch_to_as_employee(Activities, :new)
+    controller = as(jola).dispatch_to(Activities, :new)
     controller.should be_successful
     recent_projects = controller.instance_variable_get(:@recent_projects)
     recent_projects.size.should == 3
-    recent_projects[0].should == p2
-    recent_projects[1].should == p3
-    recent_projects[2].should == p1
     
     other_projects = controller.instance_variable_get(:@other_projects)
     other_projects.size.should == Project.active.count - 3
   end
   
   it "should add new activity" do
-    Employee.gen
-    response = dispatch_to_as_employee(Activities, :create, :activity => { 
+    as(:employee).dispatch_to(Activities, :create, :activity => { 
       :date => Date.today,
       :project_id => Project.gen.id,
       :hours => "7",
-      :comments => "this & that",
-    })
-    response.status.should == 201
+      :comments => "this & that"
+    }).status.should == 201
   end
   
   it "should not add invalid activity" do
-    Employee.gen
-    response = dispatch_to_as_employee(Activities, :create, :activity => { 
+    as(:employee).dispatch_to(Activities, :create, :activity => { 
       :date => Date.today,
       :project_id => Project.gen.id,
       :hours => "6:30",
-      :comments => "",
-    })
-    response.status.should == 200
+      :comments => ""
+    }).status.should == 200
   end
   
   it "should not add activity for other user if he isn't admin" do
@@ -101,13 +85,12 @@ describe Activities, "index action" do
   end
   
   it "should be successful for user requesting for his calendar" do
-    prepare_users
-    controller = as(@employee).dispatch_to(Activities, :calendar, :user_id => @employee.id).should be_successful
+    user = fx(:stefan)
+    controller = as(user).dispatch_to(Activities, :calendar, :user_id => user.id).should be_successful
   end
   
   it "should be successful for admin requesting for user's calendar" do
-    prepare_users    
-    as(:admin).dispatch_to(Activities, :calendar, :user_id => @employee.id).should be_successful
+    as(:admin).dispatch_to(Activities, :calendar, :user_id => fx(:jola).id).should be_successful
   end
   
   it "should raise forbidden for trying to view other's calendars" do
@@ -139,5 +122,35 @@ describe Activities, "index action" do
       as(employee = Employee.gen).dispatch_to(
         Activities, :calendar, { :user_id => employee.id, :year => 3300, :month => 10 })
     end
+  end
+  
+  it "should allow admin to delete activity" do
+    block_should(change(Activity, :count).by(-1)) do
+      delete_jolas_ctivity_as(:admin).should be_successful
+    end    
+  end
+  
+  it "should allow owner to delete activity" do
+    block_should(change(Activity, :count).by(-1)) do
+      delete_jolas_ctivity_as(fx(:jola)).should be_successful
+    end
+  end
+  
+  it "shouldn't allow user to delete other's activities" do
+    block_should(raise_forbidden).and_not(change Activity.count) do
+      delete_jolas_ctivity_as fx(:stefan)
+    end
+  end
+  
+  it "should raise not found for deleting activity with nonexistent id" do
+    block_should(raise_not_found) do
+      as(:admin).dispatch_to(Activity, :destroy, :activity_id => 123123123)
+    end
+  end
+  
+  protected 
+  
+  def delete_jolas_ctivity_as(user)
+    as(user).dispatch_to(Activities, :destroy, { :activity_id => fx(:jolas_activity1).id})
   end
 end

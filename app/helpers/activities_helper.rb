@@ -3,20 +3,28 @@ module Merb
 
     def activities_calendar(options = {})
       raise ArgumentError.new("options[:activities] is a mandatory argument") unless options.has_key?(:activities)
-      year = options[:year] || Date.today.year
-      month = options[:month] || Date.today.month
+      # no need to check for :year and :month - calendar_table does it
+      year = options[:year]
+      month = options[:month]
       activities = options[:activities]
       
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         html =  %(<div class="day_of_the_month">#{date.mday}</div><div class="activities">)
-        html << activities[date].map { |a| a.comments }.join("\n") + " >>" unless activities[date].nil?
+        html << partial(:activity, :with => activities[date]) unless activities[date].nil?
         html << %(<a class="add_activity" id="#{format_date date}">+</a>)
         html << "</div>"
       end 
     end
+    
+    def delete_activity(activity)
+      link_to "-", resource(activity), :class => "delete_activity" if activity.deletable_by?(current_user)
+    end
       
     private
       
+    # based on rails calendar_helper plugin by topfunky
+    # homepage: http://nubyonrails.com
+    # plugin: http://topfunky.net/svn/plugins/calendar_helper  
     def calendar_table(options = {}, &block)
       raise(ArgumentError, "No year given")  unless options.has_key?(:year)
       raise(ArgumentError, "No month given") unless options.has_key?(:month)

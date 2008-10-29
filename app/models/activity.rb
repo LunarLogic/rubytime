@@ -72,6 +72,10 @@ class Activity
     !!(self.invoice && self.invoice.issued?)
   end
   
+  def deletable_by?(user)
+    self.user == user || user.is_admin?
+  end
+  
   protected
   
   # Checks if hours for this activity are under 24 hours

@@ -21,3 +21,5 @@ dependency "dm-observer", dm_gems_version
 
 #dependency "dm-migrations" #, "0.9.7"   # Make incremental changes to your database.
 dependency "randexp", ">=0.1.3"
+
+require "csv" # dependency raises error

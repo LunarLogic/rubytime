@@ -21,20 +21,39 @@ var Activities = {
     if (target.hasClass('add_activity')) {
       var memo = { date: target.attr('id'), user_id: $.getDbId(Activities._calendarContainer().attr('id')) };
       $(document).trigger(EVENTS.add_activity_clicked, memo);
-    } else if ((/previous_month|next_month/).test(target.attr('id')))
+    } else if ((/previous_month|next_month/).test(target.attr('id'))) {
       $("div[id$=calendar][id^=users]").load(target.url());
+    } else if (target.hasClass("delete_activity")) {
+      Activities._deleteActivity(target);
+    }
+    return false;
+  },
+  
+  _deleteActivity: function(link) {
+    var activity = link.parent();
+    if (confirm("Are you sure?"))
+      $.ajax({
+        url: link.url(), 
+        type: "DELETE",
+        beforeSend: function() { activity.disableLinks(); },
+        success: function() { activity.remove(); },
+        error: function(xhr) {
+          activity.enableLinks();
+          Rubytime.errorFromXhr(xhr);
+        }
+      });
+      
     return false;
   },
   
   _reloadCalendar: function(e, memory) {
-    var container = Activity._calendarContainer();
+    var container = Activities._calendarContainer();
     container.load('/' + container.attr('id').replace(/_/g, '/'), memory ? memory : {});
   },
   
   _reloadList: function(e) {
     $('#activities_filter form:first').submit();
   },
-  
   
   _calendarContainer: function() {
     return $("div[id$=calendar][id^=users]");

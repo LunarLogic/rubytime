@@ -15,7 +15,7 @@ describe Client do
   
   it "Shouldn't allow to delete client with invoices" do
     client = fx(:orange)
-    client.invoices.count.should > 0
+    client.invoices.should_not be_empty
     block_should_not(change(Client, :count)) do
       client.destroy.should be_nil
     end

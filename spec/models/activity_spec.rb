@@ -2,12 +2,9 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Activity do
   it "should be created" do
-    lambda do
-      activity = Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan))
-      #activity.project.save.should be_true
-      #activity.user.save.should be_true
-      activity.save.should be_true 
-    end.should change(Activity, :count).by(1)
+    block_should(change(Activity, :count).by(1)) do
+      Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan)).save.should be_true 
+    end
   end
   
   it "should not be locked when does not belong to invoice" do
@@ -15,13 +12,10 @@ describe Activity do
   end
 
   it "should not be locked when invoice is not locked" do
-    #activity = Activity.gen(:invoice => Invoice.gen)
     fx(:jolas_invoiced_activity).locked?.should be_false
   end
   
   it "should be locked when invoice is locked" do
-    #invoice = Invoice.gen(:issued_at => DateTime.now)
-    #activity = Activity.gen(:invoice => invoice)
     fx(:jolas_locked_activity).locked?.should be_true
   end
   
@@ -112,5 +106,11 @@ describe Activity do
     # WTF? why it does work sometimes and sometimes doesn't?
     employee.reload.activities.for(:this_month).count.should == this_month_count
     employee.reload.activities.for(:year => year, :month => previous_month).count.should == previous_month_count
+  end
+
+  it "should be deletable by admin and by owner" do
+    fx(:jolas_activity1).deletable_by?(fx(:jola)).should be_true
+    fx(:jolas_activity1).deletable_by?(fx(:admin)).should be_true
+    fx(:jolas_activity1).deletable_by?(fx(:stefan)).should be_false
   end
 end

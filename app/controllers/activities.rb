@@ -17,7 +17,9 @@ class Activities < Application
     provides :csv
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @activities = @search_criteria.found_activities
-    if content_type == :csv || request.xhr?
+    if content_type == :csv
+      convert_to_csv(@activities)
+    elsif request.xhr?
       render :index, :layout => false
     else
       render
@@ -113,5 +115,18 @@ class Activities < Application
   
   def load_all_users
     @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
+  end
+  
+  def convert_to_csv(activities)
+    report = StringIO.new
+    CSV::Writer.generate(report, ',') do |csv|
+      csv << %w(Client Project Role User Date Hours)
+      activities.each do |activity|
+        csv << [activity.project.client.name, activity.project.name, activity.user.role.name, activity.user.name, 
+                activity.date, format("%.2f", activity.minutes / 60.0)]
+      end
+    end
+    report.rewind
+    report.read
   end
 end # Activities
