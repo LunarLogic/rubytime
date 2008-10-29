@@ -102,28 +102,28 @@ table.activities {
   width: 100%;
 }
 
-table th {
+table.list th {
   background-color: #C1E1FF;
   font-weight: bold;
 }
 
-table td, table th {
+table.list td, table.list th {
   padding: 10px;
 }
 
-table tr.odd td {
+table.list tr.odd td {
 }
 
-table tr.even td {
+table.list tr.even td {
   background-color: #EEEEEE;
 }
 
-table td.summary {
+table.list td.summary {
   background-color: #C1E1FF;
   font-weight: bold;
 }
 
-table .right {
+table.list .right {
   text-align: right;
   width: 70px;
 }
@@ -140,4 +140,8 @@ p.selection {
 
 span.radiobuttons label {
   width: auto;
+}
+
+#cancel_add_activity {
+  color: #C1E1FF;
 }
