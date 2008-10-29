@@ -89,8 +89,8 @@ module Rubytime
                                                                         :user    => fx(:jola), 
                                                                         :invoice => fx(:oranges_first_invoice)))
           add_fixture(:activity, :jolas_locked_activity, Activity.gen(:project => fx(:oranges_first_project), 
-                                                                        :user    => fx(:jola), 
-                                                                        :invoice => fx(:oranges_issued_invoice)))
+                                                                      :user    => fx(:jola), 
+                                                                      :invoice => fx(:oranges_issued_invoice)))
           
 
           
@@ -127,7 +127,7 @@ module Rubytime
         def fx(*args)
           Fixtures::get_fixture(*args)
         end
-      end
-    end
-  end
-end
+      end # FixturesHelper
+    end # Fixtures
+  end # Test
+end # Rubytime
