@@ -24,16 +24,16 @@ describe Projects do
 
   describe "#create" do
     it "should create new record successfully and redirect to index" do
-      proc do
-        controller = dispatch_to_as_admin(Projects, :create, { 
+      block_should(change(Project, :count)) do
+        controller = as(:admin).dispatch_to(Projects, :create, { 
           :project => { 
             :name => "Jola", 
             :description => "Jolanta", 
-            :client_id => @client.id 
+            :client_id => fx(:apple).id
           }
         })
-        controller.should redirect_to(url(:projects))
-      end.should change(Project, :count)
+        controller.should redirect_to(resource controller.instance_variable_get(:@project))
+      end
     end
 
     it "should should not create record and show errors when invalid data" do
@@ -57,37 +57,37 @@ describe Projects do
   
   describe "#update" do
     it "should update record successfully and redirect to index" do
-      project = Project.gen
-      controller = dispatch_to_as_admin(Projects, :update, { 
-        :id => project.id , 
+      apple = fx(:apple)
+      project = fx(:oranges_first_project)
+
+      
+      dispatch_to_as_admin(Projects, :update, { 
+        :id => project.id, 
         :project => { 
           :name => "Misio", 
           :description => "Misiaczek", 
-          :client_id => @client.id 
+          :client_id => apple.id
         }
-      })
-      controller.should redirect_to(url(:projects))
+      }).should redirect_to(resource project)
       project.reload
       project.name.should == "Misio"
       project.description.should == "Misiaczek"
-      project.client.should == @client
+      project.client.should == apple
     end
 
     it "should not update record and show errors" do
-      project = Project.gen
-      controller = dispatch_to_as_admin(Projects, :update, { :id => project.id , :project => { :name => "" } })
-      controller.should be_successful
-      controller.should_not redirect_to(url(:projects))
+      project = fx(:oranges_first_project)
+      as(:admin).dispatch_to(Projects, :update, { :id => project.id , :project => { :name => "" } }).should be_successful
     end
   
     it "shouldn't update nonexistent project" do
-      lambda { dispatch_to_as_admin(Projects, :update, :id => 12345678, :project => {})}.should raise_not_found
+      block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :update, :id => 12345678, :project => {} ) }
     end
   end
   
   describe "#destroy" do
     it "shouldn't delete nonexistent project" do
-      lambda { dispatch_to_as_admin(Projects, :destroy, :id => 12345678)}.should raise_not_found
+      block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :destroy, :id => 12345678) }
     end
   end
 
