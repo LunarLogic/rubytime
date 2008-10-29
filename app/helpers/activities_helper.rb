@@ -17,7 +17,9 @@ module Merb
     end
     
     def delete_activity(activity)
-      link_to "-", resource(activity), :class => "delete_activity" if activity.deletable_by?(current_user)
+      if activity.deletable_by?(current_user) && !activity.locked?
+        link_to "-", resource(activity), :class => "delete_activity" 
+      end
     end
       
     private

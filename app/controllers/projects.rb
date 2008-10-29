@@ -22,7 +22,7 @@ class Projects < Application
   def create
     @project = Project.new(params[:project])
     if @project.save
-      redirect url(:projects)
+      redirect resource(@project)
     else
       render :edit
     end
@@ -34,7 +34,7 @@ class Projects < Application
   
   def update
     if @project.update_attributes(params[:project]) || !@project.dirty? 
-      redirect url(:projects)
+      redirect resource(@project)
     else
       render :edit
     end

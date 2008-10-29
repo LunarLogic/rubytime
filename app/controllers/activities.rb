@@ -41,7 +41,7 @@ class Activities < Application
     if @activity.save
       render "", :status => 201, :layout => false 
     else
-      render :new, :status => 200, :layout => false
+      render :new, :status => 400, :layout => false
     end
   end
   
@@ -52,7 +52,11 @@ class Activities < Application
   end
   
   def destroy
-    
+    if @activity.destroy
+      render "", :status => 200
+    else
+      render "Could not delete activity.", :status => 403
+    end 
   end
 
   # TODO refactor
@@ -91,19 +95,19 @@ class Activities < Application
   protected
   
   def check_deletable_by
-    
+    @activity.deletable_by?(current_user) or raise Forbidden
   end
   
   def check_calendar_viewability
-    raise Forbidden unless @user.calendar_viewable?(current_user)
+    @user.calendar_viewable?(current_user) or raise Forbidden
   end
 
   def load_activity
-    @activity = User.get(params[:id]) or raise NotFound
+    @activity = Activity.get(params[:id]) or raise NotFound
   end
   
   def load_user
-    try_load_user or raise NotFound 
+    raise NotFound unless try_load_user
   end
 
   def try_load_user

@@ -18,19 +18,12 @@ class Clients < Application
   def create
     @client = Client.new(params[:client])
     @client_user = ClientUser.new(params[:client_user].merge(:client => @client))
-    begin
-      DataMapper::Transaction.new(@client, @client_user) do # TODO: refactor transaction
-        raise "save_error" unless @client.save
-        raise "save_error" unless @client_user.save
-      end
-    rescue => ex
-      if ex.to_s == "save_error"
-        render :template => "clients/edit"
-      else
-        raise ex
-      end
+    if @client_user.valid?  && @client.valid?
+      @client_user.save
+      @client.save
+      redirect resource(@client)
     else
-      redirect url(:clients)
+      render :template => "clients/edit"
     end
   end
   

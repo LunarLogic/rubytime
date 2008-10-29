@@ -8,11 +8,11 @@ module Rubytime
           @user = case user
                   when :admin
                     # Employee.admin.first WTF? why it doesn't work sometimes?
-                    User.first(:admin => true) || raise("There is no admin user in database")
+                    User.first(:admin => true) or raise "There is no admin user in database"
                   when :employee
-                    Employee.not_admin.first || raise("There is employee user in database")
+                    Employee.not_admin.first or raise "There is employee user in database"
                   when :client
-                    ClientUser.first || raise("There is no client user in database")
+                    ClientUser.first or raise "There is no client user in database"
                   when :guest
                     nil
                   else 
@@ -34,19 +34,6 @@ module Rubytime
         As.new(user, self)
       end
   
-      def prepare_users
-        # cleanup db because
-        User.all.destroy!
-    
-        @admin = Employee.make(:admin)
-        @employee = Employee.make
-        @client_user = ClientUser.make
-        @admin.save.should be_true
-        @employee.save.should be_true
-        @client_user.save.should be_true
-        @client = Client.gen
-      end
-
       def dispatch_to_as_admin(controller_klass, action, params = {}, &blk)
         Merb.logger <<  "dispatch_to_as_admin is deprecated - user as(:admin).dispatch_to instead"
         as(:admin).dispatch_to(controller_klass, action, params, &blk)

@@ -1,8 +1,6 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Users do
-  before(:each) { prepare_users }
-  
   it "shouldn't show index for guest" do
     as(:guest).dispatch_to(Users, :index).should redirect_to(url(:login))
   end
