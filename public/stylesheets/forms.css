@@ -138,10 +138,17 @@ p.selection {
   padding-left: 0px;
 }
 
+span.radiobuttons {
+  float:left;
+  display:block;
+}
+
 span.radiobuttons label {
   width: auto;
 }
-
+span.radiobuttons input {
+  clear:left;
+}
 #cancel_add_activity {
   color: #C1E1FF;
 }
