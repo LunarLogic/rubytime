@@ -106,8 +106,9 @@ class SearchCriteria
     Activity.all({:order => [:date.desc]}.merge(conditions))
   end
 
-protected
-  def get_ids(collection) # does symbol to proc work in merb?
+  protected
+  
+  def get_ids(collection)
     collection.map { |o| o.id }
   end
 end
