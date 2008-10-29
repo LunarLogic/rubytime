@@ -46,6 +46,11 @@ function addOnSubmitForActivityPopup() {
   });
 }
 
+function hideActivityPopup() {
+  $("#add_activity").fadeOut(function() { $("#add_activity_form").remove(); });
+  return false;
+}
+
 $(function() {
     $(".datepicker").datepicker({
       dateFormat: "yy-mm-dd", duration: "", showOn: "both", 
@@ -53,10 +58,9 @@ $(function() {
     
     $(".add-activity a").click(function() { $(document).trigger(EVENTS.add_activity_clicked); });
     $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
-        var form = $("#add_activity_form");
         // don't hide form if memory.date which means click on calendar form
-        if (form.length > 0 && !memory && !memory.date) {
-          $("#add_activity").fadeOut(function() { form.remove(); });
+        if ($("#add_activity_form").length > 0 && !memory && !memory.date) {
+          hideActivityPopup();
         } else {
           var user_id = memory && memory.user_id; 
           // TODO should be done via GET
@@ -64,6 +68,7 @@ $(function() {
             $("#add_activity").fadeIn("normal", addOnSubmitForActivityPopup);
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
+            $("#cancel_add_activity").click(hideActivityPopup);
           });
         }
         return false;
@@ -95,4 +100,8 @@ $(function() {
     };
     return false;
   });
+});
+
+$(function() {
+  $("table").zebra();
 });

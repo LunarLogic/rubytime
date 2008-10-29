@@ -19,13 +19,11 @@
       <p>
         <%= password_field :password_confirmation, :label => "Password confirmation" %>
       </p>
-      <p>
-        <label>&nbsp;</label>
-        <%= submit "Save", :class => "button" %>
+      <p class="buttons">
+        <%= submit "Save", :class => "button" %> or <%= link_to 'Cancel', url(:users) %>
       </p>
     <% end %>
   </fieldset>
 <% end =%>
 
-<%= link_to 'Show', url(:user, @user) %> |
-<%= link_to 'Back', url(:users) %>
+<%= link_to 'Show', url(:user, @user) %>
