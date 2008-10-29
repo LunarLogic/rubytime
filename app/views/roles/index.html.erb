@@ -1,9 +1,13 @@
 <h1>List of employees' roles</h1>
 
 <% if @roles.empty? %>
-  No roles.
+  No roles found.
 <% else %>
   <table id="roles">
+  <tr>
+    <th>Name</th>
+    <th></th>
+  </tr>
   <% @roles.each do |role| %>
     <tr>
       <td><%= role.name %></td>

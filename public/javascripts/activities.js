@@ -47,6 +47,7 @@ var Activities = {
       // load with GET request
       $("#primary").load(form.url()+'?' + form.serialize(), null, function() {
         //form.find("input[type=submit]").removeAttr("disabled");
+        $(this).zebra();
       });
       return false;
     });

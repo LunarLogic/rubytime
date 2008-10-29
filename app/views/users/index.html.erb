@@ -1,15 +1,23 @@
-<h1>Users controller, index action</h1>
+<h1>List of users</h1>
 
 <table>
   <tr>
+    <th>Name</th>
+    <th>Login</th>
+    <th>Type</th>
+    <th></th>
   </tr>
   <% @users.each do |user| %>
     <tr>
       <td><%= user.name %></td>
-      <td><%= link_to 'Show', url(:user, user) %></td>
-      <td><%= link_to 'Edit', url(:edit_user,  user) %></td>
-      <td><%= link_to "Remove", url(:user, user), :class => "delete_row" %></td>
-      <td><%= link_to_calendar user %></td>
+      <td><%= user.login %></td>
+      <td><%= user.instance_of?(ClientUser) ? "Client's user" : "Employee" %></td>
+      <td>
+        <%= link_to 'Show', url(:user, user) %> |
+        <%= link_to 'Edit', url(:edit_user,  user) %> |
+        <%= link_to "Remove", url(:user, user), :class => "delete_row" %> |
+        <%= link_to_calendar user %></td>
+      </td>
     </tr>
   <% end %>
 </table>

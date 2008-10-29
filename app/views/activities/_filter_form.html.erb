@@ -22,13 +22,14 @@
   
   <p>
     <label>Include</label>
-    <%= radio_group :invoiced, [{ :value => "all", :label => "All" }, 
-                                { :value => "invoiced", :label => "Invoiced" }, 
-                                { :value => "not_invoiced", :label => "Not invoiced" }] %>
+    <span class="radiobuttons">
+      <%= radio_group :invoiced, [{ :value => "all", :label => "All" }, 
+                                  { :value => "invoiced", :label => "Invoiced" }, 
+                                  { :value => "not_invoiced", :label => "Not invoiced" }] %>
+    </span>
   </p>
   
-  <p>
-    <label>&nbsp;</label>
+  <p class="buttons">
     <%= submit "Submit", :class => "button" %>
   </p>
   
