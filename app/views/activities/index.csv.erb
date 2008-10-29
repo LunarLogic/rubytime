@@ -1,6 +1,0 @@
-Client,Project,Role,User,Date,Hours
-<% @activities.each do |activity| %>
-<%= activity.project.client.name %>,<%= activity.project.name %>,<%= activity.user.role.name %>,<%= activity.user.name %>,<%= activity.date %>,<%= format_minutes(activity.minutes) %>
-<% end %>
-
-Sum,<%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %>
