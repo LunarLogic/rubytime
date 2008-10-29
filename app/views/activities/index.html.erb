@@ -4,6 +4,7 @@
 <% include_projects = @search_criteria.selected_project_ids.size != 1 %>
 <% include_roles = @search_criteria.selected_role_ids.size != 1 %>
 <% include_users = @search_criteria.selected_user_ids.size != 1 && current_user.can_see_users? %>
+<% show_invoice_form = current_user.is_admin? && !@uninvoiced_activities.empty? %>
 
 <h1>Activities</h1>
 
@@ -34,7 +35,7 @@
   
   <table class="activities list" cellspacing="0" cellpadding="0">
     <tr>
-      <% unless @uninvoiced_activities.empty? %>
+      <% if show_invoice_form  %>
         <th class="checkbox"><%= check_box :name => "activity_select_all" %></th>
       <% end %>
       <% if include_clients %>
@@ -51,7 +52,7 @@
     </tr>
     <% @activities.each_with_index do |activity,i| %>
       <tr>
-        <% unless @uninvoiced_activities.empty? %>
+        <% if show_invoice_form %>
           <td class="checkbox"><%= check_box(:name => "activity_id[]", :value => activity.id) unless activity.invoiced? %></td>
         <% end %>
         <% if include_clients %>
@@ -85,13 +86,13 @@
       </tr>
     <% end %>
     <tr class="odd">
-      <td colspan="<%= 5 - [!@uninvoiced_activities.empty?, include_clients, include_projects, include_users].reject { |b| b }.size %>"></td>
+      <td colspan="<%= 5 - [show_invoice_form, include_clients, include_projects, include_users].reject { |b| b }.size %>"></td>
       <td class="summary right">Sum: <%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %></td>
     </tr>
   </table>
   <%= link_to "Export this list to CSV", url(:activities) + ".csv?" + params.reject { |k,v| k =~ /^(id|action|controller|format)$/}.to_params %>
   
-  <% unless @uninvoiced_activities.empty? %>
+  <% if show_invoice_form %>
     <br/>
     <br/>
     <br/>
