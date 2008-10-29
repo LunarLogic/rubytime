@@ -59,7 +59,7 @@ $(function() {
     $(".add-activity a").click(function() { $(document).trigger(EVENTS.add_activity_clicked); return false; });
     $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
         // don't hide form if memory.date which means click on calendar form
-        if ($("#add_activity_form").length > 0 && !memory && !memory.date) {
+        if ($("#add_activity_form").length > 0 && !memory) {
           hideActivityPopup();
         } else {
           var user_id = memory && memory.user_id; 
