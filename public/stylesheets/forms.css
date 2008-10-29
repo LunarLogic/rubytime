@@ -42,6 +42,14 @@ fieldset p {
     margin-bottom:10px;
 }
 
+fieldset .description {
+  padding-left:90px;
+  font-size:11px;
+  display:block;
+  clear:both;
+  font-style:italic;
+}
+
 * html .clearfix {
     height:1px;
 }
