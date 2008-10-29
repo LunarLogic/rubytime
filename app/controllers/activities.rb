@@ -10,7 +10,8 @@ class Activities < Application
   before :load_user,                  :only => [:calendar]
   before :try_load_user,              :only => [:new] 
   before :check_calendar_viewability, :only => [:calendar]
-
+  before :load_activity             , :only => [:destroy]
+  before :check_deletable_by        , :only => [:destroy] 
 
   def index
     provides :csv
@@ -45,6 +46,7 @@ class Activities < Application
   end
   
   def destroy
+    
   end
 
   # TODO refactor
@@ -82,12 +84,20 @@ class Activities < Application
   
   protected
   
+  def check_deletable_by
+    
+  end
+  
   def check_calendar_viewability
     raise Forbidden unless @user.calendar_viewable?(current_user)
   end
+
+  def load_activity
+    @activity = User.get(params[:id]) or raise NotFound
+  end
   
   def load_user
-    raise NotFound unless try_load_user
+    try_load_user or raise NotFound 
   end
 
   def try_load_user
