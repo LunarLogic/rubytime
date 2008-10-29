@@ -1,8 +1,6 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Sessions do
-  before(:each) { prepare_users }
-  
   it "should route to Sessions#new from '/login'" do
      request_to("/login") do |params|
        params[:controller].should == "Sessions"

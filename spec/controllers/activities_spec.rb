@@ -31,9 +31,9 @@ describe Activities do
   end
   
   it "should add new activity" do
-    as(:employee).dispatch_to(Activities, :create, :activity => { 
+    as(fx(:misio)).dispatch_to(Activities, :create, :activity => { 
       :date => Date.today,
-      :project_id => Project.gen.id,
+      :project_id => fx(:bananas_first_project).id,
       :hours => "7",
       :comments => "this & that"
     }).status.should == 201
@@ -45,39 +45,40 @@ describe Activities do
       :project_id => Project.gen.id,
       :hours => "6:30",
       :comments => ""
-    }).status.should == 200
+    }).status.should == 400
   end
   
   it "should not add activity for other user if he isn't admin" do
-    @employee = Employee.gen
-    other_user = Employee.gen
-    block_should(change(@employee.activities, :count).by(1)).and_not(change other_user.activities, :count) do
-      response = dispatch_to_as_employee(Activities, :create, :activity => { 
+    employee = fx(:jola)
+    another_emplyee = fx(:misio)
+
+    block_should(change(employee.activities, :count).by(1)).and_not(change another_emplyee.activities, :count) do
+      as(employee).dispatch_to(Activities, :create, :activity => { 
         :date => Date.today,
-        :project_id => Project.gen.id,
+        :project_id => fx(:oranges_first_project).id,
         :hours => "7",
         :comments => "this & that",
-        :user_id => other_user.id
-      })
-      response.status.should == 201
+        :user_id => another_emplyee.id
+      }).status.should == 201
+      employee.reload # nedded to reload employee.activity 
     end
   end
   
   it "should add activity for other user if he is admin" do
-    @admin = Employee.gen(:admin)
-    other_user = Employee.gen
-    proc do
-      proc do
-        response = dispatch_to_as_admin(Activities, :create, :activity => { 
-          :date => Date.today,
-          :project_id => Project.gen.id,
-          :hours => "7",
-          :comments => "this & that",
-          :user_id => other_user.id
-        })
-        response.status.should == 201
-      end.should_not change(@admin.activities, :count)
-    end.should change(other_user.activities, :count).by(1)
+    admin = fx(:admin)
+    user = fx(:misio)
+    
+    block_should(change(user.activities, :count).by(1)).and_not(change(admin.activities, :count)) do
+      as(admin).dispatch_to(Activities, :create, :activity => { 
+        :date => Date.today,
+        :project_id => fx(:oranges_first_project).id,
+        :hours => "7",
+        :comments => "this & that",
+        :user_id => user.id
+      }).status.should == 201
+      admin.reload # needed to reload admin.activities
+      user.reload # nedded to reload user.activities 
+    end
   end
   
   it "should match /users/3/calendar to Activites#calendar with user_id = 3" do
@@ -109,8 +110,8 @@ describe Activities do
   
   it "should render calendar for given month" do
     repository(:default) do # same as above
-      employee = Employee.gen
-      year, month = 2007, 10 # values in params are passed as strings
+      employee = Employee.first
+      year, month = 2007, 10
       employee.activities.should_receive(:for).with(:year => year, :month => month).and_return([])
       controller = as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id, :month => month, :year => year })
       controller.should be_successful
@@ -126,31 +127,31 @@ describe Activities do
   
   it "should allow admin to delete activity" do
     block_should(change(Activity, :count).by(-1)) do
-      delete_jolas_ctivity_as(:admin).should be_successful
+      delete_jolas_activity_as(:admin).should be_successful
     end    
   end
   
   it "should allow owner to delete activity" do
     block_should(change(Activity, :count).by(-1)) do
-      delete_jolas_ctivity_as(fx(:jola)).should be_successful
+      delete_jolas_activity_as(fx(:jola)).should be_successful
     end
   end
   
   it "shouldn't allow user to delete other's activities" do
-    block_should(raise_forbidden).and_not(change Activity.count) do
-      delete_jolas_ctivity_as fx(:stefan)
+    block_should(raise_forbidden).and_not(change Activity, :count) do
+      delete_jolas_activity_as fx(:stefan)
     end
   end
   
   it "should raise not found for deleting activity with nonexistent id" do
     block_should(raise_not_found) do
-      as(:admin).dispatch_to(Activity, :destroy, :activity_id => 123123123)
+      as(:admin).dispatch_to(Activities, :destroy, { :id => 123123123 })
     end
   end
   
   protected 
   
-  def delete_jolas_ctivity_as(user)
-    as(user).dispatch_to(Activities, :destroy, { :activity_id => fx(:jolas_activity1).id})
+  def delete_jolas_activity_as(user)
+    as(user).dispatch_to(Activities, :destroy, { :id => fx(:jolas_activity1).id })
   end
 end
