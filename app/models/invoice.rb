@@ -12,6 +12,10 @@ class Invoice
   belongs_to :client
   belongs_to :user
   
+  def self.non_issued
+    all(:issued_at => nil)
+  end
+  
   def issued?
     !self.issued_at.nil?
   end

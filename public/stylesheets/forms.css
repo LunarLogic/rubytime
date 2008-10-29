@@ -108,7 +108,7 @@ table.list th {
 }
 
 table.list td, table.list th {
-  padding: 10px;
+  padding: 8px;
 }
 
 table.list tr.odd td {
@@ -125,7 +125,7 @@ table.list td.summary {
 
 table.list .right {
   text-align: right;
-  width: 70px;
+  width: 50px;
 }
 
 p.selection {
@@ -151,4 +151,10 @@ span.radiobuttons input {
 }
 #cancel_add_activity {
   color: #C1E1FF;
+}
+
+table.list td.checkbox, table.list th.checkbox {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 0;
 }

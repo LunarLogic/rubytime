@@ -64,12 +64,16 @@ class Activity
     end
   end
   
+  def invoiced?
+    !!self.invoice
+  end
+  
   # Checks if activity is locked.
   #
-  # It is considered to be locked when it belongs to
-  # an invoice and that invoice has been already issued.
+  # It is considered to be locked when it's invoiced
+  # and that invoice has been already issued.
   def locked?
-    !!(self.invoice && self.invoice.issued?)
+    self.invoiced? && self.invoice.issued?
   end
   
   def deletable_by?(user)

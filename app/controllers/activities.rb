@@ -17,6 +17,10 @@ class Activities < Application
     provides :csv
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @activities = @search_criteria.found_activities
+    @uninvoiced_activities = @activities.reject { |a| a.invoiced? }
+    @clients = Client.active.all(:order => [:name])
+    @invoices = Invoice.non_issued.all(:order => [:name])
+    @invoice = Invoice.new
     if content_type == :csv
       convert_to_csv(@activities)
     elsif request.xhr?

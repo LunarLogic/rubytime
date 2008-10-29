@@ -34,6 +34,9 @@
   
   <table class="activities list" cellspacing="0" cellpadding="0">
     <tr>
+      <% unless @uninvoiced_activities.empty? %>
+        <th class="checkbox"><%= check_box :name => "activity_select_all" %></th>
+      <% end %>
       <% if include_clients %>
         <th>Client</th>
       <% end %>
@@ -48,6 +51,9 @@
     </tr>
     <% @activities.each_with_index do |activity,i| %>
       <tr>
+        <% unless @uninvoiced_activities.empty? %>
+          <td class="checkbox"><%= check_box(:name => "activity_id[]", :value => activity.id) unless activity.invoiced? %></td>
+        <% end %>
         <% if include_clients %>
           <td>
             <% if current_user.is_admin? %>
@@ -79,9 +85,53 @@
       </tr>
     <% end %>
     <tr class="odd">
-      <td colspan="<%= 4 - [include_clients, include_projects, include_users].reject { |b| b }.size %>"></td>
+      <td colspan="<%= 5 - [!@uninvoiced_activities.empty?, include_clients, include_projects, include_users].reject { |b| b }.size %>"></td>
       <td class="summary right">Sum: <%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %></td>
     </tr>
   </table>
   <%= link_to "Export this list to CSV", url(:activities) + ".csv?" + params.reject { |k,v| k =~ /^(id|action|controller|format)$/}.to_params %>
+  
+  <% unless @uninvoiced_activities.empty? %>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <p>
+      <%= form_for @invoice, :action => url(:invoices) do %>
+        <fieldset>
+          <p>
+            Add selected activities to
+          </p>
+          <p>
+            <%= text_field :name, :label => "new invoice" %>
+          </p>
+          <p>
+            <%= select :client_id, :label => "for client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+          </p>
+          <p class="buttons">
+            <%= submit "Add", :class => "button" %>
+          </p>
+        </fieldset>
+      <% end =%>
+    </p>
+    <br/>
+    <br/>
+    <br/>
+    <p>
+      <%= form :action => "/invoices/update" do %>
+        <fieldset>
+          <p>
+            Add selected activities to
+          </p>
+          <p>
+            <%= select :name => "id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
+          </p>
+          <p class="buttons">
+            <%= submit "Add", :class => "button" %>
+          </p>
+        </fieldset>
+      <% end =%>
+    </p>
+  <% end %>
 <% end %>
