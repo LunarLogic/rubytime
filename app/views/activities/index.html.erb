@@ -86,7 +86,7 @@
       </tr>
     <% end %>
     <tr class="odd">
-      <td colspan="<%= 5 - [show_invoice_form, include_clients, include_projects, include_users].reject { |b| b }.size %>"></td>
+      <td colspan="<%= 5 - [show_invoice_form, include_clients, include_projects, include_users].count { |b| !b } %>"></td>
       <td class="summary right">Sum: <%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %></td>
     </tr>
   </table>
