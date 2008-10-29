@@ -1,12 +1,18 @@
 <h1>List of projects</h1>
 
 <% if @projects.empty? %>
-  No projects.
+  No projects found.
 <% else %>
   <table id="projects">
+  <tr>
+    <th>Name</th>
+    <th>Client</th>
+    <th></th>
+  </tr>
   <% @projects.each do |project| %>
     <tr>
       <td><%= project.name %></td>
+      <td><%= project.client.name %></td>
       <td><%= link_to 'Edit', resource(project, :edit) %> | 
       <%= link_to 'Remove', resource(project), :class => "delete_row" %></td>
     </tr>

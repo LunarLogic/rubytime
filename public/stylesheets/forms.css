@@ -55,11 +55,12 @@ fieldset .description {
 }
 
 fieldset p.buttons {
-  padding-left:110px;
+  padding-left:90px;
+  line-height: 24px;
 }
 
 fieldset p.buttons .button {
-  margin-right:10px;
+  margin-right:5px;
 }
 
 .button {
@@ -101,32 +102,42 @@ table.activities {
   width: 100%;
 }
 
-table.activities th {
+table th {
   background-color: #C1E1FF;
   font-weight: bold;
 }
 
-table.activities td, table.activities th {
+table td, table th {
   padding: 10px;
 }
 
-table.activities tr.odd td {
+table tr.odd td {
 }
 
-table.activities tr.even td {
+table tr.even td {
   background-color: #EEEEEE;
 }
 
-table.activities td.summary {
+table td.summary {
   background-color: #C1E1FF;
   font-weight: bold;
 }
 
-table.activities .right {
+table .right {
   text-align: right;
   width: 70px;
 }
 
 p.selection {
   font-weight: bold;
+}
+
+#add_activity p.buttons {
+  line-height: 24px;
+  margin-left: 90px;
+  padding-left: 0px;
+}
+
+span.radiobuttons label {
+  width: auto;
 }

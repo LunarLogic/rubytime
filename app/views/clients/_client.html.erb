@@ -2,7 +2,9 @@
   <td><%= client.name  %></td>
   <td><%= client.email %></td>
   <td><%= client.active ? "Yes" : "No" %></td>
-  <td><%= link_to "Show", url(:client, client) %> | </td>
-  <td><%= link_to "Edit", url(:edit_client, client) %> | </td>
-  <td><%= link_to "Remove", resource(client), :class => "delete_row" %></td>
+  <td>
+    <%= link_to "Show", url(:client, client) %> | 
+    <%= link_to "Edit", url(:edit_client, client) %> |
+    <%= link_to "Remove", resource(client), :class => "delete_row" %>
+  </td>
 </tr>

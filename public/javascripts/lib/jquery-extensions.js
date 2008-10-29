@@ -43,6 +43,12 @@ jQuery.fn.extend((function() {
     
     focusFirstBlank: function() {
       this.find(":text:blank:eq(0)").focus();
+    },
+    
+    zebra: function() {
+      this.find("tr:odd").addClass('odd');
+      this.find("tr:even").addClass('even');
+      return this;
     }
   };
 })());
