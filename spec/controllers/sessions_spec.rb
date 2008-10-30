@@ -41,8 +41,10 @@ describe Sessions do
    end
 
    it 'should login correctly' do
-     controller = dispatch_to(Sessions, :create, {:login => @admin.login, :password => @admin.password })
-     controller.session[:user_id].should_not be_nil
+     user = fx(:jola)
+     user.update_attributes :password => "password", :password_confirmation => "password"
+     controller = dispatch_to(Sessions, :create, {:login => user.login, :password => user.password })
+     controller.session[:user_id].should == user.id
      controller.flash[:notice].should_not be_nil
      controller.should redirect_to("/")
    end
