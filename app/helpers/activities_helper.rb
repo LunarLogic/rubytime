@@ -1,27 +1,44 @@
 module Merb
   module ActivitiesHelper
-
+    # TODO: use css instead of &nbsp; in activities_calendar, edit_activity and delete_activity
+    
     def activities_calendar(options = {})
-      raise ArgumentError.new("options[:activities] is a mandatory argument") unless options.has_key?(:activities)
       # no need to check for :year and :month - calendar_table does it
+      activities = options[:activities] or raise ArgumentError.new "options[:activities] is a mandatory argument"
+      user = options[:user]             or raise ArgumentError.new "options[:user] is a mandatory argument"
       year = options[:year]
       month = options[:month]
-      activities = options[:activities]
       
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
-        html =  %(<div class="day_of_the_month">#{date.mday}</div><div class="activities">)
+        html =  %(<div class="day_of_the_month clearfix">)
+        unless activities[date].nil?
+          criteria =  { :date_from => date, :date_to => date, :user_id => [user.id]}
+          html << link_to("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", url(:activities_for_day, :search_criteria => criteria), 
+            :class => "show_day")
+        end
+        html << %(#{date.mday}</div><div class="activities">)
         html << partial(:activity, :with => activities[date]) unless activities[date].nil?
-        html << %(<a class="add_activity" id="#{format_date date}">+</a>)
+        html << %(<a href="#"class="add_activity" id="#{format_date date}">&nbsp;&nbsp;&nbsp;</a>)
         html << "</div>"
       end 
     end
     
     def delete_activity(activity)
       if activity.deletable_by?(current_user) && !activity.locked?
-        link_to "-", resource(activity), :class => "delete_activity" 
+        link_to "&nbsp;&nbsp;&nbsp;", resource(activity), :class => "delete_activity" 
       end
     end
       
+    def edit_activity(activity)
+      if activity.deletable_by?(current_user) && !activity.locked?
+        link_to "&nbsp;&nbsp;&nbsp;", url(:edit_activity, activity), :class => "edit_activity"
+      end
+    end
+      
+    def format_hours(activity)
+      "#{activity.minutes / 60}:#{activity.minutes % 60}"
+    end
+    
     private
       
     # based on rails calendar_helper plugin by topfunky

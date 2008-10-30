@@ -1,4 +1,5 @@
-<div>
-  <%= activity.comments[0..8] %> 
+<div id="calendar_activity_<%= activity.id %>" class="activity">
+  <%= format_hours activity %>
+  <%= activity.project.name %>
   <%= delete_activity activity %>
 </div>

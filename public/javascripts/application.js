@@ -1,6 +1,8 @@
 // TODO clean up application.js
 var EVENTS = {
   activities_changed: 'activitites:changed',
+  activity_added: 'activitites:added',
+  activity_deleted: 'activitites:deleted',
   add_activity_clicked: 'activitites:add_clicked'
 };
 
@@ -30,16 +32,21 @@ function addOnSubmitForActivityPopup() {
   });
   $("#add_activity_form").focusFirstBlank();
   $("#add_activity_form").submit(function() {
-      var params = $("#add_activity_form").serializeArray();
-      var date = $('#activity_date').attr('value').split(/\D/g);
-      $("#add_activity").load($("#add_activity_form").url(), params, function(responseText, textStatus) {
-          if (responseText == '') {
-            // TODO: parse date rather than split - user ui.datapicker method for parsing?
-            $("#add_activity").hide();
-            $(document).trigger(EVENTS.activities_changed, { month: date[1], year: date[2]});
-          } else {
-            addOnSubmitForActivityPopup();
-          }
+      var form = $("#add_activity_form");
+      $.ajax({
+        url: form.url(), 
+        type: "POST",
+        data: form.serialize(),
+        success: function(responseText) {
+          var responseText = $(responseText).hide();
+          $('#' + $('#activity_date').attr('value')).before(responseText);
+          responseText.fadeIn();
+          hideActivityPopup();
+        },
+        error: function(xhr) {
+          $('#add_activity').html(xhr.responseText);
+          addOnSubmitForActivityPopup();
+        }
       });
       $("#add_activity_form input[type=submit]").attr("disabled", "true");
       return false;

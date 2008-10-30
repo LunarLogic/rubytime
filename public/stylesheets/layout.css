@@ -218,7 +218,6 @@ table#calendar tbody td {
   border: 1px solid #ddd;
   padding:5px;
   width:70px;
-  height:50px;
 }
 
 table#calendar .other_month {
@@ -241,7 +240,8 @@ table#calendar a.add_activity {
   display: block;
   text-align:center;
   text-decoration:none;
-  cursor:pointer;
+  background:url(/images/icons/plus_small.png) center no-repeat;
+  padding-top: 8px;
   font-size:11px;
 }
 table#calendar .month_name th {
@@ -262,6 +262,38 @@ a#previous_month {
 
 div#months_navigation {
   padding-bottom: 10px;
+}
+
+a.delete_activity {
+  background:url(/images/icons/cross_small.png) 0 0 no-repeat;
+  width: 16px;
+  height: 16px;
+  text-decoration: none;
+}
+
+
+div.day_of_the_month a{
+  float: left;
+  background:url(/images/icons/wrench_pencil.png) 0 0 no-repeat;
+  text-decoration: none;
+}
+
+div.activity_details a.edit_activity {
+  background:url(/images/icons/pencil_small.png) 0 0 no-repeat;
+  text-decoration: none;
+}
+
+div.activity {
+  padding: 5px 0px 5px;
+}
+
+div.activity_details .label {
+  padding-right: 10px;
+  font-weight: bold;
+}
+
+div.activity_details div.comments {
+  padding: 6px 0 6px;
 }
 
 /* clearfix - http://www.webtoolkit.info/css-clearfix.html */
