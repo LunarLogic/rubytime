@@ -1,0 +1,10 @@
+<div id="list_activity_<%= activity.id %>" class="activity_details">
+  <span class="label">Project:</span>
+  <%= activity.project.name %>
+  <span class="label">Hours:</span>
+  <%= format_hours activity %> 
+  <%= edit_activity activity %>
+  <%= delete_activity activity %>
+  <div class="label">Comments:</div>
+  <div class="comments"><%= activity.comments %></div>
+</div>
