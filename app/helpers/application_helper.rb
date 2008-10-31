@@ -47,6 +47,8 @@ module Merb
         sub_menu << { :title => "Not issued", :path => resource(:invoices) }
       when 'activities'
         if current_user.is_employee?
+          sub_menu << { :title => "List", :path => resource(:activities), 
+                        :selected => action_name == 'index' }
           sub_menu << { :title => "Calendar", :path => url(:user_calendar, current_user.id), 
                         :selected => action_name == 'calendar' }
         end
