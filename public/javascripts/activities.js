@@ -8,6 +8,7 @@ var Activities = {
     Activities._updateIcons('project');
     Activities._updateIcons('role');
     Activities._updateIcons('user');
+    Activities._addOnInvoiceSubmit();
     if (!Activities._calendarContainer().blank()) {
       Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
@@ -67,8 +68,24 @@ var Activities = {
       $("#primary").load(form.url()+'?' + form.serialize(), null, function() {
         //form.find("input[type=submit]").removeAttr("disabled");
         $(this).zebra();
+        Activities._addOnInvoiceSubmit();
       });
       return false;
+    });
+  },
+  
+  _addOnInvoiceSubmit: function() {
+    $("#create_invoice_form").submit(function() {
+      $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
+        $("#activities_filter form:first").submit();
+        alert('created');
+      });
+      return false;
+    });
+
+    $("#update_invoice_form").submit(function() {
+        alert('2');
+        return false;
     });
   },
   

@@ -1,1 +1,33 @@
-You're in index of the Invoices controller.
+<h1>List of invoices</h1>
+
+<% if @invoices.empty? %>
+  No invoices found.
+<% else %>
+  <table id="invoices" class="list">
+  <tr>
+    <th>Name</th>
+    <th>Client</th>
+    <th>Created at</th>
+    <th>Issued at</th>
+    <th>No. of activities</th>
+    <th></th>
+  </tr>
+  <% @invoices.each do |invoice| %>
+    <tr>
+      <td><%= invoice.name %></td>
+      <td><%= invoice.client.name %></td>
+      <td><%= invoice.created_at %></td>
+      <td><%= invoice.issued? ? invoice.issued_at : "-" %></td>
+      <td><%= invoice.activities.count %></td>
+      <td>
+        <%= link_to 'Edit', resource(invoice, :edit) %> | 
+        <%= link_to 'Remove', resource(invoice), :class => "delete_row" %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>
+
+<p>
+  <%= link_to 'Create new invoice', url(:new_invoice) %>
+</p>
