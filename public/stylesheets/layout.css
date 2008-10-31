@@ -305,16 +305,20 @@ div#flash {
   top: 0;
   display: none;
   margin-bottom: 10px;
+  background-position:left center;
+  background-repeat:no-repeat;
 }
 
 div#flash.notice {
   color: green;
   border: 1px solid green;
+  background-image:url(/images/icons/tick_circle.png);
 }
 
 div#flash.error {
   color: red;
   border: 1px solid red;
+  background-image:url(/images/icons/minus_circle.png);
 }
 
 /* clearfix - http://www.webtoolkit.info/css-clearfix.html */
