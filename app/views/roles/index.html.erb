@@ -1,3 +1,4 @@
+<% throw_content :secondary, partial(:new_role) %>
 <h1>List of employees' roles</h1>
 
 <% if @roles.empty? %>
@@ -17,17 +18,3 @@
   </table>
 <% end %>
 
-<br/>
-<br/>
-<br/>
-
-<%= form_for @role, :action => resource(@role.id ? @role : :roles), :id => "role_form" do %>
-  <fieldset>
-    <p>
-      <%= text_field :name, :label => "Add new role" %>
-    </p>
-    <p class="buttons">
-      <%= submit 'Add', :class => "button" %>
-    </p>
-  </fieldset>
-<% end =%>

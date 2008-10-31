@@ -1,3 +1,4 @@
+<% throw_content :secondary, partial(:new_invoice) %>
 <h1>List of invoices</h1>
 
 <% if @invoices.empty? %>
@@ -20,14 +21,8 @@
       <td><%= invoice.issued? ? invoice.issued_at : "-" %></td>
       <td><%= invoice.activities.count %></td>
       <td>
-        <%= link_to 'Edit', resource(invoice, :edit) %> | 
-        <%= link_to 'Remove', resource(invoice), :class => "delete_row" %>
       </td>
     </tr>
   <% end %>
   </table>
 <% end %>
-
-<p>
-  <%= link_to 'Create new invoice', url(:new_invoice) %>
-</p>

@@ -2,20 +2,31 @@ class Invoices < Application
   before :login_required
   before :admin_required
   before :load_invoice, :only => [:edit, :update, :destroy, :show]
+  before :load_invoices, :only => [:index, :create]
+  before :load_clients, :only => [:index, :create]
 
   def index
-    @invoices = Invoice.all
+    @invoice = Invoice.new
     render
   end
   
   def create
-    invoice = Invoice.create(params[:invoice].merge(:user_id => current_user.id))
-    if invoice.new_record?
-      render_failure invoice.errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").capitalize
+    @invoice = Invoice.create(params[:invoice].merge(:user_id => current_user.id))
+    if @invoice.new_record?
+      if request.xhr?
+        render_failure @invoice.errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").capitalize
+      else
+        render :index
+      end
     else
-      Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => invoice.id) if params[:activity_id]
-      ""
+      Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => @invoice.id) if params[:activity_id]
+      request.xhr? ? "" : redirect(resource(:invoices))
     end
+  end
+  
+  def update
+    Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => @invoice.id) if params[:activity_id]
+    ""
   end
   
   def destroy
@@ -29,5 +40,13 @@ class Invoices < Application
 protected
   def load_invoice
     @invoice = Invoice.get(params[:id]) or raise NotFound
+  end
+
+  def load_invoices
+    @invoices = Invoice.all
+  end
+
+  def load_clients
+    @clients = Client.active.all(:order => [:name])
   end
 end
