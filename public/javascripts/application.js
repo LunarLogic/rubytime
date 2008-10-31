@@ -114,7 +114,7 @@ var Application = {
           data: form.serialize(),
           success: function(responseText) {
             var responseText = $(responseText).hide();
-            $('#' + $('#activity_date').attr('value')).before(responseText);
+            $('#' + $('#activity_date').attr('value')).before(responseText).parents('td.day').find('a.show_day').show();
             responseText.fadeIn();
             Application._hideActivityPopup();
             $(document).trigger(EVENTS.activity_added, {date: $('#activity_date').attr('value')});
