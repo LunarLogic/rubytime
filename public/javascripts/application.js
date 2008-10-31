@@ -39,9 +39,11 @@ function addOnSubmitForActivityPopup() {
         data: form.serialize(),
         success: function(responseText) {
           var responseText = $(responseText).hide();
-          $('#' + $('#activity_date').attr('value')).before(responseText);
+          $('#' + $('#activity_date').attr('value')).before(responseText).parents('td.day').find('a.show_day').show();
           responseText.fadeIn();
           hideActivityPopup();
+          
+          $(document).trigger(EVENTS.activity_added, {date: $('#activity_date').attr('value')});
         },
         error: function(xhr) {
           $('#add_activity').html(xhr.responseText);

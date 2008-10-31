@@ -23,9 +23,10 @@ module Rubytime
         private
   
         def run(&blk)
-          @matchers.inject(blk) do |memo, matcher|
+
+          @matchers.inject(blk) { |memo, matcher|
             proc { memo.send matcher[0], matcher[1] }
-          end.call
+          }.call
         end
       end
 

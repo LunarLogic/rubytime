@@ -1,4 +1,5 @@
 class Activities < Application
+  # TODO: extract everything related to calendar to separated Calendar controller
   RECENT_ACTIVITIES_NUM = 3
     
   before :login_required
@@ -10,6 +11,7 @@ class Activities < Application
   before :load_user,                  :only => [:calendar]
   before :try_load_user,              :only => [:new] 
   before :check_calendar_viewability, :only => [:calendar]
+  before :check_day_viewability     , :only => [:day]
   before :load_activity             , :only => [:destroy]
   before :check_deletable_by        , :only => [:destroy] 
 
@@ -30,13 +32,6 @@ class Activities < Application
     else
       render
     end
-  end
-  
-  def day
-    @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
-    @day = format_date(Date.parse(params[:search_criteria][:date_from]))
-    raise BadRequest if @activities.empty?
-    render :layout => false
   end
   
   def new
@@ -102,7 +97,20 @@ class Activities < Application
     end
   end
   
+  def day
+    @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
+    @day = format_date(Date.parse(params[:search_criteria][:date_from]))
+    raise BadRequest if @activities.empty?
+    render :layout => false
+  end
+  
   protected
+  
+  def check_day_viewability
+    raise BadRequest if params[:search_criteria][:user_id].size > 1
+    @user = User.get(params[:search_criteria][:user_id].first) or raise NotFound
+    check_calendar_viewability
+  end
   
   def check_deletable_by
     @activity.deletable_by?(current_user) or raise Forbidden

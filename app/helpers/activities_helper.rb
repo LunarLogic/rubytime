@@ -10,12 +10,11 @@ module Merb
       month = options[:month]
       
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
+        activities_for_today =  !activities[date].nil?
         html =  %(<div class="day_of_the_month clearfix">)
-        unless activities[date].nil?
-          criteria =  { :date_from => date, :date_to => date, :user_id => [user.id]}
-          html << link_to("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", url(:activities_for_day, :search_criteria => criteria), 
-            :class => "show_day")
-        end
+        criteria =  { :date_from => date, :date_to => date, :user_id => [user.id]}
+        html << link_to("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", url(:activities_for_day, :search_criteria => criteria), 
+          :class => "show_day", :style => activities_for_today ? "" : "display: none")
         html << %(#{date.mday}</div><div class="activities">)
         html << partial(:activity, :with => activities[date]) unless activities[date].nil?
         html << %(<a href="#"class="add_activity" id="#{format_date date}">&nbsp;&nbsp;&nbsp;</a>)

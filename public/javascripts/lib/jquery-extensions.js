@@ -56,5 +56,22 @@ jQuery.fn.extend((function() {
 jQuery.extend({
   getDbId: function(s) {
     return s.match(/\d+/)[0];
-  }
+  },
+  
+  once: (function() {
+    var functions = {};
+    return function(f) {
+      if (!functions[f]) {
+        var called = false;
+        var self = this;
+        functions[f] = function() {
+          if (!called) {
+            called = true;
+            f.apply(self, arguments);
+          }
+        };
+      }
+      return functions[f];
+    };
+  })()
 });

@@ -12,6 +12,11 @@ var Activities = {
       Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
       $('#activitites_for_day').click(Activities._dispatchClick);
+      $(document).bind(EVENTS.activity_added, function(e, memo){
+        var date = memo.date; 
+        if (!$('#activitites_for_day h3:contains(' + date + ')').blank())
+          Activities.showDay($('#' + date).parents('td').find('a.show_day'));
+      });
     }
     $(document).bind(EVENTS.activities_changed, Activities._reloadList);
     $(document).bind(EVENTS.activities_changed, function() { Rubytime.notice('Activity added successfully!'); });
@@ -27,13 +32,13 @@ var Activities = {
     } else if (target.hasClass("delete_activity")) {
       Activities._deleteActivity(target);
     } else if (target.hasClass("show_day")) {
-      Activities._showDay(target);
+      Activities.showDay(target);
     } else if (target.hasClass('edit_activity'))
       Rubytime.notice("No editing yet, sorry.");
     return false;
   },
   
-  _showDay: function(link) {
+  showDay: function(link) {
     $("#activitites_for_day").load(link.url());
   },
   
@@ -47,7 +52,13 @@ var Activities = {
         beforeSend: function() { activities.disableLinks(); },
         success: function() { 
           activities.fadeOut(800, function() { 
+            var activitiesContainer = $(this).parents('div.activities');
             $(this).remove(); 
+            if (!activitiesContainer.blank() && activitiesContainer.find('div.activity').blank())
+              activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
+              
+            // TODO change _adjustDetailsCounter regexp to not match digits in date and call it for each activity element
+            $.once(Activities._adjustDetailsCounter)();
           });
         },
         error: function(xhr) {
@@ -57,6 +68,11 @@ var Activities = {
       });
       
     return false;
+  },
+  
+  _adjustDetailsCounter: function() {
+    $('#activitites_for_day h3').text($('#activitites_for_day h3').text().replace(/\d+/, 
+      $('#activitites_for_day div.activity_details').size() || 'no'));
   },
   
   _reloadCalendar: function(e, memory) {
