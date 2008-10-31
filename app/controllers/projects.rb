@@ -3,7 +3,7 @@ class Projects < Application
   before :login_required
   before :admin_required, :exclude => [:for_clients]
   before :load_project, :only => [:edit, :update, :destroy, :show]
-  before :load_projects, :only => [:index, :create]
+  before :load_all_projects, :only => [:index, :create]
   before :load_clients, :only => [:index, :new, :create, :edit, :update]
   
   def index
@@ -58,7 +58,7 @@ class Projects < Application
     raise NotFound unless @project = Project.get(params[:id])
   end
   
-  def load_projects
+  def load_all_projects
     @projects = Project.all(:order => [:name])
   end
   

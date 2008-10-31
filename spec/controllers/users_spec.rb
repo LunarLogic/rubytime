@@ -5,16 +5,8 @@ describe Users do
     as(:guest).dispatch_to(Users, :index).should redirect_to(url(:login))
   end
 
-  it "should redirect from new when user is not admin" do
-    block_should(raise_forbidden) { as(:employee).dispatch_to(Users, :new) }
-  end
-
-  it "Should render new" do
-    User.should_receive(:new)
-    as(:admin).dispatch_to(Users, :new).should be_successful
-  end
-  
   it "should fetch all users" do
+    User.should_receive(:new)
     User.should_receive(:all).and_return([fx(:jola), fx(:misio), fx(:orange_user1)])
     dispatch_to_as_admin(Users, :index)
   end

@@ -12,3 +12,9 @@ module Rubytime
     end
   end
 end
+
+class Fixnum
+  def pred
+    self - 1
+  end
+end

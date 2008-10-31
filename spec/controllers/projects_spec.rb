@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Projects do
   it "shouldn't show any action for guest, employee and client's user" do
-    [:index, :new, :create, :edit, :update, :destroy].each do |action|
+    [:index, :create, :edit, :update, :destroy].each do |action|
       as(:guest).dispatch_to(Projects, action).should redirect_to(url(:login))
       block_should(raise_forbidden) { as(:employee).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:client).dispatch_to(Projects, action) }
@@ -11,14 +11,7 @@ describe Projects do
 
   describe "#index" do
     it "should show index for admin" do
-      controller = dispatch_to_as_admin(Projects, :index)
-      controller.should be_successful
-    end
-  end
-
-  describe "#new" do
-    it "should show new project form" do
-      dispatch_to_as_admin(Projects, :new).should be_successful
+      as(:admin).dispatch_to(Projects, :index).should be_successful
     end
   end
 

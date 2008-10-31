@@ -69,5 +69,3 @@ Merb::Mailer.delivery_method = :test_send
 require Merb.root / "spec/sweatshop"
 
 require Merb.root / "spec/mail_controller_specs_helper"
-
-require 'ruby-prof'
