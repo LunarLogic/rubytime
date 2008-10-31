@@ -11,6 +11,7 @@ class Invoice
  
   belongs_to :client
   belongs_to :user
+  has n, :activities
   
   def self.non_issued
     all(:issued_at => nil)

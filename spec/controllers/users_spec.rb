@@ -39,7 +39,7 @@ describe Users do
     block_should(change(user, :role_id)) do
       controller = as(:admin).dispatch_to(Users, :update, 
         { :id => user.id , :user => { :name => "Jola", :role_id => new_role.id } })
-      controller.should redirect_to(url :user, user)
+      controller.should redirect_to(url(:user, user))
       user.reload 
     end
   end
@@ -59,7 +59,7 @@ describe Users do
       as(:admin).dispatch_to(Users, :update, {
         :id => user.id,
         :user => { :password => "", :password_confirmation => "", :name => "stefan 123" } 
-      }).should redirect_to(url :user, user)
+      }).should redirect_to(url(:user, user))
       user.reload
     end    
   end
@@ -68,7 +68,7 @@ describe Users do
     user = fx(:misio)
     block_should(change(user, :active)) do
       controller = as(:admin).dispatch_to(Users, :update, { :id => user.id, :user => { :active => 0 } })
-      controller.should redirect_to(url :user, user)
+      controller.should redirect_to(url(:user, user))
       user.reload
     end
   end

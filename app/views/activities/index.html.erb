@@ -33,7 +33,7 @@
   
   <br/>
   
-  <table class="activities list" cellspacing="0" cellpadding="0">
+  <table id="activities" class="list" cellspacing="0" cellpadding="0">
     <tr>
       <% if show_invoice_form  %>
         <th class="checkbox"><%= check_box :name => "activity_select_all" %></th>
@@ -99,7 +99,7 @@
     <br/>
     <br/>
     <p>
-      <%= form_for @invoice, :action => url(:invoices) do %>
+      <%= form_for @invoice, :action => url(:invoices), :id => "create_invoice_form" do %>
         <fieldset>
           <p>
             Add selected activities to
@@ -111,7 +111,7 @@
             <%= select :client_id, :label => "for client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
           </p>
           <p class="buttons">
-            <%= submit "Add", :class => "button" %>
+            <%= submit "Add", :class => "button", :id => "create_invoice_button" %>
           </p>
         </fieldset>
       <% end =%>
@@ -120,7 +120,7 @@
     <br/>
     <br/>
     <p>
-      <%= form :action => "/invoices/update" do %>
+      <%= form :action => "/invoices/update", :id => "update_invoice_form" do %>
         <fieldset>
           <p>
             Add selected activities to
@@ -129,7 +129,7 @@
             <%= select :name => "id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
           </p>
           <p class="buttons">
-            <%= submit "Add", :class => "button" %>
+            <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
           </p>
         </fieldset>
       <% end =%>
