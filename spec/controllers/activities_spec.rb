@@ -148,6 +148,12 @@ describe Activities do
       as(:admin).dispatch_to(Activities, :destroy, { :id => 123123123 })
     end
   end
+
+  describe "day action" do
+    it "should dispatch to Activities#day" do
+      request_to("/activities/day").should route_to(Activities, :day)
+    end
+  end
   
   protected 
   

@@ -32,6 +32,13 @@ class Activities < Application
     end
   end
   
+  def day
+    @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
+    @day = format_date(Date.parse(params[:search_criteria][:date_from]))
+    raise BadRequest if @activities.empty?
+    render :layout => false
+  end
+  
   def new
     @activity = Activity.new(:date => Date.today, :user => current_user.is_admin? ? @user : current_user)
     render :layout => false
@@ -41,7 +48,7 @@ class Activities < Application
     @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save
-      render "", :status => 201, :layout => false 
+      render partial("activity", :with => @activity), :status => 201, :layout => false 
     else
       render :new, :status => 400, :layout => false
     end
@@ -70,15 +77,16 @@ class Activities < Application
              @year, @month = Date.today.year, Date.today.month
              :this_month
            end
-           
-    @next_month       = @month == 12 ? 1 : @month.next
-    @next_year        = @month == 12 ? @year.next : @year
-    if @month == 12 && @year == Date.today.year
+
+    if @month == Date.today.month && @year == Date.today.year 
       @next_year      = @next_month = nil
     else
-      @previous_month = @month == 1 ? 12 : @month.pred
-      @previous_year  = @month == 1 ? @year.pred : @year
+      @next_month     = @month == 12 ? 1 : @month.next
+      @next_year      = @month == 12 ? @year.next : @year
     end
+    
+    @previous_month = @month == 1 ? 12 : @month.pred
+    @previous_year  = @month == 1 ? @year.pred : @year
     
     @activities = begin 
                     @user.activities.for date

@@ -12,6 +12,7 @@ var Activities = {
     if (!Activities._calendarContainer().blank()) {
       Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
+      $('#activitites_for_day').click(Activities._dispatchClick);
     }
     $(document).bind(EVENTS.activities_changed, Activities._reloadList);
     $(document).bind(EVENTS.activities_changed, function() { Rubytime.notice('Activity added successfully!'); });
@@ -26,20 +27,32 @@ var Activities = {
       $("div[id$=calendar][id^=users]").load(target.url());
     } else if (target.hasClass("delete_activity")) {
       Activities._deleteActivity(target);
-    }
+    } else if (target.hasClass("show_day")) {
+      Activities._showDay(target);
+    } else if (target.hasClass('edit_activity'))
+      Rubytime.notice("No editing yet, sorry.");
     return false;
   },
   
+  _showDay: function(link) {
+    $("#activitites_for_day").load(link.url());
+  },
+  
   _deleteActivity: function(link) {
-    var activity = link.parent();
+    var id = $.getDbId(link.parent().attr('id'));
+    var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
     if (confirm("Are you sure?"))
       $.ajax({
         url: link.url(), 
         type: "DELETE",
-        beforeSend: function() { activity.disableLinks(); },
-        success: function() { activity.remove(); },
+        beforeSend: function() { activities.disableLinks(); },
+        success: function() { 
+          activities.fadeOut(800, function() { 
+            $(this).remove(); 
+          });
+        },
         error: function(xhr) {
-          activity.enableLinks();
+          activities.enableLinks();
           Rubytime.errorFromXhr(xhr);
         }
       });
