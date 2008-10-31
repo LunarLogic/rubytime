@@ -304,13 +304,17 @@ div#flash {
   width:100%;
   top: 0;
   display: none;
+  margin-bottom: 10px;
 }
 
 div#flash.notice {
+  color: green;
+  border: 1px solid green;
 }
 
 div#flash.error {
-  
+  color: red;
+  border: 1px solid red;
 }
 
 /* clearfix - http://www.webtoolkit.info/css-clearfix.html */
