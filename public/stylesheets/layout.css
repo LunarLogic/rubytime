@@ -296,6 +296,23 @@ div.activity_details div.comments {
   padding: 6px 0 6px;
 }
 
+div#flash {
+  font-size:10pt;
+  font-weight:bold;
+  padding:15px;
+  text-align:center;
+  width:100%;
+  top: 0;
+  display: none;
+}
+
+div#flash.notice {
+}
+
+div#flash.error {
+  
+}
+
 /* clearfix - http://www.webtoolkit.info/css-clearfix.html */
 
 .clearfix:after {

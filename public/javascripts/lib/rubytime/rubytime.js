@@ -1,6 +1,10 @@
 var Rubytime ={
+  notice: function(message) {
+    Rubytime._showFlash("notice", message);
+  },
+  
   error: function(message) {
-    alert(message);
+    Rubytime._showFlash("error", message);
   },
   
   errorFromXhr: function(xhr) {
@@ -10,7 +14,13 @@ var Rubytime ={
       Rubytime.error("Ooops! Something went wrong.");
   },
   
-  notice: function(message) {
-    alert(message);
+  _showFlash: function(klass, message) {
+    $("#flash").addClass(klass).text(message).click(Rubytime._closeFlash).slideDown();
+  },
+  
+  _closeFlash: function() {
+    $("#flash").slideUp(function() {
+      $(this).removeClass("notice").removeClass("error").hide();
+    });
   }
 };

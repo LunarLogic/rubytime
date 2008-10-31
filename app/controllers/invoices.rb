@@ -9,11 +9,11 @@ class Invoices < Application
   end
   
   def create
-    invoice = Invoice.create(params[:invoice].merge!(:user_id => current_user.id))
+    invoice = Invoice.create(params[:invoice].merge(:user_id => current_user.id))
     if invoice.new_record?
       render_failure invoice.errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").capitalize
     else
-      Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => invoice.id)
+      Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => invoice.id) if params[:activity_id]
       ""
     end
   end

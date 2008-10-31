@@ -89,10 +89,14 @@ var Activities = {
   
   _addOnInvoiceSubmit: function() {
     $("#create_invoice_form").submit(function() {
-      $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
-        $("#activities_filter form:first").submit();
-        alert('created');
-      });
+      if ($("#activities td input.checkbox:checked").length > 0) {
+        $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
+          $("#activities_filter form:first").submit();
+          Rubytime.notice('Invoice has been created successfully');
+        });
+      } else {
+          Rubytime.error('You need to select activities for this invoice.');
+      }
       return false;
     });
 

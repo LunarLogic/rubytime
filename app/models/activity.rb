@@ -27,6 +27,10 @@ class Activity
     all(:order => [:date.desc], :limit => n_)
   end
   
+  def self.not_invoiced
+    all(:invoice_id => nil)
+  end
+      
   # Needed only for User#activities in calendar view
   def self.for(time)
     year, month = case time
