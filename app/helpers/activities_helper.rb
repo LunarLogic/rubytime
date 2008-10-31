@@ -4,8 +4,8 @@ module Merb
     
     def activities_calendar(options = {})
       # no need to check for :year and :month - calendar_table does it
-      activities = options[:activities] or raise ArgumentError.new "options[:activities] is a mandatory argument"
-      user = options[:user]             or raise ArgumentError.new "options[:user] is a mandatory argument"
+      activities = options[:activities] or raise ArgumentError.new("options[:activities] is a mandatory argument")
+      user = options[:user]             or raise ArgumentError.new("options[:user] is a mandatory argument")
       year = options[:year]
       month = options[:month]
       
