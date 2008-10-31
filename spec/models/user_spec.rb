@@ -49,7 +49,7 @@ describe User do
   end
 
   it "shouldn't allow to delete it if there is a related invoice or activity" do
-    block_should_not(change User, :count) do
+    block_should_not(change(User, :count)) do
       fx(:jola).destroy
     end
   end

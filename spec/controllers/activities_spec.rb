@@ -40,7 +40,7 @@ describe Activities do
     employee = fx(:jola)
     another_emplyee = fx(:misio)
 
-    block_should(change(employee.activities, :count).by(1)).and_not(change another_emplyee.activities, :count) do
+    block_should(change(employee.activities, :count).by(1)).and_not(change(another_emplyee.activities, :count)) do
       as(employee).dispatch_to(Activities, :create, :activity => { 
         :date => Date.today,
         :project_id => fx(:oranges_first_project).id,
@@ -126,7 +126,7 @@ describe Activities do
   end
   
   it "shouldn't allow user to delete other's activities" do
-    block_should(raise_forbidden).and_not(change Activity, :count) do
+    block_should(raise_forbidden).and_not(change(Activity, :count)) do
       delete_jolas_activity_as fx(:stefan)
     end
   end

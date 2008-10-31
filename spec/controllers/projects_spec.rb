@@ -32,7 +32,7 @@ describe Projects do
             :client_id => fx(:apple).id
           }
         })
-        controller.should redirect_to(resource controller.instance_variable_get(:@project))
+        controller.should redirect_to(resource(controller.instance_variable_get(:@project)))
       end
     end
 
@@ -68,7 +68,7 @@ describe Projects do
           :description => "Misiaczek", 
           :client_id => apple.id
         }
-      }).should redirect_to(resource project)
+      }).should redirect_to(resource(project))
       project.reload
       project.name.should == "Misio"
       project.description.should == "Misiaczek"

@@ -33,7 +33,7 @@ describe Clients, "index action" do
    end
     
   it "should allow admin to create new client and create client user for this client" do
-    block_should(change Client, :count).and(change ClientUser, :count) do
+    block_should(change(Client, :count)).and(change(ClientUser, :count)) do
       controller = as(:admin).dispatch_to(Clients, :create, :client => Client.gen_attrs, 
         :client_user => ClientUser.gen_attrs)
       controller.should redirect_to(resource(controller.instance_variable_get(:@client)))
@@ -41,14 +41,14 @@ describe Clients, "index action" do
   end
   
   it "should render new with errors and not save objects when client is invalid" do
-    block_should_not(change Client, :count).and_not(change ClientUser, :count) do
+    block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
       as(:admin).dispatch_to(Clients, :create, :client => { :name => "", :email => "" },
         :client_user => ClientUser.gen_attrs).should be_successful
     end
   end
   
   it "should render new with errors and not save objects when ClientUser is invalid" do
-    block_should_not(change ClientUser, :count).and_not(change Client, :count) do
+    block_should_not(change(ClientUser, :count)).and_not(change(Client, :count)) do
       as(:admin).dispatch_to(Clients, :create,
           :client => Client.gen_attrs, 
           :client_user => { :name => "John" }
@@ -58,7 +58,7 @@ describe Clients, "index action" do
 
   it "should update client and redirect to show" do
     apple = fx(:apple)
-    block_should_not(change Client, :count).and_not(change ClientUser, :count) do
+    block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
       as(:admin).dispatch_to(Clients, :update, :id => apple.id, 
                              :client => { :name => "new name"}).should redirect_to(resource(apple))
     end
@@ -74,7 +74,7 @@ describe Clients, "index action" do
   end
   
   it "Shouldn't destroy client and client's users if he has any invoices" do
-    block_should_not(change Client, :count).and_not(change ClientUser, :count) do
+    block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
       as(:admin).dispatch_to(Clients, :destroy, :id => fx(:orange).id).status.should == 400
     end
   end
