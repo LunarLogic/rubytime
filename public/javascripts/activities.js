@@ -8,7 +8,7 @@ var Activities = {
     Activities._updateIcons('project');
     Activities._updateIcons('role');
     Activities._updateIcons('user');
-    Activities._addOnInvoiceSubmit();
+    Activities._initActivitiesList();
     if (!Activities._calendarContainer().blank()) {
       Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
@@ -97,13 +97,26 @@ var Activities = {
       $("#primary").load(form.url()+'?' + form.serialize(), null, function() {
         //form.find("input[type=submit]").removeAttr("disabled");
         $(this).zebra();
-        Activities._addOnInvoiceSubmit();
+        Activities._initActivitiesList();
       });
       return false;
     });
   },
   
-  _addOnInvoiceSubmit: function() {
+  _initActivitiesList: function() {
+    $("#activity_select_all").click(function() {
+        var checked = this.checked;
+        $("#activities td input.checkbox").each(function() {
+            this.checked = checked;
+        });
+    });
+    
+    $("#activities td input.checkbox").click(function() {
+        if (!this.checked) {
+          $("#activity_select_all")[0].checked = false;
+        }
+    });
+
     $("#create_invoice_form").submit(function() {
       if ($("#activities td input.checkbox:checked").length == 0) {
         Rubytime.error('You need to select activities for this invoice.');

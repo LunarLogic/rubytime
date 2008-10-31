@@ -36,7 +36,7 @@
   <table id="activities" class="list" cellspacing="0" cellpadding="0">
     <tr>
       <% if show_invoice_form  %>
-        <th class="checkbox"><%= check_box :name => "activity_select_all" %></th>
+        <th class="checkbox"><%= check_box :id => "activity_select_all" %></th>
       <% end %>
       <% if include_clients %>
         <th>Client</th>
