@@ -1,4 +1,4 @@
-<% throw_content :secondary, partial(:new_invoice) %>
+<% throw_content :secondary, partial(:new_invoice) if current_user.is_admin? %>
 <h1>List of invoices</h1>
 
 <% if @invoices.empty? %>

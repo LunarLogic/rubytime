@@ -1,11 +1,12 @@
 class Invoices < Application
   before :login_required
-  before :admin_required
+  before :admin_required, :exclude => [:index]
   before :load_invoice, :only => [:edit, :update, :destroy, :show]
   before :load_invoices, :only => [:index, :create]
   before :load_clients, :only => [:index, :create]
 
   def index
+    raise Forbidden if current_user.is_employee? && !current_user.is_admin?
     @invoice = Invoice.new
     render
   end
@@ -43,7 +44,7 @@ protected
   end
 
   def load_invoices
-    @invoices = Invoice.all
+    @invoices = current_user.is_client_user? ? current_user.client.invoices : Invoice.all
   end
 
   def load_clients
