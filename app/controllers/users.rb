@@ -3,22 +3,17 @@ class Users < Application
   
   before :login_required
   before :admin_required, :only => [:new, :create, :destroy, :index]
-  before :get_user, :only => [:edit, :update, :show, :destroy] 
+  before :load_user, :only => [:edit, :update, :show, :destroy] 
+  before :load_users, :only => [:index, :create]
   before :check_authorization, :only => [:edit, :update, :show]
 
   def index
-    @users = User.all
+    @user = User.new
     display @users
   end
 
   def show
     display @user
-  end
-
-  def new
-    only_provides :html
-    @user = User.new
-    render
   end
 
   def edit
@@ -31,7 +26,7 @@ class Users < Application
     if @user.save
       redirect url(:user, @user)
     else
-      render :new
+      render :index
     end
   end
 
@@ -60,9 +55,13 @@ class Users < Application
     display @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } }
   end
   
-  protected
+protected
+
+  def load_users
+    @users = User.all
+  end
   
-  def get_user
+  def load_user
     raise NotFound unless @user = User.get(params[:id]) 
   end
 

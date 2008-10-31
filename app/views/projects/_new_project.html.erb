@@ -1,0 +1,19 @@
+<h1>Create new project</h1>
+
+<%= error_messages_for(@project) %>
+<%= form_for @project, :action => resource(:projects), :id => "project_form" do %>
+  <fieldset>
+    <p>
+      <%= text_field :name, :label => "Name" %>
+    </p>
+    <p>
+      <%= text_area :description, :label => "Description" %>
+    </p>
+    <p>
+      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+    </p>
+    <p class="buttons">
+      <%= submit 'Save', :class => "button" %> or <%= link_to 'Cancel', resource(:projects) %>
+    </p>
+  </fieldset>
+<% end =%>

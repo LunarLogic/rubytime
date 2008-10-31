@@ -1,3 +1,4 @@
+<% throw_content :secondary, partial(:new_project) %>
 <h1>List of projects</h1>
 
 <% if @projects.empty? %>
@@ -19,7 +20,3 @@
   <% end %>
   </table>
 <% end %>
-
-<p>
-  <%= link_to 'Create new project', url(:new_project) %>
-</p>

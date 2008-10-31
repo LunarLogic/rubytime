@@ -3,16 +3,12 @@ class Projects < Application
   before :login_required
   before :admin_required, :exclude => [:for_clients]
   before :load_project, :only => [:edit, :update, :destroy, :show]
-  before :load_clients, :only => [:new, :create, :edit, :update]
+  before :load_projects, :only => [:index, :create]
+  before :load_clients, :only => [:index, :new, :create, :edit, :update]
   
   def index
-    @projects = Project.all(:order => [:name])
-    render
-  end
-  
-  def new
     @project = Project.new
-    render :edit
+    render
   end
   
   def show
@@ -24,7 +20,7 @@ class Projects < Application
     if @project.save
       redirect resource(@project)
     else
-      render :edit
+      render :index
     end
   end
   
@@ -60,6 +56,10 @@ class Projects < Application
 
   def load_project
     raise NotFound unless @project = Project.get(params[:id])
+  end
+  
+  def load_projects
+    @projects = Project.all(:order => [:name])
   end
   
   def load_clients
