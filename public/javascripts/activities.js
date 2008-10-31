@@ -105,20 +105,40 @@ var Activities = {
   
   _addOnInvoiceSubmit: function() {
     $("#create_invoice_form").submit(function() {
-      if ($("#activities td input.checkbox:checked").length > 0) {
-        $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
-          $("#activities_filter form:first").submit();
-          Rubytime.notice('Invoice has been created successfully');
-        });
-      } else {
-          Rubytime.error('You need to select activities for this invoice.');
+      if ($("#activities td input.checkbox:checked").length == 0) {
+        Rubytime.error('You need to select activities for this invoice.');
+        return false;
       }
+        
+      $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
+        $("#activities_filter form:first").submit();
+        Rubytime.notice('Invoice has been created successfully');
+      });
       return false;
     });
 
-    $("#update_invoice_form").submit(function() {
-        alert('2');
+    $("#update_invoice_button").click(function() {
+      if ($("#activities td input.checkbox:checked").length == 0) {
+        Rubytime.error('You need to select activities for this invoice.');
         return false;
+      }
+        
+      var invoiceId = $("#invoice_id").val();
+      if (invoiceId == "") {
+        Rubytime.error('You need to select an invoice.');
+        return false;
+      }
+      
+      $.ajax({
+          type: "PUT",
+          url: "/invoices/" + invoiceId,
+          data: $("#activities td input.checkbox:checked").serialize(), 
+          success: function () {
+            $("#activities_filter form:first").submit();
+            Rubytime.notice('Activities have been added to invoice successfully');
+          }
+      });
+      return false;
     });
   },
   

@@ -120,19 +120,17 @@
     <br/>
     <br/>
     <p>
-      <%= form :action => "/invoices/update", :id => "update_invoice_form" do %>
-        <fieldset>
-          <p>
-            Add selected activities to
-          </p>
-          <p>
-            <%= select :name => "id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
-          </p>
-          <p class="buttons">
-            <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
-          </p>
-        </fieldset>
-      <% end =%>
+      <fieldset>
+        <p>
+          Add selected activities to
+        </p>
+        <p>
+          <%= select :id => "invoice_id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
+        </p>
+        <p class="buttons">
+          <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
+        </p>
+      </fieldset>
     </p>
   <% end %>
 <% end %>

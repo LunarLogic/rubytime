@@ -69,7 +69,7 @@ class Activity
   end
   
   def invoiced?
-    !!self.invoice
+    !!self.invoice_id
   end
   
   # Checks if activity is locked.
