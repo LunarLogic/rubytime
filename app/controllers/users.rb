@@ -5,6 +5,7 @@ class Users < Application
   before :admin_required, :only => [:new, :create, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy] 
   before :load_users, :only => [:index, :create]
+  before :load_clients_and_roles, :only => [:index, :create]
   before :check_authorization, :only => [:edit, :update, :show]
 
   def index
@@ -31,7 +32,7 @@ class Users < Application
   end
 
   def update
-    @user.inspect # fix for dm's validation bug
+    #@user.inspect # fix for dm's validation bug
     if @user.update_attributes(params[:user]) || !@user.dirty?
       redirect url(:user, @user)
     else
@@ -63,6 +64,11 @@ protected
   
   def load_user
     raise NotFound unless @user = User.get(params[:id]) 
+  end
+  
+  def load_clients_and_roles
+    @clients = Client.active.all(:order => [:name])
+    @roles = Role.all(:order => [:name])
   end
 
   def check_authorization

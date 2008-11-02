@@ -2,7 +2,7 @@ class Clients < Application
 
   before :login_required
   before :admin_required
-  before :get_client, :only => [:show, :edit, :destroy, :update]
+  before :load_client, :only => [:show, :edit, :destroy, :update]
   
   def new
     @client_user = ClientUser.new
@@ -28,7 +28,7 @@ class Clients < Application
   end
   
   def index
-    @clients = Client.all
+    @clients = Client.all(:order => [:name])
     render
   end
   
@@ -54,7 +54,7 @@ class Clients < Application
   
   protected
   
-  def get_client
+  def load_client
     raise NotFound unless @client = Client.get(params[:id])
   end
 end # Clients

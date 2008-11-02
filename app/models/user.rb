@@ -10,19 +10,20 @@ class User
   property :active,        Boolean, :nullable => false, :default => true
   property :admin,         Boolean, :nullable => false, :default => false
   property :role_id,       Integer
+  property :client_id,     Integer
   property :created_at,    DateTime
 
   attr_accessor :password_confirmation
   attr_accessor :password
   
   validates_length :name, :min => 3
-  validates_present :role, :if => proc { |u| u.class.to_s == "Employee" }
 
   validates_length :password, :min => 6 , :if => :password_required?
   validates_is_confirmed :password, :if => :password_required?
 
-  
   belongs_to :role # only for Employee
+  belongs_to :client # only for ClientUser
+  
   has n, :activities #, :order => [:created_at.desc] - this order doesn't currently work when used in through relation below 
                      # according to lighthouse it's a bug in DM
   has n, :projects, :through => :activities

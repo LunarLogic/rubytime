@@ -136,7 +136,7 @@ class Activities < Application
     @recent_projects = current_user.projects.active.sort_by { |p| p.activities.recent(1).first.created_at }
     @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
     # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
-    @other_projects = Project.active - @recent_projects
+    @other_projects = Project.active.all(:order => [:name]) - @recent_projects
   end
   
   def load_all_users

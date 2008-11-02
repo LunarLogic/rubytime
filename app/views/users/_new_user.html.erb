@@ -3,6 +3,15 @@
 <%= form_for(@user, :action => url(:users), :id => "user_form") do %>
   <fieldset>
     <p>
+      <%= select :class, :label => "Type", :collection => ["Employee", ["ClientUser", "Client's user"]] %>
+    </p>
+    <p>
+      <%= select :role_id, :label => "Role", :collection => @roles.map { |r| [r.id, r.name] }, :prompt => "Select role..." %>
+    </p>
+    <p>
+      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+    </p>
+    <p>
       <%= text_field :name, :label => "Name" %>
     </p>
     <p>
