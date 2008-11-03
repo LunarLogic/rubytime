@@ -55,6 +55,15 @@ module Rubytime
           property :created_at,  DateTime
         end
       end
+      
+      _ClientLogin = Class.new
+      _ClientLogin.class_eval do
+        include DataMapper::Resource
+        storage_names[:legacy] = "clients_logins"
+        property :id,          DataMapper::Types::Serial
+        property :login,       String
+        property :client_id,   Integer
+      end
 
       # Copy data
       
@@ -73,14 +82,26 @@ module Rubytime
       
       puts "importing users"
       User.all(:repository => repository(:legacy), :id.gt => 0).each do |user|
+        puts "user: #{user.name}, role: #{user.role.name}"
         role = Role.first(:name => user.role.name) || Role.create(:name => user.role.name)
         e = Employee.create(user.attributes.merge(:active => !user.active, :password => "foobar", 
-                                                  :password_confirmation => "foobar", :role => role ))
+                                                  :password_confirmation => "foobar", :role_id => role.id ))
         unless e.errors.empty?
           p e
           p e.errors
         end
       end
+      
+      puts "importing client users"
+      _ClientLogin.all(:repository => repository(:legacy)).each do |user|
+        e = ClientUser.create(:login => user.login, :name => user.login, :password => "foobar", :password_confirmation => "foobar", 
+                              :client_id => user.client_id, :email => "#{user.login}@fixthisemail.com")
+        unless e.errors.empty?
+          p e
+          p e.errors
+        end
+      end
+      
       fix_serial(User)
       
       puts "importing activities"

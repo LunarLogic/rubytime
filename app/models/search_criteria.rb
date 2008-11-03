@@ -24,11 +24,11 @@ class SearchCriteria
   # setters
 
   def date_from=(date)
-    @date_from = Date.parse(date) rescue nil
+    @date_from = date.is_a?(Date) ? date : (Date.parse(date) rescue nil)
   end
 
   def date_to=(date)
-    @date_to = Date.parse(date) rescue nil
+    @date_to = date.is_a?(Date) ? date : (Date.parse(date) rescue nil)
   end
   
   # Setters for multiple user_id[], project_id[], client_id[] and role_id[] properties

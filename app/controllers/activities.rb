@@ -13,7 +13,7 @@ class Activities < Application
 
   def index
     provides :csv
-    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
+    @search_criteria = SearchCriteria.new(params[:search_criteria] || { :date_from => Date.today - 7}, current_user)
     @activities = @search_criteria.found_activities
     if current_user.is_admin?
       @uninvoiced_activities = @activities.reject { |a| a.invoiced? }
