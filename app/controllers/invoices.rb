@@ -1,6 +1,5 @@
 class Invoices < Application
-  before :login_required
-  before :admin_required, :exclude => [:index]
+  before :ensure_admin, :exclude => [:index]
   before :load_invoice, :only => [:edit, :update, :destroy, :show]
   before :load_invoices, :only => [:index, :create]
   before :load_clients, :only => [:index, :create]

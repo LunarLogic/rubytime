@@ -1,7 +1,5 @@
 class Clients < Application
-
-  before :login_required
-  before :admin_required
+  before :ensure_admin
   before :load_client, :only => [:show, :edit, :destroy, :update]
   
   def new

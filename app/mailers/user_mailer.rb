@@ -4,4 +4,10 @@ class UserMailer < Merb::MailController
     @url = Rubytime::CONFIG[:site_url]
     render_mail
   end
+  
+  def new_password
+    @user = params[:user]
+    @url = Rubytime::CONFIG[:site_url]
+    render_mail
+  end
 end

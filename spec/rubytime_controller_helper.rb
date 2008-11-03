@@ -23,7 +23,7 @@ module Rubytime
     
         def dispatch_to(controller_klass, action, params = {}, &blk)
           @spec.dispatch_to(controller_klass, action, params) do |controller|
-            controller.stub!(:current_user).and_return(@user)
+            controller.session.stub!(:user).and_return(@user)
             blk.call(controller) if block_given?
             controller
           end
@@ -83,6 +83,10 @@ module Rubytime
         raise_error Merb::Controller::Forbidden
       end
 
+      def raise_unauthenticated
+        raise_error Merb::Controller::Unauthenticated
+      end
+      
       def raise_bad_request
         raise_error Merb::Controller::BadRequest
       end

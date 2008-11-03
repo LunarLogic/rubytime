@@ -2,7 +2,9 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Users do
   it "shouldn't show index for guest" do
-    as(:guest).dispatch_to(Users, :index).should redirect_to(url(:login))
+    block_should(raise_unauthenticated) do
+      as(:guest).dispatch_to(Users, :index)
+    end
   end
 
   it "should fetch all users" do

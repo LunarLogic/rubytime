@@ -3,7 +3,7 @@ def random_date(start_date, end_date)
 end
 
 Employee.fixture {{
-  :name => (name = /\w{6,15}/.gen),
+  :name => (name = /\w{6,20}/.gen),
   :login => name,
   :email => "#{name}@kiszonka.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -12,7 +12,7 @@ Employee.fixture {{
 }}
 
 Employee.fixture(:admin) {{
-  :name => (name = /\w{6,15}/.gen),
+  :name => (name = /\w{6,20}/.gen),
   :login => name,
   :email => "#{name}@kiszonka.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -22,7 +22,7 @@ Employee.fixture(:admin) {{
 }}
 
 ClientUser.fixture {{
-  :name => (name = /\w{3,15}/.gen),
+  :name => (name = /\w{6,20}/.gen),
   :login => name,
   :email => "#{name}@company.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -45,12 +45,12 @@ Activity.fixture {{
   :user => Employee.pick,
   :project => Project.pick,
   :date => random_date(Date.today - 15, Date.today - 5),
-  :minutes => 30 + rand * 100,
-  :comments => /(\w{3,8}\s){1,5}/.gen
+  :minutes => 30 + rand * (23 * 60),
+  :comments => /(\w{3,8}\s\d{6}\s){1,5}/.gen
 }}
 
 Invoice.fixture {{
-  :name => /200\d-\d{2}-\d{2}/.gen,
+  :name => /200\d-\d{2}-\d{2}-\w{6,15}/.gen,
   :client => Client.pick,
   :user => Employee.pick
 }}

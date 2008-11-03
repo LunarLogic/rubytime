@@ -1,7 +1,5 @@
 class Roles < Application
-
-  before :login_required
-  before :admin_required
+  before :ensure_admin
   before :load_roles, :only => [:index, :create]
   
   def index

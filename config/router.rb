@@ -22,8 +22,6 @@
 Merb.logger.info("Compiling routes...")
 
 Merb::Router.prepare do
-  match("/login").to(:controller => "sessions", :action => "new").name(:login)
-  match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
   match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
   match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
   match("/activities/day").to(:controller => "activities", :action => "day").name(:activities_for_day)
@@ -38,8 +36,11 @@ Merb::Router.prepare do
   resources :projects, :collection => { "for_clients" => :get }
   resources :roles
   resources :invoices
+  
+  # Adds the required routes for merb-auth using the password slice 
+  slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
 
   default_routes
   
-  match('/').to(:controller => 'sessions', :action =>'index').name(:root)
+  match('/').to(:controller => 'activities', :action =>'index').name(:root)
 end

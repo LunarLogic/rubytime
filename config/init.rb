@@ -16,8 +16,6 @@ Merb::BootLoader.before_app_loads do
   # This will get executed after dependencies have been loaded but before your app's classes have loaded.
   Merb.add_mime_type(:csv, :to_csv, %w[text/csv])
   Merb::Mailer.delivery_method = :sendmail
-  require Merb.root / "lib/rubytime/sha1_hash"
-  require Merb.root / "lib/rubytime/authenticated_system"
   require Merb.root / "lib/rubytime/config"
 end
 
@@ -26,5 +24,4 @@ Merb::BootLoader.after_app_loads do
   require Merb.root / "lib/rubytime/misc"
   require Merb.root / "config/local_config.rb"
   require 'chronic'
-  Application.send(:include, Utype::AuthenticatedSystem)
 end

@@ -159,6 +159,14 @@ table.list td.checkbox, table.list th.checkbox {
   margin: 0;
 }
 
-#secondary .text {
+#secondary .text, #secondary .password {
+  width: 160px;
+}
+
+div.error {
+  margin-bottom: 20px;
+}
+
+#activities_filter select {
   width: 160px;
 }

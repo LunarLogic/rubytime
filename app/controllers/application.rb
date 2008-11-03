@@ -1,7 +1,13 @@
 class Application < Merb::Controller
+  before :ensure_authenticated
+  
+  def current_user
+    session.user
+  end
+  
   protected
   
-  def admin_required
+  def ensure_admin
     raise Forbidden unless current_user.is_admin?
   end
   

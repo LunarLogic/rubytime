@@ -2,7 +2,6 @@ class Activities < Application
   # TODO: extract everything related to calendar to separated Calendar controller
   RECENT_ACTIVITIES_NUM = 3
     
-  before :login_required
   before :load_projects,              :only => [:new, :edit, :create]
   before :load_all_users,             :only => [:new, :edit, :create] # currently it needs to be named load_all_users 
                                                                       # instead of just load_users, because of bug 

@@ -2,7 +2,7 @@
 development: &defaults
   # These are the settings for repository :default
   adapter:  mysql
-  database: rubytime_dev
+  database: rubytime3_dev
   username: root
   password: 
   host: localhost
@@ -11,12 +11,20 @@ development: &defaults
 
 test:
   <<:       *defaults
-  database: rubytime_test
+  database: rubytime3_test
 
 production:
   <<:       *defaults
-  database: rubytime_prod
+  database: rubytime3_prod
+  repositories:
+    legacy:
+      adapter:  mysql
+      database: rubytime2_prod
+      username: root
+      password: 
+      host: localhost
+      socket: /opt/local/var/run/mysql5/mysqld.sock
 
 rake:
   <<:       *defaults
-  database: rubytime_dev
+  database: rubytime3_dev

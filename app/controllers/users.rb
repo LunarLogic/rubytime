@@ -1,8 +1,7 @@
 class Users < Application
   # provides :xml, :yaml, :js
   
-  before :login_required
-  before :admin_required, :only => [:new, :create, :destroy, :index]
+  before :ensure_admin, :only => [:new, :create, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy] 
   before :load_users, :only => [:index, :create]
   before :load_clients_and_roles, :only => [:index, :create]

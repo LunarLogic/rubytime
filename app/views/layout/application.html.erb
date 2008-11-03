@@ -27,9 +27,9 @@
           </a>
         </h1>
         <dl id="userinfo">
-          <%= partial 'layout/session_info' if current_user && params[:controller] != 'sessions' %>
+          <%= partial 'layout/session_info' if session.user && params[:controller] != 'sessions' %>
         </dl>
-        <%= partial 'layout/navigation' if current_user && params[:controller] != 'sessions' %>
+        <%= partial 'layout/navigation' if session.user && params[:controller] != 'sessions' %>
       </div>
     </div>
     <div id="content" class="wrapper clearfix">

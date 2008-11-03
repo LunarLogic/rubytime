@@ -1,7 +1,5 @@
 class Projects < Application
-
-  before :login_required
-  before :admin_required, :exclude => [:for_clients]
+  before :ensure_admin, :exclude => [:for_clients]
   before :load_project, :only => [:edit, :update, :destroy, :show]
   before :load_all_projects, :only => [:index, :create]
   before :load_clients, :only => [:index, :new, :create, :edit, :update]

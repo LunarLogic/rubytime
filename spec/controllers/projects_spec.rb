@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 describe Projects do
   it "shouldn't show any action for guest, employee and client's user" do
     [:index, :create, :edit, :update, :destroy].each do |action|
-      as(:guest).dispatch_to(Projects, action).should redirect_to(url(:login))
+      block_should(raise_unauthenticated) { as(:guest).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:employee).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:client).dispatch_to(Projects, action) }
     end
