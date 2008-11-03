@@ -48,7 +48,7 @@ var Application = {
           var user_id = memory && memory.user_id; 
           // TODO should be done via GET
           $("#add_activity").load("/activities/new", { user_id: user_id }, function() {
-            $("#add_activity").fadeIn("normal", Application._addOnSubmitForActivityPopup);
+            $("#add_activity").slideDown("fast", Application._addOnSubmitForActivityPopup);
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
             $("#cancel_add_activity").click(Application._hideActivityPopup);
@@ -90,7 +90,7 @@ var Application = {
   },
   
   _hideActivityPopup: function() {
-    $("#add_activity").fadeOut(function() { $("#add_activity_form").remove(); });
+    $("#add_activity").slideUp("fast", function() { $("#add_activity_form").remove(); });
     return false;
   },
 

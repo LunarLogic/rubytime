@@ -3,10 +3,7 @@ class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
     
   before :load_projects,              :only => [:new, :edit, :create]
-  before :load_all_users,             :only => [:new, :edit, :create] # currently it needs to be named load_all_users 
-                                                                      # instead of just load_users, because of bug 
-                                                                      # (or design fault) in merb (1.0rc2) which confuses  
-                                                                      # load_users with load_user
+  before :load_all_users,             :only => [:new, :edit, :create] 
   before :load_user,                  :only => [:calendar]
   before :try_load_user,              :only => [:new] 
   before :check_calendar_viewability, :only => [:calendar]
@@ -132,7 +129,8 @@ class Activities < Application
   end
   
   def load_projects
-    @recent_projects = current_user.projects.active.sort_by { |p| p.activities.recent(1).first.created_at }
+    @recent_projects = current_user.projects.active.sort_by { |p| Activity.first(:project_id => p.id, :user_id => current_user.id, 
+                                                                                 :order => [:date.desc]).date }
     @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
     # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
     @other_projects = Project.active.all(:order => [:name]) - @recent_projects
