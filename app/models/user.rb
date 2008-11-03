@@ -2,14 +2,14 @@ class User
   include DataMapper::Resource
   
   property :id,            Serial
-  property :name,          String, :nullable => false, :unique => true 
-  property :type,          Discriminator
-  property :login,         String, :nullable => false, :unique => true, :format => /^[\w_\.-]{3,20}$/
+  property :name,          String, :nullable => false, :unique => true
+  property :type,          Discriminator, :index => true
+  property :login,         String, :nullable => false, :unique => true, :index => true, :format => /^[\w_\.-]{3,20}$/
   property :email,         String, :nullable => false, :unique => true, :format => :email_address
   property :active,        Boolean, :nullable => false, :default => true
   property :admin,         Boolean, :nullable => false, :default => false
-  property :role_id,       Integer
-  property :client_id,     Integer
+  property :role_id,       Integer, :index => true
+  property :client_id,     Integer, :index => true
   property :created_at,    DateTime
 
   validates_length :name, :min => 3

@@ -2,10 +2,10 @@ class Invoice
   include DataMapper::Resource
 
   property :id,          Serial
-  property :name,        String, :nullable => false, :unique => true
+  property :name,        String, :nullable => false, :unique => true, :index => true
   property :notes,       Text
-  property :user_id,     Integer, :nullable => false
-  property :client_id,   Integer, :nullable => false
+  property :user_id,     Integer, :nullable => false, :index => true
+  property :client_id,   Integer, :nullable => false, :index => true
   property :issued_at,   DateTime, :default => nil
   property :created_at,  DateTime
  

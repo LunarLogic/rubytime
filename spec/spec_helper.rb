@@ -52,12 +52,12 @@ Spec::Runner.configure do |config|
   end
   
   config.before(:all) do
-    User.all.destroy!
-    Client.all.destroy!
-    Project.all.destroy!
-    Role.all.destroy!
     Activity.all.destroy!
     Invoice.all.destroy!
+    User.all.destroy!
+    Project.all.destroy!
+    Client.all.destroy!
+    Role.all.destroy!
     Rubytime::Test::Fixtures::prepare
   end
 end

@@ -82,7 +82,6 @@ module Rubytime
       
       puts "importing users"
       User.all(:repository => repository(:legacy), :id.gt => 0).each do |user|
-        puts "user: #{user.name}, role: #{user.role.name}"
         role = Role.first(:name => user.role.name) || Role.create(:name => user.role.name)
         e = Employee.create(user.attributes.merge(:active => !user.active, :password => "foobar", 
                                                   :password_confirmation => "foobar", :role_id => role.id ))
@@ -91,6 +90,7 @@ module Rubytime
           p e.errors
         end
       end
+      fix_serial(User)
       
       puts "importing client users"
       _ClientLogin.all(:repository => repository(:legacy)).each do |user|
@@ -102,30 +102,27 @@ module Rubytime
         end
       end
       
-      fix_serial(User)
-      
-      puts "importing activities"
-      Activity.all(:repository => repository(:legacy)).each do |activity|
-        Activity.create(activity.attributes)
-      end
-      fix_serial(Activity)
-      
       puts "importing invoices"
       Invoice.all(:repository => repository(:legacy)).each do |invoice|
         Invoice.create(invoice.attributes)
       end
       fix_serial(Invoice)
+
+      puts "importing activities"
+      # Activity.all(:repository => repository(:legacy)).each do |activity|
+      #   Activity.create(activity.attributes)
+      # end
+      fix_serial(Activity)
     end
     
     def self.fix_serial(klass)
       last = klass.first(:order => [:id.desc]) or return
       table_name = klass.to_s.downcase.pluralize
-      puts "fixing #{klass}"
       
       if repository.adapter.class.to_s =~ /Mysql/
         repository.adapter.execute("alter table #{table_name} AUTO_INCREMENT=#{last.id + 1}")
       elsif repository.adapter.class.to_s =~ /Postgres/
-        model.repository.adapter.query("select setval('#{table_name}_id_seq', #{last.id + 1});")
+        repository.adapter.query("select setval('#{table_name}_id_seq', #{last.id + 1});")
       end
     end
   end

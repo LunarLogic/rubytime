@@ -2,7 +2,7 @@ class Client
   include DataMapper::Resource
 
   property :id,           Serial
-  property :name,         String, :nullable => false
+  property :name,         String, :nullable => false, :index => true
   property :description,  Text
   property :email,        String
   property :active,       Boolean, :nullable => false, :default => true

@@ -5,11 +5,11 @@ class Activity
   
   property :id,          Serial
   property :comments,    Text, :nullable => false
-  property :date,        Date, :nullable => false
+  property :date,        Date, :nullable => false, :index => true
   property :minutes,     Integer, :nullable => false, :auto_validation => false
-  property :project_id,  Integer, :nullable => false
-  property :user_id,     Integer, :nullable => false
-  property :invoice_id,  Integer
+  property :project_id,  Integer, :nullable => false, :index => true
+  property :user_id,     Integer, :nullable => false, :index => true
+  property :invoice_id,  Integer, :index => true
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
