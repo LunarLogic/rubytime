@@ -5,7 +5,7 @@
   <fieldset>
     <% fields_for :user do #TODO: hack for proper input names based on base class name - get rid ot it %>
       <p>
-        <label>Login</label><%= @user.login %>
+        <label>Login</label><span class="static_text"><%= @user.login %></span>
       </p>
       <p>
         <%= text_field :name, :label => "Name" %>
