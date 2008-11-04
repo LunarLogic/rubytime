@@ -1,6 +1,6 @@
 class Users < Application
   # provides :xml, :yaml, :js
-  
+  before :ensure_authenticated, :exclude => [:request_password, :reset_password]
   before :ensure_admin, :only => [:new, :create, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy] 
   before :load_users, :only => [:index, :create]
@@ -53,6 +53,27 @@ class Users < Application
     only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     display @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } }
+  end
+  
+  def request_password
+    if params[:email]
+      user = User.first(:email => params[:email])
+      if user
+        user.password_reset_token = SHA1::hex_digest("-#{user.login}-#{Time.now}-")
+        user.save
+        redirect url(:login), :message => { :notice => "Email with password reset link has been sent to #{params[:email]}" }
+      else
+        redirect resource(:request_password, :users), :message => { :error => "Couldn't find user with email #{params[:email]}" }
+      end
+    else
+      render
+    end
+  end
+  
+  def reset_password
+    user = User.first(:password_reset_token => params[:token]) or raise NotFound
+    session.user = user
+    redirect url(:settings)
   end
   
 protected

@@ -29,7 +29,7 @@ Merb::Router.prepare do
   match("/invoices/issued").to(:controller => "invoices", :action => "index", :filter => "issued").name(:issued_invoices)
   match("/invoices/pending").to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
   
-  resources :users, :collection => { "with_roles" => :get } do
+  resources :users, :collection => { "with_roles" => :get, "request_password" => :get, "reset_password" => :get} do
     resource :calendar
   end
   

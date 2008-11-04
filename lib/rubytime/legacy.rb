@@ -109,9 +109,9 @@ module Rubytime
       fix_serial(Invoice)
 
       puts "importing activities"
-      # Activity.all(:repository => repository(:legacy)).each do |activity|
-      #   Activity.create(activity.attributes)
-      # end
+      Activity.all(:repository => repository(:legacy)).each do |activity|
+        Activity.create(activity.attributes)
+      end
       fix_serial(Activity)
     end
     
