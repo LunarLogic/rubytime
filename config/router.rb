@@ -26,6 +26,10 @@ Merb::Router.prepare do
   match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
   match("/activities/day").to(:controller => "activities", :action => "day").name(:activities_for_day)
 
+  match("/users/:id/settings").to(:controller => "users", :action => "settings").name(:settings)
+  match("/users/request_password").to(:controller => "users", :action => "request_password").name(:request_password)
+  match("/users/reset_password").to(:controller => "users", :action => "reset_password").name(:reset_password)
+
   match("/invoices/issued").to(:controller => "invoices", :action => "index", :filter => "issued").name(:issued_invoices)
   match("/invoices/pending").to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
   

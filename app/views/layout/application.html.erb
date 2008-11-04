@@ -18,7 +18,7 @@
     <%= js_include_tag 'lib/rubytime/input-filler' %>
     <%= auto_link %>
   </head>
-  <body>
+  <body id="<%= params[:controller] %>_<%= params[:action] %>">
     <div class="header header-expanded">
       <div class="wrapper">
         <h1 class="logo">
@@ -35,11 +35,13 @@
     <div id="content" class="wrapper clearfix">
       <div id="add_activity" style="display: none">
       </div>
-      <div id="flash"></div>
+      <div id="flash" class="<%= message.keys.first %>" style="<%= 'display: block' unless message.keys.empty? %>">
+        <%= message[message.keys.first] %>
+      </div>
       <div id="primary">
         <%= catch_content :for_layout %>
       </div>
-      <% unless params[:controller] == 'sessions' %>
+      <% unless params[:controller] == 'sessions' || params[:action] == 'calendar' %>
         <div id="secondary">
           <div class="box">
             <%= catch_content :secondary %>

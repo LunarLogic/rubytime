@@ -1,0 +1,24 @@
+<h1>Account settings</h1>
+
+<%= error_messages_for @user %>
+<%= form_for(@user, :action => url(:user, @user), :id => "user_form") do %>
+  <fieldset>
+    <% fields_for :user do #TODO: hack for proper input names based on base class name - get rid ot it %>
+      <p>
+        <%= text_field :name, :label => "Name" %>
+      </p>
+      <p>
+        <%= text_field :email, :label => "Email" %>
+      </p>
+      <p>
+        <%= password_field :password, :label => "Password" %>
+      </p>
+      <p>
+        <%= password_field :password_confirmation, :label => "Password confirmation" %>
+      </p>
+      <p class="buttons">
+        <%= submit "Save", :class => "button" %> or <%= link_to 'Cancel', url(:activities) %>
+      </p>
+    <% end %>
+  </fieldset>
+<% end =%>

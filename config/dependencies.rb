@@ -25,4 +25,5 @@ dependency "dm-sweatshop"
 #dependency "dm-migrations" #, "0.9.7"   # Make incremental changes to your database.
 dependency "randexp", ">=0.1.3"
 
+require 'digest/sha1'
 require "csv" # dependency raises error
