@@ -41,6 +41,7 @@ var Activities = {
   
   showDay: function(link) {
     $("#activitites_for_day").load(link.url());
+    $.scrollTo('div#activitites_for_day');
   },
   
   _deleteActivity: function(link) {

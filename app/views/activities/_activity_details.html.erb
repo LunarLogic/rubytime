@@ -1,10 +1,13 @@
-<div id="list_activity_<%= activity.id %>" class="activity_details">
-  <span class="label">Project:</span>
-  <%= activity.project.name %>
-  <span class="label">Hours:</span>
-  <%= format_hours activity %> 
-  <%= edit_activity activity %>
-  <%= delete_activity activity %>
-  <div class="label">Comments:</div>
-  <div class="comments"><%= activity.comments %></div>
-</div>
+<dl id="list_activity_<%= activity.id %>" class="activity_details">
+  <dt><span class="label">Project:</span><%= activity.project.name %></dt>
+  <dd>
+    <span class="label">Hours:</span>
+    <%= format_hours activity %> 
+    <%= edit_activity activity %>
+    <%= delete_activity activity %>
+  </dd>
+  <dd class="comments">
+    <p class="label">Comments:</p>
+    <p class="comments"><%= activity.comments %></p>
+  </dd>
+</dl>

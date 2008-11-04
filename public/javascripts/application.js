@@ -52,6 +52,7 @@ var Application = {
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
             $("#cancel_add_activity").click(Application._hideActivityPopup);
+            $.scrollTo('#add_activity');
           });
         }
         return false;

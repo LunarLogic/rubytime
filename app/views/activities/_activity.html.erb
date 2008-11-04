@@ -1,5 +1,5 @@
-<div id="calendar_activity_<%= activity.id %>" class="activity">
-  <%= format_hours activity %>
+<li id="calendar_activity_<%= activity.id %>" class="activity">
+  <strong class="hours"><%= format_hours activity %></strong>
   <%= activity.project.name %>
   <%= delete_activity activity %>
-</div>
+</li>

@@ -13,24 +13,24 @@ module Merb
         activities_for_today =  !activities[date].nil?
         html =  %(<div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, :user_id => [user.id]}
-        html << link_to("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", url(:activities_for_day, :search_criteria => criteria), 
+        html << link_to("Show activity for the day", url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day", 
           :class => "show_day", :style => activities_for_today ? "" : "display: none")
-        html << %(#{date.mday}</div><div class="activities">)
+        html << %(#{date.mday}</div><ul class="activities">)
         html << partial(:activity, :with => activities[date]) unless activities[date].nil?
-        html << %(<a href="#"class="add_activity" id="#{format_date date}">&nbsp;&nbsp;&nbsp;</a>)
-        html << "</div>"
+        html << %(<li class="add_activity"><a href="#"class="add_activity" id="#{format_date date}">Add activity</a></li>)
+        html << "</ul>"
       end 
     end
     
     def delete_activity(activity)
       if activity.deletable_by?(current_user) && !activity.locked?
-        link_to "&nbsp;&nbsp;&nbsp;", resource(activity), :class => "delete_activity" 
+        link_to "<img src=\"/images/icons/cross_small.png\" alt=\"Delete activity\" />", resource(activity), :class => "delete_activity" 
       end
     end
       
     def edit_activity(activity)
       if activity.deletable_by?(current_user) && !activity.locked?
-        link_to "&nbsp;&nbsp;&nbsp;", url(:edit_activity, activity), :class => "edit_activity"
+        link_to "<img src=\"/images/icons/pencil_small.png\" alt=\"Edit activity\" />", url(:edit_activity, activity), :class => "edit_activity"
       end
     end
       

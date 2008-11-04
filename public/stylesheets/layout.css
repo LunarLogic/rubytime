@@ -264,35 +264,36 @@ div#months_navigation {
   padding-bottom: 10px;
 }
 
-a.delete_activity {
-  background:url(/images/icons/cross_small.png) 0 0 no-repeat;
-  width: 16px;
-  height: 16px;
-  text-decoration: none;
-}
-
 
 div.day_of_the_month a{
   float: left;
   background:url(/images/icons/wrench_pencil.png) 0 0 no-repeat;
   text-decoration: none;
+  text-indent:999em;
+  display:block;
+  width:16px;
+  height:16px;
+  overflow:hidden;
 }
 
-div.activity_details a.edit_activity {
-  background:url(/images/icons/pencil_small.png) 0 0 no-repeat;
+.activity_details a.edit_activity {
   text-decoration: none;
+}
+
+.activity_details dt, .activity_details dd{
+  line-height:16px;
 }
 
 div.activity {
   padding: 5px 0px 5px;
 }
 
-div.activity_details .label {
+.activity_details .label {
   padding-right: 10px;
   font-weight: bold;
 }
 
-div.activity_details div.comments {
+.activity_details div.comments {
   padding: 6px 0 6px;
 }
 
@@ -342,4 +343,31 @@ html[xmlns] .clearfix {
 
 * html .clearfix {
   height: 1%;
+}
+
+#activities_calendar #primary {
+  width:100%;
+}
+
+table#calendar {
+  width:100%;
+}
+
+table#calendar td {
+  height:80px;
+}
+
+table#calendar .activity {
+  font-size:11px;
+}
+
+table#calendar .activity strong {
+  font-weight:900;
+}
+
+table#calendar a.add_activity {
+  text-indent:-999em;
+}
+#activitites_for_day { 
+  margin-left:20px;
 }
