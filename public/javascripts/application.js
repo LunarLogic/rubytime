@@ -16,13 +16,14 @@ var Application = {
     Application.initDatepickers();
     Application.initAddActivity();
     Application.initTables();
+    Application.initFlash();
     Application.initDeleteLinks();
   },
   
   setupAjax: function() {
     $.ajaxSetup({
         error: function(xhr) {
-          Rubytime.errorFromXhr(xhr);
+          Application.errorFromXhr(xhr);
         }
     });
   },
@@ -60,6 +61,11 @@ var Application = {
   
   initTables: function() {
     $("table").zebra();
+  },
+
+  initFlash: function() {
+    $("#flash").click(Application._closeFlash);
+    setTimeout(Application._closeFlash, 5000);
   },
   
   initDeleteLinks: function() {
@@ -127,6 +133,32 @@ var Application = {
         $("#add_activity_form input[type=submit]").attr("disabled", "true");
         return false;
     });
-  }
+  },
+  
+  _showFlash: function(klass, message) {
+    $("#flash").removeClass("error").removeClass("notice").addClass(klass).text(message).slideDown();
+    Application.initFlash();
+  },
+  
+  _closeFlash: function() {
+    $("#flash").slideUp(function() {
+      $(this).removeClass("notice").removeClass("error").hide();
+    });
+  },
+
+  notice: function(message) {
+    Application._showFlash("notice", message);
+  },
+  
+  error: function(message) {
+    Application._showFlash("error", message);
+  },
+  
+  errorFromXhr: function(xhr) {
+    if (xhr.status >= 400 && xhr.status < 500)
+      Application.error(xhr.responseText);
+    if(xhr.status >= 500)
+      Application.error("Ooops! Something went wrong.");
+  }  
 };
 $(Application.init);

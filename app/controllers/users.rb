@@ -77,7 +77,8 @@ class Users < Application
   end
   
   def reset_password
-    user = User.first(:password_reset_token => params[:token]) or raise NotFound
+    token = params[:token] or raise BadRequest
+    user = User.first(:password_reset_token => token) or raise NotFound
     session.user = user
     redirect url(:settings, user.id), :message => { :notice => "Please set your password" }
   end
