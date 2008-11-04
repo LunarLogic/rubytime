@@ -1,4 +1,3 @@
-// TODO clean up application.js
 var EVENTS = {
   activities_changed: 'activitites:changed',
   activity_added: 'activitites:added',

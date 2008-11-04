@@ -1,12 +1,16 @@
 class Invoices < Application
-  before :ensure_admin, :exclude => [:index]
-  before :load_invoice, :only => [:edit, :update, :destroy, :show]
+  before :ensure_admin, :exclude => [:index, :show]
+  before :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
   before :load_invoices, :only => [:index, :create]
   before :load_clients, :only => [:index, :create]
 
   def index
     raise Forbidden if current_user.is_employee? && !current_user.is_admin?
     @invoice = Invoice.new
+    render
+  end
+  
+  def show
     render
   end
   
@@ -35,6 +39,12 @@ class Invoices < Application
     else
       render_failure "This invoice has been issued. Couldn't delete."
     end
+  end
+  
+  def issue
+    @invoice.issued_at = DateTime.now
+    @invoice.save
+    redirect resource(@invoice), :message => { :notice => "Invoice has been issued" }
   end
 
 protected

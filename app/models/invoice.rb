@@ -13,6 +13,11 @@ class Invoice
   belongs_to :user
   has n, :activities
   
+  before :destroy do
+    throw :halt if issued?
+    self.activities.update!(:invoice_id => nil)
+  end
+  
   def self.pending
     all(:issued_at => nil)
   end

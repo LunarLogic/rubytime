@@ -1,0 +1,52 @@
+<h1>Invoice: <%= @invoice.name %></h1>
+<% unless @invoice.notes.blank? %>
+  Notes: <%= @invoice.notes %>
+<% end %>
+
+<% if @invoice.activities.empty? %>
+  This invoice has no assigned activities.
+<% else %>
+  <p>This invoice contains following activities:</p>
+  <table class="list" cellspacing="0" cellpadding="0">
+    <tr>
+      <% unless @invoice.issued? %>
+      <!--   <th class="checkbox"><%= check_box :id => "activity_select_all" %></th> -->
+      <% end %>
+      <th>Project</th>
+      <th>User</th>
+      <th>Date</th>
+      <th class="right">Hours</th>
+    </tr>
+    <% @invoice.activities.all(:order => [:created_at.desc]).each do |activity| %>
+      <tr>
+        <% unless @invoice.issued? %>
+        <!--   <td class="checkbox"><%= check_box(:name => "activity_id[]", :value => activity.id) %></td> -->
+        <% end %>
+        <td>
+          <%= activity.project.name %>
+        </td>
+        <td>
+          <%= activity.user.name %> (<%= activity.user.role.name %>)
+        </td>
+        <td><%= activity.date %></td>
+        <td class="right"><%= format_minutes(activity.minutes) %></td>
+      </tr>      
+    <% end %>
+  </table>
+  
+  <br/>
+  <br/>
+  <br/>
+  
+  <% if @invoice.issued? %>
+    This invoice has been issued at <%= @invoice.issued_at.to_time.to_date %>
+  <% elsif current_user.is_admin? %>
+    <%= form_for @invoice, :action => resource(@invoice, :issue), :id => "issue_invoice_form" do %>
+      <%= submit "Issue this invoice", :class => "button" %>
+    <% end =%>
+  <% end %>
+<% end %>
+
+<p>
+  <%= link_to 'Back to invoices', url(:invoices) %>
+</p>
