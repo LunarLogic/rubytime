@@ -42,7 +42,7 @@
       <div id="primary">
         <%= catch_content :for_layout %>
       </div>
-      <% unless params[:controller] == 'sessions' || params[:action] == 'calendar' %>
+      <% unless !session.user || params[:action] == 'calendar' %>
         <div id="secondary">
           <div class="box">
             <%= catch_content :secondary %>

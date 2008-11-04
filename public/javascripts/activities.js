@@ -25,7 +25,7 @@ var Activities = {
   },
   
   _dispatchClick: function(e) {
-    var target = $(e.target);
+    var target = $(e.target).is('a') ? $(e.target) : $(e.target).parents('a');
     if (target.hasClass('add_activity')) {
       var memo = { date: target.attr('id'), user_id: $.getDbId(Activities._calendarContainer().attr('id')) };
       $(document).trigger(EVENTS.add_activity_clicked, memo);
@@ -46,7 +46,7 @@ var Activities = {
   },
   
   _deleteActivity: function(link) {
-    var id = $.getDbId(link.parent().attr('id'));
+    var id = link.url().match(/\d+$/g)[0];
     var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
     if (confirm("Are you sure?"))
       $.ajax({
@@ -56,10 +56,11 @@ var Activities = {
         success: function() { 
           activities.fadeOut(800, function() { 
             var activitiesContainer = $(this).parents('div.activities');
+            var memo = '????';
             $(this).remove(); 
             if (!activitiesContainer.blank() && activitiesContainer.find('div.activity').blank())
               activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
-              $(document).trigger(EVENTS.activity_deleted);
+              $(document).trigger(EVENTS.activity_deleted, memo);
             // TODO change _adjustDetailsCounter regexp to not match digits in date and call it for each activity element
             $.once(Activities._adjustDetailsCounter)();
           });
