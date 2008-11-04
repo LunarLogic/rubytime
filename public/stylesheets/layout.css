@@ -321,8 +321,8 @@ div#flash.notice {
 }
 
 div#flash.error, div.error {
-  color:#880000;
-  border: 1px solid #880000;
+  color:#cc0000;
+  border: 1px solid #cc0000;
   background:#ffeeee url(/images/icons/minus_circle.png) 10px center no-repeat;
   text-align:left;
   padding-left:40px;
