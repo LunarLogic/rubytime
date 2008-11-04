@@ -311,38 +311,33 @@ div#flash {
 }
 
 div#flash.notice {
-  color: green;
-  border: 1px solid green;
-  background-image:url(/images/icons/tick_circle.png);
+  color:#008800;
+  border: 1px solid #008800;
+  background:#eeffee url(/images/icons/tick_circle.png) 10px center no-repeat;
+  text-align:left;
+  padding-left:40px;
+  display:block;
+  width:auto;
 }
 
-div#flash.error {
-  color: red;
-  border: 1px solid red;
-  background-image:url(/images/icons/minus_circle.png);
+div#flash.error, div.error {
+  color:#880000;
+  border: 1px solid #880000;
+  background:#ffeeee url(/images/icons/minus_circle.png) 10px center no-repeat;
+  text-align:left;
+  padding-left:40px;
+  display:block;
+  width:auto;
 }
 
-/* clearfix - http://www.webtoolkit.info/css-clearfix.html */
-
-.clearfix:after {
-  content: ".";
-  display: block;
-  clear: both;
-  visibility: hidden;
-  line-height: 0;
-  height: 0;
+div.error {
+  padding:10px 10px 10px 40px;
 }
 
-.clearfix {
-  display: inline-block;
-}
-
-html[xmlns] .clearfix {
-  display: block;
-}
-
-* html .clearfix {
-  height: 1%;
+div.error h2 {
+  font-size:13px;
+  font-weight:900;
+  color:#880000;
 }
 
 #activities_calendar #primary {

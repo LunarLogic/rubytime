@@ -20,24 +20,31 @@ h3 {
   font-size:16px;
 }
 
+p {
+  line-height:1.25em;
+}
+
+/* clearfix - http://www.webtoolkit.info/css-clearfix.html */
+
 .clearfix:after {
-    content:"."; 
-    display:block; 
-    height:0; 
-    clear:both; 
-    visibility:hidden;
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
 }
 
 .clearfix {
-    display:inline-block;
+  display: inline-block;
 }
 
-.clearfix {
-    display:block;
+html[xmlns] .clearfix {
+  display: block;
 }
 
 * html .clearfix {
-    height:1px;
+  height: 1%;
 }
 
 /* common elements */

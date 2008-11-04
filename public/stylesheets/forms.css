@@ -8,15 +8,19 @@ fieldset label {
   float:left;
 }
 
-fieldset input {
+fieldset input, fieldset textarea {
   display:block;
   float:left;
   border:1px solid #ccc;
-  color:#888;
+  color:#888;  
   line-height:18px;
   font-size:14px;
-  height:18px;
   background:#fff url(/images/input-text-bg.png) 0 0 repeat-x;
+  font-family:'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,sans-serif;
+}
+
+fieldset textarea {
+  
 }
 
 fieldset input:focus, fieldset input.focus {
@@ -173,9 +177,13 @@ div.error {
   width: 160px;
 }
 
-fieldset label.error {
-  width:auto;
-  color:#ff0000;
+label.error {
   font-size:11px;
+  width:auto; 
+  color:#ff0000;
+}
+
+#add_activity label.error {
+  color:#ffaaaa;
   padding-left:20px;
 }
