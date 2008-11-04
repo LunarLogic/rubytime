@@ -187,3 +187,11 @@ label.error {
   color:#ffaaaa;
   padding-left:20px;
 }
+
+#add_activity input, #add_activity select, #add_activity textarea {
+  width:180px;
+}
+
+#add_activity input.button {
+  width:auto;
+}
