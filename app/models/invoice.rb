@@ -13,8 +13,12 @@ class Invoice
   belongs_to :user
   has n, :activities
   
-  def self.non_issued
+  def self.pending
     all(:issued_at => nil)
+  end
+  
+  def self.issued
+    all(:issued_at.not => nil)
   end
   
   def issued?

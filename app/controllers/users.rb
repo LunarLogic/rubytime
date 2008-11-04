@@ -58,7 +58,7 @@ class Users < Application
 protected
 
   def load_users
-    @users = User.all
+    @users = User.all(:order => [:name])
   end
   
   def load_user

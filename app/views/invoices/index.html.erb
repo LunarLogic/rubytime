@@ -10,16 +10,14 @@
     <th>Client</th>
     <th>Created at</th>
     <th>Issued at</th>
-    <th>No. of activities</th>
     <th></th>
   </tr>
   <% @invoices.each do |invoice| %>
     <tr>
       <td><%= invoice.name %></td>
       <td><%= invoice.client.name %></td>
-      <td><%= invoice.created_at %></td>
-      <td><%= invoice.issued? ? invoice.issued_at : "-" %></td>
-      <td><%= invoice.activities.count %></td>
+      <td><%= invoice.created_at.to_time.to_date %></td>
+      <td><%= invoice.issued? ? invoice.issued_at.to_time.to_date : "-" %></td>
       <td>
       </td>
     </tr>

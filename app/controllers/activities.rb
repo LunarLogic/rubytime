@@ -18,7 +18,7 @@ class Activities < Application
     if current_user.is_admin?
       @uninvoiced_activities = @activities.reject { |a| a.invoiced? }
       @clients = Client.active.all(:order => [:name])
-      @invoices = Invoice.non_issued.all(:order => [:name])
+      @invoices = Invoice.pending.all(:order => [:name])
       @invoice = Invoice.new
     end
     if content_type == :csv

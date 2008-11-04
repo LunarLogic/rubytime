@@ -6,7 +6,7 @@
 <% include_users = @search_criteria.selected_user_ids.size != 1 && current_user.can_see_users? %>
 <% show_invoice_form = current_user.is_admin? && !@uninvoiced_activities.empty? %>
 
-<h1>Activities</h1>
+<h1>List of activities</h1>
 
 <% if @activities.empty? %>
   No activities found for selected critieria. 

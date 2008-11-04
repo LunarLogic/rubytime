@@ -25,6 +25,9 @@ Merb::Router.prepare do
   match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
   match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
   match("/activities/day").to(:controller => "activities", :action => "day").name(:activities_for_day)
+
+  match("/invoices/issued").to(:controller => "invoices", :action => "index", :filter => "issued").name(:issued_invoices)
+  match("/invoices/pending").to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
   
   resources :users, :collection => { "with_roles" => :get } do
     resource :calendar

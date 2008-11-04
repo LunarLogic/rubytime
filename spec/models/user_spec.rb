@@ -18,28 +18,29 @@ describe User do
     end
     
     %w(maciej-lotkowski stefan_ks bob kiszka123 12foo123).each do |login|
-      Employee.make(:login => login).save.should be_true
+      Employee.make(:login => login, :role => fx(:developer)).save.should be_true
     end
   end
   
   it "shouldn't authenticate inactive user" do
     password = "awsumpass"
     login = "awsum-stefan"
-    emplyee = Employee.make(:active => false, :login => login, :password => password, :password_confirmation => password)
-    emplyee.save.should be_true
+    employee = Employee.make(:active => false, :login => login, :password => password, 
+                             :password_confirmation => password, :role => fx(:developer))
+    employee.save.should be_true
     User.authenticate(login, password).should be_nil
   end
 
   it "should send welcome email to new user" do
     block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
-      Employee.gen
+      Employee.gen(:role => fx(:developer))
     end
     Merb::Mailer.deliveries.last.text.should include("welcome") 
   end
 
   it "should required password" do
     Employee.new.password_required?.should be_true
-    user = Employee.get(Employee.gen.id) #prevent from keeping password_confirmation set
+    user = Employee.get(Employee.gen(:role => fx(:developer)).id) #prevent from keeping password_confirmation set
     user.password_required?.should be_false
     user.password = "kiszka"
     user.password_required?.should be_true
@@ -64,7 +65,7 @@ describe Employee do
   end
 
   it "should create user" do
-    lambda { Employee.make.save.should be_true }.should change(Employee, :count).by(1)
+    lambda { Employee.make(:role => fx(:developer)).save.should be_true }.should change(Employee, :count).by(1)
   end
   
   it "should be an employee" do
@@ -93,7 +94,7 @@ describe Employee do
     pass = "kiszka123"
     login = "stefan13"
     
-    user = Employee.make :login => login, :password => pass, :password_confirmation => pass
+    user = Employee.make :login => login, :password => pass, :password_confirmation => pass, :role => fx(:developer)
     user.save.should be_true
     User.authenticate(login, pass).should == User.get(user.id)
   end

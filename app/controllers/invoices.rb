@@ -43,7 +43,8 @@ protected
   end
 
   def load_invoices
-    @invoices = current_user.is_client_user? ? current_user.client.invoices : Invoice.all
+    filter = params[:filter] || :all
+    @invoices = (current_user.is_client_user? ? current_user.client.invoices : Invoice.all).send(filter).all(:order => [:created_at.desc])
   end
 
   def load_clients

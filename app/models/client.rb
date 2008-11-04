@@ -14,6 +14,7 @@ class Client
   
   before :destroy do
     throw :halt if invoices.count > 0 
+    throw :halt if projects.count > 0 
   end
   
   before :destroy, :destroy_client_users
