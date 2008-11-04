@@ -8,6 +8,12 @@ fieldset label {
   float:left;
 }
 
+fieldset span.static_text {
+  line-height:24px;
+  display:block;
+  float:left;
+}
+
 fieldset input, fieldset textarea {
   display:block;
   float:left;
@@ -17,10 +23,6 @@ fieldset input, fieldset textarea {
   font-size:14px;
   background:#fff url(/images/input-text-bg.png) 0 0 repeat-x;
   font-family:'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,sans-serif;
-}
-
-fieldset textarea {
-  
 }
 
 fieldset input:focus, fieldset input.focus {
