@@ -2,10 +2,13 @@
 <%= form_for @invoice, :action => resource(:invoices), :id => "invoice_form" do %>
   <fieldset>
     <p>
+      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+    </p>
+    <p>
       <%= text_field :name, :label => "Name" %>
     </p>
     <p>
-      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+      <%= text_area :notes, :label => "Notes" %>
     </p>
     <p class="buttons">
       <%= submit 'Create', :class => "button" %>

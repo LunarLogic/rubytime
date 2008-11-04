@@ -7,19 +7,18 @@
   <table id="invoices" class="list">
   <tr>
     <th>Name</th>
-    <th>Client</th>
+    <% unless current_user.is_client_user? %><th>Client</th><% end %>
     <th>Created at</th>
     <th>Issued at</th>
     <th></th>
   </tr>
   <% @invoices.each do |invoice| %>
     <tr>
-      <td><%= invoice.name %></td>
-      <td><%= invoice.client.name %></td>
+      <td><%= link_to(invoice.name, resource(invoice)) %></td>
+      <% unless current_user.is_client_user? %><td><%= invoice.client.name %></td><% end %>
       <td><%= invoice.created_at.to_time.to_date %></td>
       <td><%= invoice.issued? ? invoice.issued_at.to_time.to_date : "-" %></td>
-      <td>
-      </td>
+      <td><%= link_to 'Remove', resource(invoice), :class => "delete_row" unless current_user.is_client_user? %></td>
     </tr>
   <% end %>
   </table>
