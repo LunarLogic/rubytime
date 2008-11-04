@@ -14,19 +14,19 @@ module Merb
     end
   
     #TODO remove user argument since current_user is available
-    def main_menu_items_for(user, controller_name) 
-      return [] unless user
+    def main_menu_items 
+      return [] unless current_user
       main_menu = []
       
       selected = ['activities'].include?(controller_name)
       main_menu << { :title => "Activities", :path => resource(:activities), :selected => selected }
       
-      if user.is_admin? || user.is_client_user?
+      if current_user.is_admin? || current_user.is_client_user?
         selected = ['invoices'].include?(controller_name)
         main_menu << { :title => "Invoices", :path => resource(:invoices), :selected => selected }
       end
       
-      if user.is_admin?
+      if current_user.is_admin?
         selected = ['users', 'roles', 'projects', 'clients'].include?(controller_name)
         main_menu << { :title => "Manage", :path => resource(:users), :selected => selected }
       end
@@ -34,14 +34,16 @@ module Merb
       main_menu
     end
     
-    def sub_menu_items_for(controller_name)
+    def sub_menu_items
       sub_menu = []
       case controller_name
       when 'users', 'roles', 'projects', 'clients'
-        sub_menu << { :title => "Users", :path => url(:users), :selected => controller_name == 'users' }
-        sub_menu << { :title => "Clients", :path => url(:clients), :selected => controller_name == 'clients' }
-        sub_menu << { :title => "Projects", :path => url(:projects), :selected => controller_name == 'projects' }
-        sub_menu << { :title => "Roles", :path => url(:roles), :selected => controller_name == 'roles' }
+        if current_user.is_admin?
+          sub_menu << { :title => "Users", :path => url(:users), :selected => controller_name == 'users' }
+          sub_menu << { :title => "Clients", :path => url(:clients), :selected => controller_name == 'clients' }
+          sub_menu << { :title => "Projects", :path => url(:projects), :selected => controller_name == 'projects' }
+          sub_menu << { :title => "Roles", :path => url(:roles), :selected => controller_name == 'roles' }
+        end
       when 'invoices'
         sub_menu << { :title => "All", :path => url(:invoices), :selected => params[:filter].nil? }
         sub_menu << { :title => "Issued", :path => url(:issued_invoices), :selected => params[:filter] == 'issued' }

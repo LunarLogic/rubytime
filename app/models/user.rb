@@ -71,4 +71,9 @@ class User
     generate_password!
     save
   end
+  
+  def generate_password_reset_token 
+    self.password_reset_token = Digest::SHA1.hexdigest("-#{login}-#{Time.now}-")
+    save
+  end
 end

@@ -1,13 +1,13 @@
         <h4 class="hidden">Navigation</h4>
         <dl id="menu" class="clearfix">
-          <% main_menu_items_for(current_user, params[:controller]).each do |item| %>
+          <% main_menu_items.each do |item| %>
             <dt class="<%= 'selected' if item[:selected] %>">
               <a href="<%= item[:path] %>"><%= item[:title] %></a> 
             </dt>
           <% end %>
           <dd>
             <ul class="floor-2">
-              <% sub_menu_items_for(params[:controller]).each do |item| %>
+              <% sub_menu_items.each do |item| %>
                 <li class="<%= 'selected' if item[:selected] %>"><a href="<%= item[:path] %>"><%= item[:title] %></a></li>
               <% end %>
             </ul>
