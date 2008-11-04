@@ -38,6 +38,14 @@ describe User do
     Merb::Mailer.deliveries.last.text.should include("welcome") 
   end
 
+  it "should send email with password reset link to user requesting it" do
+    block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
+      user = fx(:jola)
+      user.generate_password_reset_token
+    end
+    Merb::Mailer.deliveries.last.text.should include("reset password") 
+  end
+
   it "should required password" do
     Employee.new.password_required?.should be_true
     user = Employee.get(Employee.gen(:role => fx(:developer)).id) #prevent from keeping password_confirmation set

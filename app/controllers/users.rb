@@ -31,9 +31,12 @@ class Users < Application
   end
 
   def update
-    #@user.inspect # fix for dm's validation bug
     if @user.update_attributes(params[:user]) || !@user.dirty?
-      redirect(current_user.is_admin? ? url(:user, @user) : url(:activities)) 
+      if current_user.is_admin?
+        redirect url(:user, @user), :message => { :notice => "User has been updated" }
+      else
+        redirect url(:activities), :message => { :notice => "Your account information has been updated" }
+      end
     else
       render(current_user.is_admin? ? :edit : :settings)
     end
@@ -63,8 +66,7 @@ class Users < Application
     if params[:email]
       user = User.first(:email => params[:email])
       if user
-        user.password_reset_token = Digest::SHA1.hexdigest("-#{user.login}-#{Time.now}-")
-        user.save
+        user.generate_password_reset_token
         redirect url(:login), :message => { :notice => "Email with password reset link has been sent to #{params[:email]}" }
       else
         redirect url(:request_password), :message => { :error => "Couldn't find user with email #{params[:email]}" }
@@ -77,7 +79,7 @@ class Users < Application
   def reset_password
     user = User.first(:password_reset_token => params[:token]) or raise NotFound
     session.user = user
-    redirect url(:settings, user.id)
+    redirect url(:settings, user.id), :message => { :notice => "Please set your password" }
   end
   
 protected

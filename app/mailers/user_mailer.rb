@@ -5,7 +5,7 @@ class UserMailer < Merb::MailController
     render_mail
   end
   
-  def new_password
+  def password_reset_link
     @user = params[:user]
     @url = Rubytime::CONFIG[:site_url]
     render_mail
