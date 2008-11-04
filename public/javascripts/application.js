@@ -1,5 +1,5 @@
 var EVENTS = {
-  activities_changed: 'activitites:changed',
+  //activities_changed: 'activitites:changed',
   activity_added: 'activitites:added',
   activity_deleted: 'activitites:deleted',
   add_activity_clicked: 'activitites:add_clicked'
@@ -51,7 +51,7 @@ var Application = {
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
             $("#cancel_add_activity").click(Application._hideActivityPopup);
-            $.scrollTo('#add_activity');
+            $.scrollTo('.header');
           });
         }
         return false;

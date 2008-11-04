@@ -11,7 +11,8 @@ var Activities = {
     Activities._initActivitiesList();
     if (!Activities._calendarContainer().blank()) {
       Activities._calendarContainer().click(Activities._dispatchClick);
-      $(document).bind(EVENTS.activities_changed, Activities._reloadCalendar);
+      $(document).bind(EVENTS.activity_added, Activities._reloadCalendar);
+      $(document).bind(EVENTS.activity_deleted, Activities._reloadCalendar);
       $('#activitites_for_day').click(Activities._dispatchClick);
       $(document).bind(EVENTS.activity_added, function(e, memo){
         var date = memo.date; 
@@ -19,8 +20,8 @@ var Activities = {
           Activities.showDay($('#' + date).parents('td').find('a.show_day'));
       });
     }
-    $(document).bind(EVENTS.activities_changed, Activities._reloadList);
-    $(document).bind(EVENTS.activities_changed, function() { Rubytime.notice('Activity added successfully!'); });
+    $(document).bind(EVENTS.activity_added, Activities._reloadList);
+    $(document).bind(EVENTS.activity_added, function() { Rubytime.notice('Activity added successfully!'); });
   },
   
   _dispatchClick: function(e) {
@@ -58,7 +59,7 @@ var Activities = {
             $(this).remove(); 
             if (!activitiesContainer.blank() && activitiesContainer.find('div.activity').blank())
               activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
-              
+              $(document).trigger(EVENTS.activity_deleted);
             // TODO change _adjustDetailsCounter regexp to not match digits in date and call it for each activity element
             $.once(Activities._adjustDetailsCounter)();
           });

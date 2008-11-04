@@ -15,7 +15,7 @@ var Rubytime ={
   },
   
   _showFlash: function(klass, message) {
-    $("#flash").addClass(klass).text(message).click(Rubytime._closeFlash).slideDown();
+    $("#flash").removeClass("error").removeClass("notice").addClass(klass).text(message).click(Rubytime._closeFlash).slideDown();
   },
   
   _closeFlash: function() {
