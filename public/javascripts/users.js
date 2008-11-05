@@ -18,7 +18,8 @@ $(function() {
         email: true
       },
       "user[password]": {
-        required: true
+        required: function(element) { return !(element && element != "") },
+        minlength: 6
       },
       "user[password_confirmation]": {
         equalTo: "#user_password"
