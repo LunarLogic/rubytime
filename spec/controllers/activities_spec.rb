@@ -17,6 +17,13 @@ describe Activities do
     other_projects = controller.instance_variable_get(:@other_projects)
     other_projects.size.should == Project.active.count - 3
   end
+
+  it "should preselect current user in new activity form when user is admin" do
+    admin = fx(:admin)
+    controller = as(admin).dispatch_to(Activities, :new)
+    controller.should be_successful
+    controller.instance_variable_get(:@user).should == admin
+  end
   
   it "should add new activity" do
     as(fx(:misio)).dispatch_to(Activities, :create, :activity => { 

@@ -135,7 +135,7 @@ var Application = {
           },
           error: function(xhr) {
             $('#add_activity').html(xhr.responseText);
-            Application._addOnSubmitForActivityPopup();
+            Application._initActivityPopup();
           }
         });
         $("#add_activity_form input[type=submit]").attr("disabled", "true");

@@ -5,7 +5,7 @@ class Activities < Application
   before :load_projects,              :only => [:new, :edit, :create]
   before :load_all_users,             :only => [:new, :edit, :create] 
   before :load_user,                  :only => [:calendar]
-  before :try_load_user,              :only => [:new] 
+  #before :try_load_user,              :only => [:new] 
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
   before :load_activity             , :only => [:destroy]
@@ -31,7 +31,7 @@ class Activities < Application
   end
   
   def new
-    @activity = Activity.new(:date => Date.today, :user => current_user.is_admin? ? @user : current_user)
+    @activity = Activity.new(:date => Date.today, :user => current_user)
     render :layout => false
   end
   
@@ -121,12 +121,12 @@ class Activities < Application
   end
   
   def load_user
-    raise NotFound unless try_load_user
+    @user = User.get(params[:user_id]) or raise NotFound #unless try_load_user
   end
 
-  def try_load_user
-    @user = User.get(params[:user_id])
-  end
+  #def try_load_user
+    
+  #end
   
   def load_projects
     @recent_projects = current_user.projects.active.sort_by { |p| Activity.first(:project_id => p.id, :user_id => current_user.id, 
