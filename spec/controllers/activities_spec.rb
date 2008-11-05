@@ -22,7 +22,7 @@ describe Activities do
     admin = fx(:admin)
     controller = as(admin).dispatch_to(Activities, :new)
     controller.should be_successful
-    controller.instance_variable_get(:@user).should == admin
+    controller.instance_variable_get(:@activity).user.should == admin
   end
   
   it "should add new activity" do
