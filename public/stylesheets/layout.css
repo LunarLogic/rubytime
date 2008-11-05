@@ -378,6 +378,11 @@ table#activities {
   margin:10px 0;
 }
 
+#activities_filter a img {
+  vertical-align:center;
+  width:12px;
+}
+
 #footer {
   width:960px;
   margin:0 auto;
