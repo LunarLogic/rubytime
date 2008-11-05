@@ -21,7 +21,7 @@ var Activities = {
       });
     }
     $(document).bind(EVENTS.activity_added, Activities._reloadList);
-    $(document).bind(EVENTS.activity_added, function() { Rubytime.notice('Activity added successfully!'); });
+    $(document).bind(EVENTS.activity_added, function() { Application.notice('Activity added successfully!'); });
   },
   
   _dispatchClick: function(e) {
@@ -36,7 +36,7 @@ var Activities = {
     } else if (target.hasClass("show_day")) {
       Activities.showDay(target);
     } else if (target.hasClass('edit_activity'))
-      Rubytime.notice("No editing yet, sorry.");
+      Application.notice("No editing yet, sorry.");
     return false;
   },
   
@@ -67,7 +67,7 @@ var Activities = {
         },
         error: function(xhr) {
           activities.enableLinks();
-          Rubytime.errorFromXhr(xhr);
+          Application.errorFromXhr(xhr);
         }
       });
       
@@ -122,26 +122,26 @@ var Activities = {
 
     $("#create_invoice_form").submit(function() {
       if ($("#activities td input.checkbox:checked").length == 0) {
-        Rubytime.error('You need to select activities for this invoice.');
+        Application.error('You need to select activities for this invoice.');
         return false;
       }
         
       $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
         $("#activities_filter form:first").submit();
-        Rubytime.notice('Invoice has been created successfully');
+        Application.notice('Invoice has been created successfully');
       });
       return false;
     });
 
     $("#update_invoice_button").click(function() {
       if ($("#activities td input.checkbox:checked").length == 0) {
-        Rubytime.error('You need to select activities for this invoice.');
+        Application.error('You need to select activities for this invoice.');
         return false;
       }
         
       var invoiceId = $("#invoice_id").val();
       if (invoiceId == "") {
-        Rubytime.error('You need to select an invoice.');
+        Application.error('You need to select an invoice.');
         return false;
       }
       
@@ -151,7 +151,7 @@ var Activities = {
           data: $("#activities td input.checkbox:checked").serialize(), 
           success: function () {
             $("#activities_filter form:first").submit();
-            Rubytime.notice('Activities have been added to invoice successfully');
+            Application.notice('Activities have been added to invoice successfully');
           }
       });
       return false;

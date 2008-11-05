@@ -87,7 +87,7 @@ var Application = {
           error: function(xhr) { 
             target.click(handler); 
             row.enableLinks(); 
-            Rubytime.errorFromXhr(xhr);
+            Application.errorFromXhr(xhr);
           }
         });
       };
