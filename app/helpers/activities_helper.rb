@@ -16,7 +16,7 @@ module Merb
         html << link_to("Show activity for the day", url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day", 
           :class => "show_day", :style => activities_for_today ? "" : "display: none")
         html << %(#{date.mday}</div><ul class="activities">)
-        html << partial(:activity, :with => activities[date]) unless activities[date].nil?
+        html << partial(:activity, :with => activities[date]) if activities_for_today
         html << %(<li class="add_activity"><a href="#"class="add_activity" id="#{format_date date}">Add activity</a></li>)
         html << "</ul>"
       end 
