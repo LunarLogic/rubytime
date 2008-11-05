@@ -377,3 +377,22 @@ table#activities {
 .activities_to_invoice fieldset {
   margin:10px 0;
 }
+
+#footer {
+  width:960px;
+  margin:0 auto;
+  text-align:center;
+}
+
+#footer .logo {
+  width:78px;
+  height:30px;
+  background:url(/images/lunar-logic-polska.png) 0 0 no-repeat;
+  text-indent:-999em;
+  display:block;
+  margin:0 auto;
+}
+
+#footer .logo:hover {
+  background-position:bottom left;
+}
