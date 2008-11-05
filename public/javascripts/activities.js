@@ -95,11 +95,7 @@ var Activities = {
   _addOnFilterSubmit: function() {
     var form = $("#activities_filter form:first");
     form.submit(function() {
-      //form.find("input[type=submit]").attr("disabled", "true"); // it would prevent form to submit in IE probably
-      // load with GET request
       $("#primary").load(form.url()+'?' + form.serialize(), null, function() {
-        //form.find("input[type=submit]").removeAttr("disabled");
-        $(this).zebra();
         Activities._initActivitiesList();
       });
       return false;
@@ -107,6 +103,10 @@ var Activities = {
   },
   
   _initActivitiesList: function() {
+    // style the table
+    $("#activities").zebra();
+    
+    // handle selection of all activities
     $("#activity_select_all").click(function() {
         var checked = this.checked;
         $("#activities td input.checkbox").each(function() {
@@ -114,12 +114,15 @@ var Activities = {
         });
     });
     
+    
+    // handle unselection of all_activities when one of activies has been unselected
     $("#activities td input.checkbox").click(function() {
         if (!this.checked) {
           $("#activity_select_all")[0].checked = false;
         }
     });
 
+    // handle new invoice form submission
     $("#create_invoice_form").submit(function() {
       if ($("#activities td input.checkbox:checked").length == 0) {
         Application.error('You need to select activities for this invoice.');
@@ -133,6 +136,7 @@ var Activities = {
       return false;
     });
 
+    // handle "add activities to existing invoice" form submission 
     $("#update_invoice_button").click(function() {
       if ($("#activities td input.checkbox:checked").length == 0) {
         Application.error('You need to select activities for this invoice.');

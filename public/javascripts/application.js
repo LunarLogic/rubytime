@@ -14,7 +14,7 @@ var Application = {
     Application.setupAjax();
     Application.setupValidator();
     Application.initDatepickers();
-    Application.initAddActivity();
+    Application.initAddActivityButton();
     Application.initTables();
     Application.initFlash();
     Application.initDeleteLinks();
@@ -38,20 +38,19 @@ var Application = {
       buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
   },
   
-  initAddActivity: function() {
+  initAddActivityButton: function() {
     $(".add-activity a").click(function() { $(document).trigger(EVENTS.add_activity_clicked); return false; });
     $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
         // don't hide form if memory which means click on calendar form
         if ($("#add_activity_form").length > 0 && !memory) {
-          Application._hideActivityPopup();
+          Application._closeActivityPopup();
         } else {
           var user_id = memory && memory.user_id; 
           // TODO should be done via GET
           $("#add_activity").load("/activities/new", { user_id: user_id }, function() {
-            $("#add_activity").slideDown("fast", Application._addOnSubmitForActivityPopup);
+            $("#add_activity").slideDown("fast", Application._initActivityPopup);
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
-            $("#cancel_add_activity").click(Application._hideActivityPopup);
             $.scrollTo('.header');
           });
         }
@@ -95,12 +94,17 @@ var Application = {
     });
   },
   
-  _hideActivityPopup: function() {
+  _closeActivityPopup: function() {
+    // slide up and remove the form
     $("#add_activity").slideUp("fast", function() { $("#add_activity_form").remove(); });
     return false;
   },
 
-  _addOnSubmitForActivityPopup: function() {
+  _initActivityPopup: function() {
+    // hide popup on clicking Cancel link
+    $("#cancel_add_activity").click(Application._closeActivityPopup);
+    
+    // set validation rules
     $("#add_activity_form").validate({
       rules: {
         "activity[hours]": {
@@ -111,7 +115,11 @@ var Application = {
         }
       }
     });
+    
+    // focus first blan field (hours)
     $("#add_activity_form").focusFirstBlank();
+    
+    // handle form submission
     $("#add_activity_form").submit(function() {
         var form = $("#add_activity_form");
         $.ajax({
@@ -122,7 +130,7 @@ var Application = {
             var responseText = $(responseText).hide();
             $('#' + $('#activity_date').attr('value')).before(responseText).parents('td.day').find('a.show_day').show();
             responseText.fadeIn();
-            Application._hideActivityPopup();
+            Application._closeActivityPopup();
             $(document).trigger(EVENTS.activity_added, {date: $('#activity_date').attr('value')});
           },
           error: function(xhr) {

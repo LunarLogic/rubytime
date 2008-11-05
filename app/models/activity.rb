@@ -45,7 +45,7 @@ class Activity
       raise ArgumentError.new("Month should be in range 1-12 and year not greater than #{Date.today.year}") 
     end
     
-    all :order => [:date.desc], :date.gt => Date.civil(year, month, 1), :date.lt => Date.civil(year, month, -1)
+    all :order => [:date.desc], :date.gte => Date.civil(year, month, 1), :date.lte => Date.civil(year, month, -1)
   end
   
   # Sets hours and minutes properties

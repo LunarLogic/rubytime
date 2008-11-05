@@ -108,6 +108,14 @@ describe Activity do
     employee.reload.activities.for(:year => year, :month => previous_month).count.should == previous_month_count
   end
 
+  it "should return activities for first and last day of month" do
+    employee = Employee.gen
+    Activity.make(:user => employee, :date => Date.parse("2008-11-01")).save.should be_true
+    Activity.make(:user => employee, :date => Date.parse("2008-11-30")).save.should be_true
+    employee.reload.activities.for(:this_month).count.should == 2
+    employee.reload.activities.for(:year => 2008, :month => 11).count.should == 2
+  end
+
   it "should be deletable by admin and by owner" do
     fx(:jolas_activity1).deletable_by?(fx(:jola)).should be_true
     fx(:jolas_activity1).deletable_by?(fx(:admin)).should be_true
