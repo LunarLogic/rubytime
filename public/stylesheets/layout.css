@@ -170,7 +170,7 @@
 }
 
 #add_activity {
-  width:300px;
+  width:350px;
   background:#157ee2;
   position:absolute;
   top:-25px;
@@ -250,18 +250,6 @@ table#calendar .month_name th {
   font-weight: bold;
   border-bottom: 1px solid black;
   padding: 3px;
-}
-
-a#next_month {
-  float: right;
-}
-
-a#previous_month {
-  float: left;
-}
-
-div#months_navigation {
-  padding-bottom: 10px;
 }
 
 
@@ -363,6 +351,29 @@ table#calendar .activity strong {
 table#calendar a.add_activity {
   text-indent:-999em;
 }
+
+table#calendar thead a {
+  font-size:11px;
+  line-height:20px;
+  color:#fff;
+}
+
+table#calendar thead span.date {
+  margin:0 40px;
+}
+
 #activitites_for_day { 
   margin-left:20px;
+}
+
+table#activities {
+  margin:20px 0;
+}
+
+.activities_to_invoice {
+  margin:20px 0 0;
+}
+
+.activities_to_invoice fieldset {
+  margin:10px 0;
 }

@@ -8,6 +8,13 @@ fieldset label {
   float:left;
 }
 
+fieldset legend {
+  display:block;
+  margin:10px 0;
+  padding:0;
+  font-weight:900;
+}
+
 fieldset span.static_text {
   line-height:24px;
   display:block;
@@ -25,7 +32,7 @@ fieldset input, fieldset textarea {
   font-family:'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,sans-serif;
 }
 
-fieldset input:focus, fieldset input.focus {
+fieldset input:focus, fieldset input.focus, fieldset textarea:focus, fieldset textarea.focus {
   border:1px solid #222;
   color:#222;
 }
@@ -191,7 +198,11 @@ label.error {
 }
 
 #add_activity input, #add_activity select, #add_activity textarea {
-  width:180px;
+  width:250px;
+}
+
+#add_activity textarea {
+  height:120px;
 }
 
 #add_activity input.button {

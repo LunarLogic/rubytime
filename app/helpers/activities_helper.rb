@@ -73,7 +73,13 @@ module Merb
       end
     
       cal = %(<table id="#{options[:table_id]}" class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
-      cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</th></tr><tr class="#{options[:day_name_class]}">)
+      cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">)
+      cal << link_to("&laquo; Previous", url(:user_calendar, @user.id, :month => @previous_month, :year => @previous_year), :id => "previous_month")
+      cal << %(<span class="date">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</span>)
+      unless @next_month.nil? && @next_year.nil?
+        cal << link_to("Next &raquo;", url(:user_calendar, @user.id, :month => @next_month, :year => @next_year), :id => "next_month")
+      end
+      cal << %(</th></tr><tr class="#{options[:day_name_class]}">)
       day_names.each {|d| cal << "<th>#{d[options[:abbrev]]}</th>"}
       cal << "</tr></thead><tbody><tr>"
       beginning_of_week(first, first_weekday).upto(first - 1) do |d|

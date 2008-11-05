@@ -2,6 +2,6 @@
   <%= select :name => "search_criteria[#{group}_id][]", :label => group.to_s.camel_case, :class => "#{group}_combo", 
                                :collection => @search_criteria.send("all_#{group.to_s.pluralize}").map { |o| [o.id, o.name] }, 
                                :prompt => "All" %>
-  <%= link_to(image_tag("icons/minus.png"), "#", :class => "remove_criterium") %>
-  <%= link_to(image_tag("icons/plus.png"), "#", :class => "add_criterium") %> 
+  <%= link_to(image_tag("icons/minus.png",  :alt => "-"), "#", :class => "remove_criterium") %>
+  <%= link_to(image_tag("icons/plus.png", :alt => "+"), "#", :class => "add_criterium") %> 
 </p>
