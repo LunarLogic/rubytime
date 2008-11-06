@@ -18,6 +18,7 @@ var Application = {
     Application.initTables();
     Application.initFlash();
     Application.initDeleteLinks();
+    $(document).bind(EVENTS.activity_added, function() { Application.notice('Activity added successfully!'); });
   },
   
   setupAjax: function() {
@@ -108,6 +109,7 @@ var Application = {
     $("#add_activity_form").validate({
       rules: {
         "activity[hours]": {
+          required: true,
           hours: true
         },
         "activity[comments]": {
@@ -121,6 +123,7 @@ var Application = {
     
     // handle form submission
     $("#add_activity_form").submit(function() {
+        if (!$("#add_activity_form").valid()) return false;
         var form = $("#add_activity_form");
         $.ajax({
           url: form.url(), 

@@ -21,7 +21,6 @@ var Activities = {
       });
     }
     $(document).bind(EVENTS.activity_added, Activities._reloadList);
-    $(document).bind(EVENTS.activity_added, function() { Application.notice('Activity added successfully!'); });
   },
   
   _dispatchClick: function(e) {
