@@ -28,7 +28,12 @@ var Users = {
           email: true
         },
         "user[password]": {
-          required: function(element) { return !(element && element != "") },
+          required: function(element) { 
+            var password_entered = element && element.value != "";
+            var action = $("#user_form").attr("action");
+            var editing = (/\d+$/).test(action);
+            return password_entered || !editing;
+          },
           minlength: 6
         },
         "user[password_confirmation]": {
