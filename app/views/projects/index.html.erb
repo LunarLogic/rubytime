@@ -14,8 +14,10 @@
     <tr>
       <td><%= project.name %></td>
       <td><%= project.client.name %></td>
-      <td><%= link_to 'Edit', resource(project, :edit) %> | 
-      <%= link_to 'Remove', resource(project), :class => "delete_row" %></td>
+      <td>
+        <%= link_to 'Edit', resource(project, :edit) %> | 
+        <%= link_to image_tag("icons/cross.png", :title => "Remove"), resource(project), :class => "delete_row" %>
+      </td>
     </tr>
   <% end %>
   </table>

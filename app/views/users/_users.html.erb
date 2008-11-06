@@ -15,7 +15,7 @@
       <td>
         <%= link_to 'Show', url(:user, user) %> |
         <%= link_to 'Edit', url(:edit_user,  user) %> |
-        <%= link_to "Remove", url(:user, user), :class => "delete_row" %> |
+        <%= link_to image_tag("icons/cross.png", :title => "Remove"), url(:user, user), :class => "delete_row" %> |
         <%= link_to_calendar user %></td>
       </td>
     </tr>
