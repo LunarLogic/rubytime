@@ -4,11 +4,11 @@ class Users < Application
   before :ensure_admin, :only => [:new, :create, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
   before :load_users, :only => [:index, :create]
-  before :load_clients_and_roles, :only => [:index, :create]
+  before :load_clients_and_roles, :only => [:index, :create, :edit]
   before :check_authorization, :only => [:edit, :update, :show]
 
   def index
-    @user = User.new
+    @user = Employee.new
     display @users
   end
 
@@ -22,7 +22,9 @@ class Users < Application
   end
 
   def create
-    @user = User.new(params[:user])
+    class_name = params[:user].delete(:class_name)
+    @user = (class_name == "Employee" ? Employee : ClientUser).new(params[:user])
+    #@user = User.new(params[:user])
     if @user.save
       redirect url(:user, @user)
     else
@@ -31,6 +33,7 @@ class Users < Application
   end
 
   def update
+    params[:user].delete(:class_name)
     if @user.update_attributes(params[:user]) || !@user.dirty?
       if current_user.is_admin?
         redirect url(:user, @user), :message => { :notice => "User has been updated" }

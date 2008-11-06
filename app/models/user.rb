@@ -24,7 +24,7 @@ class User
   has n, :activities #, :order => [:created_at.desc] - this order doesn't currently work when used in through relation below 
                      # according to lighthouse it's a bug in DM
   has n, :projects, :through => :activities
-    
+  
   def self.active
     all(:active => true)
   end
@@ -75,5 +75,9 @@ class User
   def generate_password_reset_token 
     self.password_reset_token = Digest::SHA1.hexdigest("-#{login}-#{Time.now}-")
     save
+  end
+  
+  def class_name
+    self.class.to_s
   end
 end

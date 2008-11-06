@@ -47,7 +47,6 @@ var Application = {
           Application._closeActivityPopup();
         } else {
           var user_id = memory && memory.user_id; 
-          // TODO should be done via GET
           $("#add_activity").load("/activities/new?user_id=" + user_id, function() {
             $("#add_activity").slideDown("fast", Application._initActivityPopup);
             if (memory && memory.date)
