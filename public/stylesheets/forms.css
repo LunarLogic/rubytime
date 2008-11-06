@@ -117,6 +117,10 @@ table#activities {
   width: 100%;
 }
 
+table.list {
+  margin-bottom: 40px;
+}
+
 table.list th {
   background-color: #C1E1FF;
   font-weight: bold;

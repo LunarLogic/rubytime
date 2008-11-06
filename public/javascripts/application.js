@@ -6,7 +6,7 @@ var EVENTS = {
 };
 
 function hoursFormat(value, element, params) {
-  return this.optional(element) || (/^\d+([\.,]\d+|:[0-5]\d)?$/).test(value);
+  return this.optional(element) || (/^\d+([\.,]\d*|:([0-5]\d?)?)?$/).test(value);
 };
 
 var Application = {
@@ -47,7 +47,7 @@ var Application = {
         } else {
           var user_id = memory && memory.user_id; 
           // TODO should be done via GET
-          $("#add_activity").load("/activities/new", { user_id: user_id }, function() {
+          $("#add_activity").load("/activities/new?user_id=" + user_id, function() {
             $("#add_activity").slideDown("fast", Application._initActivityPopup);
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);

@@ -1,0 +1,23 @@
+<h1>List of <%= type %></h1>
+
+<table class="list">
+  <tr>
+    <th>Name</th>
+    <th>Login</th>
+    <th>Active</th>
+    <th></th>
+  </tr>
+  <% users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.login %></td>
+      <td><%= user.active? ? 'Yes' : 'No' %></td>
+      <td>
+        <%= link_to 'Show', url(:user, user) %> |
+        <%= link_to 'Edit', url(:edit_user,  user) %> |
+        <%= link_to "Remove", url(:user, user), :class => "delete_row" %> |
+        <%= link_to_calendar user %></td>
+      </td>
+    </tr>
+  <% end %>
+</table>

@@ -30,7 +30,8 @@ class Activities < Application
   end
   
   def new
-    @activity = Activity.new(:date => Date.today, :user => current_user)
+    preselected_user = (current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])) || current_user
+    @activity = Activity.new(:date => Date.today, :user => preselected_user)
     render :layout => false
   end
   
