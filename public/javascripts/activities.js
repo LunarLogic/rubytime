@@ -110,8 +110,10 @@ var Activities = {
         $(this).parents("tr").next().toggle();
         return false;
     });
-    
     $(".toggle_all_comments_link").click(function() {
+        if ($("tr.comments:visible").length > 0 && $("tr.comments:hidden").length > 0) {
+          $("tr.comments").hide();
+        }
         $("tr.comments").toggle();
         return false;
     });
