@@ -60,6 +60,7 @@ var Application = {
   
   initTables: function() {
     $("table").zebra();
+    $("table.list tr").mouseover(function() { $(this).addClass("hovered") }).mouseout(function() { $(this).removeClass("hovered") });
   },
 
   initFlash: function() {
@@ -80,8 +81,10 @@ var Application = {
           beforeSend: function() { 
             target.unbind('click', handler); row.disableLinks(); 
           },
-          success: function() { 
-            row.remove(); 
+          success: function() {
+            table = row.parents("table");
+            row.remove();
+            table.zebra();
           },
           error: function(xhr) { 
             target.click(handler); 

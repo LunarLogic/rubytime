@@ -190,69 +190,6 @@
   font-weight:900;
 }
 
-table#calendar { 
-  border: 1px solid #888;
-  border-collapse: collapse;
-  margin:10px auto;
-}
-
-table#calendar thead tr.month_name {
-  background:url(/images/header.png) 0 -100px repeat-x;
-  color:#fff;
-}
-
-table#calendar thead tr.month_name th {
-  padding:5px;
-}
-
-table#calendar thead tr.day_name {
-  background:url(/images/header.png) 0 -140px repeat-x;
-}
-
-table#calendar thead tr.day_name th {
-  width:70px;
-  padding:5px;
-}
-
-table#calendar tbody td {
-  border: 1px solid #ddd;
-  padding:5px;
-  width:70px;
-}
-
-table#calendar .other_month {
-  text-align:right;
-  background:#fff;
-  color:#ddd;
-}
-
-table#calendar .day_of_the_month {
-  text-align:right;
-  color:#888;
-}
-
-table#calendar .activities {
-  padding: 4px;
-  height: 100%;
-}
-
-table#calendar a.add_activity {
-  display: block;
-  text-align:center;
-  text-decoration:none;
-  background:url(/images/icons/plus_small.png) center no-repeat;
-  padding-top: 8px;
-  font-size:11px;
-}
-table#calendar .month_name th {
-  text-align: center;
-  font-size: 14px;
-  font-weight: bold;
-  border-bottom: 1px solid black;
-  padding: 3px;
-}
-
-
 div.day_of_the_month a{
   float: left;
   background:url(/images/icons/wrench_pencil.png) 0 0 no-repeat;
@@ -332,44 +269,6 @@ div.error h2 {
   width:100%;
 }
 
-table#calendar {
-  width:100%;
-}
-
-table#calendar td {
-  height:80px;
-}
-
-table#calendar .activity {
-  font-size:11px;
-}
-
-table#calendar .activity strong {
-  font-weight:900;
-}
-
-table#calendar a.add_activity {
-  text-indent:-999em;
-}
-
-table#calendar thead a {
-  font-size:11px;
-  line-height:20px;
-  color:#fff;
-}
-
-table#calendar thead span.date {
-  margin:0 40px;
-}
-
-#activitites_for_day { 
-  margin-left:20px;
-}
-
-table#activities {
-  margin:20px 0;
-}
-
 .activities_to_invoice {
   margin:20px 0 0;
 }
@@ -401,3 +300,4 @@ table#activities {
 #footer .logo:hover {
   background-position:bottom left;
 }
+

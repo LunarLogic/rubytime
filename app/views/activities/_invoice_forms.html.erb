@@ -1,0 +1,30 @@
+<div class="activities_to_invoice">
+  <%= form_for @invoice, :action => url(:invoices), :id => "create_invoice_form" do %>
+    <fieldset class="new">
+      <legend>
+        Add selected activities to
+      </legend>
+      <p>
+        <%= text_field :name, :label => "new invoice" %>
+      </p>
+      <p>
+        <%= select :client_id, :label => "for client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+      </p>
+      <p class="buttons">
+        <%= submit "Add", :class => "button", :id => "create_invoice_button" %>
+      </p>
+    </fieldset>
+    
+    <fieldset class="existing">
+      <legend>
+        Add selected activities to
+      </legend>
+      <p>
+        <%= select :id => "invoice_id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
+      </p>
+      <p class="buttons">
+        <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
+      </p>
+    </fieldset>
+  <% end =%>
+</div>

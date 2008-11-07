@@ -105,6 +105,17 @@ var Activities = {
     // style the table
     $("#activities").zebra();
     
+    // init details icon/link
+    $(".toggle_comments_link").click(function() {
+        $(this).parents("tr").next().toggle();
+        return false;
+    });
+    
+    $(".toggle_all_comments_link").click(function() {
+        $("tr.comments").toggle();
+        return false;
+    });
+    
     // handle selection of all activities
     $("#activity_select_all").click(function() {
         var checked = this.checked;

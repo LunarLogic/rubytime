@@ -108,45 +108,6 @@ label.radio {
   display: none;
 }
 
-table.ui-datepicker td.ui-datepicker-current-day a {
-  background: white;
-  font-weight: bold;
-}
-
-table#activities {
-  width: 100%;
-}
-
-table.list {
-  margin-bottom: 40px;
-}
-
-table.list th {
-  background-color: #C1E1FF;
-  font-weight: bold;
-}
-
-table.list td, table.list th {
-  padding: 8px;
-}
-
-table.list tr.odd td {
-}
-
-table.list tr.even td {
-  background-color: #EEEEEE;
-}
-
-table.list td.summary {
-  background-color: #C1E1FF;
-  font-weight: bold;
-}
-
-table.list .right {
-  text-align: right;
-  width: 50px;
-}
-
 p.selection {
   font-weight: bold;
 }
@@ -170,12 +131,6 @@ span.radiobuttons input {
 }
 #cancel_add_activity {
   color: #C1E1FF;
-}
-
-table.list td.checkbox, table.list th.checkbox {
-  padding-left: 0px;
-  padding-right: 0px;
-  margin: 0;
 }
 
 #secondary .text, #secondary .password {

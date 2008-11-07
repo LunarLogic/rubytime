@@ -46,8 +46,8 @@ jQuery.fn.extend((function() {
     },
     
     zebra: function() {
-      this.find("tr:odd").addClass('odd');
-      this.find("tr:even").addClass('even');
+      this.find("tr:not(.comments):odd").addClass('odd').removeClass("even");
+      this.find("tr:not(.comments):even").addClass('even').removeClass("odd");
       return this;
     }
   };

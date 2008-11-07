@@ -139,10 +139,10 @@ class Activities < Application
   def convert_to_csv(activities)
     report = StringIO.new
     CSV::Writer.generate(report, ',') do |csv|
-      csv << %w(Client Project Role User Date Hours)
+      csv << %w(Client Project Role User Date Hours Comments)
       activities.each do |activity|
         csv << [activity.project.client.name, activity.project.name, activity.user.role.name, activity.user.name, 
-                activity.date, format("%.2f", activity.minutes / 60.0)]
+                activity.date, format("%.2f", activity.minutes / 60.0), activity.comments.strip]
       end
     end
     report.rewind
