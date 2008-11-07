@@ -1,4 +1,5 @@
-<%= error_messages_for @client  %>
+<%= error_messages_for @client %>
+<%= error_messages_for @client_user %>
 <%= form_for @client, :action => resource(@client.new_record? ? :clients : @client), :id => "client_form" do %>
   <fieldset>
     <legend>Client</legend>
@@ -16,6 +17,9 @@
         Default user for client:
       </p>
       <% fields_for @client_user do %>
+        <p>
+          <%= text_field :name, :label => "Name" %>
+        </p>
         <p>
           <%= text_field :login, :label => "Login" %>
         </p>
