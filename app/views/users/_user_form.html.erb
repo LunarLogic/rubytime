@@ -21,6 +21,12 @@
       <p>
         <%= text_field :email, :label => "Email" %>
       </p>
+      <% unless @user.new_record? %>
+        <p>
+          <label for="user_active">Active?</label>
+          <%= check_box :active %>
+        </p>
+      <% end %>
       <p>
         <%= password_field :password, :label => "Password" %>
       </p>
