@@ -14,11 +14,17 @@ $(function() {
       "client[email]": {
         email: true
       },
+      "client_user[name]": {
+        required: true,
+        minlength: 3
+      },
       "client_user[login]": {
+        required: true,
         minlength: 3, 
         maxlength: 20
       },
       "client_user[email]": {
+        required: true,
         email: true
       },
       
