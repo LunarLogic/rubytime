@@ -45,7 +45,7 @@
       <% end %>
       <th>Date</th>
       <th class="right">Hours</th>
-      <th>
+      <th class="icons">
         <%= link_to image_tag("icons/magnifier.png", :title => "Toggle all details"), "#", :class => "toggle_all_comments_link" %>
       </th>
     </tr>
@@ -75,19 +75,16 @@
         <% if include_users %>
           <td>
             <%= activity.user.name %>
-            <!--
-            <% if include_roles %>
-              (<%= activity.user.role.name %>)
-            <% end %>
-            -->
           </td>
         <% end %>
         <td><%= activity.date %></td>
         <td class="right"><%= format_minutes(activity.minutes) %></td>
         <td>
           <%= link_to image_tag("icons/magnifier.png", :title => "Toggle details"), "#", :class => "toggle_comments_link" %>
-          <!-- <%= link_to(image_tag("icons/cross.png", :title => "Remove"), '#', :class => "activity_remove_link") if activity.deletable_by?(current_user) %> -->
-          <!-- <span id="activity_comment_<%= activity.id %>" class="hidden_comment"><%= activity.comments %></span> -->
+          <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", 
+                                                                       :class => "edit_activity_link", 
+                                                                       :title => "Editing activity" if activity.deletable_by?(current_user) && !activity.locked? %>
+          <%= link_to(image_tag("icons/cross.png", :title => "Remove"), '#', :class => "remove_activity_link") if activity.deletable_by?(current_user) && !activity.locked? %>
         </td>
       </tr>
       <tr class="comments">
