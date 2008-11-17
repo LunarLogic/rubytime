@@ -86,7 +86,7 @@
           <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", 
                                                                        :class => "edit_activity_link", 
                                                                        :title => "Editing activity" if activity.deletable_by?(current_user) && !activity.locked? %>
-          <%= link_to(image_tag("icons/cross.png", :title => "Remove"), '#', :class => "remove_activity_link") if activity.deletable_by?(current_user) && !activity.locked? %>
+          <%= link_to(image_tag("icons/cross.png", :title => "Remove"), resource(activity), :class => "remove_activity_link") if activity.deletable_by?(current_user) && !activity.locked? %>
         </td>
       </tr>
       <tr class="comments">

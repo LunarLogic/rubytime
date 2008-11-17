@@ -1,30 +1,35 @@
 var Activities = {
   init: function() {
-    Activities._addOnFilterSubmit();
-    $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() { Activities.onSelectChanged($(this)); });
-    $(".add_criterium").click(Activities.addCriterium);
-    $(".remove_criterium").click(Activities.removeCriterium);
-    Activities._updateIcons('client');
-    Activities._updateIcons('project');
-    Activities._updateIcons('role');
-    Activities._updateIcons('user');
-    Activities._initActivitiesList();
+    // table listing
+    if (!$("#activities_filter").blank()) {
+      Activities._addOnFilterSubmit();
+      $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() { Activities.onSelectChanged($(this)); });
+      $(".add_criterium").click(Activities.addCriterium);
+      $(".remove_criterium").click(Activities.removeCriterium);
+      Activities._updateIcons('client');
+      Activities._updateIcons('project');
+      Activities._updateIcons('role');
+      Activities._updateIcons('user');
+      Activities._initActivitiesList();
+      $(document).bind(EVENTS.activity_added, Activities._reloadList);
+      $(document).bind(EVENTS.activity_updated, Activities._reloadList);
+      $(document).bind(EVENTS.activity_deleted, Activities._reloadList);
+    }
+    
+    // calendar
     if (!Activities._calendarContainer().blank()) {
       Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activity_added, Activities._reloadCalendar);
       $(document).bind(EVENTS.activity_updated, Activities._reloadCalendar);
       $(document).bind(EVENTS.activity_updated, function() { $("#activitites_for_day").html("") });
-      $(document).bind(EVENTS.activity_deleted, Activities._reloadCalendar);
       $('#activitites_for_day').click(Activities._dispatchClick);
       $(document).bind(EVENTS.activity_added, function(e, memo){
         var date = memo.date; 
         if (!$('#activitites_for_day h3:contains(' + date + ')').blank())
           Activities.showDay($('#' + date).parents('td').find('a.show_day'));
       });
+      $(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
     }
-    $(document).bind(EVENTS.activity_added, Activities._reloadList);
-    $(document).bind(EVENTS.activity_updated, Activities._reloadList);
-    $(document).bind(EVENTS.activity_deleted, Activities._reloadList);
   },
   
   _dispatchClick: function(e) {
@@ -59,16 +64,7 @@ var Activities = {
         type: "DELETE",
         beforeSend: function() { activities.disableLinks(); },
         success: function() { 
-          activities.fadeOut(800, function() { 
-            var activitiesContainer = $(this).parents('div.activities');
-            var memo = '????';
-            $(this).remove(); 
-            if (!activitiesContainer.blank() && activitiesContainer.find('div.activity').blank())
-              activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
-              $(document).trigger(EVENTS.activity_deleted, memo);
-            // TODO change _adjustDetailsCounter regexp to not match digits in date and call it for each activity element
-            $.once(Activities._adjustDetailsCounter)();
-          });
+          $(document).trigger(EVENTS.activity_deleted, {id: id});
         },
         error: function(xhr) {
           activities.enableLinks();
@@ -79,9 +75,22 @@ var Activities = {
     return false;
   },
   
+  _removeActivityFromCalendar: function(e, memory) {
+    var id = memory.id;
+    var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
+    Activities._adjustDetailsCounter();
+    activities.fadeOut(800, function() { 
+      var activitiesContainer = $(this).parents('ul.activities');
+      $(this).remove(); 
+      if (!activitiesContainer.blank() && activitiesContainer.find('li.activity').blank())
+        activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
+    });
+  },
+  
   _adjustDetailsCounter: function() {
+    // TODO change regexp to not match digits in date and call it for each activity element
     $('#activitites_for_day h3').text($('#activitites_for_day h3').text().replace(/\d+/, 
-      $('#activitites_for_day div.activity_details').size() || 'no'));
+      $('#activitites_for_day .activity_details').size()-1 || 'no'));
   },
   
   _reloadCalendar: function(e, memory) {
@@ -126,6 +135,13 @@ var Activities = {
     
     // init edit icon/link
     tb_init(".edit_activity_link");
+
+    // init delete icon/link
+    $("#activities .remove_activity_link").click(function() {
+        var t = $(this);
+        Activities._deleteActivity(t);
+        return false;
+    });
     
     // handle selection of all activities
     $("#activity_select_all").click(function() {
@@ -135,7 +151,7 @@ var Activities = {
         });
     });
     
-    // handle unselection of all_activities when one of activies has been unselected
+    // handle unselection of all_activities when one of activities has been unselected
     $("#activities td input.checkbox").click(function() {
         if (!this.checked) {
           $("#activity_select_all")[0].checked = false;

@@ -20,6 +20,7 @@ var Application = {
     Application.initDeleteLinks();
     $(document).bind(EVENTS.activity_added, function() { Application.notice('Activity added successfully.'); });
     $(document).bind(EVENTS.activity_updated, function() { Application.notice('Activity updated successfully.'); });
+    $(document).bind(EVENTS.activity_deleted, function() { Application.notice('Activity removed successfully.'); });
     $(document).bind('tb:ajax_loaded', function() { Application._initActivityPopup($("#TB_ajaxContent")); });
   },
   
@@ -143,6 +144,7 @@ var Application = {
               responseText.fadeIn();
             }
             Application._closeActivityPopup();
+            // check if we were editing or creating new activity
             if ((/\d+$/).test(form.url())) {  
               $(document).trigger(EVENTS.activity_updated, {date: $('#activity_date').attr('value')});
             } else {
