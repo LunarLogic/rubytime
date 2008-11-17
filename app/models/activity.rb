@@ -13,8 +13,6 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
-  attr_reader :hours
-  
   validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
   validates_with_method :hours, :method => :check_max_hours
 
@@ -66,6 +64,10 @@ class Activity
     else
       self.minutes = nil
     end
+  end
+  
+  def hours
+    @hours ||= (minutes && format("%d:%.2d", minutes / 60, minutes % 60))
   end
   
   def invoiced?

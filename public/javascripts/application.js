@@ -1,6 +1,6 @@
 var EVENTS = {
-  //activities_changed: 'activitites:changed',
   activity_added: 'activitites:added',
+  activity_updated: 'activitites:updated',
   activity_deleted: 'activitites:deleted',
   add_activity_clicked: 'activitites:add_clicked'
 };
@@ -18,7 +18,9 @@ var Application = {
     Application.initTables();
     Application.initFlash();
     Application.initDeleteLinks();
-    $(document).bind(EVENTS.activity_added, function() { Application.notice('Activity added successfully!'); });
+    $(document).bind(EVENTS.activity_added, function() { Application.notice('Activity added successfully.'); });
+    $(document).bind(EVENTS.activity_updated, function() { Application.notice('Activity updated successfully.'); });
+    $(document).bind('tb:ajax_loaded', function() { Application._initActivityPopup($("#TB_ajaxContent")); });
   },
   
   setupAjax: function() {
@@ -43,12 +45,12 @@ var Application = {
     $(".add-activity a").click(function() { $(document).trigger(EVENTS.add_activity_clicked); return false; });
     $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
         // don't hide form if memory which means click on calendar form
-        if ($("#add_activity_form").length > 0 && !memory) {
+        if ($("#add_activity .activity_form").length > 0 && !memory) {
           Application._closeActivityPopup();
         } else {
           var user_id = memory && memory.user_id; 
           $("#add_activity").load("/activities/new?user_id=" + user_id, function() {
-            $("#add_activity").slideDown("fast", Application._initActivityPopup);
+            $("#add_activity").slideDown("fast", function() { Application._initActivityPopup($("#add_activity")); });
             if (memory && memory.date)
               $('#activity_date').attr('value', memory.date);
             $.scrollTo('.header');
@@ -98,17 +100,20 @@ var Application = {
   },
   
   _closeActivityPopup: function() {
+    // close new activity popup
     // slide up and remove the form
-    $("#add_activity").slideUp("fast", function() { $("#add_activity_form").remove(); });
+    $("#add_activity").slideUp("fast", function() { $("#add_activity .activity_form").remove(); });
+    // close edit activity popup
+    tb_remove();
     return false;
   },
 
-  _initActivityPopup: function() {
+  _initActivityPopup: function(container) {
     // hide popup on clicking Cancel link
-    $("#cancel_add_activity").click(Application._closeActivityPopup);
+    container.find("#close_activity_form").click(Application._closeActivityPopup);
     
     // set validation rules
-    $("#add_activity_form").validate({
+    container.find(".activity_form").validate({
       rules: {
         "activity[hours]": {
           required: true,
@@ -120,41 +125,47 @@ var Application = {
       }
     });
     
-    // focus first blan field (hours)
-    $("#add_activity_form").focusFirstBlank();
+    // focus first blank field (hours)
+    container.find(".activity_form").focusFirstBlank();
     
     // handle form submission
-    $("#add_activity_form").submit(function() {
-        if (!$("#add_activity_form").valid()) return false;
-        var form = $("#add_activity_form");
+    container.find(".activity_form").submit(function() {
+        var form = $(this);
+        if (!form.valid()) return false;
         $.ajax({
           url: form.url(), 
           type: "POST",
           data: form.serialize(),
           success: function(responseText) {
-            var responseText = $(responseText).hide();
-            $('#' + $('#activity_date').attr('value')).before(responseText).parents('td.day').find('a.show_day').show();
-            responseText.fadeIn();
+            if (responseText != '') {
+              var responseText = $(responseText).hide();
+              $('#' + $('#activity_date').attr('value')).before(responseText).parents('td.day').find('a.show_day').show();
+              responseText.fadeIn();
+            }
             Application._closeActivityPopup();
-            $(document).trigger(EVENTS.activity_added, {date: $('#activity_date').attr('value')});
+            if ((/\d+$/).test(form.url())) {  
+              $(document).trigger(EVENTS.activity_updated, {date: $('#activity_date').attr('value')});
+            } else {
+              $(document).trigger(EVENTS.activity_added, {date: $('#activity_date').attr('value')});
+            }
           },
           error: function(xhr) {
-            $('#add_activity').html(xhr.responseText);
-            Application._initActivityPopup();
+            container.html(xhr.responseText);
+            Application._initActivityPopup(container);
           }
         });
-        $("#add_activity_form input[type=submit]").attr("disabled", "true");
+        container.find(".activity_form input[type=submit]").attr("disabled", "true");
         return false;
     });
   },
   
   _showFlash: function(klass, message) {
-    $("#flash").removeClass("error").removeClass("notice").addClass(klass).text(message).slideDown();
+    $("#flash").removeClass("error").removeClass("notice").addClass(klass).text(message).fadeIn();
     Application.initFlash();
   },
   
   _closeFlash: function() {
-    $("#flash").slideUp(function() {
+    $("#flash").fadeOut(function() {
       $(this).removeClass("notice").removeClass("error").hide();
     });
   },

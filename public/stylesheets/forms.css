@@ -129,7 +129,7 @@ span.radiobuttons label {
 span.radiobuttons input {
   clear:left;
 }
-#cancel_add_activity {
+#close_activity_form {
   color: #C1E1FF;
 }
 
@@ -160,8 +160,12 @@ label.error {
   width:250px;
 }
 
-#add_activity textarea {
+#add_activity textarea, #TB_ajaxContent textarea {
   height:120px;
+}
+
+#TB_ajaxContent textarea {
+  width:250px;
 }
 
 #add_activity input.button {

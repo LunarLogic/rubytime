@@ -2,12 +2,12 @@ class Activities < Application
   # TODO: extract everything related to calendar to separated Calendar controller
   RECENT_ACTIVITIES_NUM = 3
     
-  before :load_projects,              :only => [:new, :edit, :create]
-  before :load_all_users,             :only => [:new, :edit, :create] 
+  before :load_projects,              :only => [:new, :edit, :update, :create]
+  before :load_all_users,             :only => [:new, :edit, :update, :create] 
   before :load_user,                  :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
-  before :load_activity             , :only => [:destroy]
+  before :load_activity             , :only => [:edit, :update, :destroy]
   before :check_deletable_by        , :only => [:destroy] 
 
   def index
@@ -46,9 +46,17 @@ class Activities < Application
   end
   
   def edit
+    render :layout => false
   end
   
   def update
+    @activity.attributes = params[:activity]
+    @activity.user = current_user unless current_user.is_admin?
+    if @activity.save || !@activity.dirty?
+      render "", :status => 200, :layout => false
+    else
+      render :edit, :status => 400, :layout => false
+    end
   end
   
   def destroy

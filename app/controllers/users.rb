@@ -5,7 +5,7 @@ class Users < Application
   before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
   before :load_users, :only => [:index, :create]
   before :load_clients_and_roles, :only => [:index, :create, :edit]
-  before :check_authorization, :only => [:edit, :update, :show]
+  before :check_authorization, :only => [:edit, :update, :show, :settings]
 
   def index
     @user = Employee.new

@@ -11,7 +11,9 @@
 <% if @activities.empty? %>
   <p>No activities found for selected critieria.</p> 
 <% else %>
-  <p>Found <%= @activities.size %> matching activities.</p>
+  <p>
+    Found <%= @activities.size %> matching activities<%= @search_criteria.date_from ? " from #{@search_criteria.date_from}" : "" %><%= @search_criteria.date_to ? " till #{@search_criteria.date_to}" : "" %>.
+  </p>
 
   <% if !include_clients && current_user.can_see_clients? %>
     <p class="selection">Client: <%= @search_criteria.found_clients.first.name %></p>

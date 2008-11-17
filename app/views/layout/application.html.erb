@@ -4,22 +4,8 @@
   <head>
     <title>Rubytime</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <%= css_include_tag 'reset' %>
-    <%= css_include_tag 'master' %>
-    <%= css_include_tag 'layout' %>
-    <%= css_include_tag 'forms' %>
-    <%= css_include_tag 'tables' %>
-    <%= css_include_tag 'thickbox' %>
-    <%= css_include_tag 'datepicker/ui.datepicker' %>
-    
-    <%= js_include_tag 'lib/jquery-1.2.6' %>
-    <%= js_include_tag 'lib/jquery.validate.min' %>
-    <%= js_include_tag 'lib/jquery-extensions' %>
-    <%= js_include_tag 'lib/jquery-scrollto' %>
-    <%= js_include_tag 'lib/thickbox' %>
-    <%= js_include_tag 'lib/ui.datepicker' %>
-    <%= js_include_tag 'application' %>
-    <%= js_include_tag 'lib/rubytime/input-filler' %>
+    <%= css_include_tag 'reset', 'master', 'layout', 'forms', 'tables', 'datepicker/ui.datepicker.css', 'thickbox', :bundle => :base %>
+    <%= js_include_tag 'lib/jquery-1.2.6.js', 'lib/jquery.validate.min.js', 'lib/jquery-extensions.js', 'lib/jquery-scrollto.js', 'lib/ui.datepicker.js', 'application.js', 'lib/rubytime/input-filler.js', 'lib/thickbox', :bundle => :base %>
     <%= auto_link %>
   </head>
   <body id="<%= params[:controller] %>_<%= params[:action] %>">

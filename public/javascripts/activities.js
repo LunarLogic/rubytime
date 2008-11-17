@@ -12,6 +12,8 @@ var Activities = {
     if (!Activities._calendarContainer().blank()) {
       Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activity_added, Activities._reloadCalendar);
+      $(document).bind(EVENTS.activity_updated, Activities._reloadCalendar);
+      $(document).bind(EVENTS.activity_updated, function() { $("#activitites_for_day").html("") });
       $(document).bind(EVENTS.activity_deleted, Activities._reloadCalendar);
       $('#activitites_for_day').click(Activities._dispatchClick);
       $(document).bind(EVENTS.activity_added, function(e, memo){
@@ -21,6 +23,8 @@ var Activities = {
       });
     }
     $(document).bind(EVENTS.activity_added, Activities._reloadList);
+    $(document).bind(EVENTS.activity_updated, Activities._reloadList);
+    $(document).bind(EVENTS.activity_deleted, Activities._reloadList);
   },
   
   _dispatchClick: function(e) {
@@ -34,13 +38,15 @@ var Activities = {
       Activities._deleteActivity(target);
     } else if (target.hasClass("show_day")) {
       Activities.showDay(target);
-    } else if (target.hasClass('edit_activity'))
-      Application.notice("No editing yet, sorry.");
+    }// else if (target.hasClass('edit_activity'))
+      //Application.notice("No editing yet, sorry.");
     return false;
   },
   
   showDay: function(link) {
-    $("#activitites_for_day").load(link.url());
+    $("#activitites_for_day").load(link.url(), function(responseText) {
+      tb_init($("#activitites_for_day .edit_activity_link"));
+    });
     $.scrollTo('div#activitites_for_day');
   },
   
@@ -118,6 +124,9 @@ var Activities = {
         return false;
     });
     
+    // init edit icon/link
+    tb_init(".edit_activity_link");
+    
     // handle selection of all activities
     $("#activity_select_all").click(function() {
         var checked = this.checked;
@@ -125,7 +134,6 @@ var Activities = {
             this.checked = checked;
         });
     });
-    
     
     // handle unselection of all_activities when one of activies has been unselected
     $("#activities td input.checkbox").click(function() {

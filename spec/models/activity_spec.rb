@@ -68,6 +68,17 @@ describe Activity do
     a.valid?
     a.errors[:hours].should be_nil
   end
+  
+  it "should return formatted hours for saved activity" do
+    a = Activity.gen(:project => fx(:oranges_first_project), :user => fx(:jola), :minutes => 7.5 * 60)
+    a = Activity.get(a.id)
+    a.hours.should == "7:30"
+  end
+
+  it "should return entered hours for new activity" do
+    a = Activity.new(:hours => "3,5")
+    a.hours.should == "3,5"
+  end
 
   it "should raise an ArgumentError when #for called with something else than :now or Hash with :year and :month" do
     args = [ :kiszonka, 

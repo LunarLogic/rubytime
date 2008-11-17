@@ -16,7 +16,7 @@
       <p>
         Default user for client:
       </p>
-      <% fields_for @client_user do %>
+      <%= fields_for @client_user do %>
         <p>
           <%= text_field :name, :label => "Name" %>
         </p>
@@ -35,7 +35,7 @@
         <p>
           <%= password_field :password_confirmation, :label => "Confirm password" %>
         </p>
-      <% end %>
+      <% end =%>
     <% else %>
       <p>
         <%= check_box  :active, :label => "Active"%>

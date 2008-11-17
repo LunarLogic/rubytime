@@ -108,7 +108,7 @@ class SearchCriteria
     when "not_invoiced"
       conditions.merge!(:invoice_id => nil)
     end
-    Activity.all({:order => [:date.desc]}.merge(conditions))
+    Activity.all({:order => [:date.desc, :created_at.desc]}.merge(conditions))
   end
 
   protected

@@ -30,7 +30,7 @@ module Merb
       
     def edit_activity(activity)
       if activity.deletable_by?(current_user) && !activity.locked?
-        link_to "<img src=\"/images/icons/pencil_small.png\" alt=\"Edit activity\" />", url(:edit_activity, activity), :class => "edit_activity"
+        link_to "<img src=\"/images/icons/pencil_small.png\" alt=\"Edit activity\" />", resource(activity, :edit)+"?height=350&width=500", :class => "edit_activity_link"
       end
     end
       
