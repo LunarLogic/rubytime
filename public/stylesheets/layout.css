@@ -283,21 +283,28 @@ div.error h2 {
 }
 
 #footer {
-  width:960px;
+  display:block;
   margin:0 auto;
   text-align:center;
+  overflow:auto;
+  width:220px;
+}
+
+#footer a {
+  display:block;
+  width:94px;
+  height:40px;  
+  text-indent:-999em;
+  margin:0 5px;
+  float:left;
 }
 
 #footer .logo {
-  width:78px;
-  height:30px;
-  background:url(/images/lunar-logic-polska.png) 0 0 no-repeat;
-  text-indent:-999em;
-  display:block;
-  margin:0 auto;
+  background:url(/images/powered_by_llp.png) 0 0 no-repeat;
+
 }
 
-#footer .logo:hover {
-  background-position:bottom left;
+#footer .merb {
+  background:url(/images/powered_by_merb.png) 0 0 no-repeat;
 }
 
