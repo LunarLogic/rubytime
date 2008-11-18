@@ -12,7 +12,7 @@
   <% @roles.each do |role| %>
     <tr>
       <td><%= role.name %></td>
-      <td><%= link_to image_tag("icons/cross.png", :title => "Remove"), resource(role), :class => "delete_row" %></td>
+      <td><%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(role), :class => "delete_row" %></td>
     </tr>
   <% end %>
   </table>

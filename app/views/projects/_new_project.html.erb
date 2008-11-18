@@ -7,7 +7,7 @@
       <%= text_field :name, :label => "Name" %>
     </p>
     <p>
-      <%= text_area :description, :label => "Description" %>
+      <%= text_area :description, :label => "Description", :class => "text", :cols => "21", :rows => "5" %>
     </p>
     <p>
       <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>

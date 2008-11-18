@@ -32,6 +32,11 @@ fieldset input, fieldset textarea {
   font-family:'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,sans-serif;
 }
 
+fieldset textarea {
+  font-size:12px;
+  line-height:16px;
+}
+
 fieldset input:focus, fieldset input.focus, fieldset textarea:focus, fieldset textarea.focus {
   border:1px solid #222;
   color:#222;
