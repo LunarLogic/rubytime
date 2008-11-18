@@ -233,16 +233,6 @@ module DataMapper
     def key(repository_name = default_repository_name)
       properties(repository_name).key
     end
-    
-    def key_values_for_identity_map(values)
-      loaded_key_values = []
-      values.each_with_index do |value, index|
-        key_property  = key[index]
-        loaded_key_values << (key_property.custom? ?
-          key_property.type.load(value, key_property) : value)
-      end
-      loaded_key_values
-    end
 
     def default_order(repository_name = default_repository_name)
       @default_order ||= {}
@@ -336,7 +326,7 @@ module DataMapper
       end
 
       if key_property_indexes = query.key_property_indexes(repository)
-        key_values   = key_values_for_identity_map(values.values_at(*key_property_indexes))
+        key_values   = values.values_at(*key_property_indexes)
         identity_map = repository.identity_map(model)
 
         if resource = identity_map.get(key_values)

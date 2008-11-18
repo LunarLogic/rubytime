@@ -13,11 +13,11 @@ class Client
   has n, :client_users
   
   before :destroy do
-    throw :halt if invoices.count > 0 
-    throw :halt if projects.count > 0 
+    throw :halt if invoices.count > 0
+    throw :halt if activities.count > 0
   end
   
-  before :destroy, :destroy_client_users
+  before :destroy, :destroy_client_users_and_projects
   
   def self.active
     all(:active => true)
@@ -25,7 +25,8 @@ class Client
   
   protected 
   
-  def destroy_client_users
+  def destroy_client_users_and_projects
     client_users.destroy!
+    projects.destroy!
   end
 end

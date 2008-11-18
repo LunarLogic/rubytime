@@ -8,9 +8,8 @@ describe Users do
   end
 
   it "should fetch all users" do
-    User.should_receive(:new)
     User.should_receive(:all).and_return([fx(:jola), fx(:misio), fx(:orange_user1)])
-    dispatch_to_as_admin(Users, :index)
+    as(:admin).dispatch_to(Users, :index)
   end
   
   it "should render edit if user is admin" do

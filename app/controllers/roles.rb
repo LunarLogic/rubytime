@@ -16,14 +16,6 @@ class Roles < Application
     end
   end
   
-  def update
-    # if @role.update_attributes(params[:role]) || !@role.dirty? 
-    #   redirect url(:roles)
-    # else
-    #   render :edit
-    # end
-  end
-  
   def destroy
     raise NotFound unless @role = Role.get(params[:id])
     if @role.destroy

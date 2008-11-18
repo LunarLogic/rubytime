@@ -4,7 +4,7 @@ Merb::Config.use { |c|
   c[:exception_details] = true
   c[:log_auto_flush ]   = true
   # log less in testing environment
-  c[:log_level]         = :error
+  c[:log_level]         = :info
 
   c[:log_file]  = Merb.root / "log" / "test.log"
   # or redirect logger using IO handle

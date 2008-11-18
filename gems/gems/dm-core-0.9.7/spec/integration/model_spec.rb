@@ -23,41 +23,23 @@ if ADAPTER
       repository(ADAPTER) do
         ModelSpec::STI.auto_migrate!
       end
-      
-      class ReversingString < DataMapper::Type
-        primitive String
-        size 10
-        def self.load(value, property)
-          value.nil? ? nil : value.reverse
-        end
-        def self.dump(value, property)
-          value.nil? ? nil : value.reverse
-        end
-      end
-      
-      @galaxy = DataMapper::Model.new('galaxy') do
-        def self.default_repository_name; ADAPTER end
-        property :name, ReversingString, :key => true
-      end
 
       @planet = DataMapper::Model.new('planet') do
         def self.default_repository_name; ADAPTER end
         property :name, String, :key => true
         property :distance, Integer
       end
-      
+
       @moon   = DataMapper::Model.new('moon') do
         def self.default_repository_name; ADAPTER end
         property :id, DM::Serial
         property :name, String
       end
-      
-      @galaxy.auto_migrate!(ADAPTER)
+
       @planet.auto_migrate!(ADAPTER)
       @moon.auto_migrate!(ADAPTER)
 
       repository(ADAPTER) do
-        @galaxy.create(:name => 'Milky Way')
         @moon.create(:name => "Charon")
         @moon.create(:name => "Phobos")
       end
@@ -106,26 +88,6 @@ if ADAPTER
           @moon.get(1)
           @moon.get(1)
           log.readlines.size.should == 2
-        end
-      end
-
-      describe 'using a custom type key' do
-        it 'should use the identity map within a repository block' do
-          logger do |log|
-            repository(ADAPTER) do
-              resource = @galaxy.get('Milky Way')
-              resource = @galaxy.get('Milky Way')
-            end
-            log.readlines.size.should == 1
-          end
-        end
-        
-        it "should not use the identity map outside a repository block" do
-          logger do |log|
-            resource = @galaxy.get('Milky Way')
-            resource = @galaxy.get('Milky Way')
-            log.readlines.size.should == 2
-          end
         end
       end
     end

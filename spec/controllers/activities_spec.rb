@@ -78,7 +78,7 @@ describe Activities do
   
   it "should render calendar for current month if no date given in the request" do
     repository(:default) do # identity map doesn't work outside repository block
-      employee = Employee.gen
+      employee = Employee.gen(:role => fx(:developer))
       employee.activities.should_receive(:for).with(:this_month).and_return([])
       as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id }).should be_successful
     end
@@ -96,7 +96,7 @@ describe Activities do
 
   it "should render bad request error for wrong date" do
     block_should(raise_bad_request) do
-      as(employee = Employee.gen).dispatch_to(
+      as(employee = Employee.gen(:role => fx(:developer))).dispatch_to(
         Activities, :calendar, { :user_id => employee.id, :year => 3300, :month => 10 })
     end
   end

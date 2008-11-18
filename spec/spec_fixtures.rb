@@ -2,8 +2,10 @@ def random_date(start_date, end_date)
   start_date + (rand * (end_date - start_date)).to_i
 end
 
+include DataMapper::Sweatshop::Unique
+
 Employee.fixture {{
-  :name => (name = /\w{6,20}/.gen),
+  :name => (name = unique { /\w{6,20}/.gen }),
   :login => name,
   :email => "#{name}@kiszonka.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -12,7 +14,7 @@ Employee.fixture {{
 }}
 
 Employee.fixture(:admin) {{
-  :name => (name = /\w{6,20}/.gen),
+  :name => (name = unique { /\w{6,20}/.gen }),
   :login => name,
   :email => "#{name}@kiszonka.com",
   :password => (password = /\w{6,20}/.gen), 
@@ -22,7 +24,7 @@ Employee.fixture(:admin) {{
 }}
 
 ClientUser.fixture {{
-  :name => (name = /\w{6,20}/.gen),
+  :name => (name = unique { /\w{6,20}/.gen }),
   :login => name,
   :email => "#{name}@company.com",
   :password => (password = /\w{6,20}/.gen), 

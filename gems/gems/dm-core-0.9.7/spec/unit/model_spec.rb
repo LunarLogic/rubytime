@@ -1,34 +1,18 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
 
 describe 'DataMapper::Model' do
-  module ModelSpec
-    class Resource
-      include DataMapper::Resource
+  before do
+    Object.send(:remove_const, :ModelSpec) if defined?(ModelSpec)
+    module ModelSpec
+      class Resource
+        include DataMapper::Resource
 
-      storage_names[:legacy] = 'legacy_resource'
+        storage_names[:legacy] = 'legacy_resource'
 
-      property :id,   Serial
-      property :name, String
-      property :type, Discriminator
-    end
-    
-    class ReversingString < DataMapper::Type
-      primitive String
-      size 10
-
-      def self.load(value, property)
-        value.nil? ? nil : value.reverse
+        property :id,   Serial
+        property :name, String
+        property :type, Discriminator
       end
-
-      def self.dump(value, property)
-        value.nil? ? nil : value.reverse
-      end
-    end
-
-    class Zoo
-      include DataMapper::Resource
-
-      property :name, ReversingString, :key => true
     end
   end
 
@@ -106,7 +90,7 @@ describe 'DataMapper::Model' do
   describe '#storage_names' do
     it 'should return a Hash mapping each repository to a storage location' do
       ModelSpec::Resource.storage_names.should be_kind_of(Hash)
-      ModelSpec::Resource.storage_names.should == { :default => 'model_spec_resources', :legacy => 'legacy_resource' }
+      ModelSpec::Resource.storage_names.should == { :legacy => 'legacy_resource' }
     end
   end
 
@@ -165,17 +149,6 @@ describe 'DataMapper::Model' do
       GasGiant.key == GasGiant.properties.slice(:id, :new_prop)
     end
   end
-  
-  it 'should provide #key_values_for_identity_map' do
-    ModelSpec::Resource.should respond_to(:key_values_for_identity_map)
-  end
-  
-  describe '#key_values_for_identity_map' do
-    it 'should return loaded key values' do
-      zoo = ModelSpec::Zoo.new(:name => 'Zoo')
-      zoo.key.should eql(zoo.model.key_values_for_identity_map(['ooZ']))
-    end
-  end
 
   it 'should provide #get' do
     ModelSpec::Resource.should respond_to(:get)
@@ -195,12 +168,7 @@ describe 'DataMapper::Model' do
 
   describe '#storage_exists?' do
     it 'should return whether or not the storage exists' do
-      ModelSpec::Resource.should_receive(:repository).with(:default) do
-        repository = mock('repository')
-        repository.should_receive(:storage_exists?).with('model_spec_resources').and_return(true)
-        repository
-      end
-      ModelSpec::Resource.storage_exists?.should == true
+      ModelSpec::Resource.storage_exists?.should == false
     end
   end
 

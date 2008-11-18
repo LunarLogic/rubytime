@@ -23,7 +23,7 @@ module Rubytime
     
         def dispatch_to(controller_klass, action, params = {}, &blk)
           @spec.dispatch_to(controller_klass, action, params) do |controller|
-            controller.session.stub!(:user).and_return(@user)
+            controller.session.user = @user
             blk.call(controller) if block_given?
             controller
           end

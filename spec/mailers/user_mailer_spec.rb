@@ -5,7 +5,7 @@ describe UserMailer do
   
   before :each do
     clear_mail_deliveries
-    @user = Employee.gen(:password_reset_token => "1234asdjfggh3f2e44rtsdfhg")
+    @user = Employee.gen(:password_reset_token => "1234asdjfggh3f2e44rtsdfhg", :role => fx(:developer))
   end
     
   it "includes welcome phrase, login, password and site url in welcome mail" do

@@ -26,7 +26,7 @@
       <div id="add_activity" style="display: none">
       </div>
       <div id="flash" class="<%= message.keys.first %>" style="<%= 'display: block' unless message.keys.empty? %>">
-        <%= message[message.keys.first] %>
+        <%= h message[message.keys.first] %>
       </div>
       <div id="primary">
         <%= catch_content :for_layout %>

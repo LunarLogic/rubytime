@@ -66,7 +66,7 @@ describe Clients, "index action" do
   end
   
   it "should destroy client and client's users" do
-    client = fx(:banana)
+    client = fx(:peach)
     block_should(change(ClientUser, :count).by(-client.client_users.count)).and(change(Client, :count).by(-1)) do
       as(:admin).dispatch_to(Clients, :destroy, :id => client.id).status.should == 200
     end

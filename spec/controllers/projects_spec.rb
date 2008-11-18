@@ -40,7 +40,7 @@ describe Projects do
     it "should show edit project form" do
       project = Project.gen
       Project.should_receive(:get).with(project.id.to_s).and_return(project)
-      dispatch_to_as_admin(Projects, :edit, :id => project.id).should be_successful
+      as(:admin).dispatch_to(Projects, :edit, :id => project.id).should be_successful
     end
 
     it "shouldn't show edit project form nonexistent project" do
@@ -52,9 +52,8 @@ describe Projects do
     it "should update record successfully and redirect to index" do
       apple = fx(:apple)
       project = fx(:oranges_first_project)
-
       
-      dispatch_to_as_admin(Projects, :update, { 
+      as(:admin).dispatch_to(Projects, :update, { 
         :id => project.id, 
         :project => { 
           :name => "Misio", 

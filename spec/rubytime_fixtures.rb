@@ -38,8 +38,10 @@ module Rubytime
           
           add_fixture(:client, :apple, Client.gen)
           
-          # Banana has no activities / invoices
           add_fixture(:client, :banana, Client.gen)
+          
+          # Peach has no activities / invoices
+          add_fixture(:client, :peach, Client.gen)
           
           # Old, inactive client
           add_fixture(:client, :old_client, Client.gen(:active => false))
@@ -55,6 +57,9 @@ module Rubytime
 
           add_fixture(:client_user, :banana_user1, ClientUser.gen(:client => fx(:banana)))
           add_fixture(:client_user, :banana_user2, ClientUser.gen(:client => fx(:banana)))
+          
+          add_fixture(:client_user, :peach_user1, ClientUser.gen(:client => fx(:peach)))
+          add_fixture(:client_user, :peach_user2, ClientUser.gen(:client => fx(:peach)))
           
           # === Generating projects
 
@@ -76,6 +81,9 @@ module Rubytime
           
           add_fixture(:project, :bananas_first_project, Project.gen(:client => fx(:banana)))
           add_fixture(:project, :bananas_second_project, Project.gen(:client => fx(:banana)))
+          
+          # Peach
+          add_fixture(:project, :peachs_first_project, Project.gen(:client => fx(:peach)))
           
           # === Generating invoices
 

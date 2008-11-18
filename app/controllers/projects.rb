@@ -27,7 +27,7 @@ class Projects < Application
   end
   
   def update
-    if @project.update_attributes(params[:project]) || !@project.dirty? 
+    if @project.update_attributes(params[:project]) || !@project.dirty?
       redirect resource(@project)
     else
       render :edit
@@ -53,7 +53,7 @@ class Projects < Application
   protected
 
   def load_project
-    raise NotFound unless @project = Project.get(params[:id])
+    @project = Project.get(params[:id]) or raise NotFound
   end
   
   def load_all_projects

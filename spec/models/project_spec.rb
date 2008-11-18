@@ -8,7 +8,7 @@ describe Project do
   end
   
   it "should find active projects" do
-    Project.count.should == 8
-    Project.active.count.should == 6
+    Project.count.should == 9
+    Project.active.count.should == 7
   end
 end
