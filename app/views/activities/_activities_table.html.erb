@@ -1,0 +1,43 @@
+<% include_users = current_user.is_admin? || !current_user.is_employee? %>
+<% invoice_view = params[:controller] == "invoices" %>
+<% include_checkboxes = current_user.is_admin? && !invoice_view %>
+<table class="activities list" cellspacing="0" cellpadding="0">
+  <tr>
+    <% if include_checkboxes %>
+      <th class="checkbox"><%= check_box :class => "activity_select_all" %></th>
+    <% end %>
+    <% if include_users %>
+      <th>User</th>
+    <% end %>
+    <th>Date</th>
+    <th class="right">Hours</th>
+    <th class="icons">
+      <%= link_to image_tag("icons/magnifier.png", :title => "Toggle all details"), "#", :class => "toggle_all_comments_link" %>
+    </th>
+  </tr>
+  <% activities.each do |activity| %>
+    <tr>
+      <% if include_checkboxes %>
+        <td class="checkbox"><%= check_box(:name => "activity_id[]", :value => activity.id) unless activity.invoiced? %></td>
+      <% end %>
+      <% if include_users %>
+        <td>
+          <%= activity.user.name %>
+        </td>
+      <% end %>
+      <td><%= activity.date %></td>
+      <td class="right"><%= format_minutes(activity.minutes) %></td>
+      <td>
+        <%= link_to image_tag("icons/magnifier.png", :title => "Toggle details"), "#", :class => "toggle_comments_link" %>
+        <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", 
+                                                                     :class => "edit_activity_link", 
+                                                                     :title => "Editing activity" if activity.deletable_by?(current_user) && !activity.locked? && !invoice_view %>
+        <%= link_to(image_tag("icons/cross.png", :title => "Remove"), resource(activity), :class => "remove_activity_link") if !invoice_view && activity.deletable_by?(current_user) && !activity.locked? %>
+        <%= link_to(image_tag("icons/notebook_minus.png", :title => "Remove activity from this invoice"), resource(activity), :class => "remove_from_invoice_link") if invoice_view && current_user.is_admin? && !activity.locked? %>
+      </td>
+    </tr>
+    <tr class="comments">
+      <td colspan="5"><%= activity.comments.gsub(/\n/, "<br/>") %></td>
+    </tr>
+  <% end %>
+</table>

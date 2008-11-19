@@ -11,6 +11,7 @@ class Invoices < Application
   end
   
   def show
+    @activities = @invoice.activities.all(:order => [:created_at.desc])
     render
   end
   

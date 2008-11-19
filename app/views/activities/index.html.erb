@@ -1,9 +1,4 @@
 <% throw_content :secondary, partial(:filter) %>
-
-<% include_clients = @search_criteria.selected_client_ids.size != 1 && current_user.can_see_clients? %>
-<% include_projects = @search_criteria.selected_project_ids.size != 1 %>
-<% include_roles = @search_criteria.selected_role_ids.size != 1 %>
-<% include_users = @search_criteria.selected_user_ids.size != 1 && current_user.can_see_users? %>
 <% show_invoice_form = current_user.is_admin? && !@uninvoiced_activities.empty? %>
 
 <h3>List of activities</h3>
@@ -13,91 +8,12 @@
 <% else %>
   <p>
     Found <%= @activities.size %> matching activities<%= @search_criteria.date_from ? " from #{@search_criteria.date_from}" : "" %><%= @search_criteria.date_to ? " till #{@search_criteria.date_to}" : "" %>.
+    <br/>
+    <br/>
   </p>
-
-  <% if !include_clients && current_user.can_see_clients? %>
-    <p class="selection">Client: <%= @search_criteria.found_clients.first.name %></p>
-  <% end %>
   
-  <% unless include_projects %>
-    <p class="selection">Project: <%= @search_criteria.found_projects.first.name %></p> 
-  <% end %>
+  <%= partial(:grouped_activities) %>
 
-  <% unless include_roles %>
-    <p class="selection">Role: <%= @search_criteria.found_roles.first.name %></p>
-  <% end %>
-
-  <% if !include_users && current_user.can_see_users? %>
-    <p class="selection">User: <%= @search_criteria.found_users.first.name %></p>
-  <% end %>
-  
-  <table id="activities" class="list" cellspacing="0" cellpadding="0">
-    <tr>
-      <% if show_invoice_form  %>
-        <th class="checkbox"><%= check_box :id => "activity_select_all" %></th>
-      <% end %>
-      <% if include_clients %>
-        <th>Client</th>
-      <% end %>
-      <% if include_projects %>
-        <th>Project</th>
-      <% end %>
-      <% if include_users %>
-        <th>User</th>
-      <% end %>
-      <th>Date</th>
-      <th class="right">Hours</th>
-      <th class="icons">
-        <%= link_to image_tag("icons/magnifier.png", :title => "Toggle all details"), "#", :class => "toggle_all_comments_link" %>
-      </th>
-    </tr>
-    <% @activities.each do |activity| %>
-      <tr>
-        <% if show_invoice_form %>
-          <td class="checkbox"><%= check_box(:name => "activity_id[]", :value => activity.id) unless activity.invoiced? %></td>
-        <% end %>
-        <% if include_clients %>
-          <td>
-            <% if current_user.is_admin? %>
-              <%= link_to(activity.project.client.name, url(:client, activity.project.client)) %>
-            <% else %>
-              <%= activity.project.client.name %>
-            <% end %>
-          </td>
-        <% end %>
-        <% if include_projects %>
-          <td>
-            <% if current_user.is_admin? %>
-              <%= link_to(activity.project.name, url(:project, activity.project)) %>
-            <% else %>
-              <%= activity.project.name %>
-            <% end %>
-            </td>
-        <% end %>
-        <% if include_users %>
-          <td>
-            <%= activity.user.name %>
-          </td>
-        <% end %>
-        <td><%= activity.date %></td>
-        <td class="right"><%= format_minutes(activity.minutes) %></td>
-        <td>
-          <%= link_to image_tag("icons/magnifier.png", :title => "Toggle details"), "#", :class => "toggle_comments_link" %>
-          <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", 
-                                                                       :class => "edit_activity_link", 
-                                                                       :title => "Editing activity" if activity.deletable_by?(current_user) && !activity.locked? %>
-          <%= link_to(image_tag("icons/cross.png", :title => "Remove"), resource(activity), :class => "remove_activity_link") if activity.deletable_by?(current_user) && !activity.locked? %>
-        </td>
-      </tr>
-      <tr class="comments">
-        <td colspan="7"><%= activity.comments.gsub(/\n/, "<br/>") %></td>
-      </tr>
-    <% end %>
-    <tr class="odd">
-      <td colspan="<%= 5 - [show_invoice_form, include_clients, include_projects, include_users].count { |b| !b } %>"></td>
-      <td class="summary right">Sum: <%= format_minutes(@activities.inject(0) { |s,a| s += a.minutes; s }) %></td>
-    </tr>
-  </table>
   <%= link_to "Export this list to CSV", url(:activities) + ".csv?" + params.reject { |k,v| k =~ /^(id|action|controller|format)$/}.to_params %>
   
   <% if show_invoice_form %>

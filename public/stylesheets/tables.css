@@ -3,7 +3,7 @@ table.ui-datepicker td.ui-datepicker-current-day a {
   font-weight: bold;
 }
 
-table#activities {
+table.activities {
   width: 100%;
 }
 
@@ -17,10 +17,11 @@ table.list th {
 }
 
 table.list td, table.list th {
-  padding: 8px;
+  padding: 7px;
 }
 
 table.list tr.odd td {
+  background-color: white;
 }
 
 table.list tr.even td {
@@ -143,7 +144,7 @@ table#calendar thead span.date {
   margin-left:20px;
 }
 
-table#activities {
+table.activities {
   margin:20px 0;
 }
 

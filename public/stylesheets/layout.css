@@ -308,3 +308,27 @@ div.error h2 {
   background:url(/images/powered_by_merb.png) 0 0 no-repeat;
 }
 
+
+/* temporary */
+ul.clients strong {
+  font-weight: 900;
+}
+
+li.client {
+  background-color: #999;
+  margin-bottom: 30px;
+}
+
+li.project {
+  background-color: #AAA;
+  margin-bottom: 20px;
+}
+
+li.role {
+  background-color: #BBB;
+  margin-bottom: 10px;
+}
+
+table.activities {
+  background-color: #FFF;
+}

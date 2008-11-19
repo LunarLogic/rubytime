@@ -1,0 +1,11 @@
+<ul class="roles">
+  <% roles.each do |role| %>
+    <li class="role">
+      <%= image_tag("icons/role.png") %>
+      <strong>Role: <%= role.name %></strong>
+      <% activities = activities_from(@activities, client, project, role) %>
+      <%= partial("activities/activities_table", :activities => activities) %>
+      <strong>Total for role: <%= format_minutes(activities.inject(0) { |s,a| s += a.minutes; s }) %></strong>
+    </li>
+  <% end %>
+</ul>

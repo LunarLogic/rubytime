@@ -185,6 +185,21 @@ var Application = {
       Application.error(xhr.responseText);
     if(xhr.status >= 500)
       Application.error("Ooops! Something went wrong.");
-  }  
+  },
+  
+  initCommentsIcons: function() {
+    $(".toggle_comments_link").click(function() {
+        $(this).parents("tr").next().toggle();
+        return false;
+    });
+    $(".toggle_all_comments_link").click(function() {
+        var comments = $(this).parents("table").find("tr.comments");
+        if (comments.filter(":visible").length > 0 && comments.filter(":hidden").length > 0) {
+          comments.hide();
+        }
+        comments.toggle();
+        return false;
+    });
+  }
 };
 $(Application.init);

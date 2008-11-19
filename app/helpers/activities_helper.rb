@@ -131,6 +131,6 @@ module Merb
       
     def weekend?(date)
       [0, 6].include?(date.wday)
-    end
+    end    
   end # ActivitiesHelper
 end # Merb

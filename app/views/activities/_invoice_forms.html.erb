@@ -2,7 +2,7 @@
   <%= form_for @invoice, :action => url(:invoices), :id => "create_invoice_form" do %>
     <fieldset class="new">
       <legend>
-        Add selected activities to
+        <%= image_tag("icons/notebook_plus.png") %> Add selected activities to
       </legend>
       <p>
         <%= text_field :name, :label => "new invoice" %>
@@ -17,7 +17,7 @@
     
     <fieldset class="existing">
       <legend>
-        Add selected activities to
+        <%= image_tag("icons/notebook_plus.png") %> Add selected activities to
       </legend>
       <p>
         <%= select :id => "invoice_id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>

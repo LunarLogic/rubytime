@@ -118,54 +118,44 @@ var Activities = {
   
   _initActivitiesList: function() {
     // style the table
-    $("#activities").zebra();
+    $(".activities").zebra();
     
     // init details icon/link
-    $(".toggle_comments_link").click(function() {
-        $(this).parents("tr").next().toggle();
-        return false;
-    });
-    $(".toggle_all_comments_link").click(function() {
-        if ($("tr.comments:visible").length > 0 && $("tr.comments:hidden").length > 0) {
-          $("tr.comments").hide();
-        }
-        $("tr.comments").toggle();
-        return false;
-    });
+    Application.initCommentsIcons();
     
     // init edit icon/link
     tb_init(".edit_activity_link");
 
     // init delete icon/link
-    $("#activities .remove_activity_link").click(function() {
+    $(".activities .remove_activity_link").click(function() {
         var t = $(this);
         Activities._deleteActivity(t);
         return false;
     });
     
     // handle selection of all activities
-    $("#activity_select_all").click(function() {
+    $(".activity_select_all").click(function() {
         var checked = this.checked;
-        $("#activities td input.checkbox").each(function() {
+        $(this).parents("table").find("td input.checkbox").each(function() {
             this.checked = checked;
         });
     });
     
     // handle unselection of all_activities when one of activities has been unselected
-    $("#activities td input.checkbox").click(function() {
+    $(".activities td input.checkbox").click(function() {
         if (!this.checked) {
-          $("#activity_select_all")[0].checked = false;
+          $(this).parents("table").find(".activity_select_all")[0].checked = false;
         }
     });
 
     // handle new invoice form submission
     $("#create_invoice_form").submit(function() {
-      if ($("#activities td input.checkbox:checked").length == 0) {
+      if ($(".activities td input.checkbox:checked").length == 0) {
         Application.error('You need to select activities for this invoice.');
         return false;
       }
         
-      $.post($(this).url(), $("#create_invoice_form, #activities td input.checkbox:checked").serialize(), function () {
+      $.post($(this).url(), $("#create_invoice_form, .activities td input.checkbox:checked").serialize(), function () {
         $("#activities_filter form:first").submit();
         Application.notice('Invoice has been created successfully');
       });
@@ -174,7 +164,7 @@ var Activities = {
 
     // handle "add activities to existing invoice" form submission 
     $("#update_invoice_button").click(function() {
-      if ($("#activities td input.checkbox:checked").length == 0) {
+      if ($(".activities td input.checkbox:checked").length == 0) {
         Application.error('You need to select activities for this invoice.');
         return false;
       }
@@ -188,7 +178,7 @@ var Activities = {
       $.ajax({
           type: "PUT",
           url: "/invoices/" + invoiceId,
-          data: $("#activities td input.checkbox:checked").serialize(), 
+          data: $(".activities td input.checkbox:checked").serialize(), 
           success: function () {
             $("#activities_filter form:first").submit();
             Application.notice('Activities have been added to invoice successfully');

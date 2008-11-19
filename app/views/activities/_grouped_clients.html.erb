@@ -1,0 +1,10 @@
+<ul class="clients">
+  <% clients.each do |client| %>
+    <li class="client">
+      <%= image_tag("icons/client.png") %>
+      <strong>Client: <%= client.name %></strong>
+      <%= partial("activities/grouped_projects", :projects => unique_projects_from(@activities, client), :client => client) %>
+      <strong>Total for client: <%= format_minutes(activities_from(@activities, client).inject(0) { |s,a| s += a.minutes; s }) %></strong>
+    </li>
+  <% end %>
+<ul>

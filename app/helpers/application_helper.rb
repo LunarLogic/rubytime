@@ -58,5 +58,31 @@ module Merb
       end
       sub_menu
     end
+    
+    def unique_clients_from(activities)
+      activities.map { |a| a.project.client }.uniq.sort_by { |c| c.name }
+    end
+    
+    def unique_projects_from(activities, client)
+      activities.select { |a| a.project.client == client }.map { |a| a.project }.uniq.sort_by { |p| p.name }
+    end
+    
+    def unique_roles_from(activities, client, project)
+      activities.select { |a| a.project.client == client && a.project == project }.map { |a| a.user.role }.uniq.sort_by { |r| r.name }
+    end
+    
+    def activities_from(activities, client, project=nil, role=nil)
+      activities = activities.select { |a| a.project.client == client }
+      if project
+        activities = activities.select { |a| a.project == project }
+        activities = activities.select { |a| a.user.role == role  } if role
+      end
+      activities.sort_by { |a| a.date }
+    end
+    
+    def total_from(activities)
+      activities.inject(0) { |a,act| a + act.minutes }
+    end
+    
   end
 end # Merb
