@@ -53,6 +53,10 @@ class User
     self.is_admin? || self.is_employee? 
   end
   
+  def can_see_invoice?(invoice)
+    self.is_admin? || invoice.client == self.client
+  end
+  
   def editable_by?(user)
     user == self || user.is_admin?
   end

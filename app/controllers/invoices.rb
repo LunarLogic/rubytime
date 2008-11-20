@@ -11,6 +11,7 @@ class Invoices < Application
   end
   
   def show
+    raise Forbidden unless current_user.can_see_invoice?(@invoice)
     @activities = @invoice.activities.all(:order => [:created_at.desc])
     render
   end
