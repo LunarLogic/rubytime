@@ -1,3 +1,4 @@
+<% throw_content :secondary, partial(:new_client) %>
 <h1>List of clients</h1>
 <table class="list">
   <tr>
@@ -8,5 +9,3 @@
   </tr>
   <%= partial :client, :with => @clients %>
 </table>
-
-<%= link_to "Create new client", url(:new_client) %>

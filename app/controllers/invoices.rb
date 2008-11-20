@@ -62,4 +62,8 @@ protected
   def load_clients
     @clients = Client.active.all(:order => [:name])
   end
+  
+  def number_of_columns
+    params[:action] == "show" || (params[:action] == "index" || params[:action] == "create") && !current_user.is_admin? ? 1 : super
+  end
 end

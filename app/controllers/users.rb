@@ -104,4 +104,8 @@ protected
   def check_authorization
     raise Forbidden unless @user.editable_by?(current_user)
   end
+  
+  def number_of_columns
+    params[:action] == "show" || params[:action] == "settings" || params[:action] == "edit" ? 1 : super
+  end
 end # Users

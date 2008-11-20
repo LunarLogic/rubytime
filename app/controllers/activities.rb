@@ -156,4 +156,9 @@ class Activities < Application
     report.rewind
     report.read
   end
+  
+  def number_of_columns
+    params[:action] == "calendar" ? 1 : super
+  end
+ 
 end # Activities

@@ -5,8 +5,6 @@ describe Clients do
     %w(client employee).each do |user_type|
       method_name = "dispatch_to_as_#{user_type}".to_sym
       
-      block_should(raise_forbidden) { send(method_name, Clients, :new) }
-      
       block_should(raise_forbidden) { send(method_name, Clients, :index) }
       
       block_should(raise_forbidden) { send(method_name, Clients, :edit, :id => fx(:banana).id) }
@@ -18,8 +16,6 @@ describe Clients do
       end
     end
   end
-  
-  it("should render new for admin") { as(:admin).dispatch_to(Clients, :new).should be_successful }
   
   it("should render edit for admin") { as(:admin).dispatch_to(Clients, :edit, :id => fx(:orange).id).should be_successful }
 

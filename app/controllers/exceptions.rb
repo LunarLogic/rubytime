@@ -22,4 +22,8 @@ class Exceptions < Merb::Controller
   def unauthenticated
     render :template => "../../slices/merb-auth-slice-password/app/views/exceptions/unauthenticated"
   end
+  
+  def number_of_columns
+    1
+  end
 end

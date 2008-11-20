@@ -1,4 +1,6 @@
 <h1>Create new invoice</h1>
+
+<%= error_messages_for(@invoice) %>
 <%= form_for @invoice, :action => resource(:invoices), :id => "invoice_form" do %>
   <fieldset>
     <p>

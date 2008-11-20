@@ -18,4 +18,8 @@ class Application < Merb::Controller
   def render_failure(content = "", status = 400)
     render content, :layout => false, :status => status
   end
+  
+  def number_of_columns
+    2
+  end
 end

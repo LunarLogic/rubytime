@@ -13,7 +13,7 @@
       <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
     </p>
     <p class="buttons">
-      <%= submit 'Save', :class => "button" %> or <%= link_to 'Cancel', resource(:projects) %>
+      <%= submit 'Create', :class => "button" %>
     </p>
   </fieldset>
 <% end =%>

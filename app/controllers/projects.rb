@@ -64,4 +64,8 @@ class Projects < Application
     @clients = Client.active
   end
   
+  
+  def number_of_columns
+    params[:action] == "show" || params[:action] == "edit" ? 1 : super
+  end
 end # Projects

@@ -1,13 +1,7 @@
 class Clients < Application
   before :ensure_admin
   before :load_client, :only => [:show, :edit, :destroy, :update]
-  
-  def new
-    @client_user = ClientUser.new
-    @client_user.generate_password!
-    @client = Client.new
-    render :template => "clients/edit"
-  end
+  before :load_clients, :only => [:index, :create]
   
   def show
     render
@@ -16,17 +10,19 @@ class Clients < Application
   def create
     @client = Client.new(params[:client])
     @client_user = ClientUser.new(params[:client_user].merge(:client => @client))
-    if @client_user.valid?  && @client.valid?
+    if @client_user.valid? && @client.valid?
       @client_user.save
       @client.save
       redirect resource(@client)
     else
-      render :template => "clients/edit"
+      render :index
     end
   end
   
   def index
-    @clients = Client.all(:order => [:name])
+    @client_user = ClientUser.new
+    @client_user.generate_password!
+    @client = Client.new
     render
   end
   
@@ -54,5 +50,13 @@ class Clients < Application
   
   def load_client
     raise NotFound unless @client = Client.get(params[:id])
+  end
+  
+  def load_clients
+    @clients = Client.all(:order => [:name])
+  end
+  
+  def number_of_columns
+    params[:action] == "show" || params[:action] == "edit" ? 1 : super
   end
 end # Clients

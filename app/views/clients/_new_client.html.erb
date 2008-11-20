@@ -1,0 +1,42 @@
+<%= error_messages_for @client %>
+<%= error_messages_for @client_user %>
+<%= form_for @client, :action => resource(:clients), :id => "client_form" do %>
+  <fieldset>
+    <legend>Add new client</legend>
+    <p>
+      <%= text_field :name, :label => "Name" %>
+    </p>
+    <p>
+      <%= text_area :description, :label => "Description", :class => "text" %>
+    </p>
+    <p>
+      <%= text_field :email, :label => "Email" %>
+    </p>
+    <p>
+      Default user for client:
+    </p>
+    <%= fields_for @client_user do %>
+      <p>
+        <%= text_field :name, :label => "Name" %>
+      </p>
+      <p>
+        <%= text_field :login, :label => "Login" %>
+      </p>
+      <p>
+        <%= text_field :email, :label => "Email" %>
+      </p>
+      <p>
+        <%= password_field :password, :label => "Password" %>
+        <span id="generated_password">
+          Generated password: <%= @client_user.password %>
+        </span>
+      </p>
+      <p>
+        <%= password_field :password_confirmation, :label => "Confirm password" %>
+      </p>
+    <% end =%>
+    <p class="buttons">
+      <%= submit "Create", :class => "button" %>
+    </p>
+  </fieldset>
+<% end =%>
