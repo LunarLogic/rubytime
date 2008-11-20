@@ -26,7 +26,7 @@
         </td>
       <% end %>
       <td><%= activity.date %></td>
-      <td class="right"><%= format_minutes(activity.minutes) %></td>
+      <td class="right"><%= activity.hours %></td>
       <td>
         <%= link_to image_tag("icons/magnifier.png", :title => "Toggle details"), "#", :class => "toggle_comments_link" %>
         <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", 
