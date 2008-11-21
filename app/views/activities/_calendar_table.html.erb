@@ -1,5 +1,1 @@
-<% if @user != current_user  %>
-  <h1><%= @user.name %> (<%= @user.role.name %>)</h1>
-<% end %>
-
 <%= activities_calendar :activities => @activities_by_date, :year => @year, :month => @month, :user => @user %>

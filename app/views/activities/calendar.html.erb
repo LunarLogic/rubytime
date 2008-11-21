@@ -1,3 +1,8 @@
+<% if current_user.is_admin? %>
+  <p>
+    Calendar for <%= select :name => "user_id", :id => "user_id", :collection => @users.map { |u| [u.id, u.name] }, :selected => @user.id %>
+  </p>
+<% end %>
 <div id="users_<%= @user.id %>_calendar">
   <%= partial 'calendar_table' %>
 </div>

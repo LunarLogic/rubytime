@@ -29,6 +29,7 @@ var Activities = {
           Activities.showDay($('#' + date).parents('td').find('a.show_day'));
       });
       $(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
+      Activities._initUserCombo();
     }
   },
   
@@ -295,6 +296,14 @@ var Activities = {
     Activities._updateIcons(group);
     
     return false;
+  },
+  
+  _initUserCombo: function() {
+    $("select#user_id").change(function() {
+      var location = ('' + window.location);
+      var currentId = location.match(/(\d+)\/calendar/)[1];
+      window.location = location.replace(currentId, $(this).val());
+    });
   }
 };
 

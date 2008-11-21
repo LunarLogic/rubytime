@@ -69,6 +69,8 @@ class Activities < Application
 
   # TODO refactor
   def calendar
+    @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
+    
     date = if params.has_key?("year") && params.has_key?("month")
              @year, @month = params[:year].to_i, params[:month].to_i
              { :year => @year, :month => @month }
@@ -129,7 +131,7 @@ class Activities < Application
   end
   
   def load_user
-    @user = User.get(params[:user_id]) or raise NotFound #unless try_load_user
+    @user = User.get(params[:user_id]) or raise NotFound
   end
 
   def load_projects
