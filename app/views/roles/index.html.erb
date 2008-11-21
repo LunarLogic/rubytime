@@ -4,10 +4,10 @@
 <% if @roles.empty? %>
   No roles found.
 <% else %>
-  <table id="roles" class="list">
+  <table id="roles" class="list wide">
   <tr>
     <th>Name</th>
-    <th></th>
+    <th class="icons"></th>
   </tr>
   <% @roles.each do |role| %>
     <tr>

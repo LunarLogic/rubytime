@@ -4,13 +4,13 @@
 <% if @invoices.empty? %>
   No invoices found.
 <% else %>
-  <table id="invoices" class="list">
+  <table id="invoices" class="list wide">
   <tr>
     <th>Name</th>
     <% unless current_user.is_client_user? %><th>Client</th><% end %>
     <th>Created at</th>
     <th>Issued at</th>
-    <th></th>
+    <th class="icons"></th>
   </tr>
   <% @invoices.each do |invoice| %>
     <tr>

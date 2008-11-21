@@ -1,7 +1,7 @@
 <% include_users = current_user.is_admin? || !current_user.is_employee? %>
 <% invoice_view = params[:controller] == "invoices" %>
 <% include_checkboxes = current_user.is_admin? && !invoice_view %>
-<table class="activities list" cellspacing="0" cellpadding="0">
+<table class="activities list wide" cellspacing="0" cellpadding="0">
   <tr>
     <% if include_checkboxes %>
       <th class="checkbox"><%= check_box :class => "activity_select_all" %></th>

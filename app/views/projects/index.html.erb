@@ -4,18 +4,18 @@
 <% if @projects.empty? %>
   No projects found.
 <% else %>
-  <table id="projects" class="list">
+  <table id="projects" class="list wide">
   <tr>
     <th>Name</th>
     <th>Client</th>
-    <th></th>
+    <th class="icons"></th>
   </tr>
   <% @projects.each do |project| %>
     <tr>
-      <td><%= project.name %></td>
+      <td><%= link_to project.name, resource(project) %></td>
       <td><%= project.client.name %></td>
       <td>
-        <%= link_to 'Edit', resource(project, :edit) %> | 
+        <%= link_to image_tag("icons/pencil.png"), resource(project, :edit) %> 
         <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(project), :class => "delete_row" %>
       </td>
     </tr>

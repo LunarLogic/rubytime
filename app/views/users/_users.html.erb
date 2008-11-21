@@ -1,23 +1,22 @@
 <h1>List of <%= type %></h1>
 
-<table class="list">
+<table class="list wide">
   <tr>
     <th>Name</th>
     <th><%= type == 'employees' ? 'Role' : 'Client' %></th>
     <th>Active</th>
-    <th></th>
+    <th class="icons"></th>
   </tr>
   <% users.each do |user| %>
     <tr>
-      <td><%= user.name %></td>
+      <td><%= link_to(user.name, url(:user, user)) %></td>
       <td><%= type == 'employees' ? user.role.name : user.client.name %></td>
       <td><%= user.active? ? 'Yes' : 'No' %></td>
       <td>
-        <%= link_to 'Show', url(:user, user) %> |
-        <%= link_to 'Edit', url(:edit_user,  user) %> |
-        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), url(:user, user), :class => "delete_row" %> |
         <%= link_to_calendar user %>
-      </td>
+        <%= link_to image_tag("icons/pencil.png", :title => "Edit"), url(:edit_user,  user) %>
+        <%= link_to image_tag("icons/cross.png", :title => "Remove"), url(:user, user), :class => "delete_row" %>
+        </td>
     </tr>
   <% end %>
 </table>

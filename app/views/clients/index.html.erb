@@ -1,11 +1,11 @@
 <% throw_content :secondary, partial(:new_client) %>
 <h1>List of clients</h1>
-<table class="list">
+<table class="list wide">
   <tr>
     <th>Name</th>
     <th>Email</th>
     <th>Active</th>
-    <th></th>
+    <th class="icons"></th>
   </tr>
   <%= partial :client, :with => @clients %>
 </table>
