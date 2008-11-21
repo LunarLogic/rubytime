@@ -44,8 +44,7 @@
       <a class="merb" href="http://merbivore.com" title="Merb -- agile web framework">Powered by Merb</a>
     </div>
     <% if Merb.env == "development" %>
-      <div style="text-align: center">
-        <br/>
+      <div class="revision_info">
         Revision: <%= link_to($GIT_REVISION, "http://github.com/LunarLogicPolska/rubytime/commit/#{$GIT_REVISION}") %>
       </div>
     <% end %>

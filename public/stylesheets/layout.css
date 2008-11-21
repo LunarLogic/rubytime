@@ -308,25 +308,56 @@ div.error h2 {
   background:url(/images/powered_by_merb.png) 0 0 no-repeat;
 }
 
+.revision_info {
+  width:960px;
+  font-size:10px;
+  margin:0 auto;
+  text-align:center;
+  margin-top:10px;
+}
 
-/* temporary */
+ul.clients img {
+  margin:5px;
+  vertical-align:middle;
+}
+
+ul.clients table img {
+  margin:0;
+  padding:0;
+}
+
 ul.clients strong {
   font-weight: 900;
+  margin:5px 0;
+  line-height:16px;
 }
 
 li.client {
-  background-color: #999;
-  margin-bottom: 30px;
+  margin:5px 0;
+  padding:5px;
+  border-bottom:1px solid #ddd;
+  border-top:1px solid #ddd;
+}
+
+ul.projects, ul.roles {
+  border-top:1px solid #eee;
+  border-bottom:1px solid #eee;
 }
 
 li.project {
-  background-color: #AAA;
-  margin-bottom: 20px;
+  padding:5px;
+}
+
+li.project strong {
+  color:#666;
 }
 
 li.role {
-  background-color: #BBB;
-  margin-bottom: 10px;
+  padding:5px;
+}
+
+li.role strong {
+  color:#888;
 }
 
 table.activities {
