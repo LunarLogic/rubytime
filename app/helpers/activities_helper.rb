@@ -13,7 +13,7 @@ module Merb
         activities_for_today =  !activities[date].nil?
         html =  %(<div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, :user_id => [user.id]}
-        html << link_to("Show activity for the day", url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day", 
+        html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"), 
           :class => "show_day", :style => activities_for_today ? "" : "display: none")
         html << %(#{date.mday}</div><ul class="activities">)
         html << partial(:activity, :with => activities[date]) if activities_for_today
