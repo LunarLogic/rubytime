@@ -36,8 +36,8 @@ var Application = {
     $.validator.addMethod('hours', hoursFormat, "Please enter hours in format like 3:45 or 2,5.");
   },
 
-  initDatepickers: function() {
-    $(".datepicker").datepicker({
+  initDatepickers: function(selector) {
+    $(selector || ".datepicker").datepicker({
       dateFormat: "yy-mm-dd", duration: "", showOn: "both", 
       buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
   },
@@ -125,6 +125,9 @@ var Application = {
         }
       }
     });
+    
+    // init datepicker
+    Application.initDatepickers(".activity_form .datepicker");
     
     // focus first blank field (hours)
     container.find(".activity_form").focusFirstBlank();

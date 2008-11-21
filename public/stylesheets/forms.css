@@ -176,3 +176,7 @@ label.error {
 #add_activity input.button {
   width:auto;
 }
+
+#add_activity input.datepicker {
+  width: 232px;
+}
