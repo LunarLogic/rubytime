@@ -1,0 +1,42 @@
+# multi environment merb deployment with vlad and god
+set :application, "rubytime-demo"
+set :deploy_to, "/home/someuser/rubytimed-demo"
+set :repository, 'git://github.com/LunarLogicPolska/rubytime.git'
+set :revision, "origin/master"
+set :user, "someuser"
+set :domain, "someuser@staging.somehost.com"
+set :use_sudo, false
+set :merb_env, 'staging'
+
+task :production do
+  set :application, "rubytime3"
+  set :merb_env, 'production'
+  set :deploy_to, "/home/someuser/rubytime3"
+  set :user, "someuser"
+  set :domain, "someuser@production.somehost.com"
+end
+
+namespace :vlad do
+  remote_task :symlink_configs, :roles => [:app] do
+    run "ln -s #{shared_path}/config/database.yml #{current_path}/config/database.yml"
+    run "ln -s #{shared_path}/config/local_config.rb #{current_path}/config/local_config.rb"
+  end
+
+  remote_task :stop_app, :roles => [:app] do
+    #run "sudo god stop #{application}"
+    run "echo \"stopping #{application} (#{merb_env})\""
+  end
+  
+  remote_task :start_app, :roles => [:app] do
+    #run "sudo god start #{application}"
+    run "echo \"starting #{application} (#{merb_env})\""
+  end
+
+  remote_task :tail, :roles => [:app] do
+    run "tail -n1000 -f #{current_path}/log/#{merb_env}.log"
+  end
+
+  task :deploy => [ 'vlad:stop_app', 'vlad:update', 'vlad:symlink_configs', 'vlad:start_app']
+  #task :long_deploy => [ :define_roles, 'vlad:stop', 'vlad:update', 'vlad:merb:symlink_configs', 'vlad:dm:migrate', 'vlad:start']
+end
+

@@ -8,7 +8,6 @@ dependency "merb-slices", merb_gems_version        # Provides a mechanism for le
 dependency "merb-auth-core", merb_gems_version          # An authentication slice (Merb's equivalent to Rails' restful authentication)
 dependency "merb-auth-more", merb_gems_version
 dependency "merb-auth-slice-password", merb_gems_version
-dependency "merb_has_flash"
 
 dependency "dm-core", dm_gems_version         # The datamapper ORM
 dependency "dm-aggregates", dm_gems_version   # Provides your DM models with count, sum, avg, min, max, etc.
