@@ -4,7 +4,7 @@ class Activities < Application
     
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_all_users,             :only => [:new, :edit, :update, :create] 
-  before :load_user,                  :only => [:calendar]
+  before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
   before :load_activity             , :only => [:edit, :update, :destroy]
@@ -70,6 +70,7 @@ class Activities < Application
   # TODO refactor
   def calendar
     @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
+    @projects = current_user.client.projects.all(:order => [:name.asc]) if current_user.is_client_user?
     
     date = if params.has_key?("year") && params.has_key?("month")
              @year, @month = params[:year].to_i, params[:month].to_i
@@ -90,7 +91,7 @@ class Activities < Application
     @previous_year  = @month == 1 ? @year.pred : @year
     
     @activities = begin 
-                    @user.activities.for date
+                    @owner.activities.for date
                   rescue ArgumentError
                     raise BadRequest
                   end
@@ -113,8 +114,13 @@ class Activities < Application
   protected
   
   def check_day_viewability
-    raise BadRequest if params[:search_criteria][:user_id].size > 1
-    @user = User.get(params[:search_criteria][:user_id].first) or raise NotFound
+    raise BadRequest if params[:search_criteria][:user_id] && params[:search_criteria][:user_id].size > 1 || params[:search_criteria][:project_id] && params[:search_criteria][:project_id].size > 1
+    if current_user.is_client_user? 
+      raise Forbidden if !params[:search_criteria][:user_id].nil?
+      @owner = Project.get(params[:search_criteria][:project_id].first) or raise NotFound
+    else
+      @owner = User.get(params[:search_criteria][:user_id].first) or raise NotFound
+    end
     check_calendar_viewability
   end
   
@@ -123,15 +129,19 @@ class Activities < Application
   end
   
   def check_calendar_viewability
-    @user.calendar_viewable?(current_user) or raise Forbidden
+    @owner.calendar_viewable?(current_user) or raise Forbidden
   end
 
   def load_activity
     @activity = Activity.get(params[:id]) or raise NotFound
   end
   
-  def load_user
-    @user = User.get(params[:user_id]) or raise NotFound
+  def load_owner
+    if params[:user_id]
+      @owner = User.get(params[:user_id]) or raise NotFound
+    else
+      @owner = Project.get(params[:project_id]) or raise NotFound
+    end
   end
 
   def load_projects

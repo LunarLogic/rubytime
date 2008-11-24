@@ -19,4 +19,8 @@ class Project
   def self.active
     all(:active => true)
   end
+  
+  def calendar_viewable?(user)
+    user.client == self.client || user.is_admin?
+  end
 end

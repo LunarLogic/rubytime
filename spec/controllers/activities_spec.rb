@@ -115,6 +115,18 @@ describe Activities do
   end
 
   describe "#calendar" do
+    it "should match /users/3/calendar to Activites#calendar with user_id = 3" do
+      response = request_to("/users/3/calendar", :get)
+      response.should route_to(Activities, :calendar)
+      response[:user_id].should == "3"
+    end
+
+    it "should match /projects/4/calendar to Activites#calendar with project_id = 4" do
+      response = request_to("/projects/4/calendar", :get)
+      response.should route_to(Activities, :calendar)
+      response[:project_id].should == "4"
+    end
+    
     it "should render calendar for current month if no date given in the request" do
       repository(:default) do # identity map doesn't work outside repository block
         employee = Employee.gen(:role => fx(:developer))
@@ -140,22 +152,28 @@ describe Activities do
       end
     end
     
-    it "should match /users/3/calendar to Activites#calendar with user_id = 3" do
-      request_to("/users/3/calendar", :get).should route_to(Activities, :calendar)
-    end
-
-    it "should be successful for user requesting for his calendar" do
+    it "should be successful for user requesting his calendar" do
       user = fx(:stefan)
       as(user).dispatch_to(Activities, :calendar, :user_id => user.id).should be_successful
-    end
-
-    it "should be successful for admin requesting for user's calendar" do
-      as(:admin).dispatch_to(Activities, :calendar, :user_id => fx(:jola).id).should be_successful
     end
 
     it "should raise forbidden for trying to view other's calendars" do
       block_should(raise_forbidden) do
         as(fx(:misio)).dispatch_to(Activities, :calendar, :user_id => fx(:jola).id)
+      end
+    end
+
+    it "should be successful for admin requesting user's calendar" do
+      as(:admin).dispatch_to(Activities, :calendar, :user_id => fx(:jola).id).should be_successful
+    end
+
+    it "should be successful for client requesting his project's calendar" do
+      as(fx(:apple_user1)).dispatch_to(Activities, :calendar, :project_id => fx(:apples_first_project).id).should be_successful
+    end
+    
+    it "should raise forbidden for trying to view other client's project's calendar" do
+      block_should(raise_forbidden) do
+        as(fx(:orange_user1)).dispatch_to(Activities, :calendar, :project_id => fx(:apples_first_project).id)
       end
     end
   end
@@ -170,6 +188,21 @@ describe Activities do
       block_should(raise_forbidden) do
         as(fx(:misio)).dispatch_to(Activities, :day, { :search_criteria => { 
           :user_id => [fx(:jola).id], :date_from => day_with_jolas_activities, :date_to => day_with_jolas_activities 
+        }})
+      end
+    end
+    
+    it "should show day on calendar for client's project" do
+      project = fx(:apples_first_project)
+      as(fx(:apple_user1)).dispatch_to(Activities, :day, { :search_criteria => { 
+          :project_id => [project.id], :date_from => project.activities.first.date.to_s
+      }}).should be_successful
+    end
+    
+    it "should raise Forbidden when client is trying to view other client's calendar" do
+      block_should(raise_forbidden) do
+        as(fx(:orange_user1)).dispatch_to(Activities, :day, { :search_criteria => { 
+          :project_id => [fx(:apples_first_project).id], :date_from => "2008-11-24"
         }})
       end
     end

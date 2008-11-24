@@ -5,14 +5,15 @@ module Merb
     def activities_calendar(options = {})
       # no need to check for :year and :month - calendar_table does it
       activities = options[:activities] or raise ArgumentError.new("options[:activities] is a mandatory argument")
-      user = options[:user]             or raise ArgumentError.new("options[:user] is a mandatory argument")
+      owner = options[:owner] or raise ArgumentError.new("options[:owner] is a mandatory argument")
+      owner_id_name = owner.is_a?(Project) ? :project_id : :user_id
       year = options[:year]
       month = options[:month]
       
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         activities_for_today =  !activities[date].nil?
         html =  %(<div class="day_of_the_month clearfix">)
-        criteria =  { :date_from => date, :date_to => date, :user_id => [user.id]}
+        criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
         html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"), 
           :class => "show_day", :style => activities_for_today ? "" : "display: none")
         html << %(#{date.mday}</div><ul class="activities">)
@@ -71,13 +72,18 @@ module Merb
       first_weekday.times do
         day_names.push(day_names.shift)
       end
-    
+      
+      owner_type = @owner.is_a?(Project) ? "project" : "user"
+      
+      prev_url = url(:"#{owner_type}_calendar", @owner.id, :month => @previous_month, :year => @previous_year)
+      next_url = url(:"#{owner_type}_calendar", @owner.id, :month => @next_month, :year => @next_year)
+      
       cal = %(<table id="#{options[:table_id]}" class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
       cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">)
-      cal << link_to("&laquo; Previous", url(:user_calendar, @user.id, :month => @previous_month, :year => @previous_year), :id => "previous_month")
+      cal << link_to("&laquo; Previous", prev_url, :id => "previous_month")
       cal << %(<span class="date">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</span>)
       unless @next_month.nil? && @next_year.nil?
-        cal << link_to("Next &raquo;", url(:user_calendar, @user.id, :month => @next_month, :year => @next_year), :id => "next_month")
+        cal << link_to("Next &raquo;", next_url, :id => "next_month")
       end
       cal << %(</th></tr><tr class="#{options[:day_name_class]}">)
       day_names.each {|d| cal << "<th>#{d[options[:abbrev]]}</th>"}
