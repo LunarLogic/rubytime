@@ -1,6 +1,6 @@
 # multi environment merb deployment with vlad and god
 set :application, "rubytime-demo"
-set :deploy_to, "/home/someuser/rubytimed-demo"
+set :deploy_to, "/home/someuser/rubytime-demo"
 set :repository, 'git://github.com/LunarLogicPolska/rubytime.git'
 set :revision, "origin/master"
 set :user, "someuser"
@@ -23,13 +23,11 @@ namespace :vlad do
   end
 
   remote_task :stop_app, :roles => [:app] do
-    #run "sudo god stop #{application}"
-    run "echo \"stopping #{application} (#{merb_env})\""
+    run "sudo god stop #{application}"
   end
   
   remote_task :start_app, :roles => [:app] do
-    #run "sudo god start #{application}"
-    run "echo \"starting #{application} (#{merb_env})\""
+    run "sudo god start #{application}"
   end
 
   remote_task :tail, :roles => [:app] do
