@@ -34,7 +34,7 @@ if Rake.application.top_level_tasks.any? {|t| t == 'deploy' or t =~ /^vlad:/}
   begin
     $TESTING = true # Required to bypass check for reserved_name? in vlad. DataMapper 0.9.x defines Kernel#repository...
     require 'vlad'
-    Vlad.load :scm => "git", :app => nil
+    Vlad.load :scm => "git", :app => nil, :web => nil
   rescue LoadError
     # do nothing
   end

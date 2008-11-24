@@ -1,5 +1,6 @@
 nbproject
 config/database.yml
+config/deploy.rb
 log/*
 coverage/*
 spec/controllers/log/*

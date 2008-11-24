@@ -22,7 +22,7 @@
       <% end %>
       <% if include_users %>
         <td>
-          <%= activity.user.name %>
+          <%= h activity.user.name %>
         </td>
       <% end %>
       <td><%= activity.date %></td>
@@ -37,7 +37,7 @@
       </td>
     </tr>
     <tr class="comments">
-      <td colspan="5"><%= activity.comments.gsub(/\n/, "<br/>") %></td>
+      <td colspan="5"><%= h activity.comments.gsub(/\n/, "<br/>") %></td>
     </tr>
   <% end %>
 </table>

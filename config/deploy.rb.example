@@ -1,19 +1,18 @@
-# multi environment merb deployment with vlad and god
 set :application, "rubytime-demo"
 set :deploy_to, "/home/someuser/rubytime-demo"
 set :repository, 'git://github.com/LunarLogicPolska/rubytime.git'
 set :revision, "origin/master"
 set :user, "someuser"
-set :domain, "someuser@staging.somehost.com"
+set :domain, "someuser@somehost.com"
 set :use_sudo, false
 set :merb_env, 'staging'
 
 task :production do
-  set :application, "rubytime3"
+  set :application, "rubytime"
   set :merb_env, 'production'
   set :deploy_to, "/home/someuser/rubytime3"
   set :user, "someuser"
-  set :domain, "someuser@production.somehost.com"
+  set :domain, "someuser@somehost.com"
 end
 
 namespace :vlad do
@@ -22,19 +21,37 @@ namespace :vlad do
     run "ln -s #{shared_path}/config/local_config.rb #{current_path}/config/local_config.rb"
   end
 
+  remote_task :start_app, :roles => [:app] do
+    run "sudo god start #{application}"
+  end
+
   remote_task :stop_app, :roles => [:app] do
     run "sudo god stop #{application}"
   end
   
-  remote_task :start_app, :roles => [:app] do
-    run "sudo god start #{application}"
+  remote_task :start_web, :roles => [:web] do
+    run "if [ -f #{shared_path}/system/maintenance.html ]; then rm -f #{shared_path}/system/maintenance.html; fi"
+  end
+    
+  remote_task :stop_web, :roles => [:web] do
+    run "cp -f #{shared_path}/config/maintenance.html #{shared_path}/system/"
+  end
+
+  remote_task :start do
+    Rake::Task['vlad:start_app'].invoke
+    Rake::Task['vlad:start_web'].invoke
+  end
+
+  remote_task :stop do
+    Rake::Task['vlad:stop_app'].invoke
+    Rake::Task['vlad:stop_web'].invoke
   end
 
   remote_task :tail, :roles => [:app] do
     run "tail -n1000 -f #{current_path}/log/#{merb_env}.log"
   end
 
-  task :deploy => [ 'vlad:stop_app', 'vlad:update', 'vlad:symlink_configs', 'vlad:start_app']
-  #task :long_deploy => [ :define_roles, 'vlad:stop', 'vlad:update', 'vlad:merb:symlink_configs', 'vlad:dm:migrate', 'vlad:start']
+  task :deploy => [ 'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:start']
+  task :full_deploy => [ 'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:dm:migrate', 'vlad:start']
 end
 

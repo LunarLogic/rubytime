@@ -1,5 +1,5 @@
 <% if current_user %>
-  <dt>Welcome, <%= current_user.name %></dt>
+  <dt>Welcome, <%= h current_user.name %></dt>
   <dd>
     <ul>
       <li><%= link_to 'Preferences', url(:settings, current_user.id) %></li>

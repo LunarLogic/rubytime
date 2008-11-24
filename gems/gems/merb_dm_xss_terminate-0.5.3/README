@@ -1,0 +1,89 @@
+this fork is for the purpose of hooking into DataMapper::Resource instead of ActiveRecord::Base.
+
+what's the merb/dm equivalent of ENV['MODELS']? (in rake task). apart from that I think the port is complete.
+
+= merb_dm_xss_terminate
+
+  Plugin that auto-sanitizes data before it is saved in your DataMapper models.
+  
+  merb_dm_xss_terminate is a port of merb_xss_terminate by Ben Chiu, which is
+  a port of xss_terminate by Luke Francl. The white list sanitizer and full
+  sanitizer were lifted from Rails so you don't have to install ActionPack.
+
+  merb_dm_xss_terminate makes stripping and sanitizing HTML automatic. Install 
+  and forget. And forget about remembering to escape your output, because you 
+  won't need to anymore.  Just remember the cases where html is allowed.
+
+  *By default, it will strip all HTML tags from user input.* But merb_dm_xss_terminate
+  is also flexible. When you need users to be able to enter HTML, the plugin
+  allows you remove bad HTML with your choice of two whitelist-based sanitizers, 
+  or to skip HTML sanitization entirely on a per-field basis.
+
+== Installation
+
+  git clone git://github.com/schwabsauce/merb_xss_terminate.git
+  cd merb_xss_terminate
+  rake install
+  add: dependency 'merb_dm_xss_terminate' to init.rb
+
+== HTML sanitization
+
+  * Full-sanitizer: removes all HTML by stripping all the tags. Tags are 
+    removed, but their content is not.
+  * White-list sanitizer: removes bad HTML with Rails' HTML sanitizer methods.
+    Bad tags are removed completely, including their content.
+  * HTML5lib sanitization: removes bad HTML after parsing it with 
+    {HTML5lib}[http://code.google.com/p/html5lib/], a library that parses HTML 
+    like browsers do. It should be very tolerant of invalid HTML. Bad tags are 
+    escaped, not removed.
+  * Do nothing. You can chose not to process given fields.
+
+== Usage
+
+  Installing the plugin creates a +before :save+ hook that will strip HTML tags 
+  from all string and text fields. No further configuration is necessary if this
+  is what you want. To customize the behavior, you use the xss_terminate 
+  class method in your models.
+  
+  To exempt some fields from sanitization, use the <tt>:except</tt> option 
+  with a list of fields not to process. Note: Merb uses :exclude but use :except here.
+  
+    class Comment
+      xss_terminate :except => [ :body ]
+    end
+  
+  To sanitize HTML with Rails' sanitization, use the <tt>:sanitize</tt> option:
+  
+    class Review
+      xss_terminate :sanitize => [ :body, :author_name]
+    end
+
+  To sanitize HTML with {HTML5Lib}[http://code.google.com/p/html5lib/] 
+  use the <tt>:html5lib_sanitize</tt> option with a list of fields to sanitize:
+
+    class Entry
+      xss_terminate :html5lib_sanitize => [ :body, :author_name ]
+    end
+   
+  You can combine multiple options if you have some fields you would like skipped
+  and others sanitized. Fields not listed in the option arrays will be stripped.
+  
+    class Message
+      xss_terminate :except => [ :body ], :sanitize => [ :title ]
+    end
+
+== Sanitizing existing records
+
+  After installing merb_xss_terminate and configuring it to your liking, you can 
+  run <tt>rake merb_xss_terminate:db:sanitize MODELS=Foo,Bar,Baz</tt> to execute 
+  it against your existing records. This will load each model found and save it 
+  again to invoke the before_save hook.
+
+== Credits
+
+  merb_xss_terminate by {Ben Chiu}
+
+  xss_terminate by {Luke Francl}[http://railspikes.com] and acts_as_sanitized by 
+  {Alex Payne}[http://www.al3x.net].
+  
+  HTML5Lib sanitization by {Jacques Distler}[http://golem.ph.utexas.edu/~distler].
