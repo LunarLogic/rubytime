@@ -30,6 +30,7 @@ var Activities = {
       });
       $(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
       Activities._initUserAndProjectCombo();
+      Activities._initCalendarCells();
     }
   },
   
@@ -296,6 +297,10 @@ var Activities = {
     Activities._updateIcons(group);
     
     return false;
+  },
+
+  _initCalendarCells: function() {
+    $("td.day").mouseover(function() { $(this).find(".activity_icons").show() }).mouseout(function() { $(this).find(".activity_icons").hide() })
   },
   
   _initUserAndProjectCombo: function() {

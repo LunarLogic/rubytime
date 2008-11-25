@@ -91,14 +91,13 @@ table#calendar .day_of_the_month {
 
 table#calendar .activities {
   padding: 4px;
-  height: 100%;
 }
 
 table#calendar a.add_activity {
   display: block;
   text-align:center;
   text-decoration:none;
-  background:url(/images/icons/plus_small.png) center no-repeat;
+  background:url(/images/icons/plus.png) center no-repeat;
   padding-top: 8px;
   font-size:11px;
 }
@@ -159,4 +158,9 @@ tr.comments td {
 
 th.icons {
   width: 60px;
+}
+
+span.activity_icons {
+  display: none;
+}
 }

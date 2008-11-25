@@ -12,14 +12,22 @@ module Merb
       
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         activities_for_today =  !activities[date].nil?
-        html =  %(<div class="day_of_the_month clearfix">)
+        html = ""
+#        html =  %(<div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
-        html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"), 
-          :class => "show_day", :style => activities_for_today ? "" : "display: none")
-        html << %(#{date.mday}</div><ul class="activities">)
+#        html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"),
+#          :class => "show_day", :style => activities_for_today ? "" : "display: none")
+#        html << %(#{date.mday}</div>)
+
+        html << %(<ul class="activities">)
         html << partial(:activity, :with => activities[date]) if activities_for_today
-        html << %(<li class="add_activity"><a href="#"class="add_activity" id="#{format_date date}">Add activity</a></li>)
         html << "</ul>"
+
+        html << '<span class="total_hours">Total: 6:66</span>'
+        html << '<span class="activity_icons">'
+        html << link_to(image_tag("icons/magnifier.png", :title => "Show details"), CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)), :class => "day_of_the_month")
+        html << %(<a href="#" class="add_activity" id="#{format_date date}">Add activity</a>)
+        html << %(</span>)
       end 
     end
     
