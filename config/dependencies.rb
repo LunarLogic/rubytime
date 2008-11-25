@@ -1,4 +1,4 @@
-merb_gems_version = "1.0"
+merb_gems_version = "~>1.0"
 dm_gems_version   = "0.9.7"
 
 dependency "merb-assets", merb_gems_version        # Provides link_to, asset_path, auto_link, image_tag methods (and lots more)
