@@ -13,7 +13,6 @@ module Merb
       format("%d:%.2d", minutes / 60, minutes % 60)
     end
   
-    #TODO remove user argument since current_user is available
     def main_menu_items 
       return [] unless current_user
       main_menu = []
@@ -21,6 +20,11 @@ module Merb
       selected = ['activities'].include?(controller_name)
       main_menu << { :title => "Activities", :path => resource(:activities), :selected => selected }
       
+      if current_user.is_client_user?
+        selected = (controller_name == 'projects' && action_name == 'index' )
+        main_menu << { :title => "Projects", :path => resource(:projects), :selected => selected }
+      end
+
       if current_user.is_admin? || current_user.is_client_user?
         selected = ['invoices'].include?(controller_name)
         main_menu << { :title => "Invoices", :path => resource(:invoices), :selected => selected }

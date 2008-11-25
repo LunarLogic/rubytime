@@ -1,7 +1,8 @@
 class Projects < Application
-  before :ensure_admin, :exclude => [:for_clients]
+  before :ensure_admin, :exclude => [:for_clients, :index]
+  before :ensure_can_list_projects, :only => [:index]
   before :load_project, :only => [:edit, :update, :destroy, :show]
-  before :load_all_projects, :only => [:index, :create]
+  before :load_projects, :only => [:index, :create]
   before :load_clients, :only => [:index, :new, :create, :edit, :update]
   
   def index
@@ -21,7 +22,7 @@ class Projects < Application
       render :index
     end
   end
-  
+
   def edit
     render
   end
@@ -50,14 +51,17 @@ class Projects < Application
     display @search_criteria.all_projects.map { |p| { :id => p.id, :name => p.name } }
   end
 
-  protected
+protected
+  def ensure_can_list_projects
+    raise Forbidden unless current_user.is_admin? || current_user.is_client_user?
+  end
 
   def load_project
     @project = Project.get(params[:id]) or raise NotFound
   end
   
-  def load_all_projects
-    @projects = Project.all(:order => [:name])
+  def load_projects
+    @projects = current_user.is_admin? ? Project.all(:order => [:name]) : current_user.client.projects.all(:order => [:name])
   end
   
   def load_clients
@@ -66,6 +70,6 @@ class Projects < Application
   
   
   def number_of_columns
-    params[:action] == "show" || params[:action] == "edit" ? 1 : super
+    params[:action] == "show" || params[:action] == "edit" || params[:action] == "index" && current_user.is_client_user? ? 1 : super
   end
 end # Projects

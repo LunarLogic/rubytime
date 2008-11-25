@@ -69,8 +69,15 @@ class Activities < Application
 
   # TODO refactor
   def calendar
-    @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
-    @projects = current_user.client.projects.all(:order => [:name.asc]) if current_user.is_client_user?
+    if current_user.is_admin?
+      if params[:user_id]
+        @users = Employee.all(:order => [:name.asc])
+      else
+        @projects = Project.all(:order => [:name.asc])
+      end
+    elsif current_user.is_client_user?
+      @projects = current_user.client.projects.all(:order => [:name.asc])
+    end
     
     date = if params.has_key?("year") && params.has_key?("month")
              @year, @month = params[:year].to_i, params[:month].to_i

@@ -29,7 +29,7 @@ var Activities = {
           Activities.showDay($('#' + date).parents('td').find('a.show_day'));
       });
       $(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
-      Activities._initUserCombo();
+      Activities._initUserAndProjectCombo();
     }
   },
   
@@ -104,7 +104,7 @@ var Activities = {
   },
   
   _calendarContainer: function() {
-    return $("div[id$=calendar][id^=users]");
+    return $("div[id$=calendar][id^=users], div[id$=calendar][id^=projects]");
   },
   
   _addOnFilterSubmit: function() {
@@ -298,11 +298,11 @@ var Activities = {
     return false;
   },
   
-  _initUserCombo: function() {
-    $("select#user_id").change(function() {
+  _initUserAndProjectCombo: function() {
+    $("select#user_id, select#project_id").change(function() {
       var location = ('' + window.location);
       var currentId = location.match(/(\d+)\/calendar/)[1];
-      window.location = location.replace(currentId, $(this).val());
+      window.location = location.replace("/" + currentId + "/", "/" + $(this).val() + "/");
     });
   }
 };

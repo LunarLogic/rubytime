@@ -1,4 +1,4 @@
-<% throw_content :secondary, partial(:new_project) %>
+<% throw_content :secondary, partial(:new_project) if current_user.is_admin? %>
 <h1>List of projects</h1>
 
 <% if @projects.empty? %>
@@ -7,16 +7,23 @@
   <table id="projects" class="list wide">
   <tr>
     <th>Name</th>
-    <th>Client</th>
+    <% if current_user.is_admin? %>
+      <th>Client</th>
+    <% end %>
     <th class="icons"></th>
   </tr>
   <% @projects.each do |project| %>
     <tr>
-      <td><%= link_to project.name, resource(project) %></td>
-      <td><%= project.client.name %></td>
+      <td><%= current_user.is_admin? ? link_to(project.name, resource(project)) : project.name %></td>
+      <% if current_user.is_admin? %>
+        <td><%= project.client.name %></td>
+      <% end %>
       <td>
-        <%= link_to image_tag("icons/pencil.png"), resource(project, :edit) %> 
-        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(project), :class => "delete_row" %>
+        <%= link_to image_tag("icons/calendar.png", :title => "Show calendar for this project"), resource(project, :calendar) %>
+        <% if current_user.is_admin? %>
+          <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(project, :edit) %>
+          <%= link_to image_tag("icons/cross.png", :title => "Remove"), resource(project), :class => "delete_row" %>
+        <% end %>
       </td>
     </tr>
   <% end %>

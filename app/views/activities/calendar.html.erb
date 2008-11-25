@@ -1,12 +1,12 @@
-<% if current_user.is_client_user? %>
+<% if @projects %>
   <p>
     Calendar for project <%= select :name => "project_id", :id => "project_id", :collection => @projects.map { |p| [p.id, p.name] }, :selected => @owner.id %>
   </p>
-  <div id="project_<%= @owner.id %>_calendar">
+  <div id="projects_<%= @owner.id %>_calendar">
     <%= partial 'calendar_table' %>
   </div>
 <% else %>
-  <% if current_user.is_admin? %>
+  <% if @users %>
     <p>
       Calendar for user <%= select :name => "user_id", :id => "user_id", :collection => @users.map { |u| [u.id, u.name] }, :selected => @owner.id %>
     </p>
