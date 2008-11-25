@@ -25,7 +25,9 @@ module Merb
 
         html << '<span class="total_hours">Total: 6:66</span>'
         html << '<span class="activity_icons">'
-        html << link_to(image_tag("icons/magnifier.png", :title => "Show details"), CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)), :class => "day_of_the_month")
+        if activities_for_today
+          html << link_to(image_tag("icons/magnifier.png", :title => "Show details"), CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)), :class => "show_day")
+        end
         html << %(<a href="#" class="add_activity" id="#{format_date date}">Add activity</a>)
         html << %(</span>)
       end 
