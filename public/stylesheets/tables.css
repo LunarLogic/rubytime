@@ -74,7 +74,6 @@ table#calendar thead tr.day_name th {
 
 table#calendar tbody td {
   border: 1px solid #ddd;
-  padding:5px;
   width:70px;
 }
 
@@ -87,20 +86,13 @@ table#calendar .other_month {
 table#calendar .day_of_the_month {
   text-align:right;
   color:#888;
+  padding:2px;
 }
 
 table#calendar .activities {
   padding: 4px;
 }
 
-table#calendar a.add_activity {
-  display: block;
-  text-align:center;
-  text-decoration:none;
-  background:url(/images/icons/plus.png) center no-repeat;
-  padding-top: 8px;
-  font-size:11px;
-}
 table#calendar .month_name th {
   text-align: center;
   font-size: 14px;
@@ -139,6 +131,36 @@ table#calendar thead span.date {
   margin:0 40px;
 }
 
+table#calendar .day_wrapper {
+  height:100px;
+  position:relative;
+}
+
+table#calendar .day_wrapper .total_hours {
+  font-size:11px;
+  position:absolute;
+  bottom:2px;
+  left:2px;
+}
+
+table#calendar .day_wrapper .activity_icons {
+  position:absolute;
+  bottom:0;
+  right:0;
+  width:40px;
+  padding:5px;
+  background:#eee url(/images/activity-calendar-mask.png) 0 0 no-repeat;
+}
+
+table.calendar .activity_icons a {
+  opacity:0.8;
+  margin:0 2px;
+}
+
+table#calendar .activity_icons a:hover {
+  opacity:1.0;
+}
+
 #activitites_for_day { 
   margin-left:20px;
 }
@@ -162,5 +184,4 @@ th.icons {
 
 span.activity_icons {
   display: none;
-}
 }
