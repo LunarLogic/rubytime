@@ -19,12 +19,18 @@ end
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 
-DataMapper.auto_migrate!
+Merb::Mailer.delivery_method = :test_send
 
 require Merb.root / "spec/rubytime_specs_helper"
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/rubytime_controller_helper"
+require Merb.root / "spec/spec_fixtures"
 require Merb.root / "spec/rubytime_fixtures"
+require Merb.root / "spec/rubytime_sweatshop_fix"
+require Merb.root / "spec/mail_controller_specs_helper"
+
+DataMapper.auto_migrate!
+Rubytime::Test::Fixtures::prepare
 
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
@@ -52,17 +58,11 @@ Spec::Runner.configure do |config|
   end
   
   config.before(:all) do
-    Activity.all.destroy!
-    Invoice.all.destroy!
-    User.all.destroy!
-    Project.all.destroy!
-    Client.all.destroy!
-    Role.all.destroy!
-    Rubytime::Test::Fixtures::prepare
+#    Activity.all.destroy!
+#    Invoice.all.destroy!
+#    User.all.destroy!
+#    Project.all.destroy!
+#    Client.all.destroy!
+#    Role.all.destroy!
   end
 end
-
-Merb::Mailer.delivery_method = :test_send
-
-require Merb.root / "spec/spec_fixtures"
-require Merb.root / "spec/mail_controller_specs_helper"

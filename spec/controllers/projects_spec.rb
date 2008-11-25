@@ -2,16 +2,32 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Projects do
   it "shouldn't show any action for guest, employee and client's user" do
-    [:index, :create, :edit, :update, :destroy].each do |action|
+    [:create, :edit, :update, :destroy].each do |action|
       block_should(raise_unauthenticated) { as(:guest).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:employee).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:client).dispatch_to(Projects, action) }
     end
+    block_should(raise_unauthenticated) { as(:guest).dispatch_to(Projects, :index) }
+    block_should(raise_forbidden) { as(:employee).dispatch_to(Projects, :index) }
   end
 
   describe "#index" do
-    it "should show index for admin" do
+    it "should show index for admin and client" do
       as(:admin).dispatch_to(Projects, :index).should be_successful
+      as(:client).dispatch_to(Projects, :index).should be_successful
+    end
+
+    it "shouldn't show index for employee" do
+      block_should(raise_forbidden) do
+        as(:employee).dispatch_to(Projects, :index)
+      end
+    end
+    
+    it "should show index for client's user listing only client's projects" do
+      user = fx(:apple_user1)
+      response = as(user).dispatch_to(Projects, :index)
+      response.should be_successful
+      response.instance_variable_get(:@projects).reject { |p| p.client == user.client }.should be_empty
     end
   end
 

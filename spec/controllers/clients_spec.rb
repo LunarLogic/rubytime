@@ -56,10 +56,8 @@ describe Clients do
 
   it "should update client and redirect to show" do
     apple = fx(:apple)
-    block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
-      as(:admin).dispatch_to(Clients, :update, :id => apple.id, 
-                             :client => { :name => "new name"}).should redirect_to(resource(apple))
-    end
+    as(:admin).dispatch_to(Clients, :update, :id => apple.id,
+                                    :client => { :name => "new name"}).should redirect_to(resource(apple))
     apple.reload.name.should == "new name"
   end
   

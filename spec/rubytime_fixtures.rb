@@ -165,11 +165,11 @@ module Rubytime
           when 2
             object = @@fixtures[[args.first, args.last]]
             raise ArgumentError, "No fixture #{args.first}:#{args.last}" unless object
-            object
+            object.reload
           when 1
             objects = @@fixtures.select { |k,v| k.last == args.first }
             raise ArgumentError, "Multiple or no fixture with name #{args.first}" unless objects.size == 1
-            objects.first.last
+            objects.first.last.reload
           else
             raise ArgumentError, "Wrong number of arguments"
           end
