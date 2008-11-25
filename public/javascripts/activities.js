@@ -31,6 +31,8 @@ var Activities = {
       $(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
       Activities._initUserAndProjectCombo();
       Activities._initCalendarCells();
+      tb_init($(".show_day"));
+      $(document).bind('tb:ajax_loaded', Activities._initActivitiesList);
     }
   },
   
@@ -41,10 +43,10 @@ var Activities = {
       $(document).trigger(EVENTS.add_activity_clicked, memo);
     } else if ((/previous_month|next_month/).test(target.attr('id'))) {
       $("div[id$=calendar][id^=users]").load(target.url());
-    } else if (target.hasClass("delete_activity")) {
-      Activities._deleteActivity(target);
-    } else if (target.hasClass("show_day")) {
-      Activities.showDay(target);
+//    } else if (target.hasClass("delete_activity")) {
+//      Activities._deleteActivity(target);
+//    } else if (target.hasClass("show_day")) {
+//      Activities.showDay(target);
     }// else if (target.hasClass('edit_activity'))
       //Application.notice("No editing yet, sorry.");
     return false;

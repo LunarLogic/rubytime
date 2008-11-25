@@ -12,12 +12,12 @@ module Merb
       
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         activities_for_today =  !activities[date].nil?
-        html = ""
-#        html =  %(<div class="day_of_the_month clearfix">)
+        #html = ""
+        html =  %(<div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
 #        html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"),
 #          :class => "show_day", :style => activities_for_today ? "" : "display: none")
-#        html << %(#{date.mday}</div>)
+        html << %(#{date.mday}</div>)
 
         html << %(<ul class="activities">)
         html << partial(:activity, :with => activities[date]) if activities_for_today
