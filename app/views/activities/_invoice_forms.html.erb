@@ -1,30 +1,34 @@
 <div class="activities_to_invoice">
-  <%= form_for @invoice, :action => url(:invoices), :id => "create_invoice_form" do %>
-    <fieldset class="new">
-      <legend>
-        <%= image_tag("icons/notebook_plus.png") %> Add selected activities to
-      </legend>
-      <p>
-        <%= text_field :name, :label => "new invoice" %>
-      </p>
-      <p>
-        <%= select :client_id, :label => "for client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
-      </p>
-      <p class="buttons">
-        <%= submit "Add", :class => "button", :id => "create_invoice_button" %>
-      </p>
-    </fieldset>
-    
-    <fieldset class="existing">
-      <legend>
-        <%= image_tag("icons/notebook_plus.png") %> Add selected activities to
-      </legend>
-      <p>
-        <%= select :id => "invoice_id", :label => "invoice", :collection => @invoices.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
-      </p>
-      <p class="buttons">
-        <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
-      </p>
-    </fieldset>
-  <% end =%>
+  <% clients_to_invoice = @uninvoiced_activities.map { |a| a.project.client }.uniq %>
+  <% if clients_to_invoice.size == 1 %>
+    <% client = clients_to_invoice.first %>
+    <%= form_for @invoice, :action => url(:invoices), :id => "create_invoice_form" do %>
+      <%= hidden_field :client_id, :value => client.id %>
+      <fieldset class="new">
+        <legend>
+          <%= image_tag("icons/notebook_plus.png") %> Create invoice for <%= client.name %> from selected activities
+        </legend>
+        <p>
+          <%= text_field :name, :label => "Invoice name" %>
+        </p>
+        <p class="buttons">
+          <%= submit "Create", :class => "button", :id => "create_invoice_button" %>
+        </p>
+      </fieldset>
+
+      <fieldset class="existing">
+        <legend>
+          <%= image_tag("icons/notebook_plus.png") %> Add selected activities to existing invoice for <%= client.name %>
+        </legend>
+        <p>
+          <%= select :id => "invoice_id", :label => "Invoice", :collection => client.invoices.pending.all.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
+        </p>
+        <p class="buttons">
+          <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
+        </p>
+      </fieldset>
+    <% end =%>
+  <% else %>
+    If you want to create invoice from selected activities please refine your search to include activities for only one client.
+  <% end %>
 </div>
