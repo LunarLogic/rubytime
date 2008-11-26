@@ -24,7 +24,7 @@
       <%= text_area :comments, :label => "Comments" %>
     </p>
     <p class="buttons">
-      <%= submit "OK", :class => "button" %> or <%= link_to "Cancel", "#", :id => "close_activity_form" %>
+      <%= submit((@activity.new_record? ? "Add" : "Save"), :class => "button") %> or <%= link_to "Cancel", "#", :id => "close_activity_form" %>
     </p>
   </fieldset>
 <% end =%> 

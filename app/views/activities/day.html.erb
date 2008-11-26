@@ -1,3 +1,2 @@
-<h3>You have <%= @activities.size %> activitites for <%= @day %></h3>
-<%# partial "activity_details", :with => @activities, :as => "activity" %>
-<%= partial("activities/activities_table", :activities => @activities) %>
+<h3><%= @activities.size %> activitites for <%= @day %></h3>
+<%= calendar_activities_table(@activities) %>
