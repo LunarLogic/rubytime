@@ -13,7 +13,7 @@ module Merb
       calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
         activities_for_today =  !activities[date].nil?
         #html = ""
-        html =  %(<div class="day_of_the_month clearfix">)
+        html =  %(<div class="day_wrapper"><div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
 #        html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"),
 #          :class => "show_day", :style => activities_for_today ? "" : "display: none")
@@ -26,10 +26,10 @@ module Merb
         html << '<span class="total_hours">Total: 6:66</span>'
         html << '<span class="activity_icons">'
         if activities_for_today
-          html << link_to(image_tag("icons/magnifier.png", :title => "Show details"), CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)), :class => "show_day")
+          html << link_to(image_tag("/images/icons/magnifier.png", :alt => "Show details"), CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)), :class => "show_day")
         end
-        html << %(<a href="#" class="add_activity" id="#{format_date date}">Add activity</a>)
-        html << %(</span>)
+        html << link_to(image_tag("/images/icons/plus.png", :alt => "Show details"), '#', :class => "add_activity")
+        html << %(</span></div>)
       end 
     end
     
