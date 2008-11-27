@@ -38,7 +38,7 @@ var Application = {
 
   initDatepickers: function(selector) {
     $(selector || ".datepicker").datepicker({
-      dateFormat: rubytime_date_format, duration: "", showOn: "both",
+      dateFormat: window.rubytime_date_format || 'dd-mm-yy', duration: "", showOn: "both",
       buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
   },
   
