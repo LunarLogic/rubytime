@@ -179,6 +179,7 @@
   border-right:1px solid #083056;
   border-bottom:1px solid #083056;
   padding:10px;
+  z-index: 999;
 }
 
 #add_activity legend, #add_activity p {
@@ -358,8 +359,4 @@ li.role {
 
 li.role strong {
   color:#888;
-}
-
-table.activities {
-  background-color: #FFF;
 }

@@ -5,30 +5,37 @@ module Merb
     def activities_calendar(options = {})
       # no need to check for :year and :month - calendar_table does it
       activities = options[:activities] or raise ArgumentError.new("options[:activities] is a mandatory argument")
-      owner = options[:owner] or raise ArgumentError.new("options[:owner] is a mandatory argument")
-      owner_id_name = owner.is_a?(Project) ? :project_id : :user_id
       year = options[:year]
       month = options[:month]
-      
-      calendar_table(:year => year, :month => month, :first_day_of_week => 1) do |date|
+      owner = options[:owner] or raise ArgumentError.new("options[:owner] is a mandatory argument")
+      owner_type = owner.is_a?(Project) ? "project" : "user"
+      owner_id_name = :"#{owner_type}_id"
+
+      calendar_table(:year => year, :month => month, :first_day_of_week => 1, :owner_type => owner_type) do |date|
         activities_for_today =  !activities[date].nil?
-        #html = ""
         html =  %(<div class="day_wrapper"><div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
-#        html << link_to("Show activity for the day", CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria) + "#activities_for_day"),
-#          :class => "show_day", :style => activities_for_today ? "" : "display: none")
         html << %(#{date.mday}</div>)
 
         html << %(<ul class="activities">)
-        html << partial(:activity, :with => activities[date]) if activities_for_today
+        if activities_for_today
+          shown_activities = activities[date][0..3]
+          rest_of_activities = activities[date] - shown_activities
+          html << partial(:activity, :with => shown_activities)
+          html << %(<li class="more">#{rest_of_activities.size} more ...</li>) if rest_of_activities.size > 0
+        end
         html << "</ul>"
 
-        html << '<span class="total_hours">Total: 6:66</span>'
-        html << '<span class="activity_icons">'
+        html << %(<span class="total_hours">Total: <strong>#{total_from(activities[date])}</strong></span>) if activities_for_today
+        html << %(<span class="activity_icons">)
         if activities_for_today
-          html << link_to(image_tag("/images/icons/magnifier.png", :alt => "Show details"), CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)), :class => "show_day")
+          html << link_to(image_tag("/images/icons/magnifier.png", :title => "Show details"), day_url(criteria),
+                                                                   :class => "show_day")
         end
-        html << link_to(image_tag("/images/icons/plus.png", :alt => "Show details"), '#', :class => "add_activity")
+        if owner_type == "user" && current_user.can_add_activity?
+          html << link_to(image_tag("/images/icons/plus.png", :title => "Add activity for this day"), '#',
+                                                              :class => "add_activity", :id => "add-#{date}")
+        end
         html << %(</span></div>)
       end 
     end
@@ -82,11 +89,9 @@ module Merb
       first_weekday.times do
         day_names.push(day_names.shift)
       end
-      
-      owner_type = @owner.is_a?(Project) ? "project" : "user"
-      
-      prev_url = url(:"#{owner_type}_calendar", @owner.id, :month => @previous_month, :year => @previous_year)
-      next_url = url(:"#{owner_type}_calendar", @owner.id, :month => @next_month, :year => @next_year)
+            
+      prev_url = url(:"#{options[:owner_type]}_calendar", @owner.id, :month => @previous_month, :year => @previous_year)
+      next_url = url(:"#{options[:owner_type]}_calendar", @owner.id, :month => @next_month, :year => @next_year)
       
       cal = %(<table id="#{options[:table_id]}" class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
       cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">)
@@ -147,6 +152,22 @@ module Merb
       
     def weekend?(date)
       [0, 6].include?(date.wday)
+    end
+
+    def day_url(criteria)
+      CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)+"&width=400&height=400")
+    end
+
+    def prev_day_url
+      criteria = Mash.new(params[:search_criteria])
+      criteria[:date_from] = criteria[:date_to] = (Date.parse(criteria[:date_from]) - 1).to_s
+      day_url(criteria)
+    end
+
+    def next_day_url
+      criteria = Mash.new(params[:search_criteria])
+      criteria[:date_from] = criteria[:date_to] = (Date.parse(criteria[:date_from]) + 1).to_s
+      day_url(criteria)
     end
 
   end # ActivitiesHelper

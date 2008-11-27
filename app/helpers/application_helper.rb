@@ -85,20 +85,22 @@ module Merb
     end
     
     def total_from(activities)
-      activities.inject(0) { |a,act| a + act.minutes }
+      format_minutes(activities.inject(0) { |a,act| a + act.minutes })
     end
     
     def activities_table(activities, options={})
       default_options = { :show_checkboxes => false, :show_users => true, :show_details_link => true, :show_edit_link => true,
-                          :show_delete_link => true, :show_exclude_from_invoice_link => false, :expanded => false }
+                          :show_delete_link => true, :show_exclude_from_invoice_link => false, :expanded => false,
+                          :show_date => true }
       options = default_options.merge(options)
 
-      html = %(<table class="activities list wide" cellspacing="0" cellpadding="0">)
+      html = %(<table class="activities list wide" id="#{options[:table_id]}" cellspacing="0" cellpadding="0">)
       html << %(<tr>)
       html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
-      html << %(<th>User</th>) if options[:show_users]
-      html << %(<th>Date</th>)
-      html << %(<th class="right">Hours</th>)
+      html << %(<th>#{image_tag("icons/project.png") if options[:show_header_icons]} Project</th>) if options[:show_project]
+      html << %(<th>#{image_tag("icons/role.png") if options[:show_header_icons]} User</th>) if options[:show_users]
+      html << %(<th>Date</th>) if options[:show_date]
+      html << %(<th class="right">#{image_tag("icons/clock.png") if options[:show_header_icons]} Hours</th>)
       html << %(<th class="icons">)
       html << link_to(image_tag("icons/magnifier.png", :title => "Toggle all details"), "#", :class => "toggle_all_comments_link") if options[:show_details_link]
       html << %(</th>)
@@ -115,15 +117,21 @@ module Merb
       if options[:show_checkboxes]
         row << %(<td class="checkbox">#{check_box(:name => "activity_id[]", :value => activity.id) unless activity.invoiced?}</td>)
       end
+      row << %(<td>#{h(activity.project.name)}</td>) if options[:show_project]
       row << %(<td>#{h(activity.user.name)}</td>) if options[:show_users]
-      row << %(<td>#{activity.date}</td>)
-      row << %(<td class="right">#{activity.hours}</td><td>)
+      row << %(<td>#{activity.date}</td>) if options[:show_date]
+      row << %(<td class="right">#{activity.hours}</td>)
+
+      # icons
+      row << %(<td class="icons">)
       row << link_to(image_tag("icons/magnifier.png", :title => "Toggle details"), "#", :class => "toggle_comments_link") if options[:show_details_link]
       row << link_to(image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
       row << link_to(image_tag("icons/cross.png", :title => "Remove"), resource(activity), :class => "remove_activity_link") if options[:show_delete_link] && activity.deletable_by?(current_user) && !activity.locked?
       row << link_to(image_tag("icons/notebook_minus.png", :title => "Remove activity from this invoice"), resource(activity), :class => "remove_from_invoice_link") if options[:show_exclude_from_invoice_link] && !activity.locked?
-      visibility = options[:expanded] ? "" : "display: none"
-      row << %(</td></tr><tr class="comments" style="#{visibility}"><td colspan="5">#{h(activity.comments.gsub(/\n/, "<br/>"))}</td></tr>)
+      row << %(</td>)
+
+      klass, visibility = (options[:expanded] ? ["", ""] : ["no_zebra", "display: none"])
+      row << %(</tr><tr class="comments #{klass}" style="#{visibility}"><td colspan="5">#{h(activity.comments.gsub(/\n/, "<br/>"))}</td></tr>)
       row
     end
 
@@ -134,16 +142,16 @@ module Merb
                                          :show_delete_link => true, :show_exclude_from_invoice_link => false)
     end
 
-    def invoice_activities_table(activities)
-      activities_table(activities, :show_checkboxes => false, :show_users => true, :show_details_link => true,
-                                   :show_edit_link => false, :show_delete_link => false, 
-                                   :show_exclude_from_invoice_link => current_user.is_admin?)
+    def invoice_activities_table(activities, options={})
+      activities_table(activities, { :show_checkboxes => false, :show_users => true, :show_details_link => true,
+                                     :show_edit_link => false, :show_delete_link => false,
+                                     :show_exclude_from_invoice_link => current_user.is_admin? }.merge!(options))
     end
 
-    def calendar_activities_table(activities)
-      activities_table(activities, :show_checkboxes => false, :show_users => current_user.is_admin? || !current_user.is_employee?,
-                                   :show_details_link => false, :show_edit_link => false, :show_delete_link => false,
-                                   :expanded => true)
+    def calendar_activities_table(activities, options={})
+      activities_table(activities, { :show_checkboxes => false, :show_users => current_user.is_admin? || !current_user.is_employee?,
+                                     :show_details_link => false, :show_edit_link => false, :show_delete_link => false,
+                                     :show_project => true, :expanded => true, :show_date => false }.merge!(options))
     end
   end
 end # Merb

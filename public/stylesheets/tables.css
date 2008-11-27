@@ -37,15 +37,24 @@ table.list td.summary {
   font-weight: bold;
 }
 
-table.list .right {
+table.list td.right {
   text-align: right;
-  width: 50px;
+}
+
+table.list th.right {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
 }
 
 table.list td.checkbox, table.list th.checkbox {
   padding-left: 0px;
   padding-right: 0px;
   margin: 0;
+}
+
+table.activities {
+  background-color: #FFF;
 }
 
 table#calendar { 
@@ -113,7 +122,7 @@ table#calendar .activity {
   font-size:11px;
 }
 
-table#calendar .activity strong {
+table#calendar .activity strong, table#calendar .total_hours strong {
   font-weight:900;
 }
 
@@ -147,13 +156,13 @@ table#calendar .day_wrapper .activity_icons {
   position:absolute;
   bottom:0;
   right:0;
-  width:40px;
+/*  width:40px;*/
   padding:5px;
   background:#eee url(/images/activity-calendar-mask.png) 0 0 no-repeat;
 }
 
 table.calendar .activity_icons a {
-  opacity:0.8;
+  opacity: 0.8;
   margin:0 2px;
 }
 
@@ -177,10 +186,52 @@ tr.comments td {
   padding-left: 23px;
 }
 
-th.icons {
-  width: 60px;
+td.icons, th.icons {
+  width: 1%;
+  white-space: nowrap;
 }
 
 span.activity_icons {
   display: none;
+}
+
+div.day_header {
+  background:url(/images/header.png) 0 -100px repeat-x;
+  color:#fff;
+  padding:5px;
+  border-bottom:1px solid black;
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+}
+
+div.day_header span.date {
+    margin:0 40px;
+}
+
+#TB_window div.day_header a {
+  color:#FFFFFF;
+  font-size:11px;
+  line-height:20px;
+}
+
+#calendar_activities {
+  margin-top: 0;
+}
+
+.activities_table_info {
+  padding: 20px;
+  text-align: center;
+}
+
+p.total {
+  text-align: right;
+}
+p.total strong {
+  font-weight: 800;
+}
+
+td.day li.more {
+  font-style: italic;
+  font-size: 10px;
 }

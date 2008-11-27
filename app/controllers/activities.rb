@@ -105,7 +105,7 @@ class Activities < Application
     @activities_by_date = @activities.group_by { |activity| activity.date }
     
     if request.xhr?
-      partial 'calendar_table'
+      activities_calendar :activities => @activities_by_date, :year => @year, :month => @month, :owner => @owner
     else
       render
     end
@@ -114,7 +114,7 @@ class Activities < Application
   def day
     @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
     @day = format_date(Date.parse(params[:search_criteria][:date_from]))
-    raise BadRequest if @activities.empty?
+    # raise BadRequest if @activities.empty?
     render :layout => false
   end
   

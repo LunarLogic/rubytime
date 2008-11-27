@@ -18,45 +18,13 @@ var Activities = {
     
     // calendar
     if (!Activities._calendarContainer().blank()) {
-      Activities._calendarContainer().click(Activities._dispatchClick);
       $(document).bind(EVENTS.activity_added, Activities._reloadCalendar);
       $(document).bind(EVENTS.activity_updated, Activities._reloadCalendar);
-      $(document).bind(EVENTS.activity_updated, function() { $("#activitites_for_day").html("") });
-      $('#activitites_for_day').click(Activities._dispatchClick);
-      $(document).bind(EVENTS.activity_added, function(e, memo){
-        var date = memo.date; 
-        if (!$('#activitites_for_day h3:contains(' + date + ')').blank())
-          Activities.showDay($('#' + date).parents('td').find('a.show_day'));
-      });
-      $(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
+      //$(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
       Activities._initUserAndProjectCombo();
-      Activities._initCalendarCells();
-      tb_init($(".show_day"));
+      Activities._initCalendar();
       $(document).bind('tb:ajax_loaded', Activities._initActivitiesList);
     }
-  },
-  
-  _dispatchClick: function(e) {
-    var target = $(e.target).is('a') ? $(e.target) : $(e.target).parents('a');
-    if (target.hasClass('add_activity')) {
-      var memo = { date: target.attr('id'), user_id: $.getDbId(Activities._calendarContainer().attr('id')) };
-      $(document).trigger(EVENTS.add_activity_clicked, memo);
-    } else if ((/previous_month|next_month/).test(target.attr('id'))) {
-      $("div[id$=calendar][id^=users]").load(target.url());
-//    } else if (target.hasClass("delete_activity")) {
-//      Activities._deleteActivity(target);
-//    } else if (target.hasClass("show_day")) {
-//      Activities.showDay(target);
-    }// else if (target.hasClass('edit_activity'))
-      //Application.notice("No editing yet, sorry.");
-    return false;
-  },
-  
-  showDay: function(link) {
-    $("#activitites_for_day").load(link.url(), function(responseText) {
-      tb_init($("#activitites_for_day .edit_activity_link"));
-    });
-    $.scrollTo('div#activitites_for_day');
   },
   
   _deleteActivity: function(link) {
@@ -79,23 +47,23 @@ var Activities = {
     return false;
   },
   
-  _removeActivityFromCalendar: function(e, memory) {
-    var id = memory.id;
-    var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
-    Activities._adjustDetailsCounter();
-    activities.fadeOut(800, function() { 
-      var activitiesContainer = $(this).parents('ul.activities');
-      $(this).remove(); 
-      if (!activitiesContainer.blank() && activitiesContainer.find('li.activity').blank())
-        activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
-    });
-  },
+//  _removeActivityFromCalendar: function(e, memory) {
+//    var id = memory.id;
+//    var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
+//    Activities._adjustDetailsCounter();
+//    activities.fadeOut(800, function() {
+//      var activitiesContainer = $(this).parents('ul.activities');
+//      $(this).remove();
+//      if (!activitiesContainer.blank() && activitiesContainer.find('li.activity').blank())
+//        activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
+//    });
+//  },
   
-  _adjustDetailsCounter: function() {
-    // TODO change regexp to not match digits in date and call it for each activity element
-    $('#activitites_for_day h3').text($('#activitites_for_day h3').text().replace(/\d+/, 
-      $('#activitites_for_day .activity_details').size()-1 || 'no'));
-  },
+//  _adjustDetailsCounter: function() {
+//    // TODO change regexp to not match digits in date and call it for each activity element
+//    $('#activitites_for_day h3').text($('#activitites_for_day h3').text().replace(/\d+/,
+//      $('#activitites_for_day .activity_details').size()-1 || 'no'));
+//  },
   
   _reloadCalendar: function(e, memory) {
     var container = Activities._calendarContainer();
@@ -190,6 +158,8 @@ var Activities = {
       });
       return false;
     });
+    
+    tb_init($("#prev_day_link, #next_day_link"));
   },
   
   _reloadSelects: function(url, group) {
@@ -301,8 +271,22 @@ var Activities = {
     return false;
   },
 
-  _initCalendarCells: function() {
+  _initCalendar: function() {
+    $("#previous_month, #next_month").click(function() {
+      $("div[id$=calendar]").load($(this).url(), Activities._initCalendar);
+      return false;
+    });
+
+    $(".add_activity").click(function() {
+      var date = $(this).attr('id').match(/\d{4}-\d{2}-\d{2}/)[0];
+      var user_id = Activities._calendarContainer().attr('id').match(/\d+/)[0];
+      var memo = { date: date, user_id: user_id };
+      $(document).trigger(EVENTS.add_activity_clicked, memo);
+      return false;
+    });
+
     $("td.day").mouseover(function() { $(this).find(".activity_icons").show() }).mouseout(function() { $(this).find(".activity_icons").hide() })
+    tb_init($(".show_day"));
   },
   
   _initUserAndProjectCombo: function() {

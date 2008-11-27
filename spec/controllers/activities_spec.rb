@@ -206,13 +206,6 @@ describe Activities do
         }})
       end
     end
-    
-    it "should raise bad request for day without activities" do
-      search_criteria = { :user_id => [fx(:jola).id], :date_from => 30.days.ago, :date_to => 30.days.ago }
-      block_should(raise_bad_request) do 
-        as(:admin).dispatch_to(Activities, :day, :search_criteria => search_criteria)
-      end
-    end
   end
   
   protected 

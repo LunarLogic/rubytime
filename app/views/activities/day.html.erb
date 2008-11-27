@@ -1,2 +1,15 @@
-<h3><%= @activities.size %> activitites for <%= @day %></h3>
-<%= calendar_activities_table(@activities) %>
+<div class="day_header">
+  <%= link_to("&laquo; Previous", prev_day_url, :id => "prev_day_link") %>
+  <span class="date"><%= @day %></span>
+  <%= link_to("Next &raquo;", next_day_url, :id => "next_day_link") %>
+</div>
+<% if @activities.empty? %>
+  <div class="activities_table_info">
+    No activities for <%= @day %>.
+  </div>
+<% else %>
+  <%= calendar_activities_table(@activities, :table_id => "calendar_activities", :show_header_icons => true) %>
+  <p class="total">
+    Total: <strong><%= total_from(@activities) %></strong>
+  </p>
+<% end %>

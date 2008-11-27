@@ -9,7 +9,7 @@
       <% else %>
         <%= full_activities_table(activities) %>
       <% end %>
-      <strong class="total">Total for role: <%= format_minutes(activities.inject(0) { |s,a| s += a.minutes; s }) %></strong>
+      <strong class="total">Total for role: <%= total_from(activities) %></strong>
     </li>
   <% end %>
 </ul>

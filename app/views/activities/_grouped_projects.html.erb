@@ -9,7 +9,7 @@
         <strong>Total for project: <%= format_minutes(activities.inject(0) { |s,a| s += a.minutes; s }) %></strong>
       <% else %>
         <%= partial("activities/grouped_roles", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>        
-        <strong class="total">Total for project: <%= format_minutes(activities_from(@activities, client, project).inject(0) { |s,a| s += a.minutes; s }) %></strong>
+        <strong class="total">Total for project: <%= total_from(activities_from(@activities, client, project)) %></strong>
       <% end %>
     </li>
   <% end %>
