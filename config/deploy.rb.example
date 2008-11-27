@@ -52,6 +52,7 @@ namespace :vlad do
   end
 
   task :deploy => [ 'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:start']
-  task :full_deploy => [ 'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:dm:migrate', 'vlad:start']
+  task :deploy_with_migrations => [ 'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'db:migrate', 'vlad:start']
+  task :deploy_with_autoupgrade => [ 'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'db:autoupgrade', 'vlad:start']
 end
 
