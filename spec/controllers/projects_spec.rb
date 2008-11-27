@@ -31,6 +31,12 @@ describe Projects do
     end
   end
 
+  describe "#show" do
+      it "should render user information for admin" do
+      as(:admin).dispatch_to(Projects, :show, { :id => fx(:apples_first_project).id }).should be_successful
+    end
+  end
+
   describe "#create" do
     it "should create new record successfully and redirect to index" do
       block_should(change(Project, :count)) do

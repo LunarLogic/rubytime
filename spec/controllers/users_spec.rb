@@ -33,6 +33,10 @@ describe Users do
     it "should render not found for nonexisting user id" do
       block_should(raise_not_found) { as(:admin).dispatch_to(Users, :show, { :id => 1234567 }) }
     end
+
+    it "should render user information for admin" do
+      as(:admin).dispatch_to(Users, :show, { :id => fx(:jola).id }).should be_successful
+    end
   end
   
   describe "#update" do
