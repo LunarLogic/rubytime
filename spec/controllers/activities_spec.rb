@@ -48,10 +48,21 @@ describe Activities do
     it "should not add invalid activity" do
       as(:employee).dispatch_to(Activities, :create, :activity => { 
         :date => Date.today,
-        :project_id => Project.gen.id,
+        :project_id => fx(:apples_first_project).id,
         :hours => "6:30",
         :comments => ""
       }).status.should == 400
+    end
+
+    it "should raise bad request if adding activity for nonexistent project" do
+      block_should(raise_bad_request) do
+        as(:employee).dispatch_to(Activities, :create, :activity => {
+          :date => Date.today,
+          :project_id => 1234567,
+          :hours => "6:30",
+          :comments => "boo"
+        })
+      end
     end
     
     it "should not add activity for other user if he isn't admin" do

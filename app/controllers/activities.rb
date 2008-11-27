@@ -8,7 +8,8 @@ class Activities < Application
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
   before :load_activity             , :only => [:edit, :update, :destroy]
-  before :check_deletable_by        , :only => [:destroy] 
+  before :check_deletable_by        , :only => [:destroy]
+  before :check_if_valid_project,     :only => [:create]
 
   def index
     provides :csv
@@ -136,6 +137,12 @@ protected
   
   def check_calendar_viewability
     @owner.calendar_viewable?(current_user) or raise Forbidden
+  end
+
+  def check_if_valid_project
+    unless Project.get(params[:activity][:project_id])
+      raise BadRequest
+    end
   end
 
   def load_activity

@@ -16,7 +16,10 @@ class Exceptions < Merb::Controller
   end
   
   def object_not_found_error
-    
+  end
+
+  def bad_request
+    render "Bad Request", :layout => false
   end
   
   def unauthenticated
