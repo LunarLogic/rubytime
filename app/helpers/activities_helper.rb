@@ -22,7 +22,7 @@ module Merb
           shown_activities = activities[date][0..3]
           rest_of_activities = activities[date] - shown_activities
           html << partial(:activity, :with => shown_activities)
-          html << %(<li class="more">#{rest_of_activities.size} more ...</li>) if rest_of_activities.size > 0
+          html << %(<li class="more">#{link_to("#{rest_of_activities.size} more ...", day_url(criteria))}</li>) if rest_of_activities.size > 0
         end
         html << "</ul>"
 
@@ -155,7 +155,7 @@ module Merb
     end
 
     def day_url(criteria)
-      CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)+"&width=400&height=400")
+      CGI.escapeHTML(url(:activities_for_day, :search_criteria => criteria)+"&width=400&height=500")
     end
 
     def prev_day_url
