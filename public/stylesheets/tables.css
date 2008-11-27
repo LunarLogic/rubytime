@@ -115,7 +115,7 @@ table#calendar {
 }
 
 table#calendar td {
-  height:80px;
+  height:120px;
 }
 
 table#calendar .activity {
@@ -141,7 +141,7 @@ table#calendar thead span.date {
 }
 
 table#calendar .day_wrapper {
-  height:100px;
+  height:120px;
   position:relative;
 }
 
