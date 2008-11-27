@@ -12,7 +12,7 @@ class Activities < Application
 
   def index
     provides :csv
-    @search_criteria = SearchCriteria.new(params[:search_criteria] || { :date_from => Date.today - 7}, current_user)
+    @search_criteria = SearchCriteria.new(params[:search_criteria] || { :date_from => Date.today - current_user.recent_days_on_list}, current_user)
     @activities = @search_criteria.found_activities
     if current_user.is_admin?
       @uninvoiced_activities = @activities.reject { |a| a.invoiced? }
@@ -31,7 +31,7 @@ class Activities < Application
   
   def new
     preselected_user = (current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])) || current_user
-    @activity = Activity.new(:date => Date.today, :user => preselected_user)
+    @activity = Activity.new(:date => params[:date] || Date.today, :user => preselected_user)
     render :layout => false
   end
   
@@ -113,7 +113,7 @@ class Activities < Application
   
   def day
     @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
-    @day = format_date(Date.parse(params[:search_criteria][:date_from]))
+    @day = Date.parse(params[:search_criteria][:date_from]).formatted(current_user.date_format)
     render :layout => false
   end
   

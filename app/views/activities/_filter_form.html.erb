@@ -13,11 +13,13 @@
   <% end %>
   
   <p>
-    <%= text_field :date_from, :label => "From", :class => 'datepicker', :size => 9 %>
+    <% date_from = @search_criteria.date_from ? @search_criteria.date_from.formatted(current_user.date_format) : "" %>
+    <%= text_field :date_from, :value => date_from, :label => "From", :class => 'datepicker', :size => 9 %>
   </p>
   
   <p>
-    <%= text_field :date_to, :label => "To", :class => 'datepicker', :size => 9  %>
+    <% date_to = @search_criteria.date_to ? @search_criteria.date_to.formatted(current_user.date_format) : "" %>
+    <%= text_field :date_to, :value => date_to, :label => "To", :class => 'datepicker', :size => 9  %>
   </p>
   
   <p>

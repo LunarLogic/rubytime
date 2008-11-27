@@ -19,6 +19,23 @@
       <p>
         <%= password_field :password_confirmation, :label => "Password confirmation" %>
       </p>
+      <p>
+        <span class="radiobuttons">
+          <label>By default show activities for last:</label>
+        </span>
+        <br/>
+        <br/>
+        <label>&nbsp;</label>
+        <span class="recent_days">
+          <%= radio_group :recent_days_on_list, Rubytime::RECENT_DAYS_ON_LIST.map { |d| { :value => d, :label => "#{d} days" } } %>
+        </span>
+      </p>
+      <p>
+        <label>Date format</label>
+        <span class="date_formats">
+          <%= radio_group :date_format, Rubytime::DATE_FORMAT_NAMES.map { |df| { :value => df, :label => "#{df.to_s.capitalize} (#{Rubytime::DATE_FORMATS[df][:description]})" } } %>
+        </span>
+      </p>
       <p class="buttons">
         <%= submit "Update", :class => "button" %> or <%= link_to 'Cancel', url(:activities) %>
       </p>

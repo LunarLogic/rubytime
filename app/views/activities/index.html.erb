@@ -7,7 +7,9 @@
   <p>No activities found for selected critieria.</p> 
 <% else %>
   <p>
-    Found <%= @activities.size %> matching activities<%= @search_criteria.date_from ? " from #{@search_criteria.date_from}" : "" %><%= @search_criteria.date_to ? " till #{@search_criteria.date_to}" : "" %>.
+    Found <%= @activities.size %> matching activities
+    <%= @search_criteria.date_from ? " from #{@search_criteria.date_from.formatted(current_user.date_format)}" : "" %>
+    <%= @search_criteria.date_to ? " till #{@search_criteria.date_to.formatted(current_user.date_format)}" : "" %>.
     <br/>
     <br/>
   </p>

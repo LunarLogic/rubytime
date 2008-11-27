@@ -180,3 +180,7 @@ label.error {
 #add_activity input.datepicker {
   width: 232px;
 }
+
+span.recent_days label, span.date_formats label {
+  width: auto;
+}

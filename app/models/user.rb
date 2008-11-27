@@ -12,6 +12,9 @@ class User
   property :client_id,             Integer, :index => true
   property :created_at,            DateTime
   property :password_reset_token,  String
+  property :date_format,           Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :nullable => false
+  property :recent_days_on_list,   Enum[*::Rubytime::RECENT_DAYS_ON_LIST], :default => ::Rubytime::RECENT_DAYS_ON_LIST.first,
+                                                                           :nullable => false
 
   validates_length :name, :min => 3
 

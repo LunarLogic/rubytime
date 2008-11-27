@@ -7,6 +7,11 @@
     <%= css_include_tag 'reset', 'master', 'layout', 'forms', 'tables', 'datepicker/ui.datepicker.css', 'thickbox', :bundle => :base %>
     <%= js_include_tag 'lib/jquery-1.2.6.js', 'lib/jquery.validate.min.js', 'lib/jquery-extensions.js', 'lib/jquery-scrollto.js', 'lib/ui.datepicker.js', 'application.js', 'lib/rubytime/input-filler.js', 'lib/thickbox', :bundle => :base %>
     <%= auto_link %>
+    <% if session.user %>
+    <script type="text/javascript">
+      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[current_user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %> ';
+    </script>
+    <% end %>
   </head>
   <body id="<%= params[:controller] %>_<%= params[:action] %>">
     <div class="header header-expanded">

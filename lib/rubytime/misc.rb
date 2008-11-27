@@ -11,4 +11,10 @@ module Rubytime
       r
     end
   end
+
+  DATE_FORMAT_NAMES = [:european, :american]
+  DATE_FORMATS = { :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" }, :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" } }
+  RECENT_DAYS_ON_LIST = [7, 14, 30]
+
+  CONFIG = {}
 end

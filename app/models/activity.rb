@@ -45,7 +45,7 @@ class Activity
     
     all :order => [:date.desc], :date.gte => Date.civil(year, month, 1), :date.lte => Date.civil(year, month, -1)
   end
-  
+
   # Sets hours and minutes properties
   #
   # It automatically converts hours to minutes allowing to 

@@ -16,8 +16,8 @@
     <tr>
       <td><%= link_to(invoice.name, resource(invoice)) %></td>
       <% unless current_user.is_client_user? %><td><%= invoice.client.name %></td><% end %>
-      <td><%= invoice.created_at.to_time.to_date %></td>
-      <td><%= invoice.issued? ? invoice.issued_at.to_time.to_date : "-" %></td>
+      <td><%= invoice.created_at.to_time.to_date.formatted(current_user.date_format) %></td>
+      <td><%= invoice.issued? ? invoice.issued_at.to_time.to_date.formatted(current_user.date_format) : "-" %></td>
       <td class="icons"><%= link_to image_tag("icons/cross.png", :title => "Remove"), resource(invoice), :class => "delete_row" unless current_user.is_client_user? %></td>
     </tr>
   <% end %>

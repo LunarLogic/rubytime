@@ -15,7 +15,7 @@
   Admin: <%= @user.admin ? "Yes" : "No" %>
 </p>
 <p>
-  Created at: <%= format_time @user.created_at %>
+  Created at: <%= @user.created_at.to_date.formatted(current_user.date_format) %>
 </p>
 <% if @user.is_employee? %>
   <p>

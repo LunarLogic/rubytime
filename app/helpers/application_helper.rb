@@ -1,12 +1,12 @@
 module Merb
   module ApplicationHelper
-    def format_time(time)
-      time.strftime Rubytime::CONFIG[:time_format]
-    end
+    #def format_time(time)
+    #  time.strftime Rubytime::CONFIG[:time_format]
+    #end
     
-    def format_date(date)
-      date.strftime Rubytime::CONFIG[:date_format]
-    end
+    #def format_date(date)
+    #  date.strftime Rubytime::CONFIG[:date_format]
+    #end
 
     def format_minutes(minutes)
       return "0" unless minutes
@@ -119,7 +119,7 @@ module Merb
       end
       row << %(<td>#{h(activity.project.name)}</td>) if options[:show_project]
       row << %(<td>#{h(activity.user.name)}</td>) if options[:show_users]
-      row << %(<td>#{activity.date}</td>) if options[:show_date]
+      row << %(<td>#{activity.date.formatted(current_user.date_format)}</td>) if options[:show_date]
       row << %(<td class="right">#{activity.hours}</td>)
 
       # icons

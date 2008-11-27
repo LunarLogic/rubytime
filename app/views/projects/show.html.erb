@@ -12,5 +12,5 @@
   Client: <%= link_to @project.client.name, url(:client, @project.client) %>
 </p>
 <p>
-  Created at: <%= format_time @project.created_at %>
+  Created at: <%= @project.created_at.to_date.formatted(current_user.date_format) %>
 </p>

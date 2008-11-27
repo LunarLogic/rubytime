@@ -9,7 +9,7 @@
       </p>
     <% end %>
     <p>
-      <%= text_field :date, :label => "Date", :class => 'datepicker', :value => @activity.date.to_s %>
+      <%= text_field :date, :label => "Date", :class => 'datepicker', :value => @activity.date.formatted(current_user.date_format) %>
     </p>
     <p>
       <%= select :project_id, :label => "Project", :collection => { 

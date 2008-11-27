@@ -38,7 +38,7 @@ var Application = {
 
   initDatepickers: function(selector) {
     $(selector || ".datepicker").datepicker({
-      dateFormat: "yy-mm-dd", duration: "", showOn: "both", 
+      dateFormat: rubytime_date_format, duration: "", showOn: "both",
       buttonImage: "/images/icons/calendar_month.png", buttonImageOnly: true });
   },
   
@@ -49,11 +49,15 @@ var Application = {
         if ($("#add_activity .activity_form").length > 0 && !memory) {
           Application._closeActivityPopup();
         } else {
-          var user_id = memory && memory.user_id; 
-          $("#add_activity").load("/activities/new?user_id=" + user_id, function() {
+          var params = "";
+          if (memory && memory.user_id) {
+            params += "user_id=" + memory.user_id;
+          }
+          if (memory && memory.date) {
+            params += "&date=" + memory.date;
+          }
+          $("#add_activity").load("/activities/new?" + params, function() {
             $("#add_activity").slideDown("fast", function() { Application._initActivityPopup($("#add_activity")); });
-            if (memory && memory.date)
-              $('#activity_date').attr('value', memory.date);
             $.scrollTo('.header');
           });
         }
