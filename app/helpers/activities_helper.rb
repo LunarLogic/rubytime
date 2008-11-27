@@ -19,7 +19,7 @@ module Merb
 
         html << %(<ul class="activities">)
         if activities_for_today
-          shown_activities = activities[date][0..3]
+          shown_activities = activities[date][0..2]
           rest_of_activities = activities[date] - shown_activities
           html << partial(:activity, :with => shown_activities)
           html << %(<li class="more">#{link_to("#{rest_of_activities.size} more ...", day_url(criteria))}</li>) if rest_of_activities.size > 0
@@ -32,7 +32,7 @@ module Merb
           html << link_to(image_tag("/images/icons/magnifier.png", :title => "Show details"), day_url(criteria),
                                                                    :class => "show_day")
         end
-        if owner_type == "user" && current_user.can_add_activity?
+        if owner_type == "user" && current_user.can_add_activity? && owner.active?
           html << link_to(image_tag("/images/icons/plus.png", :title => "Add activity for this day"), '#',
                                                               :class => "add_activity", :id => "add-#{date}")
         end

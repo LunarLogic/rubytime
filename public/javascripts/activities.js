@@ -20,7 +20,6 @@ var Activities = {
     if (!Activities._calendarContainer().blank()) {
       $(document).bind(EVENTS.activity_added, Activities._reloadCalendar);
       $(document).bind(EVENTS.activity_updated, Activities._reloadCalendar);
-      //$(document).bind(EVENTS.activity_deleted, Activities._removeActivityFromCalendar);
       Activities._initUserAndProjectCombo();
       Activities._initCalendar();
       $(document).bind('tb:ajax_loaded', Activities._initActivitiesList);
@@ -47,27 +46,14 @@ var Activities = {
     return false;
   },
   
-//  _removeActivityFromCalendar: function(e, memory) {
-//    var id = memory.id;
-//    var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
-//    Activities._adjustDetailsCounter();
-//    activities.fadeOut(800, function() {
-//      var activitiesContainer = $(this).parents('ul.activities');
-//      $(this).remove();
-//      if (!activitiesContainer.blank() && activitiesContainer.find('li.activity').blank())
-//        activitiesContainer.prev('.day_of_the_month').find('a.show_day').hide();
-//    });
-//  },
-  
-//  _adjustDetailsCounter: function() {
-//    // TODO change regexp to not match digits in date and call it for each activity element
-//    $('#activitites_for_day h3').text($('#activitites_for_day h3').text().replace(/\d+/,
-//      $('#activitites_for_day .activity_details').size()-1 || 'no'));
-//  },
-  
   _reloadCalendar: function(e, memory) {
     var container = Activities._calendarContainer();
-    container.load('/' + container.attr('id').replace(/_/g, '/'), memory ? memory : {});
+    var date = '?';
+    if (memory) {
+      matches = memory.date.match(/(\d{4})-(\d{2})-\d{2}/)
+      date += 'year=' + matches[1] + '&month=' + matches[2];
+    }
+    container.load('/' + container.attr('id').replace(/_/g, '/') + date, Activities._initCalendar);
   },
   
   _reloadList: function(e) {
@@ -286,7 +272,7 @@ var Activities = {
     });
 
     $("td.day").mouseover(function() { $(this).find(".activity_icons").show() }).mouseout(function() { $(this).find(".activity_icons").hide() })
-    tb_init($(".show_day"));
+    tb_init($(".show_day, td li.more a"));
   },
   
   _initUserAndProjectCombo: function() {

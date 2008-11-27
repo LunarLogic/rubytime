@@ -18,7 +18,7 @@
       <% if current_user.is_admin? %>
         <td><%= project.client.name %></td>
       <% end %>
-      <td>
+      <td class="icons">
         <%= link_to image_tag("icons/calendar.png", :title => "Show calendar for this project"), resource(project, :calendar) %>
         <% if current_user.is_admin? %>
           <%= link_to image_tag("icons/pencil.png", :title => "Edit"), resource(project, :edit) %>

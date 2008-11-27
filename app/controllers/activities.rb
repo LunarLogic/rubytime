@@ -39,7 +39,7 @@ class Activities < Application
     @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save
-      render partial("activity", :with => @activity), :status => 201, :layout => false 
+      render_success(@activity.date.to_s, 201)
     else
       render :new, :status => 400, :layout => false
     end
@@ -53,7 +53,7 @@ class Activities < Application
     @activity.attributes = params[:activity]
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save || !@activity.dirty?
-      render "", :status => 200, :layout => false
+      render_success
     else
       render :edit, :status => 400, :layout => false
     end
@@ -61,8 +61,8 @@ class Activities < Application
   
   def destroy
     if @activity.destroy
-      render "", :status => 200
-    else
+     render_success
+   else
       render "Could not delete activity.", :status => 403
     end 
   end
@@ -114,16 +114,15 @@ class Activities < Application
   def day
     @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
     @day = format_date(Date.parse(params[:search_criteria][:date_from]))
-    # raise BadRequest if @activities.empty?
     render :layout => false
   end
   
-  protected
+protected
   
   def check_day_viewability
     raise BadRequest if params[:search_criteria][:user_id] && params[:search_criteria][:user_id].size > 1 || params[:search_criteria][:project_id] && params[:search_criteria][:project_id].size > 1
-    if current_user.is_client_user? 
-      raise Forbidden if !params[:search_criteria][:user_id].nil?
+    if current_user.is_client_user? || current_user.is_admin? && params[:search_criteria][:project_id]
+      raise Forbidden unless params[:search_criteria][:user_id].nil?
       @owner = Project.get(params[:search_criteria][:project_id].first) or raise NotFound
     else
       @owner = User.get(params[:search_criteria][:user_id].first) or raise NotFound

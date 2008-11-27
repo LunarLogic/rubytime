@@ -141,17 +141,13 @@ var Application = {
           type: "POST",
           data: form.serialize(),
           success: function(responseText) {
-            if (responseText != '') {
-              var responseText = $(responseText).hide();
-              $('#' + $('#activity_date').attr('value')).before(responseText).parents('td.day').find('a.show_day').show();
-              responseText.fadeIn();
-            }
+            var date = responseText;
             Application._closeActivityPopup();
             // check if we were editing or creating new activity
-            if ((/\d+$/).test(form.url())) {  
-              $(document).trigger(EVENTS.activity_updated, {date: $('#activity_date').attr('value')});
+            if ((/\d+$/).test(form.url())) {
+              $(document).trigger(EVENTS.activity_updated, { date: date });
             } else {
-              $(document).trigger(EVENTS.activity_added, {date: $('#activity_date').attr('value')});
+              $(document).trigger(EVENTS.activity_added, { date: date });
             }
           },
           error: function(xhr) {
