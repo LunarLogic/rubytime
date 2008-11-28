@@ -67,15 +67,15 @@ describe Activities do
     
     it "should not add activity for other user if he isn't admin" do
       employee = fx(:jola)
-      another_emplyee = fx(:misio)
+      another_employee = fx(:misio)
   
-      block_should(change(employee.activities, :count).by(1)).and_not(change(another_emplyee.activities, :count)) do
+      block_should(change(employee.activities, :count).by(1)).and_not(change(another_employee.activities, :count)) do
         as(employee).dispatch_to(Activities, :create, :activity => { 
           :date => Date.today,
           :project_id => fx(:oranges_first_project).id,
           :hours => "7",
           :comments => "this & that",
-          :user_id => another_emplyee.id
+          :user_id => another_employee.id
         }).status.should == 201
         employee.reload # nedded to reload employee.activity 
       end
@@ -98,7 +98,45 @@ describe Activities do
       end
     end
   end
-  
+
+  describe "#edit" do
+    it "should show edit form for activity owner" do
+      as(fx(:jola)).dispatch_to(Activities, :edit, :id => fx(:jolas_activity1).id).status.should be_successful
+    end
+
+    it "should show edit form for admin" do
+      as(fx(:admin)).dispatch_to(Activities, :edit, :id => fx(:jolas_activity1).id).status.should be_successful
+    end
+
+    it "shouldn't show edit form for other user" do
+      block_should(raise_not_found) do
+        as(fx(:misio)).dispatch_to(Activities, :edit, :id => fx(:jolas_activity1).id)
+      end
+    end
+  end
+
+  describe "#update" do
+    it "should update user's activity" do
+      as(fx(:jola)).dispatch_to(Activities, :update, :id => fx(:jolas_activity1).id, :activity => {
+        :date => Date.today,
+        :project_id => fx(:apples_first_project).id,
+        :hours => "3:03",
+        :comments => "updated this stuff"
+      }).status.should be_successful
+    end
+
+    it "shouldn't update other user's activity" do
+      block_should(raise_not_found) do
+        as(fx(:misio)).dispatch_to(Activities, :update, :id => fx(:jolas_activity1).id, :activity => {
+          :date => Date.today,
+          :project_id => fx(:apples_first_project).id,
+          :hours => "3:03",
+          :comments => "updated this stuff"
+        })
+      end
+    end
+  end
+
   describe "#destroy" do
     it "should allow admin to delete activity" do
       block_should(change(Activity, :count).by(-1)) do
@@ -113,7 +151,7 @@ describe Activities do
     end
     
     it "shouldn't allow user to delete other's activities" do
-      block_should(raise_forbidden).and_not(change(Activity, :count)) do
+      block_should(raise_not_found).and_not(change(Activity, :count)) do
         delete_jolas_activity_as fx(:stefan)
       end
     end

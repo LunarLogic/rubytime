@@ -3,7 +3,7 @@ class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
     
   before :load_projects,              :only => [:new, :edit, :update, :create]
-  before :load_all_users,             :only => [:new, :edit, :update, :create] 
+  before :load_users,             :only => [:new, :edit, :update, :create]
   before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
@@ -146,7 +146,7 @@ protected
   end
 
   def load_activity
-    @activity = Activity.get(params[:id]) or raise NotFound
+    @activity = (current_user.is_admin? ? Activity : current_user.activities).get(params[:id]) or raise NotFound
   end
   
   def load_owner
@@ -165,7 +165,7 @@ protected
     @other_projects = Project.active.all(:order => [:name]) - @recent_projects
   end
   
-  def load_all_users
+  def load_users
     @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
   end
   
