@@ -3,10 +3,10 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 describe Activity do
   it "should be created" do
     block_should(change(Activity, :count).by(1)) do
-      Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan)).save.should be_true 
+      Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan)).save.should be_true
     end
   end
-  
+
   it "should not be locked when does not belong to invoice" do
     fx(:jolas_activity1).locked?.should be_false
   end
@@ -14,11 +14,11 @@ describe Activity do
   it "should not be locked when invoice is not locked" do
     fx(:jolas_invoiced_activity).locked?.should be_false
   end
-  
+
   it "should be locked when invoice is locked" do
     fx(:jolas_locked_activity).locked?.should be_true
   end
-  
+
   it "should find n recent activities" do
     10.downto(1) { |i| Activity.gen(:date => Date.today-(i*2)) }
     recent_activities = Activity.recent(3)
@@ -41,7 +41,7 @@ describe Activity do
     a = Activity.new(:hours => " 8.5")
     a.minutes.should == 8.5 * 60
 
-    a = Activity.new(:hours => " 8.90")
+    a = Activity.new(:hours => " 8.9")
     a.minutes.should == 8.9 * 60
 
     a = Activity.new(:hours => "9,5 ")
@@ -52,18 +52,24 @@ describe Activity do
 
     a = Activity.new(:hours => 25)
     a.valid?
+    a.minutes.should be_nil
+    a.errors[:hours].size.should == 1
+
+    a = Activity.new(:hours => "24:01")
+    a.valid?
+    a.minutes.should be_nil
     a.errors[:hours].size.should == 1
 
     a = Activity.new(:hours => "1:80")
-    a.minutes.should be_nil
     a.valid?
+    a.minutes.should be_nil
     a.errors[:hours].size.should == 1
 
     a = Activity.new(:hours => "jola")
-    a.minutes.should be_nil
     a.valid?
+    a.minutes.should be_nil
     a.errors[:hours].size.should == 1
-    
+
     a = Activity.new(:minutes => 123)
     a.valid?
     a.errors[:hours].should be_nil
@@ -81,8 +87,8 @@ describe Activity do
   end
 
   it "should raise an ArgumentError when #for called with something else than :now or Hash with :year and :month" do
-    args = [ :kiszonka, 
-             :nuwee, 
+    args = [ :kiszonka,
+             :nuwee,
              { :foo => "bar", :year => 123 },
              { :month => 2, :kiszka => "ki5zk4"},
              [:year, :month] ]
@@ -90,7 +96,7 @@ describe Activity do
       block_should(raise_argument_error) { fx(:jola).activities.for(arg) }
     end
   end
-  
+
   it "should raise an ArgumentError when #for called with :month not included in 1..12 or future year" do
     [ { :month => 0, :year => 2007 },
       { :month => 13, :year => 2004 },
@@ -104,11 +110,11 @@ describe Activity do
     employee = Employee.gen
     previous_month_count = 8
     this_month_count = 10
-    
+
     previous_month = (month = Date.today.month) == 1 ? 12 : month -1
     year = previous_month == 12 ? Date.today.year - 1 : Date.today.year
-     
-    previous_month_count.times do 
+
+    previous_month_count.times do
       Activity.make(:user => employee, :date => Date.today - (day_number + rand(25))).save.should be_true
     end
     this_month_count.times do

@@ -1,5 +1,5 @@
 class Activity
-  HOURS_REGEX = /^\d+([\.,]\d+|:[0-5]\d)?$/
+  HOURS_REGEX = /^\d{1,2}([\.,]\d{1}|:[0-5]\d)?$/
 
   include DataMapper::Resource
   
@@ -90,7 +90,12 @@ class Activity
   
   # Checks if hours for this activity are under 24 hours
   def check_max_hours
-    return true unless minutes
-    minutes / 60 <= 24 ? true : [false, "Hours must be under 24"]
+    if minutes
+      if minutes > (24 * 60)
+        self.minutes = nil
+        return [false, "Hours must be under 24"]
+      end
+    end
+    true
   end
 end
