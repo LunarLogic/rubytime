@@ -9,7 +9,7 @@
     <%= auto_link %>
     <% if session.user %>
     <script type="text/javascript">
-      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[current_user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %> ';
+      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[session.user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %> ';
     </script>
     <% end %>
   </head>
@@ -22,9 +22,9 @@
           </a>
         </h1>
         <dl id="userinfo">
-          <%= partial 'layout/session_info' if session.user && params[:controller] != 'sessions' %>
+          <%= partial 'layout/session_info' if session.user && params[:controller] != 'exceptions' %>
         </dl>
-        <%= partial 'layout/navigation' if session.user && params[:controller] != 'sessions' %>
+        <%= partial 'layout/navigation' if session.user && params[:controller] != 'exceptions' %>
       </div>
     </div>
     <div id="content" class="wrapper clearfix">

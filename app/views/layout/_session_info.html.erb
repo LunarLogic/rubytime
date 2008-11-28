@@ -1,8 +1,8 @@
-<% if current_user %>
-  <dt>Welcome, <%= h current_user.name %></dt>
+<% if session.user %>
+  <dt>Welcome, <%= h session.user.name %></dt>
   <dd>
     <ul>
-      <li><%= link_to 'Preferences', url(:settings, current_user.id) %></li>
+      <li><%= link_to 'Preferences', url(:settings, session.user.id) %></li>
       <li><%= link_to 'Logout', url(:logout) %></li>
     </ul>
   </dd>

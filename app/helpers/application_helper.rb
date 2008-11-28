@@ -1,13 +1,5 @@
 module Merb
   module ApplicationHelper
-    #def format_time(time)
-    #  time.strftime Rubytime::CONFIG[:time_format]
-    #end
-    
-    #def format_date(date)
-    #  date.strftime Rubytime::CONFIG[:date_format]
-    #end
-
     def format_minutes(minutes)
       return "0" unless minutes
       format("%d:%.2d", minutes / 60, minutes % 60)
@@ -17,7 +9,7 @@ module Merb
       return [] unless current_user
       main_menu = []
       
-      selected = ['activities'].include?(controller_name)
+      selected = controller_name == 'activities'
       main_menu << { :title => "Activities", :path => resource(:activities), :selected => selected }
       
       if current_user.is_client_user?
@@ -26,7 +18,7 @@ module Merb
       end
 
       if current_user.is_admin? || current_user.is_client_user?
-        selected = ['invoices'].include?(controller_name)
+        selected = controller_name == 'invoices'
         main_menu << { :title => "Invoices", :path => resource(:invoices), :selected => selected }
       end
       
