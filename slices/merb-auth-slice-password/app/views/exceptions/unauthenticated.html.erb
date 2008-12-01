@@ -16,12 +16,15 @@
       <label for="password">Password</label>
       <input type="password" name="<%= @password_param.to_s %>" value="" id="<%= @password_param.to_s %>">
     </p>
+    <p class="remember">
+      <%= check_box :name => "remember_me", :value => "1", :label => "Remember me" %>
+    </p>
     <p class="buttons">
       <input type="submit" value="Login" class="button" />
     </p>
   </fieldset>
 </form>
 
-<p>
+<p class="forgot">
   Forgot your password? Click <%= link_to 'here', resource(:users, :request_password) %>
 </p>

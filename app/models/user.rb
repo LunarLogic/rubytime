@@ -1,20 +1,22 @@
 class User
   include DataMapper::Resource
   
-  property :id,                    Serial
-  property :name,                  String, :nullable => false, :unique => true
-  property :type,                  Discriminator, :index => true
-  property :login,                 String, :nullable => false, :unique => true, :index => true, :format => /^[\w_\.-]{3,20}$/
-  property :email,                 String, :nullable => false, :unique => true, :format => :email_address
-  property :active,                Boolean, :nullable => false, :default => true
-  property :admin,                 Boolean, :nullable => false, :default => false
-  property :role_id,               Integer, :index => true
-  property :client_id,             Integer, :index => true
-  property :created_at,            DateTime
-  property :password_reset_token,  String
-  property :date_format,           Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :nullable => false
-  property :recent_days_on_list,   Enum[*::Rubytime::RECENT_DAYS_ON_LIST], :default => ::Rubytime::RECENT_DAYS_ON_LIST.first,
+  property :id,                              Serial
+  property :name,                            String, :nullable => false, :unique => true
+  property :type,                            Discriminator, :index => true
+  property :login,                           String, :nullable => false, :unique => true, :index => true, :format => /^[\w_\.-]{3,20}$/
+  property :email,                           String, :nullable => false, :unique => true, :format => :email_address
+  property :active,                          Boolean, :nullable => false, :default => true
+  property :admin,                           Boolean, :nullable => false, :default => false
+  property :role_id,                         Integer, :index => true
+  property :client_id,                       Integer, :index => true
+  property :created_at,                      DateTime
+  property :password_reset_token,       String
+  property :date_format,                Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :nullable => false
+  property :recent_days_on_list,        Enum[*::Rubytime::RECENT_DAYS_ON_LIST], :default => ::Rubytime::RECENT_DAYS_ON_LIST.first,
                                                                            :nullable => false
+  property :remember_me_token_expiration,  DateTime
+  property :remember_me_token,             String
 
   validates_length :name, :min => 3
 
@@ -75,6 +77,24 @@ class User
   def generate_password!
     if password.nil? && password_confirmation.nil?
       self.password = self.password_confirmation = Rubytime::Misc.generate_password 
+    end
+  end
+
+  def remember_me!
+    self.remember_me_token_expiration = 2.weeks.from_now
+    self.remember_me_token = encrypt("#{email}--#{remember_me_token_expiration}")
+    save
+  end
+
+  def forget_me!
+    self.remember_me_token_expiration = self.remember_me_token = nil
+    save
+  end
+
+  def self.authenticate_with_token(token)
+    user = self.first(:remember_me_token => token)
+    if user
+      user.remember_me_token_expiration > DateTime.now ? user : nil
     end
   end
   

@@ -184,3 +184,15 @@ label.error {
 span.recent_days label, span.date_formats label {
   width: auto;
 }
+
+p.forgot {
+  margin-top: 40px;
+}
+
+p.remember {
+  padding-left: 90px;
+}
+
+p.remember label {
+  width: auto;
+}

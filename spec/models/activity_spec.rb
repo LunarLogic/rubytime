@@ -129,7 +129,6 @@ describe Activity do
     employee = Employee.gen
     Activity.make(:user => employee, :date => Date.parse("2008-11-01")).save.should be_true
     Activity.make(:user => employee, :date => Date.parse("2008-11-30")).save.should be_true
-    employee.reload.activities.for(:this_month).count.should == 2
     employee.reload.activities.for(:year => 2008, :month => 11).count.should == 2
   end
 
