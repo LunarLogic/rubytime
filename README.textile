@@ -36,8 +36,8 @@ Then:
 
  * copy config/database.yml.example to config/database.yml, then edit it to match your database configuration
  * copy config/local_config.rb.example to config/local_config.rb, then set application domain and mailer "From" address
- * run @rake db:automigrate@ to create database structure
- * run @rake rubytime:kickstart@ to populate database tables with initial data (admin account, example clients and projects)
+ * run @MERB_ENV=production rake db:automigrate@ to create database structure
+ * run @MERB_ENV=production rake rubytime:kickstart@ to populate database tables with initial data (admin account, example clients and projects)
 
 h3. Run
 
