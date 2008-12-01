@@ -36,13 +36,16 @@ Then:
 
  * copy config/database.yml.example to config/database.yml, then edit it to match your database configuration
  * copy config/local_config.rb.example to config/local_config.rb, then set application domain and mailer "From" address
- * run @rake rubytime:kickstart@ to populate database with initial data (admin account, example clients and projects)
+ * run @rake db:automigrate@ to create database structure
+ * run @rake rubytime:kickstart@ to populate database tables with initial data (admin account, example clients and projects)
 
 h3. Run
 
 Run the application:
 
   merb
+
+Point your browser to url set in config/local/config.rb and login as admin with password asdf1234
 
 h2. Contact & information
 
