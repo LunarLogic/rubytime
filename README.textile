@@ -45,7 +45,7 @@ Run the application:
 
   merb
 
-Point your browser to url set in config/local/config.rb and login as admin with password asdf1234
+Point your browser to url set in config/local/config.rb and login as @admin@ with password @password@
 
 h2. Contact & information
 
