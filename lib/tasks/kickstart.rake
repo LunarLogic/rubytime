@@ -6,7 +6,7 @@ namespace :rubytime do
 
     developer = Role.first(:name => "Developer") || Role.create(:name => "Developer")
     
-    pass = "asdf1234"
+    pass = "password"
 
     # developers
     1.upto(3) do |i|
