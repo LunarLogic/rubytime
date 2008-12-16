@@ -3,7 +3,7 @@ class Client
 
   property :id,           Serial
   property :name,         String, :nullable => false, :index => true
-  property :description,  Text, :lazy => false
+  property :description,  Text
   property :email,        String
   property :active,       Boolean, :nullable => false, :default => true
   
