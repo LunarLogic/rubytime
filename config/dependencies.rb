@@ -1,5 +1,5 @@
 merb_gems_version = "~>1.0"
-dm_gems_version   = "0.9.8"
+dm_gems_version   = "~>0.9.8"
 
 dependency "merb-assets", merb_gems_version        # Provides link_to, asset_path, auto_link, image_tag methods (and lots more)
 dependency "merb-helpers", merb_gems_version       # Provides the form, date/time, and other helpers
@@ -14,7 +14,7 @@ dependency "dm-aggregates", dm_gems_version   # Provides your DM models with cou
 dependency "dm-timestamps", dm_gems_version   # Automatically populate created_at, created_on, etc. when those properties are present.
 dependency "dm-types" , dm_gems_version        # Provides additional types, including csv, json, yaml.
 dependency "dm-validations", dm_gems_version  # Validation framework
-dependency "dm-constraints", dm_gems_version  # Validation framework
+dependency "dm-constraints", '0.9.9'  # Validation framework
 dependency "dm-observer", dm_gems_version
 dependency "dm-sweatshop", dm_gems_version
 
@@ -23,6 +23,8 @@ dependency "dm-sweatshop", dm_gems_version
 
 #dependency "dm-migrations" #, "0.9.7"   # Make incremental changes to your database.
 dependency "randexp", ">=0.1.3"
+dependency "chronic", ">=0.2.3"
+dependency "html5", ">=0.10.0"
 dependency "merb_dm_xss_terminate", "0.5.3"
 
 require 'digest/sha1'
