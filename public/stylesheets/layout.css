@@ -285,7 +285,7 @@ div.error h2 {
 
 #footer {
   display:block;
-  margin:0 auto;
+  margin:0 auto 10px;
   text-align:center;
   overflow:auto;
   width:220px;
