@@ -3,6 +3,7 @@ var Users = {
   init: function() {
     Users._initValidation();
     Users._initUserTypeCombo();
+    if ($('.box').html()=="") { $('#secondary .box').hide() };
   },
   
   _initValidation: function() {
