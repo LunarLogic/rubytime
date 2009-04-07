@@ -13,7 +13,8 @@
       <%= text_field :email, :label => "Email" %>
     </p>
     <p>
-      <%= check_box  :active, :label => "Active"%>
+      <label for="client_active">Active?</label>
+      <%= check_box :active %>
     </p>
     <p class="buttons">
       <%= submit "Save", :class => "button" %>

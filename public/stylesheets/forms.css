@@ -35,6 +35,7 @@ fieldset input, fieldset textarea {
 fieldset textarea {
   font-size:12px;
   line-height:16px;
+  width:184px;
 }
 
 fieldset input:focus, fieldset input.focus, fieldset textarea:focus, fieldset textarea.focus {
