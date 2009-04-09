@@ -100,6 +100,8 @@ module Merb
       activities.each do |activity|
         html << activities_table_row(activity, options)
       end
+      html << %(<tr class="no_zebra"><td></td><td></td><td class="right"><strong>Total for role:</strong></td>)
+      html << %(<td class="right"><strong>#{total_from(activities)}</strong></td></tr>)
       html << %(</table>)
       html
     end
