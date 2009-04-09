@@ -48,7 +48,7 @@ table.list th.right {
 }
 
 table.list td.checkbox, table.list th.checkbox {
-  padding-left: 0px;
+  padding-left: 7px;
   padding-right: 0px;
   margin: 0;
 }
