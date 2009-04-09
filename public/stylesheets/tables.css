@@ -48,7 +48,7 @@ table.list th.right {
 }
 
 table.list td.checkbox, table.list th.checkbox {
-  padding-left: 0px;
+  padding-left: 7px;
   padding-right: 0px;
   margin: 0;
 }
@@ -168,6 +168,10 @@ table.calendar .activity_icons a {
 
 table#calendar .activity_icons a:hover {
   opacity:1.0;
+}
+
+table.padding5 td {
+    padding:5px;
 }
 
 #activitites_for_day { 

@@ -43,6 +43,14 @@ fieldset input:focus, fieldset input.focus, fieldset textarea:focus, fieldset te
   color:#222;
 }
 
+fieldset .middleTable {
+    margin-bottom:20px;
+}
+
+fieldset .middleTable td {
+    vertical-align:middle;
+}
+
 fieldset p:after {
     content:"."; 
     display:block; 

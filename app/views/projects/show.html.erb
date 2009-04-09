@@ -1,7 +1,5 @@
 <h1><%= @project.name %></h1>
 
-<%= link_to "Edit", url(:edit_project, @project) %>
-
 <p>
   Description: <%= @project.description %>
 </p>
@@ -13,4 +11,7 @@
 </p>
 <p>
   Created at: <%= @project.created_at.to_date.formatted(current_user.date_format) %>
+</p>
+<p>
+  <%= link_to "Edit", url(:edit_project, @project) %>
 </p>
