@@ -1,10 +1,8 @@
 <ul class="clients">
-  <% clients.each do |client| %>
-    <li class="client">
-      <%= image_tag("icons/client.png") %>
-      <strong>Client: <%= client.name %></strong>
-      <%= partial("activities/grouped_projects", :projects => unique_projects_from(@activities, client), :client => client) %>
-      <strong class="total">Total for client: <%= total_from(activities_from(@activities, client)) %></strong>
-    </li>
-  <% end %>
+<% clients.each do |client| %>
+  <li class="client">
+    <%= partial("activities/grouped_projects", :projects => unique_projects_from(@activities, client), :client => client) %>
+    <strong class="total">Total for client: <%= total_from(activities_from(@activities, client)) %></strong>
+  </li>
+<% end %>
 <ul>

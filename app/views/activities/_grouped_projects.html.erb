@@ -1,6 +1,8 @@
 <ul class="projects">
   <% projects.each do |project| %>
     <li class="project">
+      <%= image_tag("icons/client.png") %>
+      <strong>Client: <%= client.name %></strong>
       <%= image_tag("icons/project.png") %>
       <strong>Project: <%= project.name %></strong>
       <% if current_user.is_employee? && !current_user.is_admin? %>
@@ -8,7 +10,7 @@
         <%= full_activities_table(activities) %>
         <strong>Total for project: <%= format_minutes(activities.inject(0) { |s,a| s += a.minutes; s }) %></strong>
       <% else %>
-        <%= partial("activities/grouped_roles", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>        
+        <%= partial("activities/grouped_roles", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>
         <strong class="total">Total for project: <%= total_from(activities_from(@activities, client, project)) %></strong>
       <% end %>
     </li>
