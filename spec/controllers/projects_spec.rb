@@ -12,9 +12,12 @@ describe Projects do
   end
 
   describe "#index" do
-    it "should show index for admin and client" do
+    it "should show index for admin, client and employee requesting json data" do
       as(:admin).dispatch_to(Projects, :index).should be_successful
       as(:client).dispatch_to(Projects, :index).should be_successful
+      as(:employee).dispatch_to(Projects, :index) do |ctl|
+        ctl.content_type = :json
+      end.should be_successful
     end
 
     it "shouldn't show index for employee" do

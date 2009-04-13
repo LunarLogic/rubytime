@@ -1,8 +1,8 @@
 class Activities < Application
-  provides :json
-
   # TODO: extract everything related to calendar to separated Calendar controller
   RECENT_ACTIVITIES_NUM = 3
+
+  provides :json
     
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,             :only => [:new, :edit, :update, :create]

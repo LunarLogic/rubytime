@@ -21,8 +21,8 @@ module Rubytime
           @spec = spec
         end
     
-        def dispatch_to(controller_klass, action, params = {}, &blk)
-          @spec.dispatch_to(controller_klass, action, params) do |controller|
+        def dispatch_to(controller_klass, action, params = {}, env = {}, &blk)
+          @spec.dispatch_to(controller_klass, action, params, env) do |controller|
             controller.session.user = @user
             blk.call(controller) if block_given?
             controller

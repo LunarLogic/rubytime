@@ -1,4 +1,6 @@
 class Projects < Application
+  provides :json
+
   before :ensure_admin, :exclude => [:for_clients, :index]
   before :ensure_can_list_projects, :only => [:index]
   before :load_project, :only => [:edit, :update, :destroy, :show]
@@ -7,7 +9,7 @@ class Projects < Application
   
   def index
     @project = Project.new
-    render
+    display @projects
   end
   
   def show
@@ -53,7 +55,7 @@ class Projects < Application
 
 protected
   def ensure_can_list_projects
-    raise Forbidden unless current_user.is_admin? || current_user.is_client_user?
+    raise Forbidden unless current_user.is_admin? || current_user.is_client_user? || content_type == :json
   end
 
   def load_project
@@ -61,7 +63,13 @@ protected
   end
   
   def load_projects
-    @projects = current_user.is_admin? ? Project.all(:order => [:name]) : current_user.client.projects.all(:order => [:name])
+    if current_user.is_admin?
+      @projects = Project.all(:order => [:name])
+    elsif current_user.is_employee?
+      @projects = Project.active.all(:order => [:name])
+    else
+      @projects = current_user.client.projects.all(:order => [:name])
+    end
   end
   
   def load_clients
