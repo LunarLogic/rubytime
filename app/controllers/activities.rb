@@ -1,4 +1,6 @@
 class Activities < Application
+  provides :json
+
   # TODO: extract everything related to calendar to separated Calendar controller
   RECENT_ACTIVITIES_NUM = 3
     
@@ -26,7 +28,7 @@ class Activities < Application
     elsif request.xhr?
       render :index, :layout => false
     else
-      render
+      display @activities
     end
   end
   
