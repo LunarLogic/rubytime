@@ -44,7 +44,11 @@ class Activities < Application
     if @activity.save
       render_success(@activity.date.to_s, 201)
     else
-      render :new, :status => 400, :layout => false
+      if content_type == :json
+        display @activity.errors, :status => 400
+      else
+        render :new, :status => 400, :layout => false
+      end
     end
   end
   
