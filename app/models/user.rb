@@ -29,6 +29,8 @@ class User
   has n, :activities #, :order => [:created_at.desc] - this order doesn't currently work when used in through relation below 
                      # according to lighthouse it's a bug in DM
   has n, :projects, :through => :activities
+
+  has n, :free_days
   
   def self.active
     all(:active => true)
