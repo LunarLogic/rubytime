@@ -23,7 +23,11 @@ class Exceptions < Merb::Controller
   end
   
   def unauthenticated
-    render :template => "../../slices/merb-auth-slice-password/app/views/exceptions/unauthenticated"
+    if content_type == :html
+      render :template => "../../slices/merb-auth-slice-password/app/views/exceptions/unauthenticated"
+    else
+      return ""
+    end
   end
   
   def number_of_columns

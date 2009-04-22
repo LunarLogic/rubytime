@@ -16,9 +16,7 @@ module Merb::Authentication::Strategies
        end
     end
   end
-end
 
-module Merb::Authentication::Strategies
   class PasswordFormWithTokenStrategy < Merb::Authentication::Strategies::Basic::Form
     def run!
       user = super
@@ -29,6 +27,19 @@ module Merb::Authentication::Strategies
       user
     end
   end
+
+  class RequestedBasicAuthStrategy < Merb::Authentication::Strategies::Basic::BasicAuth
+    def run!
+      user = super
+      if user
+        user
+      else
+        if request.params["auth"] == "basic"
+          request_basic_auth!
+        end
+      end
+    end
+  end
 end
 
-Merb::Authentication.default_strategy_order = [Merb::Authentication::Strategies::CookieStrategy, Merb::Authentication::Strategies::PasswordFormWithTokenStrategy, Merb::Authentication::Strategies::Basic::BasicAuth]
+Merb::Authentication.default_strategy_order = [Merb::Authentication::Strategies::CookieStrategy, Merb::Authentication::Strategies::PasswordFormWithTokenStrategy, Merb::Authentication::Strategies::RequestedBasicAuthStrategy]
