@@ -18,7 +18,7 @@ class SearchCriteria
     @selected_project_ids = []
     @limit = nil
     attrs && attrs.each do |attr, value|
-      send("#{attr}=", value)
+      send("#{attr}=", value) if respond_to?("#{attr}=")
     end
     @errors = DataMapper::Validate::ValidationErrors.new
   end
