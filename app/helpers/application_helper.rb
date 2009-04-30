@@ -148,7 +148,7 @@ module Merb
 
     def calendar_activities_table(activities, options={})
       activities_table(activities, { :show_checkboxes => false, :show_users => current_user.is_admin? || !current_user.is_employee?,
-                                     :show_details_link => false, :show_edit_link => false, :show_delete_link => false,
+                                     :show_details_link => false, :show_edit_link => true, :show_delete_link => false,
                                      :show_project => true, :expanded => true, :show_date => false }.merge!(options))
     end
   end
