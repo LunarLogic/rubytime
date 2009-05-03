@@ -7,6 +7,7 @@ class SearchCriteria
   attr_reader :date_to
   attr_accessor :invoiced
   attr_accessor :limit
+  attr_accessor :since_activity
   attr_reader :errors
   
   def initialize(attrs, current_user)
@@ -17,6 +18,7 @@ class SearchCriteria
     @selected_client_ids = []
     @selected_project_ids = []
     @limit = nil
+    @since_activity = nil
     attrs && attrs.each do |attr, value|
       send("#{attr}=", value) if respond_to?("#{attr}=")
     end
@@ -105,6 +107,7 @@ class SearchCriteria
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
     conditions.merge!(:limit => @limit.to_i) if @limit
+    conditions.merge!(:id.gt => @since_activity.to_i) if @since_activity
     case @invoiced
     when "invoiced"
       conditions.merge!(:invoice_id.not => nil)
