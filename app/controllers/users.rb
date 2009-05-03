@@ -86,6 +86,13 @@ class Users < Application
     redirect url(:settings, user.id), :message => { :notice => "Please set your password" }
   end
   
+  # this is for API, to let the client check if credentials are correct
+  def authenticate
+    provides :json
+    render "", :status => 200
+  end
+    
+  
 protected
 
   def load_users
