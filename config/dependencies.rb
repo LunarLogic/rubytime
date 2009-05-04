@@ -17,7 +17,7 @@ dependency "dm-validations", dm_gems_version  # Validation framework
 dependency "dm-constraints", '0.9.9'  # Validation framework
 dependency "dm-observer", dm_gems_version
 dependency "dm-sweatshop", dm_gems_version
-dependency "dm-serializer", dm_gems_version
+dependency "dm-serializer", '0.9.9'  # dm_gems_version
 
 # dependency "merb-action-args", "0.9.10"   # Provides support for querystring arguments to be passed in to controller actions
 # dependency "merb-cache", "0.9.10"         # Provides your application with caching functions 
