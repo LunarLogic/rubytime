@@ -64,3 +64,7 @@ Invoice.fixture(:issued) {{
   :issued_at => random_date(Date.today - 180, Date.today)
 }}
 
+FreeDay.fixture {{
+  :user => Employee.pick,
+  :date => random_date(Date.today - 15, Date.today - 5),
+}}
