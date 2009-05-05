@@ -3,7 +3,8 @@ class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
 
   provides :json
-    
+
+  before :authorize,                  :only => [:new]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,             :only => [:new, :edit, :update, :create]
   before :load_owner,                 :only => [:calendar]
@@ -125,6 +126,10 @@ class Activities < Application
   end
   
 protected
+
+  def authorize
+    throw :halt, "You don't have permissions to do that!" if current_user.is_client_user?
+  end
   
   def check_day_viewability
     raise BadRequest if params[:search_criteria][:user_id] && params[:search_criteria][:user_id].size > 1 || params[:search_criteria][:project_id] && params[:search_criteria][:project_id].size > 1
