@@ -26,7 +26,7 @@ describe User do
     password = "awsumpass"
     login = "awsum-stefan"
     employee = Employee.make(:active => false, :login => login, :password => password, 
-                             :password_confirmation => password, :role => fx(:developer))
+      :password_confirmation => password, :role => fx(:developer))
     employee.save.should be_true
     User.authenticate(login, password).should be_nil
   end
@@ -61,6 +61,16 @@ describe User do
     block_should_not(change(User, :count)) do
       fx(:jola).destroy
     end
+  end
+
+  # in april 2009 were 21 working days
+  it "should have 17 days without activity besides vacations and weekends in april 2009" do
+    fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").count.should == 21
+    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-04-17")).save.should be_true
+    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-04-15")).save.should be_true
+    FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-21")).save.should be_true
+    FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-22")).save.should be_true
+    fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").count.should == 17
   end
 end
 
@@ -130,4 +140,5 @@ describe ClientUser do
     client_user.save.should be_false
     client_user.errors.on(:client).should_not be_nil
   end
+
 end

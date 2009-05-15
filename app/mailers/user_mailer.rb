@@ -10,4 +10,12 @@ class UserMailer < Merb::MailController
     @url = Rubytime::CONFIG[:site_url]
     render_mail
   end
+
+  def notice
+    @missed_days = params[:missed_days]
+    @user = params[:user]
+    @url = Rubytime::CONFIG[:site_url]
+    render_mail
+  end
+
 end

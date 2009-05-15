@@ -22,4 +22,11 @@ describe UserMailer do
     last_delivered_mail.text.should include(@user.password_reset_token)
     last_delivered_mail.text.should include(Rubytime::CONFIG[:site_url])
   end
+
+  it "includes login, missed days and site url" do
+    deliver :notice, {}, :user => @user, :url => Rubytime::CONFIG[:site_url], :missed_days => ["05/04/2009", "06/06/2009"]
+    last_delivered_mail.text.should include("Hello #{@user.name},")
+    last_delivered_mail.text.should include("05/04/2009\n  06/06/2009\n")
+  end
+
 end

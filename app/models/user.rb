@@ -14,7 +14,7 @@ class User
   property :password_reset_token,          String
   property :date_format,                   Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :nullable => false
   property :recent_days_on_list,           Enum[*::Rubytime::RECENT_DAYS_ON_LIST], :default => ::Rubytime::RECENT_DAYS_ON_LIST.first,
-                                                                           :nullable => false
+    :nullable => false
   property :remember_me_token_expiration,  DateTime
   property :remember_me_token,             String
 
@@ -27,7 +27,7 @@ class User
   belongs_to :client # only for ClientUser
   
   has n, :activities #, :order => [:created_at.desc] - this order doesn't currently work when used in through relation below 
-                     # according to lighthouse it's a bug in DM
+  # according to lighthouse it's a bug in DM
   has n, :projects, :through => :activities
 
   has n, :free_days
@@ -113,4 +113,14 @@ class User
   def class_name
     self.class.to_s
   end
+
+  def indefinite_activities(from_date="#{Date.today.year}-#{Date.today.month}-1", to_date=Date.today.to_s)
+    days = []
+    Date.parse(from_date).upto(Date.parse(to_date)) do |thisday|
+      days += [thisday] unless thisday.wday==0  or thisday.wday==6 or
+        FreeDay.is_day_off(self, thisday) or Activity.is_activity_day(self, thisday)
+    end
+    days
+  end
+
 end
