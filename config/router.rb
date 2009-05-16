@@ -37,6 +37,7 @@ Merb::Router.prepare do
   resources :users, :collection => { "with_roles" => :get, "request_password" => :get,
       "reset_password" => :get, "authenticate" => :get } do
     resource :calendar
+    resources :activities
   end
   
   resources :sessions
