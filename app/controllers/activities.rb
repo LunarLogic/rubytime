@@ -44,7 +44,8 @@ class Activities < Application
     @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save
-      render_success(@activity.date.to_s, 201)
+      self.content_type = :json
+      display @activity, :status => 201
     else
       if content_type == :json
         display @activity.errors, :status => 400

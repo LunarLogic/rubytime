@@ -215,8 +215,9 @@ var Application = {
                 url: form.url(),
                 type: "POST",
                 data: form.serialize(),
-                success: function(responseText) {
-                    var date = responseText;
+                dataType: 'json',
+                success: function(responseJson) {
+                    var date = responseJson.date;
                     Application._closeActivityPopup();
                     // check if we were editing or creating new activity
                     if ((/\d+$/).test(form.url())) {
