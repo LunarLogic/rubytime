@@ -5,6 +5,8 @@ namespace :rubytime do
     Merb::Mailer.delivery_method = :test_send
 
     developer = Role.first(:name => "Developer") || Role.create(:name => "Developer")
+    pm = Role.first(:name => "Project Manager") || Role.create(:name => "Project Manager")
+    tester = Role.first(:name => "Tester") || Role.create(:name => "Tester")
     
     pass = "password"
 

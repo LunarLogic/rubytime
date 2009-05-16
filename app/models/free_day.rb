@@ -7,8 +7,8 @@ class FreeDay
 
   belongs_to :user
 
-  def self.is_day_off(user_id, thisday)
-    !FreeDay.all(:user_id => user_id, :date => thisday).empty?
+  def self.is_day_off(user, thisday)
+    user.free_days.count(:date => thisday) > 0
   end
 
 end

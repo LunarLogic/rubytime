@@ -32,11 +32,11 @@ class Activity
   # Needed only for User#activities in calendar view
   def self.for(time)
     year, month = case time
-                  when :this_month
-                    [Date.today.year, Date.today.month]
-                  when Hash
-                    [time[:year], time[:month]]
-                  end
+    when :this_month
+      [Date.today.year, Date.today.month]
+    when Hash
+      [time[:year], time[:month]]
+    end
 
     raise ArgumentError.new("You have to pass either :now or a Hash with :year and :month") if year.nil? || month.nil?
     if !(1..12).include?(month) || year > Date.today.year
@@ -84,6 +84,10 @@ class Activity
   
   def deletable_by?(user)
     self.user == user || user.is_admin?
+  end
+
+  def self.is_activity_day(user, thisday)
+    user.activities.count(:date => thisday) > 0
   end
   
   protected

@@ -137,4 +137,10 @@ describe Activity do
     fx(:jolas_activity1).deletable_by?(fx(:admin)).should be_true
     fx(:jolas_activity1).deletable_by?(fx(:stefan)).should be_false
   end
+
+  it "should check if activity exist for date" do
+    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23")).save.should be_true
+    Activity.is_activity_day(fx(:stefan), Date.parse("2008-11-23")).should be_true
+  end
+  
 end
