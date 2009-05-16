@@ -89,7 +89,7 @@ class Users < Application
   # this is for API, to let the client check if credentials are correct
   def authenticate
     provides :json
-    render "", :status => 200
+    display current_user.id
   end
     
   
