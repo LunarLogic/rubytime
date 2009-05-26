@@ -8,7 +8,6 @@
       <% if current_user.is_employee? && !current_user.is_admin? %>
         <% activities = activities_from(@activities, client, project, current_user.role) %>
         <%= full_activities_table(activities) %>
-        <strong>Total for project: <%= format_minutes(activities.inject(0) { |s,a| s += a.minutes; s }) %></strong>
       <% else %>
         <%= partial("activities/grouped_roles", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>
         <strong class="total">Total for project: <%= total_from(activities_from(@activities, client, project)) %></strong>
