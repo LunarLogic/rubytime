@@ -17,6 +17,7 @@ class User
     :nullable => false
   property :remember_me_token_expiration,  DateTime
   property :remember_me_token,             String
+  property :remind_by_email,               Boolean, :nullable => false, :default => false
 
   validates_length :name, :min => 3
 

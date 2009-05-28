@@ -4,7 +4,7 @@ You have missed fill activities in your callendar.
 
 List of indefinite days:
 <% @missed_days.each do |missed_day| %>
-  <%= Date.parse(missed_day).strftime("%m/%d/%Y") %>
+  <%= missed_day %>
 <% end %>
 
 This message was sent automatically.
