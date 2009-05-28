@@ -25,4 +25,5 @@
 
 <p>
   <%= link_to 'Back to invoices', url(:invoices) %>
+  <%= link_to('Edit', resource(@invoice, :edit))if current_user.is_admin? %>
 </p>

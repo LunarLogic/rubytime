@@ -2,7 +2,7 @@ class Invoices < Application
   before :ensure_admin, :exclude => [:index, :show]
   before :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
   before :load_invoices, :only => [:index, :create]
-  before :load_clients, :only => [:index, :create]
+  before :load_clients, :only => [:index, :create, :edit]
 
   def index
     raise Forbidden if current_user.is_employee? && !current_user.is_admin?
@@ -14,6 +14,20 @@ class Invoices < Application
     raise Forbidden unless current_user.can_see_invoice?(@invoice)
     @activities = @invoice.activities.all(:order => [:created_at.desc])
     render
+  end
+
+  def edit
+    raise Forbidden unless current_user.is_admin?
+    render
+  end
+
+  def update
+    @invoice.attributes = params[:invoice]
+    if @invoice.save || !@invoice.dirty?
+      redirect resource(@invoice), :message => { :notice => "Invoice has been updated" }
+    else
+      render :edit, :status => 400, :layout => false
+    end
   end
   
   def create
@@ -30,10 +44,6 @@ class Invoices < Application
     end
   end
   
-  def update
-    Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => @invoice.id) if params[:activity_id]
-    ""
-  end
   
   def destroy
     if @invoice.destroy
@@ -49,7 +59,7 @@ class Invoices < Application
     redirect resource(@invoice), :message => { :notice => "Invoice has been issued" }
   end
 
-protected
+  protected
   def load_invoice
     @invoice = Invoice.get(params[:id]) or raise NotFound
   end

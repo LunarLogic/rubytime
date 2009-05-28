@@ -1,0 +1,19 @@
+<h1>Edit invoice</h1>
+
+<%= error_messages_for(@invoice) %>
+<%= form_for @invoice, :action => resource(@invoice), :id => "invoice_form" do %>
+  <fieldset>
+    <p>
+      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+    </p>
+    <p>
+      <%= text_field :name, :label => "Name" %>
+    </p>
+    <p>
+      <%= text_area :notes, :label => "Notes", :class => "text", :cols => "21", :rows => "5" %>
+    </p>
+    <p class="buttons">
+      <%= submit 'Save', :class => "button" %>  or <%= link_to "Cancel", resource(@invoice) %>
+    </p>
+  </fieldset>
+<% end =%>
