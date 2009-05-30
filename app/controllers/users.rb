@@ -82,8 +82,13 @@ class Users < Application
   def reset_password
     token = params[:token] or raise BadRequest
     user = User.first(:password_reset_token => token) or raise NotFound
-    session.user = user
-    redirect url(:settings, user.id), :message => { :notice => "Please set your password" }
+    if user.password_reset_token_exp < DateTime.now
+      redirect url(:password_reset), :message => { :notice => "Password reset token has expired" }
+    else
+      session.user = user
+      user.clear_password_reset_token!
+      redirect url(:settings, user.id), :message => { :notice => "Please set your password" }
+    end
   end
   
   # this is for API, to let the client check if credentials are correct

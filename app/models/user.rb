@@ -12,6 +12,7 @@ class User
   property :client_id,                     Integer, :index => true
   property :created_at,                    DateTime
   property :password_reset_token,          String
+  property :password_reset_token_exp,      DateTime
   property :date_format,                   Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :nullable => false
   property :recent_days_on_list,           Enum[*::Rubytime::RECENT_DAYS_ON_LIST], :default => ::Rubytime::RECENT_DAYS_ON_LIST.first,
     :nullable => false
@@ -106,9 +107,15 @@ class User
     save
   end
   
-  def generate_password_reset_token 
-    self.password_reset_token = Digest::SHA1.hexdigest("-#{login}-#{Time.now}-")
-    save
+  def generate_password_reset_token
+    now = Time.now
+    update_attributes(
+      :password_reset_token => Digest::SHA1.hexdigest("-#{login}-#{now}-"),
+      :password_reset_token_exp => now+Rubytime::PASSWORD_RESET_LINK_EXP_TIME)
+  end
+
+  def clear_password_reset_token!
+    update_attributes(:password_reset_token => nil, :password_reset_token_exp => nil)
   end
   
   def class_name

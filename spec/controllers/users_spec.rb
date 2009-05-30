@@ -38,7 +38,7 @@ describe Users do
       as(:admin).dispatch_to(Users, :show, { :id => fx(:jola).id }).should be_successful
     end
   end
-  
+
   describe "#update" do
     it "update action should redirect to show" do
       user = fx(:misio)
@@ -111,6 +111,26 @@ describe Users do
       block_should(raise_forbidden) do
         as(:employee).dispatch_to(Users, :with_roles, :search_criteria => {})
       end
+    end
+  end
+
+  describe "#reset_password" do
+    before :all do
+      @user = fx(:admin)
+      @user.generate_password_reset_token
+    end
+
+    it "should raise bad request if there is no token" do
+      block_should(raise_bad_request) { dispatch_to(Users, :reset_password) }
+    end
+
+    it "should redirect to settings page" do
+      dispatch_to(Users, :reset_password, :token => @user.password_reset_token).should redirect_to(url(:settings, @user.id))
+    end
+    
+    it 'should redirect to password_reset if a token has expired' do
+      @user.update_attributes(:password_reset_token_exp => DateTime.now-1.hour)
+      dispatch_to(Users, :reset_password, :token => @user.password_reset_token).should redirect_to(url(:password_reset))
     end
   end
 end

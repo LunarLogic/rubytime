@@ -38,6 +38,13 @@ describe User do
     Merb::Mailer.deliveries.last.text.should include("welcome") 
   end
 
+  it "should generate a password reset token with expiration time" do
+    user = fx(:jola)
+
+    user.generate_password_reset_token.should be(true)
+    user.password_reset_token_exp.should <= DateTime.now+Rubytime::PASSWORD_RESET_LINK_EXP_TIME
+  end
+
   it "should send email with password reset link to user requesting it" do
     block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
       user = fx(:jola)
