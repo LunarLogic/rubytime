@@ -1,8 +1,9 @@
 <h1>Account settings</h1>
 
 <%= error_messages_for @user %>
+
 <%= form_for(@user, :action => url(:user, @user), :id => "user_form") do %>
-  <fieldset>
+  <fieldset id="account-settings">
     <%= fields_for :user do %>
       <p>
         <label>Login</label><span class="static_text"><%= @user.login %></span>
@@ -19,44 +20,18 @@
       <p>
         <%= password_field :password_confirmation, :label => "Password confirmation" %>
       </p>
-      <table class="middleTable">
-        <tr>
-          <td>
-            <span class="radiobuttons">
-              <p>By default show activities for last:&nbsp;</p>
-            </span>
-          </td>
-          <td>
-            <span class="recent_days">
-              <p><%= radio_group :recent_days_on_list, Rubytime::RECENT_DAYS_ON_LIST.map { |d| { :value => d, :label => "#{d} days" } } %></p>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Date format:</p>
-          </td>
-          <td>
-            <span class="date_formats">
-              <p>
-                <%= radio_group :date_format, Rubytime::DATE_FORMAT_NAMES.map { |df| { :value => df, :label => "#{df.to_s.capitalize} (#{Rubytime::DATE_FORMATS[df][:description]})" } } %>
-              </p>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>
-              Remind me by email about past<br/>days without activities/vacations
-            </p>
-          </td>
-          <td>
-            <p>
-              <%= check_box :id => "user_remind_by_email", :name => "user[remind_by_email]", :boolean => true, :checked => @user.remind_by_email %>
-            </p>
-          </td>
-        </tr>
-      </table>
+      <p class="options">
+        <span>Show activities for last</span>
+        <%= radio_options(@user, :recent_days_on_list, Rubytime::RECENT_DAYS_ON_LIST) { |v| recent_days_on_list_desc(v) }%>
+      </p>
+      <p class="options">
+        <span>Date format</span>
+        <%= radio_options(@user, :date_format, Rubytime::DATE_FORMAT_NAMES) { |v| date_format_desc(v) } %>
+      </p>
+      <p class="options">
+        <span>Email reminder</span>
+        <%= check_box :id => "user_remind_by_email", :name => "user[remind_by_email]", :boolean => true, :checked => @user.remind_by_email %>
+      </p>
       <p class="buttons">
         <%= submit "Update", :class => "button" %> or <%= link_to 'Cancel', url(:activities) %>
       </p>
