@@ -30,7 +30,8 @@
       </p>
       <p class="options">
         <span>Email reminder</span>
-        <%= check_box :id => "user_remind_by_email", :name => "user[remind_by_email]", :boolean => true, :checked => @user.remind_by_email %>
+        <%= check_box :id => "user_remind_by_email", :name => "user[remind_by_email]", :value => '1', :checked => @user.remind_by_email %>
+        <%= hidden_field :id => "user_remind_by_email_hidden", :name => 'user[remind_by_email]', :value => '0' %>
       </p>
       <p class="buttons">
         <%= submit "Update", :class => "button" %> or <%= link_to 'Cancel', url(:activities) %>

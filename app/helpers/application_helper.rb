@@ -86,34 +86,37 @@ module Merb
                           :show_date => true }
       options = default_options.merge(options)
 
-      html = %(<table class="activities list wide" id="#{options[:table_id]}" cellspacing="0" cellpadding="0">)
-      html << %(<tr>)
-      html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
-      html << %(<th>#{image_tag("icons/project.png") if options[:show_header_icons]} Project</th>) if options[:show_project]
-      html << %(<th>#{image_tag("icons/role.png") if options[:show_header_icons]} User</th>) if options[:show_users]
-      html << %(<th>Date</th>) if options[:show_date]
-      html << %(<th class="right">#{image_tag("icons/clock.png") if options[:show_header_icons]} Hours</th>)
-      html << %(<th class="icons">)
-      html << link_to(image_tag("icons/magnifier.png", :title => "Toggle all details"), "#", :class => "toggle_all_comments_link") if options[:show_details_link]
-      html << %(</th>)
-      html << %(</tr>)
-      activities.each do |activity|
-        html << activities_table_row(activity, options)
+      table_opts = {
+        :class => 'activites list wide',
+        :id => "#{options[:table_id]}"}.reject!{|k,v| v.blank?}
+
+      tag(:table,table_opts) do
+        html =  %(<tr>)
+        html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
+        html << %(<th>#{image_tag("icons/project.png", :alt => 'project') if options[:show_header_icons]} Project</th>) if options[:show_project]
+        html << %(<th>#{image_tag("icons/role.png", :alt => 'role') if options[:show_header_icons]} User</th>) if options[:show_users]
+        html << %(<th>Date</th>) if options[:show_date]
+        html << %(<th class="right">#{image_tag("icons/clock.png", :alt => 'clock') if options[:show_header_icons]} Hours</th>)
+        html << %(<th class="icons">)
+        html << link_to(image_tag("icons/magnifier.png", :title => "Toggle all details", :alt => 'I'), "#", :class => "toggle_all_comments_link") if options[:show_details_link]
+        html << %(</th>)
+        html << %(</tr>)
+        activities.each do |activity|
+          html << activities_table_row(activity, options)
+        end
+        html << %(<tr class="no_zebra">)
+        html << %(<td></td>) if options[:show_checkboxes]
+        html << %(<td></td>) if options[:show_project]
+        html << %(<td></td>) if options[:show_users]
+        html << %(<td class="right"><strong>Total:</strong></td>)
+        html << %(<td class="right"><strong>#{total_from(activities)}</strong></td></tr>)
       end
-      html << %(<tr class="no_zebra">)
-      html << %(<td></td>) if options[:show_checkboxes]
-      html << %(<td></td>) if options[:show_project]
-      html << %(<td></td>) if options[:show_users]
-      html << %(<td class="right"><strong>Total:</strong></td>)
-      html << %(<td class="right"><strong>#{total_from(activities)}</strong></td></tr>)
-      html << %(</table>)
-      html
     end
 
     def activities_table_row(activity, options)
       row = %(<tr>)
       if options[:show_checkboxes]
-        row << %(<td class="checkbox">#{check_box(:name => "activity_id[]", :value => activity.id) unless activity.invoiced?}</td>)
+        row << %(<td class="checkbox">#{check_box(:name => "activity_id[]", :value => activity.id, :id => "activity_id_#{activity.id}") unless activity.invoiced?}</td>)
       end
       row << %(<td>#{h(activity.project.name)}</td>) if options[:show_project]
       row << %(<td>#{h(activity.user.name)}</td>) if options[:show_users]
@@ -122,10 +125,10 @@ module Merb
 
       # icons
       row << %(<td class="icons">)
-      row << link_to(image_tag("icons/magnifier.png", :title => "Toggle details"), "#", :class => "toggle_comments_link") if options[:show_details_link]
-      row << link_to(image_tag("icons/pencil.png", :title => "Edit"), resource(activity, :edit)+"?height=350&width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
-      row << link_to(image_tag("icons/cross.png", :title => "Remove"), resource(activity), :class => "remove_activity_link") if options[:show_delete_link] && activity.deletable_by?(current_user) && !activity.locked?
-      row << link_to(image_tag("icons/notebook_minus.png", :title => "Remove activity from this invoice"), resource(activity), :class => "remove_from_invoice_link") if options[:show_exclude_from_invoice_link] && !activity.locked?
+      row << link_to(image_tag("icons/magnifier.png", :alt => "I", :title => "Toggle details"), "#", :class => "toggle_comments_link") if options[:show_details_link]
+      row << link_to(image_tag("icons/pencil.png", :alt => "E", :title => "Edit"), resource(activity, :edit)+"?height=350&amp;width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
+      row << link_to(image_tag("icons/cross.png", :alt => "R", :title => "Remove"), resource(activity), :class => "remove_activity_link") if options[:show_delete_link] && activity.deletable_by?(current_user) && !activity.locked?
+      row << link_to(image_tag("icons/notebook_minus.png", :alt => "-", :title => "Remove activity from this invoice"), resource(activity), :class => "remove_from_invoice_link") if options[:show_exclude_from_invoice_link] && !activity.locked?
       row << %(</td>)
 
       klass, visibility = (options[:expanded] ? ["", ""] : ["no_zebra", "display: none"])

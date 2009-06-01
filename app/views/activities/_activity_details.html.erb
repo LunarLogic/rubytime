@@ -8,6 +8,6 @@
   </dd>
   <dd class="comments">
     <p class="label">Comments:</p>
-    <p class="comments"><%= activity.comments.gsub(/\n/, "<br/>") %></p>
+    <p class="comments"><%= activity.comments.strip.gsub("\n", "<br/>") %></p>
   </dd>
 </dl>

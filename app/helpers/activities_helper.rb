@@ -98,8 +98,8 @@ module Merb
         day_names.push(day_names.shift)
       end
             
-      prev_url = url(:"#{options[:owner_type]}_calendar", @owner.id, :month => @previous_month, :year => @previous_year)
-      next_url = url(:"#{options[:owner_type]}_calendar", @owner.id, :month => @next_month, :year => @next_year)
+      prev_url = CGI.escapeHTML(url(:"#{options[:owner_type]}_calendar", @owner.id, :month => @previous_month, :year => @previous_year))
+      next_url = CGI.escapeHTML(url(:"#{options[:owner_type]}_calendar", @owner.id, :month => @next_month, :year => @next_year))
       
       cal = %(<table id="#{options[:table_id]}" class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
       cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">)

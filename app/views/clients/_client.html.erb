@@ -3,7 +3,7 @@
   <td><%= client.email %></td>
   <td><%= client.active ? "Yes" : "No" %></td>
   <td class="icons">
-    <%= link_to image_tag("icons/pencil.png"), url(:edit_client, client) %>
+    <%= link_to image_tag("icons/pencil.png", :alt => "E"), url(:edit_client, client) %>
     <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(client), :class => "delete_row" %>
   </td>
 </tr>

@@ -1,7 +1,7 @@
 <ul class="roles">
   <% roles.each do |role| %>
     <li class="role">
-      <%= image_tag("icons/role.png") %>
+      <%= image_tag("icons/role.png", :alt => 'role') %>
       <strong>Role: <%= role.name %></strong>
       <% activities = activities_from(@activities, client, project, role) %>
       <% if params[:controller] == "invoices" %>

@@ -6,7 +6,7 @@
       <%= hidden_field :client_id, :value => client.id %>
       <fieldset class="new">
         <legend>
-          <%= image_tag("icons/notebook_plus.png") %> Create invoice for <%= client.name %> from selected activities
+          <%= image_tag("icons/notebook_plus.png", :alt => "I") %> Create invoice for <%= client.name %> from selected activities
         </legend>
         <p>
           <%= text_field :name, :label => "Invoice name" %>
@@ -18,7 +18,7 @@
 
       <fieldset class="existing">
         <legend>
-          <%= image_tag("icons/notebook_plus.png") %> Add selected activities to existing invoice for <%= client.name %>
+          <%= image_tag("icons/notebook_plus.png", :alt => "I") %> Add selected activities to existing invoice for <%= client.name %>
         </legend>
         <p>
           <%= select :id => "invoice_id", :label => "Invoice", :collection => client.invoices.pending.all.map { |i| [i.id, i.name] }, :prompt => "Select an invoice..." %>
