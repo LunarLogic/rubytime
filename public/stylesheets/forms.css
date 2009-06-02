@@ -131,9 +131,17 @@ p.selection {
   padding-left: 0px;
 }
 
+.radiobuttons {
+  display:block;
+  float:left;
+}
+.radiobuttons input {
+  clear:left;
+}
 .radiobuttons label {
   width: auto;
   text-align:left;
+  float:left;
 }
 #close_activity_form {
   color: #C1E1FF;
