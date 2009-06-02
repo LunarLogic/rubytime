@@ -1,7 +1,7 @@
 module Merb
   module UsersHelper
     def link_to_calendar(user)
-      link_to image_tag("icons/calendar.png", :title => "Calendar"), url(:user_calendar, user) if user.is_employee?
+      link_to image_tag("icons/calendar.png", :title => "Calendar", :alt => 'C'), url(:user_calendar, user) if user.is_employee?
     end
 
     def recent_days_on_list_desc(v)

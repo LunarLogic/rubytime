@@ -17,31 +17,34 @@ module Merb
         html =  %(<div class="day_wrapper"><div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
         html << %(#{date.mday}</div>)
-        html << %(<ul class="activities">)
+
         if activities_for_today
           shown_activities = activities[date][0..2]
           rest_of_activities = activities[date] - shown_activities
+          html << '<ul class="activities">'
           html << partial(:activity, :with => shown_activities)
-          html << %(<li class="more">#{link_to("#{rest_of_activities.size} more ...", day_url(criteria))}</li>) if rest_of_activities.size > 0
+            if rest_of_activities.size > 0
+              html << %(<li class="more">#{link_to("#{rest_of_activities.size} more ...", day_url(criteria))}</li>)
+            end
+          html << '</ul>'
         elsif vacation_for_today
-          html << "VACATION"
+          html << %(<p class="vacation">VACATION</p>)
         end
-        html << "</ul>"
 
         html << %(<span class="total_hours">Total: <strong>#{total_from(activities[date])}</strong></span>) if activities_for_today
         html << %(<span class="activity_icons">)
         if activities_for_today
-          html << link_to(image_tag("/images/icons/magnifier.png", :title => "Show details"), day_url(criteria),
+          html << link_to(image_tag("/images/icons/magnifier.png", :title => "Show details", :alt => "Details"), day_url(criteria),
             :class => "show_day")
         elsif !vacation_for_today
-          html << link_to(image_tag("/images/icons/calendar-day-off.png", :title => "Day off"), '#',
+          html << link_to(image_tag("/images/icons/calendar-day-off.png", :title => "Day off", :alt => "Day Off"), '#',
             :class => "day_off", :id => "vacation-#{date}")
         elsif vacation_for_today
-          html << link_to(image_tag("/images/icons/working_day.png", :title => "Change to working day"), '#',
+          html << link_to(image_tag("/images/icons/working_day.png", :title => "Change to working day", :alt => 'Change to working day'), '#',
             :class => "working_day", :id => "vacation-#{date}")
         end
         if owner_type == "user" && current_user.can_add_activity? && owner.active?
-          html << link_to(image_tag("/images/icons/plus.png", :title => "Add activity for this day"), '#',
+          html << link_to(image_tag("/images/icons/plus.png", :title => "Add activity for this day", :alt => 'Add activity for this day'), '#',
             :class => "add_activity", :id => "add-#{date}")
         end
         html << %(</span></div>)

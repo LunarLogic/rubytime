@@ -160,6 +160,9 @@ table#calendar .day_wrapper .activity_icons {
   padding:5px;
   background:#eee url(/images/activity-calendar-mask.png) 0 0 no-repeat;
 }
+table#calendar .vacation {
+  text-align:center;
+}
 
 table.calendar .activity_icons a {
   opacity: 0.8;
