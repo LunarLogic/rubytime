@@ -3,25 +3,20 @@
   width:960px;
   margin:0 auto;
 }
-
 .header {
   background:url(/images/header.png) 0 0 repeat-x;
   height: 140px;
 }
-
 .header-expanded {
   height:165px;
 }
-
 .header .wrapper {
   position:relative;
   height:140px;
 }
-
 .header-expanded .wrapper {
   height:165px;
 }
-
 #content {
   width:920px;
   background:#fff url(/images/bottom.png) bottom center no-repeat;
@@ -30,20 +25,16 @@
   font-size:12px;
   position:relative;
 }
-
 #primary {
   float:left;
   width:600px;
   padding: 0 10px;
 }
-
 #secondary {
   width:300px;
   float:left;
 }
-
 /* user information, preferences / logout */
-
 #userinfo {
   position:absolute;
   top:5px;
@@ -52,38 +43,30 @@
   color:#80b2e2;
   width:250px;
 }
-
 #userinfo dt {
   margin-right:5px;
   padding-right:5px;
   border-right:1px solid #80b2e2;
   float:left;
 }
-
 #userinfo dd {
   float:right;
 }
-
 #userinfo dd li {
   float:left;
   margin-right:5px;
 }
-
 #userinfo a {
   color:#c1e1ff;
 }
-
 #userinfo a:hover {
   color:#fff;
 }
-
 /* menu */
-
 #menu {
   position:relative;
   height:60px;
 }
-
 #menu dt {
   float:left;
   padding:0 10px;
@@ -91,7 +74,6 @@
   line-height:36px;
   margin:0 10px 0 0;
 }
-
 #menu dt a {
   display:block;
   width:100%;
@@ -99,11 +81,9 @@
   color:#80b2e2;
   text-decoration:none;
 }
-
 #menu dt a:hover {
   color:#76bcff;
 }
-
 #menu dd {
   position:absolute;
   bottom:0;
@@ -111,42 +91,34 @@
   font-size:11px;
   height:19px;
 }
-
 #menu .floor-2 {
   margin-top:5px;
 }
-
 #menu .floor-2 li {
   float:left;
   padding:0 10px;
 }
-
 #menu .floor-2 a {
   display:block;
   width:100%;
   height:19px;
   text-decoration:none;
 }
-
 #menu dt.selected {
   background:url(/images/menu-selected.png) 0 0 repeat-x;
   border-left:1px solid #083056;
   border-right:1px solid #083056;
 }
-
 #menu .selected a {
   background:url(/images/menu-selected-indicator.png) bottom center no-repeat;  
 }
-
 #menu dt.selected a {
   color:#fff;
 }
-
 #menu .floor-2 li.selected a {
   color:#000;
   font-weight:900;
 }
-
 /* add new activity button + popup */
 #menu .add-activity {
   position:absolute;
@@ -158,17 +130,14 @@
   border-right:1px solid #083056;
   margin:0;
 }
-
 #menu .add-activity a {
   color:#fff;
   padding-left:20px;
   background:url(/images/icons/add.png) 0 10px no-repeat;
 }
-
 #menu .add-activity a:hover {
   color:#fff;
 }
-
 #add_activity {
   width:350px;
   background:#157ee2;
@@ -181,16 +150,13 @@
   padding:10px;
   z-index: 999;
 }
-
 #add_activity legend, #add_activity p {
   color:#fff;
 }
-
 #add_activity legend {
   font-size:13px;
   font-weight:900;
 }
-
 div.day_of_the_month a{
   float: left;
   background:url(/images/icons/wrench_pencil.png) 0 0 no-repeat;
@@ -201,28 +167,22 @@ div.day_of_the_month a{
   height:16px;
   overflow:hidden;
 }
-
 .activity_details a.edit_activity {
   text-decoration: none;
 }
-
 .activity_details dt, .activity_details dd{
   line-height:16px;
 }
-
 div.activity {
   padding: 5px 0px 5px;
 }
-
 .activity_details .label {
   padding-right: 10px;
   font-weight: bold;
 }
-
 .activity_details div.comments {
   padding: 6px 0 6px;
 }
-
 div#flash {
   font-size:10pt;
   font-weight:bold;
@@ -235,7 +195,6 @@ div#flash {
   background-position:left center;
   background-repeat:no-repeat;
 }
-
 div#flash.notice {
   color:#008800;
   border: 1px solid #008800;
@@ -245,7 +204,6 @@ div#flash.notice {
   display:block;
   width:auto;
 }
-
 div#flash.error, div.error {
   color:#cc0000;
   border: 1px solid #cc0000;
@@ -255,34 +213,27 @@ div#flash.error, div.error {
   display:block;
   width:auto;
 }
-
 div.error {
   padding:10px 10px 10px 40px;
 }
-
 div.error h2 {
   font-size:13px;
   font-weight:900;
   color:#880000;
 }
-
 #activities_calendar #primary {
   width:100%;
 }
-
 .activities_to_invoice {
   margin:20px 0 0;
 }
-
 .activities_to_invoice fieldset {
   margin:10px 0;
 }
-
 #activities_filter a img {
   vertical-align:center;
   width:12px;
 }
-
 #footer {
   display:block;
   margin:0 auto 10px;
@@ -290,7 +241,6 @@ div.error h2 {
   overflow:auto;
   width:220px;
 }
-
 #footer a {
   display:block;
   width:94px;
@@ -299,16 +249,13 @@ div.error h2 {
   margin:0 5px;
   float:left;
 }
-
 #footer .logo {
   background:url(/images/powered_by_llp.png) 0 0 no-repeat;
 
 }
-
 #footer .merb {
   background:url(/images/powered_by_merb.png) 0 0 no-repeat;
 }
-
 .revision_info {
   width:960px;
   font-size:10px;
@@ -316,45 +263,36 @@ div.error h2 {
   text-align:center;
   margin-top:10px;
 }
-
 ul.clients img {
   margin:5px;
   vertical-align:middle;
 }
-
 ul.clients table img {
   margin:0;
   padding:0;
 }
-
 ul.clients strong {
   font-weight: 900;
   margin:5px 0;
   line-height:16px;
 }
-
 li.client {
   margin:5px 0;
   padding:5px;
   border-bottom:1px solid #ddd;
 }
-
 ul.projects, ul.roles {
   border-bottom:1px solid #eee;
 }
-
 li.project {
   padding:5px;
 }
-
 li.project strong {
   color:#666;
 }
-
 li.role {
   padding:5px;
 }
-
 li.role strong {
   color:#888;
 }

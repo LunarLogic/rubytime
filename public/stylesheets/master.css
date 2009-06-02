@@ -1,31 +1,33 @@
+@import '/stylesheets/reset.css';
+@import '/stylesheets/layout.css';
+@import '/stylesheets/master.css';
+@import '/stylesheets/tables.css';
+@import '/stylesheets/forms.css';
+@import '/stylesheets/thickbox.css';
+@import '/stylesheets/datepicker/ui.datepicker.css';
+
 body {
   margin: 0 0;
   background-color: #dddddd;
   color: #555;
   font-family: 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,sans-serif;
 }
-
 h1,h2,h3,h4,h5,h6 {
   font-weight:900;
   margin-bottom:20px;
 }
-
 h2 {
   color: #083056;
   font-size:24px;
 }
-
 h3 {
   color: #0c457c;
   font-size:16px;
 }
-
 p {
   line-height:1.25em;
 }
-
 /* clearfix - http://www.webtoolkit.info/css-clearfix.html */
-
 .clearfix:after {
   content: ".";
   display: block;
@@ -34,41 +36,33 @@ p {
   line-height: 0;
   height: 0;
 }
-
 .clearfix {
   display: inline-block;
 }
-
 html[xmlns] .clearfix {
   display: block;
 }
-
 * html .clearfix {
   height: 1%;
 }
-
 /* common elements */
 .hidden {
   display:none;
   visibility:hidden;
 }
-
 .box {
   background:#eee;
   border:1px solid #ddd;
   padding:10px;
 }
-
 h1.logo {
   margin:0 0 0 -70px;
   height:100px;
 }
-
 a {
   color:#0f5ba3;
   text-decoration:underline;
 }
-
 a:hover {
   color:#0b3f6f;
   text-decoration:none;

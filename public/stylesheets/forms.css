@@ -38,18 +38,15 @@ fieldset input, fieldset textarea {
   background:#fff url(/images/input-text-bg.png) 0 0 repeat-x;
   font-family:'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,sans-serif;
 }
-
 fieldset textarea {
   font-size:12px;
   line-height:16px;
   width:184px;
 }
-
 fieldset input:focus, fieldset input.focus, fieldset textarea:focus, fieldset textarea.focus {
   border:1px solid #222;
   color:#222;
 }
-
 fieldset p:after {
   content:".";
   display:block;
@@ -57,17 +54,14 @@ fieldset p:after {
   clear:both;
   visibility:hidden;
 }
-
 fieldset p {
   display:inline-block;
 }
-
 fieldset p {
   display:block;
   min-height:0;
   margin-bottom:10px;
 }
-
 fieldset .description {
   padding-left:90px;
   font-size:11px;
@@ -75,20 +69,16 @@ fieldset .description {
   clear:both;
   font-style:italic;
 }
-
 * html .clearfix {
   height:1px;
 }
-
 fieldset p.buttons {
   margin-top:10px;
   line-height: 24px;
 }
-
 fieldset p.buttons .button {
   margin-right:5px;
 }
-
 .button {
   background:#afbe09 url(/images/button.png) 0 0 repeat-x;
   line-height:16px;
@@ -99,38 +89,30 @@ fieldset p.buttons .button {
   font-weight:900;
   text-transform:uppercase;
 }
-
 form input.error, form textarea.error  {
   border: 1px solid #ff0000;
   color:#ff0000;
   background:#ffefef;
 }
-
 label.radio {
   width: auto;
 }
-
 .add_criterium img {
 }
-
 .remove_criterium {
   display: none;
 }
-
 .add_criterium {
   display: none;
 }
-
 p.selection {
   font-weight: bold;
 }
-
 #add_activity p.buttons {
   line-height: 24px;
   margin-left: 90px;
   padding-left: 0px;
 }
-
 .radiobuttons {
   display:block;
   float:left;
@@ -146,62 +128,48 @@ p.selection {
 #close_activity_form {
   color: #C1E1FF;
 }
-
 #secondary .text, #secondary .password {
   width: 160px;
 }
-
 div.error {
   margin-bottom: 20px;
 }
-
 #activities_filter select {
   width: 150px;
 }
-
 label.error {
   font-size:11px;
   width:auto;
   color:#ff0000;
 }
-
 #add_activity label.error {
   color:#ffaaaa;
   padding-left:20px;
 }
-
 #add_activity input, #add_activity select, #add_activity textarea {
   width:250px;
 }
-
 #add_activity textarea, #TB_ajaxContent textarea {
   height:120px;
 }
-
 #TB_ajaxContent textarea {
   width:250px;
 }
-
 #add_activity input.button {
   width:auto;
 }
-
 #add_activity input.datepicker {
   width: 232px;
 }
-
 span.recent_days label, span.date_formats label {
   width: auto;
 }
-
 p.forgot {
   margin-top: 40px;
 }
-
 p.remember {
   padding-left: 90px;
 }
-
 p.remember label {
   width: auto;
 }

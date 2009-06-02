@@ -2,106 +2,84 @@ table.ui-datepicker td.ui-datepicker-current-day a {
   background: white;
   font-weight: bold;
 }
-
 table.wide {
   width: 100%;
 }
-
 table.list {
   margin-bottom: 40px;
 }
-
 table.list th {
   background-color: #C1E1FF;
   font-weight: bold;
 }
-
 table.list td, table.list th {
   padding: 7px;
 }
-
 table.list tr.odd td {
   background-color: white;
 }
-
 table.list tr.even td {
   background-color: #EEEEEE;
 }
-
 table.list tr.hovered td {
   background-color: #F7F7F7;
 }
-
 table.list td.summary {
   background-color: #C1E1FF;
   font-weight: bold;
 }
-
 table.list td.right {
   text-align: right;
 }
-
 table.list th.right {
   text-align: right;
   width: 1%;
   white-space: nowrap;
 }
-
 table.list td.checkbox, table.list th.checkbox {
   padding-left: 7px;
   padding-right: 0px;
   margin: 0;
 }
-
 table.activities {
   background-color: #FFF;
 }
-
 table#calendar { 
   border: 1px solid #888;
   border-collapse: collapse;
   margin:10px auto;
 }
-
 table#calendar thead tr.month_name {
   background:url(/images/header.png) 0 -100px repeat-x;
   color:#fff;
 }
-
 table#calendar thead tr.month_name th {
   padding:5px;
 }
-
 table#calendar thead tr.day_name {
   background:url(/images/header.png) 0 -140px repeat-x;
 }
-
 table#calendar thead tr.day_name th {
   width:70px;
   padding:5px;
 }
-
 table#calendar tbody td {
   border: 1px solid #ddd;
   width:70px;
 }
-
 table#calendar .other_month {
   text-align:right;
   background:#fff;
   color:#ddd;
 }
-
 table#calendar .day_of_the_month {
   text-align:right;
   color:#888;
   padding:2px;
 }
-
 table#calendar .activities {
   padding: 4px;
 }
-
 table#calendar .month_name th {
   text-align: center;
   font-size: 14px;
@@ -109,49 +87,39 @@ table#calendar .month_name th {
   border-bottom: 1px solid black;
   padding: 3px;
 }
-
 table#calendar {
   width:100%;
 }
-
 table#calendar td {
   height:120px;
 }
-
 table#calendar .activity {
   font-size:11px;
 }
-
 table#calendar .activity strong, table#calendar .total_hours strong {
   font-weight:900;
 }
-
 table#calendar a.add_activity {
   text-indent:-999em;
 }
-
 table#calendar thead a {
   font-size:11px;
   line-height:20px;
   color:#fff;
 }
-
 table#calendar thead span.date {
   margin:0 40px;
 }
-
 table#calendar .day_wrapper {
   height:120px;
   position:relative;
 }
-
 table#calendar .day_wrapper .total_hours {
   font-size:11px;
   position:absolute;
   bottom:2px;
   left:2px;
 }
-
 table#calendar .day_wrapper .activity_icons {
   position:absolute;
   bottom:0;
@@ -163,45 +131,35 @@ table#calendar .day_wrapper .activity_icons {
 table#calendar .vacation {
   text-align:center;
 }
-
 table.calendar .activity_icons a {
   opacity: 0.8;
   margin:0 2px;
 }
-
 table#calendar .activity_icons a:hover {
   opacity:1.0;
 }
-
 table.padding5 td {
     padding:5px;
 }
-
 #activitites_for_day { 
   margin-left:20px;
 }
-
 table.activities {
   margin:20px 0;
 }
-
 tr.comments {
 }
-
 tr.comments td {
   border-top: 1px solid #EEEEEE;
   padding-left: 23px;
 }
-
 td.icons, th.icons {
   width: 1%;
   white-space: nowrap;
 }
-
 span.activity_icons {
   display: none;
 }
-
 div.day_header {
   background:url(/images/header.png) 0 -100px repeat-x;
   color:#fff;
@@ -211,33 +169,27 @@ div.day_header {
   font-weight:bold;
   text-align:center;
 }
-
 div.day_header span.date {
     margin:0 40px;
 }
-
 #TB_window div.day_header a {
   color:#FFFFFF;
   font-size:11px;
   line-height:20px;
 }
-
 #calendar_activities {
   margin-top: 0;
 }
-
 .activities_table_info {
   padding: 20px;
   text-align: center;
 }
-
 p.total {
   text-align: right;
 }
 p.total strong {
   font-weight: 800;
 }
-
 td.day li.more {
   font-style: italic;
   font-size: 10px;

@@ -1,3 +1,3 @@
 $(function() {
-    $("form:first").focusFirstBlank();
+  $("form:first").focusFirstBlank();
 });

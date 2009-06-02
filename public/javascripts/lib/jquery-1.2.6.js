@@ -3362,13 +3362,13 @@ jQuery.fn.offset = function() {
 	var left = 0, top = 0, elem = this[0], results;
 
 	if ( elem ) with ( jQuery.browser ) {
-		var parent       = elem.parentNode,
-		    offsetChild  = elem,
-		    offsetParent = elem.offsetParent,
-		    doc          = elem.ownerDocument,
-		    safari2      = safari && parseInt(version) < 522 && !/adobeair/i.test(userAgent),
-		    css          = jQuery.curCSS,
-		    fixed        = css(elem, "position") == "fixed";
+		var parent     = elem.parentNode,
+		  offsetChild  = elem,
+		  offsetParent = elem.offsetParent,
+		  doc      = elem.ownerDocument,
+		  safari2    = safari && parseInt(version) < 522 && !/adobeair/i.test(userAgent),
+		  css      = jQuery.curCSS,
+		  fixed    = css(elem, "position") == "fixed";
 
 		// Use getBoundingClientRect if available
 		if ( elem.getBoundingClientRect ) {
@@ -3465,7 +3465,7 @@ jQuery.fn.extend({
 			var offsetParent = this.offsetParent(),
 
 			// Get correct offsets
-			offset       = this.offset(),
+			offset     = this.offset(),
 			parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? { top: 0, left: 0 } : offsetParent.offset();
 
 			// Subtract element margins
