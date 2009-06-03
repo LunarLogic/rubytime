@@ -155,7 +155,7 @@ var Activities = {
         return false;
       }
 
-      var params = this._createInvoiceActivityParams(checkedActivityIds);
+      var params = Activities._createInvoiceActivityParams(checkedActivityIds);
 
       $.ajax({
         type: "PUT",
