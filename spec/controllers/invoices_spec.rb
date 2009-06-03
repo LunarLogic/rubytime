@@ -13,9 +13,10 @@ describe Invoices do
     
     it "should create invoice with activities" do
       block_should(change(Activity.not_invoiced, :count).by(-1)) do
-        as(:admin).dispatch_to(Invoices, :create, :activity_id => [fx(:jolas_activity1).id], :invoice => { 
+        as(:admin).dispatch_to(Invoices, :create, :invoice => { 
           :name => "Theee Invoice",
           :client_id => fx(:orange).id,
+          :activity_id => [fx(:jolas_activity1).id]
         }).status.should == 302
       end
     end
@@ -41,7 +42,10 @@ describe Invoices do
   describe "#update" do
     it "should allow admin to add activities to existing invoice" do
       block_should(change(Activity.not_invoiced, :count).by(-1)) do
-        as(:admin).dispatch_to(Invoices, :update, :id => fx(:oranges_first_invoice).id, :activity_id => [fx(:jolas_activity1).id]).should be_successful
+        as(:admin).dispatch_to(Invoices, :update, :id => fx(:oranges_first_invoice).id,
+          :invoice => {
+            :activity_id => [fx(:jolas_activity1).id]
+          }).should redirect(resource(fx(:oranges_first_invoice)))
       end
     end
   end
