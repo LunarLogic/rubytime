@@ -116,21 +116,35 @@ var Activities = {
 
     // handle new invoice form submission
     $("#create_invoice_form").submit(function() {
-      if ($(".activities td input.checkbox:checked").length == 0) {
+      var checkedActivityIds = $(".activities td .checkbox:checked");
+
+      if (checkedActivityIds.length == 0) {
         Application.error('You need to select activities for this invoice.');
         return false;
       }
+
+      try {
+        $.ajax({
+          type : 'POST',
+          url : $(this).url(),
+          data : Activities._createInvoiceActivityParams(checkedActivityIds)+'&'+$(this).serialize(),
+          success : function () {
+            $("#activities_filter form:first").submit();
+            Application.notice('Invoice has been created successfully');
+          }
+        });
+      } catch(e) {
+        alert(e);
+      }
     
-      $.post($(this).url(), $("#create_invoice_form, .activities td input.checkbox:checked").serialize(), function () {
-        $("#activities_filter form:first").submit();
-        Application.notice('Invoice has been created successfully');
-      });
       return false;
     });
 
     // handle "add activities to existing invoice" form submission
     $("#update_invoice_button").click(function() {
-      if ($(".activities td input.checkbox:checked").length == 0) {
+      var checkedActivityIds = $(".activities td .checkbox:checked");
+
+      if (checkedActivityIds.length == 0) {
         Application.error('You need to select activities for this invoice.');
         return false;
       }
@@ -140,24 +154,32 @@ var Activities = {
         Application.error('You need to select an invoice.');
         return false;
       }
-    
+
+      var params = this._createInvoiceActivityParams(checkedActivityIds);
+
       $.ajax({
         type: "PUT",
         url: "/invoices/" + invoiceId,
-        data: $(".activities td input.checkbox:checked").serialize(),
+        data: params,
         success: function () {
           $("#activities_filter form:first").submit();
           Application.notice('Activities have been added to invoice successfully');
         }
       });
+      
       return false;
     });
   
     tb_init($("#prev_day_link, #next_day_link"));
   },
+
+  _createInvoiceActivityParams : function(ids) {
+    return $.makeArray(ids.map(function(i, f) {
+        return 'invoice['+f.name.replace('[]', '')+'][]='+f.value })).join('&');
+  },
   
   _reloadSelects: function(url, group) {
-    var url = url + "?"+$("#activities_filter form").serialize();
+    url += "?"+$("#activities_filter form").serialize();
     $.getJSON(url, function(json) {
       var options = '<option value="">All</option>';
       for (var i = 0; i < json.length; i++) {

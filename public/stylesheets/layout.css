@@ -188,12 +188,14 @@ div#flash {
   font-weight:bold;
   padding:15px;
   text-align:center;
-  width:100%;
-  top: 0;
+  width:880px;
+  top: 10px;
+  left:10px;
   display: none;
   margin-bottom: 10px;
   background-position:left center;
   background-repeat:no-repeat;
+  position:absolute;
 }
 div#flash.notice {
   color:#008800;
@@ -202,7 +204,6 @@ div#flash.notice {
   text-align:left;
   padding-left:40px;
   display:block;
-  width:auto;
 }
 div#flash.error, div.error {
   color:#cc0000;
@@ -211,7 +212,6 @@ div#flash.error, div.error {
   text-align:left;
   padding-left:40px;
   display:block;
-  width:auto;
 }
 div.error {
   padding:10px 10px 10px 40px;

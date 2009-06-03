@@ -22,25 +22,27 @@ class Invoices < Application
   end
 
   def update
-    @invoice.attributes = params[:invoice]
-    if @invoice.save || !@invoice.dirty?
-      redirect resource(@invoice), :message => { :notice => "Invoice has been updated" }
+    if @invoice.update_attributes(params[:invoice]||{})
+      if request.xhr?
+        @invoice.to_json
+      else
+        redirect resource(@invoice), :message => { :notice => "Invoice has been updated" }
+      end
     else
       render :edit, :status => 400, :layout => false
     end
   end
   
   def create
-    @invoice = Invoice.create(params[:invoice].merge(:user_id => current_user.id))
-    if @invoice.new_record?
+    @invoice = Invoice.new(params[:invoice].merge(:user_id => current_user.id))
+    if @invoice.save
+      request.xhr? ? "" : redirect(resource(:invoices))
+    else
       if request.xhr?
         render_failure @invoice.errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").capitalize
       else
         render :index
       end
-    else
-      Activity.all(:id => params[:activity_id], :invoice_id => nil).update!(:invoice_id => @invoice.id) if params[:activity_id]
-      request.xhr? ? "" : redirect(resource(:invoices))
     end
   end
   
