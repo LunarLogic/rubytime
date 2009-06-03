@@ -87,7 +87,7 @@ module Merb
       options = default_options.merge(options)
 
       table_opts = {
-        :class => 'activities list wide',
+        :class => 'activites list wide',
         :id => "#{options[:table_id]}"}.reject!{|k,v| v.blank?}
 
       tag(:table,table_opts) do
