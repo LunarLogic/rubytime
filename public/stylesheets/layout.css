@@ -189,6 +189,7 @@ div#flash {
   padding:15px;
   text-align:center;
   width:880px;
+  position:absolute;
   top:10px;
   left:10px;
   display: none;
