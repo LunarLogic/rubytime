@@ -25,6 +25,9 @@ fieldset label {
   text-align:left;
   width:auto;
 }
+#account-settings .buttons {
+  margin-left:138px;
+}
 fieldset span.static_text {
   line-height:18px;
 }
@@ -73,11 +76,12 @@ fieldset .description {
   height:1px;
 }
 fieldset p.buttons {
-  margin-top:10px;
+  margin:10px 0 0 92px;
   line-height: 24px;
 }
 fieldset p.buttons .button {
   margin-right:5px;
+  padding: 0 5px;
 }
 .button {
   background:#afbe09 url(/images/button.png) 0 0 repeat-x;
