@@ -1,13 +1,12 @@
 Hello <%= @user.name %>,
 
-You have missed fill activities in your callendar.
+You have missed fill activities in your callendar on:
 
-List of indefinite days:
 <% @missed_days.each do |missed_day| %>
   <%= missed_day %>
 <% end %>
 
-This message was sent automatically.
+This message has been sent automatically.
 
 Rubytime
 <%= @url %>
