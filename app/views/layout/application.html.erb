@@ -5,7 +5,7 @@
     <title>Rubytime</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <%= css_include_tag Merb.env?('production') ? 'master.min' : 'master' %>
-    <%= js_include_tag 'lib/jquery-1.2.6.js', 'lib/jquery.validate.min.js', 'lib/jquery-extensions.js', 'lib/jquery-scrollto.js', 'lib/ui.datepicker.js', 'application.js', 'lib/rubytime/input-filler.js', 'lib/thickbox', :bundle => :base %>
+    <%= js_include_tag 'lib/jquery.min.js', 'lib/jquery.validate.min.js', 'lib/jquery-extensions.js', 'lib/jquery-scrollto.js', 'lib/ui.datepicker.js', 'application.js', 'lib/rubytime/input-filler.js', 'lib/thickbox', :bundle => :base %>
     <%= auto_link %>
     <% if session.user %>
     <script type="text/javascript">
