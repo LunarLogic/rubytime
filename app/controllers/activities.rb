@@ -60,10 +60,12 @@ class Activities < Application
   end
   
   def update
-    @activity.attributes = params[:activity]
+    provides :json, :html
+
     @activity.user = current_user unless current_user.is_admin?
-    if @activity.save || !@activity.dirty?
-      render_success
+
+    if @activity.update_attributes(params[:activity])
+      display(@activity)
     else
       render :edit, :status => 400, :layout => false
     end
@@ -159,7 +161,8 @@ protected
   end
 
   def load_activity
-    @activity = (current_user.is_admin? ? Activity : current_user.activities).get(params[:id]) or raise NotFound
+    @activity = (current_user.is_admin? ?
+      Activity : current_user.activities).get(params[:id]) or raise NotFound
   end
   
   def load_owner
