@@ -12,7 +12,7 @@ module Merb
       owner_id_name = :"#{owner_type}_id"
 
       calendar_table(:year => year, :month => month, :first_day_of_week => 1, :owner_type => owner_type) do |date|
-        vacation_for_today = FreeDay.is_day_off(current_user, date)
+        vacation_for_today = FreeDay.is_day_off(owner, date)
         activities_for_today =  !activities[date].nil?
         html =  %(<div class="day_wrapper"><div class="day_of_the_month clearfix">)
         criteria =  { :date_from => date, :date_to => date, owner_id_name => [owner.id]}
