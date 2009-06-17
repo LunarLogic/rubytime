@@ -17,31 +17,35 @@ namespace :rubytime do
     Rake::Task['rubytime:create_role'].invoke if STDIN.gets.chomp =~ /[Yy]/
     print 'Woud you like to create new account? [y/N] '
     Rake::Task['rubytime:create_account'].invoke if STDIN.gets.chomp =~ /[Yy]/
+    puts 'Default password for users is password'
     puts 'Thank you for installing RubyTime'
   end
 
   task :create_account do
     print '- login for new account: '
     account_login = STDIN.gets.chomp
-    print '- password for new account: '
+    print '- password for new account (6 characters at least): '
     account_passwd = STDIN.gets.chomp
-    print '- confirm password for new account: '
-    account_passwd_conf = STDIN.gets.chomp
     print '- your name for new account: '
     account_name = STDIN.gets.chomp
     print '- email for new account: '
     account_email = STDIN.gets.chomp
-    puts '- select number of role:'
-    Role.all.each do |role|
+    puts '- available roles:'
+    Role.all.map do |role|
       puts "\t #{role.id}. #{role.name}"
     end
     puts "\t #{Role.all.count+1}. < without role >"
-    role = {}
+    print '- select number of role: '
     account_role_id = STDIN.gets.chomp.to_i
+    settings = {}
     if (1..Role.all.count).include?(account_role_id)
-      role = {:role_id => account_role_id}
+      settings = {:role_id => account_role_id}
+    else
+      puts 'wrong role id !'
+      exit
     end
-    new_user = User.new(role.merge!(:name => account_name, :login => account_login, :password => account_passwd, :password_confirmation => account_passwd_conf, :email => account_email))
+    settings.merge!(:name => account_name, :login => account_login, :password => account_passwd, :password_confirmation => account_passwd, :email => account_email)
+    new_user = Employee.new(settings)
     print "creating new account\t"
     puts new_user.save ? "[ \e[32mDONE\e[0m ]" : "[\e[31mFAILED\e[0m]"
   end
