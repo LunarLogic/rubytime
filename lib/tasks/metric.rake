@@ -1,8 +1,8 @@
 require 'metric_fu'
 
 MetricFu::Configuration.run do |config|
-  config.metrics  = [:churn, :saikuro, :flay, :reek, :roodi]
-  config.graphs   = [:flay, :reek, :roodi]
+  config.metrics  = [:rcov, :churn, :saikuro, :flay, :reek, :roodi]
+  config.graphs   = [:rcov, :flay, :reek, :roodi]
   config.flay     = { :dirs_to_flay => ['app', 'lib']  }
   config.flog     = { :dirs_to_flog => ['app', 'lib']  }
   config.reek     = { :dirs_to_reek => ['app', 'lib']  }
@@ -15,4 +15,7 @@ MetricFu::Configuration.run do |config|
     :error_cyclo => "7",
     :formater => "text"} #this needs to be set to "text"
   config.churn    = { :start_date => "1 year ago", :minimum_churn_count => 10}
+  config.rcov     = {
+    :test_files => ['spec/**/*_spec.rb'],
+    :rcov_opts => [ "--sort coverage", "--no-html", "--text-coverage", "--no-color", "--profile"]}
 end
