@@ -19,6 +19,9 @@ end
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 
+require Merb.root / "spec/randexp_fix"
+Randexp::Dictionary.dict_path = File.join(File.dirname(__FILE__), "words.txt")
+
 Merb::Mailer.delivery_method = :test_send
 
 require Merb.root / "spec/rubytime_specs_helper"
