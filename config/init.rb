@@ -26,4 +26,6 @@ Merb::BootLoader.after_app_loads do
   end
   require Merb.root / "config/local_config.rb"
   require 'chronic'
+  
+  Dir[ Merb.root / "lib/extensions/*.rb" ].each { |filename| require filename }
 end
