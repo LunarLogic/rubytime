@@ -28,5 +28,14 @@ describe UserMailer do
     last_delivered_mail.text.should include("Hello #{@user.name},")
     last_delivered_mail.text.should include("05/04/2009\n  06/06/2009\n")
   end
+  
+  describe '#timesheet_nagger' do
+    it "includes username, day without activities and site url" do
+      deliver :timesheet_nagger, {}, :user => @user, :url => Rubytime::CONFIG[:site_url], :day_without_activities => Date.today
+      last_delivered_mail.text.should include("Hello #{@user.name},")
+      last_delivered_mail.text.should include("#{Date.today}")
+      last_delivered_mail.text.should include("#{Rubytime::CONFIG[:site_url]}")
+    end
+  end
 
 end

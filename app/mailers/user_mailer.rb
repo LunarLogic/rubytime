@@ -17,5 +17,11 @@ class UserMailer < Merb::MailController
     @url = Rubytime::CONFIG[:site_url]
     render_mail
   end
-
+  
+  def timesheet_nagger
+    @day_without_activities = params[:day_without_activities]
+    @user = params[:user]
+    @url = Rubytime::CONFIG[:site_url]
+    render_mail
+  end
 end
