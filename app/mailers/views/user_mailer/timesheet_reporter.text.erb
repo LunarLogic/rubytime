@@ -1,0 +1,17 @@
+Hello,
+
+<% if @employees_without_activities.empty? %>
+  All employees filled time in the RubyTime system on <%= @day_without_activities %> :-)
+  
+<% else %>
+  On <%= @day_without_activities %> the following employees did not fill in any time in the RubyTime system:
+
+  <% @employees_without_activities.each do |employee| %>
+    <%= employee.name %>
+  <% end %>
+<% end %>
+
+This message has been sent automatically.
+
+Rubytime
+<%= @url %>

@@ -20,4 +20,9 @@ class Employee < User
       employee.send_timesheet_nagger_for(date)
     end
   end
+  
+  def self.send_timesheet_reporter_for(date, email, logger = Logger.new(nil))
+    m = UserMailer.new(:employees_without_activities => all.reject { |employee| employee.has_activities_on?(date) }, :day_without_activities => date)
+    m.dispatch_and_deliver(:timesheet_reporter, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet report")
+  end
 end
