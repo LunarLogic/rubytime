@@ -21,6 +21,19 @@ namespace :rubytime do
       Employee.send_timesheet_naggers_for(date, timesheet_nagger_logger(date)) 
     end
   end
+  
+  desc 'Send timesheet report email about missing activities'
+  task :send_timesheet_report_email => :merb_env do
+#    Merb::Mailer.delivery_method = :test_send
+    if Date.today.weekday?
+      Employee.send_timesheet_reporter_for(
+        Date.today.previous_weekday, 
+        Rubytime::CONFIG[:timesheet_report_addressee_email],
+        Logger.new(Merb.root / "log/timesheet_reporter.log")
+      )
+    end
+  end
+
 
 end
 
