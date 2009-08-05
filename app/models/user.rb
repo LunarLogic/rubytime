@@ -131,4 +131,8 @@ class User
     days
   end
 
+  def has_activities_on?(date)
+    activities.count(:date => date) > 0
+  end
+  
 end

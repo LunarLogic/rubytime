@@ -79,6 +79,20 @@ describe User do
     FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-22")).save.should be_true
     fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").size.should == 18
   end
+  
+  describe '#has_activities_on?' do
+    before do
+      fx(:stefan).activities = [ Activity.gen(:project => fx(:bananas_first_project), :user => fx(:stefan), :date => Date.parse('2009-08-03')) ]
+    end
+    
+    it 'should return true for days with activities' do
+      fx(:stefan).has_activities_on?(Date.parse('2009-08-03')).should be_true
+    end
+    
+    it 'should return false for days with no activities' do
+      fx(:stefan).has_activities_on?(Date.parse('2009-08-04')).should be_false
+    end
+  end
 end
 
 describe Employee do
@@ -130,6 +144,18 @@ describe Employee do
   
   it "should be admin" do
     Employee.make(:admin).is_admin?.should be_true
+  end
+  
+  describe ".send_timesheet_naggers_for" do
+    it "should send emails to employees that have no activities on given day" do
+      Activity.all.destroy!
+      Activity.make(:user => fx(:stefan), :date => Date.parse('2009-08-03')).save!
+      Activity.make(:user => fx(:koza), :date => Date.parse('2009-08-03')).save!
+      
+      block_should change(Merb::Mailer.deliveries, :size).by(3) do
+        Employee.send_timesheet_naggers_for(Date.parse('2009-08-03'))
+      end
+    end
   end
 end
 
