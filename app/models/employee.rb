@@ -26,6 +26,7 @@ class Employee < User
   end
   
   def self.send_timesheet_reporter_for(date, email, logger = Logger.new(nil))
+    logger.info "Sending timesheet report email to #{email}."
     m = UserMailer.new(:employees_without_activities => Employee.without_activities_on(date), :day_without_activities => date)
     m.dispatch_and_deliver(:timesheet_reporter, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet report")
   end
