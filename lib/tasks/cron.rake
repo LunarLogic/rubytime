@@ -12,5 +12,12 @@ namespace :rubytime do
       end
     end
   end
+  
+  desc 'Send timesheet nagger emails about missing activities'
+  task :send_timesheet_nagger_emails => :merb_env do
+#    Merb::Mailer.delivery_method = :test_send
+    Employee.send_timesheet_naggers_for(Date.today.previous_weekday) if Date.today.weekday?
+  end
 
 end
+
