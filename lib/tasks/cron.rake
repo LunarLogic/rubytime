@@ -16,8 +16,16 @@ namespace :rubytime do
   desc 'Send timesheet nagger emails about missing activities'
   task :send_timesheet_nagger_emails => :merb_env do
 #    Merb::Mailer.delivery_method = :test_send
-    Employee.send_timesheet_naggers_for(Date.today.previous_weekday) if Date.today.weekday?
+    if Date.today.weekday?
+      date = Date.today.previous_weekday
+      Employee.send_timesheet_naggers_for(date, timesheet_nagger_logger(date)) 
+    end
   end
 
 end
 
+def timesheet_nagger_logger(date)
+  log_dir = Merb.root / "log/timesheet_nagger/"
+  Dir.mkdir(log_dir) unless File.directory?(log_dir)
+  Logger.new(log_dir / "#{date}.log")
+end

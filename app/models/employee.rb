@@ -1,3 +1,5 @@
+require 'logger'
+
 class Employee < User
   validates_present :role
   
@@ -12,8 +14,9 @@ class Employee < User
     m.dispatch_and_deliver(:timesheet_nagger, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet nagger!")
   end
   
-  def self.send_timesheet_naggers_for(date)
+  def self.send_timesheet_naggers_for(date, logger = Logger.new(nil))
     all.reject { |employee| employee.has_activities_on?(date) }.each do |employee|
+      logger.info "Sending timesheet nagger email to #{employee.name}."
       employee.send_timesheet_nagger_for(date)
     end
   end
