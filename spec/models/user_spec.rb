@@ -157,6 +157,22 @@ describe Employee do
       end
     end
   end
+  
+  describe ".send_timesheet_reporter_for" do
+    it "should send email to given address with a list of the employees who have no activities on given day" do
+      Activity.all.destroy!
+      Activity.make(:user => fx(:stefan), :date => Date.parse('2009-08-03')).save!
+      Activity.make(:user => fx(:koza), :date => Date.parse('2009-08-03')).save!
+      
+      block_should change(Merb::Mailer.deliveries, :size).by(1) do
+        Employee.send_timesheet_reporter_for(Date.parse('2009-08-03'), 'email@localhost')
+      end
+      
+      Merb::Mailer.deliveries.last.text.should include(fx(:admin).name)
+      Merb::Mailer.deliveries.last.text.should include(fx(:jola).name) 
+      Merb::Mailer.deliveries.last.text.should include(fx(:misio).name) 
+    end
+  end
 end
 
 describe ClientUser do
