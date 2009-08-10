@@ -9,22 +9,34 @@ describe SearchCriteria do
     sc.should have(42).found_activities
     sc = SearchCriteria.new({ :project_id => [""], :user_id => [""] }, user)
     sc.should have(42).found_activities
+    sc = SearchCriteria.new({}, user)
+    sc.include_inactive_projects = true
+    sc.should have(60).found_activities
   end
 
   it "should return all activities for specific client (for admin)" do
     sc = SearchCriteria.new({ :client_id => [fx(:orange).id] }, fx(:admin))
     sc.should have(18).found_activities
+    sc = SearchCriteria.new({ :client_id => [fx(:orange).id] }, fx(:admin))
+    sc.include_inactive_projects = true
+    sc.should have(27).found_activities
   end
 
   it "should return all activities for two clients (for admin)" do
     clients = [fx(:orange), fx(:apple)]
     sc = SearchCriteria.new({ :client_id => [clients[0].id, clients[1].id] }, fx(:admin))
     sc.should have(18 + 18).found_activities
+    sc = SearchCriteria.new({ :client_id => [clients[0].id, clients[1].id] }, fx(:admin))
+    sc.include_inactive_projects = true
+    sc.should have(27 + 27).found_activities
   end
   
   it "should return all activities for specific project (for admin)" do
     project = Project.active.first
     sc = SearchCriteria.new({ :project_id => [project.id] }, fx(:admin))
+    sc.should have(project.activities.count).found_activities
+    sc = SearchCriteria.new({ :project_id => [project.id] }, fx(:admin))
+    sc.include_inactive_projects = true
     sc.should have(project.activities.count).found_activities
   end
 
@@ -44,23 +56,38 @@ describe SearchCriteria do
   it "should return all activities for specific role (for admin)" do
     sc = SearchCriteria.new({ :role_id => [fx(:developer).id] }, fx(:admin))
     sc.should have(28).found_activities
+    sc = SearchCriteria.new({ :role_id => [fx(:developer).id] }, fx(:admin))
+    sc.include_inactive_projects = true
+    sc.should have(40).found_activities
 
     sc = SearchCriteria.new({ :role_id => [fx(:tester).id] }, fx(:admin))
     sc.should have(14).found_activities
+    sc = SearchCriteria.new({ :role_id => [fx(:tester).id] }, fx(:admin))
+    sc.include_inactive_projects = true
+    sc.should have(20).found_activities
   end
 
   it "should return all activities for specific user (for admin)" do
     sc = SearchCriteria.new({ :user_id => [fx(:jola).id] }, fx(:admin))
     sc.should have(19).found_activities
+    sc = SearchCriteria.new({ :user_id => [fx(:jola).id] }, fx(:admin))
+    sc.include_inactive_projects = true
+    sc.should have(27).found_activities
   end
 
   it "should return all activities for two users (for admin)" do
     sc = SearchCriteria.new({ :user_id => [fx(:jola).id, fx(:stefan).id] }, fx(:admin))
     sc.should have(33).found_activities
+    sc = SearchCriteria.new({ :user_id => [fx(:jola).id, fx(:stefan).id] }, fx(:admin))
+    sc.include_inactive_projects = true
+    sc.should have(47).found_activities
   end
 
   it "should return all activities for specific client and role (for admin)" do
     sc = SearchCriteria.new({ :client_id => [fx(:banana).id], :role_id => [fx(:developer).id] }, fx(:admin))
+    sc.should have(4).found_activities
+    sc = SearchCriteria.new({ :client_id => [fx(:banana).id], :role_id => [fx(:developer).id] }, fx(:admin))
+    sc.include_inactive_projects = true
     sc.should have(4).found_activities
   end
 
@@ -274,6 +301,21 @@ describe SearchCriteria do
     sc = SearchCriteria.new({ :user_id => [other_user.id] }, user)
     sc.found_activities.each do |activity|
       activity.user_id.should_not == other_user.id
+    end
+  end
+  
+  describe ":include_inactive_projects attribute" do
+    it "should not be settable via constructor" do
+      sc = SearchCriteria.new({ :include_inactive_projects => true  }, User.first).include_inactive_projects.should == false
+      sc = SearchCriteria.new({ :include_inactive_projects => false }, User.first).include_inactive_projects.should == false
+    end
+    
+    it "should only be settable via setter" do
+      sc = SearchCriteria.new({}, User.first)
+      sc.include_inactive_projects = true
+      sc.include_inactive_projects.should == true
+      sc.include_inactive_projects = false
+      sc.include_inactive_projects.should == false
     end
   end
 end

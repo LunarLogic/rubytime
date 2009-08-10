@@ -8,6 +8,7 @@ class SearchCriteria
   attr_accessor :invoiced
   attr_accessor :limit
   attr_accessor :since_activity
+  attr_accessor :include_inactive_projects
   attr_reader :errors
   
   def initialize(attrs, current_user)
@@ -19,9 +20,13 @@ class SearchCriteria
     @selected_project_ids = []
     @limit = nil
     @since_activity = nil
+    
     attrs && attrs.each do |attr, value|
       send("#{attr}=", value) if respond_to?("#{attr}=")
     end
+    
+    @include_inactive_projects = false
+    
     @errors = DataMapper::Validate::ValidationErrors.new
   end
   
@@ -52,7 +57,7 @@ class SearchCriteria
   def all_projects(conditions={})
     return @all_projects if @all_projects
     conditions.merge!(:client_id => get_ids(self.found_clients)) unless self.found_clients.empty?
-    @all_projects = Project.active.all({ :order => [:name] }.merge(conditions))
+    @all_projects = (@include_inactive_projects ? Project.all : Project.active).all({ :order => [:name] }.merge(conditions))
   end
   
   def all_roles(conditions={})
