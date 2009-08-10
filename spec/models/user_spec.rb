@@ -82,7 +82,8 @@ describe User do
   
   describe '#has_activities_on?' do
     before do
-      fx(:stefan).activities = [ Activity.gen(:project => fx(:bananas_first_project), :user => fx(:stefan), :date => Date.parse('2009-08-03')) ]
+      fx(:stefan).activities.all.destroy!
+      fx(:stefan).activities << Activity.gen(:project => fx(:bananas_first_project), :user => fx(:stefan), :date => Date.parse('2009-08-03'))
     end
     
     it 'should return true for days with activities' do
