@@ -18,7 +18,7 @@ namespace :rubytime do
 #    Merb::Mailer.delivery_method = :test_send
     if Date.today.weekday?
       date = Date.today.previous_weekday
-      Employee.send_timesheet_naggers_for(date, timesheet_nagger_logger(date)) 
+      Employee.send_timesheet_naggers_for__if_enabled(date, timesheet_nagger_logger(date)) 
     end
   end
   
@@ -26,7 +26,7 @@ namespace :rubytime do
   task :send_timesheet_report_email => :merb_env do
 #    Merb::Mailer.delivery_method = :test_send
     if Date.today.weekday?
-      Employee.send_timesheet_reporter_for(
+      Employee.send_timesheet_reporter_for__if_enabled(
         Date.today.previous_weekday, 
         Rubytime::CONFIG[:timesheet_report_addressee_email],
         Logger.new(Merb.root / "log/timesheet_reporter.log")
