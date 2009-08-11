@@ -1,0 +1,15 @@
+<h1>Settings</h1>  
+  
+<%= error_messages_for @setting %>
+<%= form_for(@setting, :action => resource(:settings), :id => "settings_form") do %>
+  <fieldset>
+    <%= fields_for :setting do %>
+      <p>
+        <%= select :enable_notifications, :label => "Notifications:", :collection => [[true, "enabled"], [false, "disabled"]] %>
+      </p>
+      <p class="buttons">
+        <%= submit "Update", :class => "button" %>
+      </p>
+    <% end =%>
+  </fieldset>
+<% end =%>
