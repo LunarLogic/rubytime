@@ -10,7 +10,7 @@ describe Setting do
       before { @setting = Setting.create! }
       it 'should return the value of the setting'  do
         Setting.first.update_attributes :enable_notifications => true
-        Setting.enable_notifications.should == @setting.enable_notifications
+        Setting.enable_notifications.should == true
       end
     end
     
