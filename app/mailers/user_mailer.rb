@@ -31,4 +31,12 @@ class UserMailer < Merb::MailController
     @url = Rubytime::CONFIG[:site_url]
     render_mail
   end
+  
+  def timesheet_summary
+    @dates_range = params[:dates_range]
+    @activities_by_dates_and_projects = params[:activities_by_dates_and_projects]
+    @user = params[:user]
+    @url = Rubytime::CONFIG[:site_url]
+    render_mail
+  end
 end

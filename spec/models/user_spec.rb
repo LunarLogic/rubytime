@@ -174,6 +174,52 @@ describe Employee do
       Merb::Mailer.deliveries.last.text.should include(fx(:misio).name) 
     end
   end
+  
+  describe "#activities_by_dates_and_projects" do
+    it "should return nested tables dates -> projects -> activities" do
+      fx(:oranges_first_project).update_attributes :name => 'BBB'
+      fx(:oranges_second_project).update_attributes :name => 'AAA'
+      
+      fx(:stefan).activities.destroy!
+      fx(:stefan).activities << @activity1 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_first_project), :date => Date.parse('2009-08-10'))
+      fx(:stefan).activities << @activity2 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_second_project), :date => Date.parse('2009-08-12'))
+      fx(:stefan).activities << @activity3 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_first_project), :date => Date.parse('2009-08-12'))
+      fx(:stefan).activities << @activity4 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_second_project), :date => Date.parse('2009-08-12'))
+      
+      fx(:stefan).activities_by_dates_and_projects(Date.parse('2009-08-10')..Date.parse('2009-08-12')).should == [
+        [ Date.parse('2009-08-10'),
+          [
+            [ fx(:oranges_first_project) , [@activity1] ]
+          ]
+        ],
+        [ Date.parse('2009-08-11'),
+          [
+          ]
+        ],
+        [ Date.parse('2009-08-12'),
+          [
+            [ fx(:oranges_second_project), [@activity2, @activity4] ],
+            [ fx(:oranges_first_project),  [@activity3] ]
+          ]
+        ]
+      ]
+    end
+  end
+  
+  describe "#send_timesheet_summary_for" do
+    it "should create UserMailer and dispatch and deliver the message" do
+      @user = fx(:stefan)
+      @dates_range = Date.parse('2009-08-10')..Date.parse('2009-08-12')
+      @user.stub!(:activities_by_dates_and_projects => @activities_by_dates_and_projects = mock('activities_by_dates_and_projects'))
+      
+      @user_mailer = mock('UserMailer')
+      @user_mailer.should_receive(:dispatch_and_deliver).with(:timesheet_summary, :to => @user.email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet summary")
+      UserMailer.should_receive(:new).with(:user => @user, :dates_range => @dates_range, :activities_by_dates_and_projects => @activities_by_dates_and_projects ).and_return(@user_mailer)
+      
+      @user.send_timesheet_summary_for(@dates_range)
+    end
+  end
+  
 end
 
 describe ClientUser do

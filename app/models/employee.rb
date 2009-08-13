@@ -46,4 +46,26 @@ class Employee < User
       logger.error "Won't send timesheet report: notifications are disabled."
     end
   end
+  
+  def send_timesheet_summary_for(dates_range)
+    m = UserMailer.new(:user => self,
+      :dates_range => dates_range,
+      :activities_by_dates_and_projects => activities_by_dates_and_projects(dates_range) )
+    m.dispatch_and_deliver(:timesheet_summary, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet summary")
+  end
+  
+  def activities_by_dates_and_projects(dates_range)
+    activities_grouped_by_days = activities(:date => dates_range).group_by{|a| a.date}
+    activities_grouped_by_days.default = []
+    
+    dates_range.to_a.map do |date|
+      [ date, activities_grouped_by_days[date].group_by{|a|a.project}.map.sort_by{|project,activity|project.name} ]
+    end
+  end
+  
+  def self.send_timesheet_summary_for(dates_range)
+    all.each do |employee|
+      employee.send_timesheet_summary_for(dates_range)
+    end
+  end
 end

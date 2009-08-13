@@ -1,0 +1,23 @@
+Hello <%= @user.name %>,
+
+this is your RubyTime activities summary for <%= @dates_range %>.
+
+<% @activities_by_dates_and_projects.each do |date, projects| %>
+  On <%= date %>:
+  <% unless projects.empty? %>
+    <% projects.each do |project, activities| %>
+      <%= project.name %>:
+        <% activities.each do |activity| %>
+          <%= activity.hours %> <%= activity.comments %>
+        <% end %>
+    <% end %>
+  <% else %>
+     No activities.
+  <% end %>
+  
+<% end %>
+
+This message has been sent automatically.
+
+Rubytime
+<%= @url %>
