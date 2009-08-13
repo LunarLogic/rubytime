@@ -15,10 +15,11 @@ namespace :rubytime do
   
   desc 'Send timesheet nagger emails about missing activities'
   task :send_timesheet_nagger_emails => :merb_env do
+    logger = daily_logger('timesheet_nagger')
 #    Merb::Mailer.delivery_method = :test_send
     if Date.today.weekday?
       date = Date.today.previous_weekday
-      Employee.send_timesheet_naggers_for__if_enabled(date, timesheet_nagger_logger) 
+      Employee.send_timesheet_naggers_for__if_enabled(date, logger) 
     end
   end
   
@@ -36,23 +37,19 @@ namespace :rubytime do
 
   desc 'Send timesheet summary emails'
   task :send_timesheet_summary_emails => :merb_env do
+    logger = daily_logger('timesheet_summary')
+    
 #    Merb::Mailer.delivery_method = :test_send
     Employee.send_timesheet_summary_for__if_enabled(
       (Date.today - 4)..(Date.today),
-      timesheet_summary_logger
+      logger
     )
   end
 
 end
 
-def timesheet_nagger_logger
-  log_dir = Merb.root / "log/timesheet_nagger/"
+def daily_logger(relative_dir, date = Date.today)
+  log_dir = Merb.root / "log" / relative_dir
   Dir.mkdir(log_dir) unless File.directory?(log_dir)
-  Logger.new(log_dir / "#{Date.today}.log")
-end
-
-def timesheet_summary_logger
-  log_dir = Merb.root / "log/timesheet_summary/"
-  Dir.mkdir(log_dir) unless File.directory?(log_dir)
-  Logger.new(log_dir / "#{Date.today}.log")
+  Logger.new(log_dir / "#{date}.log")
 end
