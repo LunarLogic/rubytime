@@ -34,6 +34,14 @@ namespace :rubytime do
     end
   end
 
+  desc 'Send timesheet summary emails'
+  task :send_timesheet_summary_emails => :merb_env do
+#    Merb::Mailer.delivery_method = :test_send
+    Employee.send_timesheet_summary_for__if_enabled(
+      (Date.today - 4)..(Date.today),
+      timesheet_summary_logger
+    )
+  end
 
 end
 
@@ -41,4 +49,10 @@ def timesheet_nagger_logger(date)
   log_dir = Merb.root / "log/timesheet_nagger/"
   Dir.mkdir(log_dir) unless File.directory?(log_dir)
   Logger.new(log_dir / "#{date}.log")
+end
+
+def timesheet_summary_logger
+  log_dir = Merb.root / "log/timesheet_summary/"
+  Dir.mkdir(log_dir) unless File.directory?(log_dir)
+  Logger.new(log_dir / "#{Date.today}.log")
 end

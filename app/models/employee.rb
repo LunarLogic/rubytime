@@ -63,9 +63,18 @@ class Employee < User
     end
   end
   
-  def self.send_timesheet_summary_for(dates_range)
+  def self.send_timesheet_summary_for(dates_range, logger = Logger.new(nil))
     all.each do |employee|
+      logger.info "Sending timesheet summary email to #{employee.name}."
       employee.send_timesheet_summary_for(dates_range)
+    end
+  end
+  
+  def self.send_timesheet_summary_for__if_enabled(dates_range, logger = Logger.new(nil))
+    if Setting.enable_notifications
+      send_timesheet_summary_for(dates_range, logger)
+    else
+      logger.error "Won't send timesheet summary: notifications are disabled."
     end
   end
 end
