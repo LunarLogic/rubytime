@@ -11,7 +11,7 @@ class Employee < User
   
   def send_timesheet_nagger_for(date)
     m = UserMailer.new(:user => self, :day_without_activities => date)
-    m.dispatch_and_deliver(:timesheet_nagger, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet nagger!")
+    m.dispatch_and_deliver(:timesheet_nagger, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet nagger for #{date}")
   end
   
   def self.without_activities_on(date)
@@ -36,7 +36,7 @@ class Employee < User
   def self.send_timesheet_reporter_for(date, email, logger = Logger.new(nil))
     logger.info "Sending timesheet report email to #{email}."
     m = UserMailer.new(:employees_without_activities => Employee.without_activities_on(date), :day_without_activities => date)
-    m.dispatch_and_deliver(:timesheet_reporter, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet report")
+    m.dispatch_and_deliver(:timesheet_reporter, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet report for #{date}")
   end
   
   def self.send_timesheet_reporter_for__if_enabled(date, email, logger = Logger.new(nil))
@@ -51,7 +51,7 @@ class Employee < User
     m = UserMailer.new(:user => self,
       :dates_range => dates_range,
       :activities_by_dates_and_projects => activities_by_dates_and_projects(dates_range) )
-    m.dispatch_and_deliver(:timesheet_summary, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet summary")
+    m.dispatch_and_deliver(:timesheet_summary, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet summary for #{dates_range}")
   end
   
   def activities_by_dates_and_projects(dates_range)

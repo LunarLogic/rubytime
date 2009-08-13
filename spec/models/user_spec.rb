@@ -213,7 +213,7 @@ describe Employee do
       @user.stub!(:activities_by_dates_and_projects => @activities_by_dates_and_projects = mock('activities_by_dates_and_projects'))
       
       @user_mailer = mock('UserMailer')
-      @user_mailer.should_receive(:dispatch_and_deliver).with(:timesheet_summary, :to => @user.email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet summary")
+      @user_mailer.should_receive(:dispatch_and_deliver).with(:timesheet_summary, :to => @user.email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet summary for #{@dates_range}")
       UserMailer.should_receive(:new).with(:user => @user, :dates_range => @dates_range, :activities_by_dates_and_projects => @activities_by_dates_and_projects ).and_return(@user_mailer)
       
       @user.send_timesheet_summary_for(@dates_range)
