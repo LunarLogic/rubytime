@@ -13,8 +13,8 @@ namespace :rubytime do
     end
   end
   
-  desc 'Send timesheet nagger emails about missing activities'
-  task :send_timesheet_nagger_emails => :merb_env do
+  desc 'Send timesheet nagger emails for previous weekday'
+  task :send_timesheet_nagger_emails_for_previous_weekday => :merb_env do
     logger = daily_logger('timesheet_nagger')
     if Date.today.weekday?
       date = Date.today.previous_weekday
@@ -22,8 +22,8 @@ namespace :rubytime do
     end
   end
   
-  desc 'Send timesheet report email about missing activities'
-  task :send_timesheet_report_email => :merb_env do
+  desc 'Send timesheet report email for previous weekday'
+  task :send_timesheet_report_email_for_previous_weekday => :merb_env do
     if Date.today.weekday?
       Employee.send_timesheet_reporter_for__if_enabled(
         Date.today.previous_weekday, 
@@ -33,8 +33,8 @@ namespace :rubytime do
     end
   end
 
-  desc 'Send timesheet summary emails'
-  task :send_timesheet_summary_emails => :merb_env do
+  desc 'Send timesheet summary emails for last five days'
+  task :send_timesheet_summary_emails_for_last_five_days => :merb_env do
     logger = daily_logger('timesheet_summary')
     Employee.send_timesheet_summary_for__if_enabled(
       (Date.today - 4)..(Date.today),
