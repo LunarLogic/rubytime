@@ -1,9 +1,16 @@
-nbproject
+# config
 config/database.yml
 config/deploy.rb
-log/*
+config/local_config.rb
+config/rcov_stats.yml
+
+# regenerable
 coverage/*
 spec/controllers/log/*
-config/local_config.rb
+
+# logs
+log/*
+
+# other
+nbproject
 .idea/*
-config/rcov_stats.yml
