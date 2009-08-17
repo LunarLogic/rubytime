@@ -29,5 +29,7 @@ dependency "chronic", ">=0.2.3"
 dependency "html5", ">=0.10.0"
 dependency "merb_dm_xss_terminate", "0.5.3"
 
+dependency "bartes-rcov_stats" , :require_as => 'rcov_stats'
+
 require 'digest/sha1'
 require "csv" # dependency raises error

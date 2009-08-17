@@ -1,0 +1,10 @@
+units_files_to_cover:
+  - app/models
+functionals_files_to_cover:
+  - app/controllers
+  - app/helpers
+units_files_to_test:
+  - models
+functionals_files_to_test:
+  - controllers
+  - helpers
