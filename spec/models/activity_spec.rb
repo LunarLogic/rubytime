@@ -180,4 +180,48 @@ describe Activity do
       end
     end
   end
+  
+  describe "after create observer" do
+    before { @activity = Activity.make }
+    
+    context "if activity date is more than a day ago" do
+      before { @activity.date = Date.today - 5 }
+      
+      it "should call :notify_project_managers_about_saving__if_enabled with 'created' argument" do
+        @activity.should_receive(:notify_project_managers_about_saving__if_enabled).with('created')
+        @activity.save
+      end
+    end
+    
+    context "if activity date is less than a day ago" do
+      before { @activity.date = Date.today }
+      
+      it "should not call :notify_project_managers_about_saving__if_enabled" do
+        @activity.should_not_receive(:notify_project_managers_about_saving__if_enabled)
+        @activity.save
+      end
+    end
+  end
+  
+  describe "after update observer" do
+    before { @activity = Activity.gen }
+    
+    context "if activity date is more than a day ago" do
+      before { @activity.date = Date.today - 5 }
+      
+      it "should call :notify_project_managers_about_saving__if_enabled with 'updated' argument" do
+        @activity.should_receive(:notify_project_managers_about_saving__if_enabled).with('updated')
+        @activity.save
+      end
+    end
+    
+    context "if activity date is less than a day ago" do
+      before { @activity.date = Date.today }
+      
+      it "should not call :notify_project_managers_about_saving__if_enabled" do
+        @activity.should_not_receive(:notify_project_managers_about_saving__if_enabled)
+        @activity.save
+      end
+    end
+  end
 end
