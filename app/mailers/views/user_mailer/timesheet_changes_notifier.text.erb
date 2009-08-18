@@ -1,0 +1,13 @@
+Hello <%= @project_manager.name %>,
+
+this is to notify you that <%= @activity.user.name %> has <%= @kind_of_change %> the following entry in RubyTime:
+
+Project: <%= @activity.project.name %>
+Date: <%= @activity.date %> 
+Hours: <%= @activity.hours %>
+Comments: <%= @activity.comments %>
+
+This message has been sent automatically.
+
+Rubytime
+<%= @url %>

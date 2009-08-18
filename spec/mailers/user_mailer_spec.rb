@@ -98,5 +98,23 @@ describe UserMailer do
       last_delivered_mail.text.should include("#{Rubytime::CONFIG[:site_url]}")
     end
   end
+  
+  describe '#timesheet_changes_notifier' do
+    it "includes updater name, kind of change, activity details and site url" do
+      deliver :timesheet_changes_notifier, {},
+        :project_manager => @project_manager = Employee.gen,
+        :kind_of_change => 'KindOfChange',
+        :activity => @activity = Activity.gen,
+        :url => Rubytime::CONFIG[:site_url]
+        
+      last_delivered_mail.text.should include("#{@project_manager.name}")
+      last_delivered_mail.text.should include("#{@activity.user.name}")
+      last_delivered_mail.text.should include("KindOfChange")
+      last_delivered_mail.text.should include("Project: #{@activity.project.name}")
+      last_delivered_mail.text.should include("Date: #{@activity.date}")
+      last_delivered_mail.text.should include("Hours: #{@activity.hours}")
+      last_delivered_mail.text.should include("Comments: #{@activity.comments}")
+    end
+  end
 
 end

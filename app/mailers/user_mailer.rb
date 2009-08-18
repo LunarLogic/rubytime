@@ -39,4 +39,12 @@ class UserMailer < Merb::MailController
     @url = Rubytime::CONFIG[:site_url]
     render_mail
   end
+  
+  def timesheet_changes_notifier
+    @project_manager = params[:project_manager]
+    @kind_of_change = params[:kind_of_change]
+    @activity = params[:activity]
+    @url = Rubytime::CONFIG[:site_url]
+    render_mail
+  end
 end
