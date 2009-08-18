@@ -143,4 +143,41 @@ describe Activity do
     Activity.is_activity_day(fx(:stefan), Date.parse("2008-11-23")).should be_true
   end
   
+  describe "#notify_project_managers_about_saving method" do
+    it "should send emails to project managers" do
+      @activity = Activity.gen
+      @kind_of_change = "updated"
+      
+      block_should change(Merb::Mailer.deliveries, :size).by(2) do
+        @activity.notify_project_managers_about_saving(@kind_of_change)
+      end
+      
+      deliveries = Merb::Mailer.deliveries[-2,2].map { |d| d.to }
+      deliveries.should include([fx(:admin).email])
+      deliveries.should include([fx(:koza).email])
+    end
+  end
+  
+  describe "#notify_project_managers_about_saving__if_enabled method" do
+    before do
+      @activity = Activity.gen
+      @kind_of_change = "updated"
+    end
+    
+    context "with notifications enabled" do
+      before { Setting.get.update_attributes :enable_notifications => true }
+      it "should call :notify_project_managers_about_saving" do
+        @activity.should_receive(:notify_project_managers_about_saving).with(@kind_of_change)
+        @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)
+      end
+    end
+    
+    context "with notifications disabled" do
+      before { Setting.get.update_attributes :enable_notifications => false }
+      it "should not call :notify_project_managers_about_saving" do
+        @activity.should_not_receive(:notify_project_managers_about_saving).with(@kind_of_change)
+        @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)
+      end
+    end
+  end
 end

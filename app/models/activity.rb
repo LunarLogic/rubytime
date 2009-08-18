@@ -90,6 +90,20 @@ class Activity
     user.activities.count(:date => thisday) > 0
   end
   
+  def notify_project_managers_about_saving(kind_of_change)
+    Employee.all('role.name' => 'Project Manager').each do |project_manager|
+      m = UserMailer.new(:activity => self, :kind_of_change => kind_of_change, :project_manager => project_manager)
+      m.dispatch_and_deliver(:timesheet_changes_notifier,
+        :to => project_manager.email,
+        :from => Rubytime::CONFIG[:mail_from],
+        :subject => "Timesheet update notification")
+    end
+  end
+  
+  def notify_project_managers_about_saving__if_enabled(kind_of_change)
+    notify_project_managers_about_saving(kind_of_change) if Setting.enable_notifications
+  end
+  
   protected
   
   # Checks if hours for this activity are under 24 hours
