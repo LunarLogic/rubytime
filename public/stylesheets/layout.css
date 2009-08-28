@@ -296,3 +296,15 @@ li.role {
 li.role strong {
   color:#888;
 }
+
+.sections {
+  width: 100%;
+  margin-top: 10px;
+}
+.sections .head {
+  margin: 10px 0 0 0;
+  font-size: 1.2em;
+}
+.sections div {
+  margin: 10px 0;
+}

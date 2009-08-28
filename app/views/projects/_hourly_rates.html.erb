@@ -1,0 +1,51 @@
+<div id="role_hourly_rate_list_template" class="hourly_rate_list" style="display: none">
+  <h3 class="role_name">[role name]</h3>
+  <table>
+    <tr>
+      <th class="takes_effect_at">Takes effect at</th>
+      <th class="value">Value</th>
+      <th class="currency">Currency</th>
+      <th class="manage"></th>
+    </tr>
+    
+    <tr id="hourly_rate_form_template" class="hourly_rate form" style="display: none">
+      <td class="takes_effect_at">
+        <%= form_for HourlyRate.new do %>
+          <%= text_field :takes_effect_at %>
+        <% end =%>
+      </td>
+      <td class="value">
+        <%= form_for HourlyRate.new do %>
+          <%= text_field :value %>
+        <% end =%>
+      </td>
+      <td class="currency">
+        <%= form_for HourlyRate.new do %>
+          <%= select :currency, :collection => currency_options_for_hourly_rate, :prompt => "Select..." %>
+        <% end =%>
+      </td>
+      <td class="buttons">
+        <%= form_for HourlyRate.new do %>
+          <%= button "OK", :class => 'submit' %>
+          <%= button "Cancel", :class => 'cancel' %>
+          <input type="hidden" name="_method" value="put"/>
+          <%= hidden_field :project_id %>
+          <%= hidden_field :role_id %>
+        <% end =%>
+        <p class="error_messages" style="display: none"></p>
+      </td>
+    </tr>
+
+    <tr id="hourly_rate_view_template" class="hourly_rate view" style="display: none">
+      <td class="takes_effect_at">[takes_effect_at]</td>
+      <td class="value">[value]</p>
+      <td class="currency">[currency]</td>
+      <td class="links">
+        <%= link_to 'Edit', '#', :class => 'edit' %>
+        <%= link_to 'Delete', '#', :class => 'delete' %>
+      </td>
+    </tr>
+    
+  </table>
+  <%= link_to 'New', '', :class => 'new_hourly_rate' %>
+</div>

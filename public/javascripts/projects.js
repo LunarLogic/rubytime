@@ -10,3 +10,237 @@ $(function() {
   }
   });
 });
+
+HourlyRates = function(node_or_selector, data_url) {
+  if (!HourlyRates.initialized) HourlyRates.init();
+  
+  this.node = $(node_or_selector);
+  $.getJSON(data_url, this.onGetResponse.bind(this));
+};
+
+HourlyRates.init = function() {
+  if (HourlyRates.initialized) return;
+  
+  HourlyRateView.initTemplate();
+  HourlyRateForm.initTemplate();
+  RoleHourlyRateList.initTemplate();
+  
+  HourlyRates.initialized = true;
+};
+
+$.extend( HourlyRates.prototype, {
+  onGetResponse: function(data) {
+    for (var roleCounter = 0; roleCounter < data.length; roleCounter++) {
+      var list = new RoleHourlyRateList({project_id: data[roleCounter].project_id, role_id: data[roleCounter].role_id}, data[roleCounter].role_name);
+      for (var rateCounter = 0; rateCounter < data[roleCounter].hourly_rates.length; rateCounter++) {
+        list.add( data[roleCounter].hourly_rates[rateCounter] );
+      }
+      this.node.append(list.node);
+    }
+  }
+});
+
+RoleHourlyRateList = function(common_hourly_rate_attrs, role_name) {
+  this.common_hourly_rate_attrs = common_hourly_rate_attrs;
+  this.node = RoleHourlyRateList.template.clone(true);
+  this.node.find('.role_name').text(role_name);
+  this.controllers = [];
+  
+  this.node.find('a.new_hourly_rate').click(function() { this.add({}); return false; }.bind(this));
+};
+
+RoleHourlyRateList.initTemplate = function() {
+  RoleHourlyRateList.template = $('#role_hourly_rate_list_template').remove().show().removeAttr('id');
+};
+
+$.extend( RoleHourlyRateList.prototype, {
+  add: function(hourly_rate_attrs) {
+    var controller = new HourlyRateController(
+      new HourlyRate( $.extend(Object.shallowCopy(this.common_hourly_rate_attrs), hourly_rate_attrs) ),
+      this
+    );
+    
+    this.controllers.push(controller);
+    this.sort();
+    controller.node.hide();
+    controller.node.fadeIn("fast");
+  },
+  
+  sort: function() {
+    this.controllers.sort(function(c1, c2) {
+      if (c1.hourly_rate.takes_effect_at_unformatted < c2.hourly_rate.takes_effect_at_unformatted) return -1;
+      if (c1.hourly_rate.takes_effect_at_unformatted > c2.hourly_rate.takes_effect_at_unformatted) return 1;
+      return 0;
+    });
+    
+    for (var i = 0; i < this.controllers.length; i++) {
+      if (i == 0)
+        this.node.find('table tr:first').after( this.controllers[i].node );
+      else
+        this.controllers[i - 1].node.after(this.controllers[i].node);
+    }
+  }
+});
+
+HourlyRate = function(attrs) {
+  this.updateAttributes(attrs);
+}
+
+$.extend( HourlyRate.prototype, {
+  updateAttributes: function(attrs) {
+    $.extend(this, attrs);
+    this.resource_url = (this.isNewRecord() ? '/hourly_rates' : '/hourly_rates/' + this.id);
+  },
+  
+  isNewRecord: function() {
+    return !this.id;
+  }
+});
+
+HourlyRateController = function(hourly_rate, list) {
+  this.hourly_rate = hourly_rate;
+  this.list = list;
+  this.hourly_rate.isNewRecord() ? this.edit() : this.show();
+};
+  
+$.extend( HourlyRateController.prototype, {
+  _new_node: function(new_node) {
+    if (this.node) this.node.after(new_node).remove();
+    this.node = new_node;
+  },
+  
+  show: function() {
+    this.view = new HourlyRateView(this);
+    this.form = null;
+    this._new_node(this.view.node);
+  },
+  
+  edit: function() {
+    this.view = null;
+    this.form = new HourlyRateForm(this);
+    this._new_node(this.form.node);
+  },
+  
+  cancelEdit: function() {
+    this.hourly_rate.isNewRecord() ? this.quit() : this.show();
+  },
+  
+  update: function(data) {
+    $.post(this.hourly_rate.resource_url, data, this.onUpdateResponse.bind(this), "json");
+  },
+  
+  onUpdateResponse: function(response) {
+    if (response.status == 'ok') {
+      this.hourly_rate.updateAttributes(response.hourly_rate);
+      this.list.sort();
+      this.show();
+      this.animateJustUpdated();
+    } else {
+      this.form.populateErrorMessages(response.hourly_rate.error_messages);
+    }
+  },
+  
+  destroy: function() {
+    $.ajax({
+      type: "DELETE",
+      url: this.hourly_rate.resource_url,
+      dataType: "json",
+      success: this.onDestroyResponse.bind(this)
+    });
+  },
+  
+  onDestroyResponse: function(response) {
+    if (response.status == 'ok')
+      this.quit();
+  },
+  
+  animateJustUpdated: function() {
+    this.node.addClass('justUpdated');
+    window.setTimeout(function() { this.node.removeClass('justUpdated') }.bind(this), 700);
+  },
+  
+  quit: function() {
+    this.node.fadeOut("fast", function() { this.node.remove(); }.bind(this));
+  }
+});
+
+HourlyRateView = function(hourly_rate_controller) {
+  this.hourly_rate_controller = hourly_rate_controller;
+  this.node = HourlyRateView.template.clone(true);
+  this.populate();
+  this.bindEvents();
+};
+
+HourlyRateView.initTemplate = function() {
+  HourlyRateView.template = $('#hourly_rate_view_template').remove().show().removeAttr('id');
+};
+
+$.extend(HourlyRateView.prototype, {
+  bindEvents: function() {
+    this.node.find('a.edit').click( function() { this.hourly_rate_controller.edit(); return false; }.bind(this));
+    this.node.find('a.delete').click( function() {
+      if (confirm('Are you sure you want to delete this rate?'))
+        this.hourly_rate_controller.destroy();
+      return false;
+    }.bind(this));
+  },
+  populate: function() {
+    this.node.find('.takes_effect_at').text(this.hourly_rate_controller.hourly_rate.takes_effect_at);
+    this.node.find('.value          ').text(this.hourly_rate_controller.hourly_rate.value);
+    this.node.find('.currency       ').text(this.hourly_rate_controller.hourly_rate.currency);
+  }
+});
+
+HourlyRateForm = function(hourly_rate_controller) {
+  this.hourly_rate_controller = hourly_rate_controller;
+  this.node = HourlyRateForm.template.clone(true);
+  
+  this.submit_button = this.node.find('button.submit');
+  this.cancel_button = this.node.find('button.cancel');
+  
+  this.populate();
+  this.bindEvents();
+};
+
+HourlyRateForm.initTemplate = function() {
+  HourlyRateForm.template = $('#hourly_rate_form_template').remove().show().removeAttr('id');
+  HourlyRateForm.template.find('input, select').removeAttr('id');
+};
+  
+$.extend( HourlyRateForm.prototype, {
+  bindEvents: function() {
+    this.submit_button.click(function() { this.submit(); return false; }.bind(this));
+    this.cancel_button.click(function() { this.cancel(); return false; }.bind(this));
+    this.node.find('form').submit( function() { this.submit(); return false; }.bind(this));
+    Application.initDatepickers(this.node.find('input[name="hourly_rate[takes_effect_at]"]'));
+  },
+  
+  populate: function() {
+    this.node.find(' input[name="hourly_rate[project_id]"]     ').val(this.hourly_rate_controller.hourly_rate.project_id);
+    this.node.find(' input[name="hourly_rate[role_id]"]        ').val(this.hourly_rate_controller.hourly_rate.role_id);
+    this.node.find(' input[name="hourly_rate[takes_effect_at]"]').val(this.hourly_rate_controller.hourly_rate.takes_effect_at);
+    this.node.find(' input[name="hourly_rate[value]"]          ').val(this.hourly_rate_controller.hourly_rate.value);
+    this.node.find('select[name="hourly_rate[currency]"]       ').val(this.hourly_rate_controller.hourly_rate.currency);
+    
+    this.node.find('input[name="_method"]').val(this.hourly_rate_controller.hourly_rate.isNewRecord() ? 'post' : 'put');
+    
+    this.populateErrorMessages(this.hourly_rate_controller.hourly_rate.error_messages);
+  },
+  
+  populateErrorMessages: function(error_messages) {
+    if (error_messages)
+      this.node.find('.error_messages').text(error_messages).show();
+    else
+      this.node.find('.error_messages').text('').hide();
+  },
+  
+  cancel: function() {
+    this.hourly_rate_controller.cancelEdit();
+  },
+  
+  submit: function() {
+    this.hourly_rate_controller.update(this.node.find('input, select').serialize());
+  }
+});
+
+$(function() { $('.sections .head').expander(); });

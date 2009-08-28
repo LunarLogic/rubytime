@@ -1,0 +1,82 @@
+.hourly_rate_list {
+  background: #f5f5f5;
+  padding: 5px;
+  float: left;
+  clear: left;
+  width: 100%;
+}
+.hourly_rate_list h3 {
+  margin: 10px 0;
+}
+.hourly_rate_list table {
+  border-spacing: 2px;
+  margin-left: -2px;
+  width: 100%;
+}
+.hourly_rate_list table tr th {
+  padding: 4px;
+  font-size: 0.8em;
+  background: #e0e0e0;
+}
+.hourly_rate_list table tr th.takes_effect_at,
+.hourly_rate_list table tr th.value,
+.hourly_rate_list table tr th.currency {
+  width: 20%;
+}
+.hourly_rate_list table tr th.manage {
+  width: 40%;
+}
+.hourly_rate_list table tr td {
+  background: #eee;
+}
+.hourly_rate_list table tr.hourly_rate:hover td,
+.hourly_rate_list table tr.hourly_rate.form td {
+  background: #d0d0d0;
+}
+.hourly_rate_list table tr.hourly_rate td.links a {
+  display: none;
+}
+.hourly_rate_list table tr.hourly_rate:hover td.links a {
+  display: inline;
+}
+.hourly_rate_list table tr.hourly_rate.view td {
+  padding: 6px 4px 5px 4px;
+  font-size: 1em;
+}
+.hourly_rate_list table tr.hourly_rate.view.justUpdated td {
+  background: yellow;
+}
+.hourly_rate_list table tr.hourly_rate.form td {
+  padding: 0;
+}
+.hourly_rate_list table tr.hourly_rate.form td input,
+.hourly_rate_list table tr.hourly_rate.form td select {
+  font-size: inherit;
+  border: solid 1px #ccc;
+  margin: 2px 1px;
+}
+.hourly_rate_list table tr.hourly_rate.form td input {
+  padding: 1px;
+}
+.hourly_rate_list table tr.hourly_rate.form td.takes_effect_at input {
+  width: 80px;
+}
+.hourly_rate_list table tr.hourly_rate td.value {
+  text-align: right;
+}
+.hourly_rate_list table tr.hourly_rate.form td.value input {
+  width: 80px;
+  text-align: inherit;
+}
+.hourly_rate_list table tr.hourly_rate.view td.currency {
+  padding-left: 5px;
+}
+.hourly_rate_list table tr.hourly_rate.form td.currency select {
+  width: 80px;
+}
+.hourly_rate_list table tr.hourly_rate .error_messages {
+  padding: 0.5em;
+  margin: 0;
+  background: #f88;
+  border: solid 1px #f00;
+}

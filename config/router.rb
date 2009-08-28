@@ -47,6 +47,7 @@ Merb::Router.prepare do
     resource :calendar
   end
   resources :roles
+  resources :hourly_rates
   resources :invoices, :member => { "issue" => :put }
   resource :settings, :controller => 'settings'
   

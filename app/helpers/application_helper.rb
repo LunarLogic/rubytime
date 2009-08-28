@@ -156,5 +156,13 @@ module Merb
                                      :show_details_link => false, :show_edit_link => true, :show_delete_link => false,
                                      :show_project => true, :expanded => true, :show_date => false }.merge!(options))
     end
+    
+    def role_options_for_hourly_rate
+      Role.all.map { |role| [role.id, role.name] }
+    end
+    
+    def currency_options_for_hourly_rate
+      HourlyRate::VALID_CURRENCIES.map { |c| [c, c] }
+    end
   end
 end # Merb
