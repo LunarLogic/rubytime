@@ -29,19 +29,19 @@ describe HourlyRate do
   end
   
   it "should not allow to save record without :takes_effect_at" do
-    hourly_rate = HourlyRate.make(:takes_effect_at => nil)
+    hourly_rate = HourlyRate.make(:takes_effect_at => '')
     hourly_rate.save.should be_false
     hourly_rate.errors.on(:takes_effect_at).should_not be_empty
   end
   
   it "should not allow to save record without :value" do
-    hourly_rate = HourlyRate.make(:value => nil)
+    hourly_rate = HourlyRate.make(:value => '')
     hourly_rate.save.should be_false
     hourly_rate.errors.on(:value).should_not be_empty
   end
   
   it "should not allow to save record without :currency" do
-    hourly_rate = HourlyRate.make(:currency => nil)
+    hourly_rate = HourlyRate.make(:currency => '')
     hourly_rate.save.should be_false
     hourly_rate.errors.on(:currency).should_not be_empty
   end
