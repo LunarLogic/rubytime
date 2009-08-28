@@ -75,3 +75,21 @@ jQuery.extend({
   };
   })()
 });
+
+Function.prototype.bind = function(object) {
+  var func = this;
+  return function() {
+    return func.apply(object, arguments);
+  };
+};
+
+Object.shallowCopy = function(object) {
+  return $.extend({}, object);
+};
+
+jQuery.prototype.expander = function() {
+  this.click(function() {
+    $(this).next().toggle('fast');
+    return false;
+  }).next().hide();
+};
