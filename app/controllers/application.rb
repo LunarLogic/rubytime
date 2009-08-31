@@ -11,6 +11,10 @@ class Application < Merb::Controller
     raise Forbidden unless current_user.is_admin?
   end
   
+  def ensure_admin_or_project_manager
+    raise Forbidden unless current_user.is_admin? or (current_user.is_a?(Employee) and current_user.role.name == "Project Manager")
+  end
+  
   def render_success(content = "", status = 200)
     render content, :layout => false, :status => status 
   end
