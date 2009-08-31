@@ -33,11 +33,10 @@ describe HourlyRates do
     end
     
     it "should return hourly rates grouped by roles" do
-
       @response.body.should == [
-        {:role_name => 'Developer',       :role_id => fx(:developer).id,       :project_id => fx(:oranges_first_project).id, :hourly_rates => [@hourly_rates[0]] },
-        {:role_name => 'Project Manager', :role_id => fx(:project_manager).id, :project_id => fx(:oranges_first_project).id, :hourly_rates => [] },
-        {:role_name => 'Tester',          :role_id => fx(:tester).id,          :project_id => fx(:oranges_first_project).id, :hourly_rates => [@hourly_rates[1], @hourly_rates[2]] }
+        {:project_id => fx(:oranges_first_project).id, :role_id => fx(:developer).id,       :role_name => 'Developer',       :hourly_rates => [@hourly_rates[0]] },
+        {:project_id => fx(:oranges_first_project).id, :role_id => fx(:project_manager).id, :role_name => 'Project Manager', :hourly_rates => [] },
+        {:project_id => fx(:oranges_first_project).id, :role_id => fx(:tester).id,          :role_name => 'Tester',          :hourly_rates => [@hourly_rates[1], @hourly_rates[2]] }
       ].to_json
     end
   end
