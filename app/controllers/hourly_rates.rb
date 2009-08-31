@@ -1,4 +1,7 @@
 class HourlyRates < Application
+  
+  before :ensure_admin_or_project_manager
+  
   only_provides :json
 
   def index

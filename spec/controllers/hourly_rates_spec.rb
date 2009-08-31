@@ -8,6 +8,14 @@ end
 
 describe HourlyRates do
   
+  it "should refuse to perform any action for guest, non-pm employee and client's user" do
+    [:index, :create, :update, :destroy].each do |action|
+      block_should(raise_unauthenticated) { as(:guest).dispatch_to(HourlyRates, action) }
+      block_should(raise_forbidden) { as(fx(:jola)).dispatch_to(HourlyRates, action) }
+      block_should(raise_forbidden) { as(:client).dispatch_to(HourlyRates, action) }
+    end
+  end
+  
   describe "#index" do
     before(:each) do
       @hourly_rates = [
