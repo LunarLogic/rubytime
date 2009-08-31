@@ -1,0 +1,26 @@
+Release 3.1 - August 31, 2009
+
+- New features:
+
+ * JSON API for external applications
+ * Email notifications
+ * Ability to mark days as vacations
+ * Ability to edit activities from calendar view
+ * Ability to edit existing invoices
+ * Ability to create an invoice with activities from activities view
+ * New rubytime:install rake task which installs the app and creates user accounts
+
+- Fixes / Improvements:
+
+ * Password reset link is now valid only for 24h
+ * A user cannot use reset password link more then once
+ * HTML validates on all pages
+ * Many minor visual fixes
+ * Cleaned up and compressed stylesheets
+
+
+Release 3.0
+
+ * Complete rewrite to Merb 1.0 and Datamapper 0.9.7. 
+ * Changed site design. 
+ * Added advanced activity filtering and nicer calendar view.
