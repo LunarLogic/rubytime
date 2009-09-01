@@ -49,7 +49,7 @@ Merb::Router.prepare do
   resources :roles
   resources :hourly_rates
   resources :invoices, :member => { "issue" => :put }
-  resource :settings, :controller => 'settings'
+  resource :settings, :controller => 'settings' # TODO conflict with line 30, # .name(:settings)
   
   # Adds the required routes for merb-auth using the password slice 
   slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
