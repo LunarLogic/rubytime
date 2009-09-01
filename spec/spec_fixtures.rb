@@ -74,5 +74,12 @@ HourlyRate.fixture {{
   :role => Role.pick,
   :takes_effect_at => unique { random_date(Date.today - 365 * 2, Date.today) },
   :value => 20 + rand * 100,
-  :currency => HourlyRate::VALID_CURRENCIES[ rand(HourlyRate::VALID_CURRENCIES.size) ]
+  :currency => HourlyRate::VALID_CURRENCIES[ rand(HourlyRate::VALID_CURRENCIES.size) ],
+  :operation_author => Employee.pick
+}}
+
+HourlyRateLog.fixture {{
+  :operation_type => 'update',
+  :operation_author => Employee.pick,
+  :hourly_rate => HourlyRate.gen
 }}

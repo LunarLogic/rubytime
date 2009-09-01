@@ -14,11 +14,12 @@ class HourlyRate
   belongs_to :role
   
   validates_is_unique :takes_effect_at, :scope => [:project_id, :role_id], :message => 'There already exists hourly rate for that project, role and date.'
-  validates_present :value
+  validates_present :value, :operation_author
   validates_within :currency, :set => VALID_CURRENCIES
   
   default_scope(:default).update(:order => [:takes_effect_at])
   
+  attr_accessor :operation_author
   attr_accessor :date_format_for_json
   
   def value=(value)

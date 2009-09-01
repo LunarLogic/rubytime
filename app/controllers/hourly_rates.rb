@@ -18,6 +18,7 @@ class HourlyRates < Application
 
   def create
     @hourly_rate = HourlyRate.new(params[:hourly_rate])
+    @hourly_rate.operation_author = current_user
     if @hourly_rate.save
       @hourly_rate.date_format_for_json = current_user.date_format
       display :status => :ok, :hourly_rate => @hourly_rate
@@ -29,6 +30,7 @@ class HourlyRates < Application
   def update
     @hourly_rate = HourlyRate.get(params[:id])
     raise NotFound unless @hourly_rate
+    @hourly_rate.operation_author = current_user
     if @hourly_rate.update_attributes(params[:hourly_rate])
       @hourly_rate.date_format_for_json = current_user.date_format
       display :status => :ok, :hourly_rate => @hourly_rate
@@ -40,6 +42,7 @@ class HourlyRates < Application
   def destroy
     @hourly_rate = HourlyRate.get(params[:id])
     raise NotFound unless @hourly_rate
+    @hourly_rate.operation_author = current_user
     if @hourly_rate.destroy
       display :status => :ok
     else

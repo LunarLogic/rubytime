@@ -63,6 +63,12 @@ describe HourlyRate do
     duplicated_hourly_rate.errors.on(:takes_effect_at).should_not be_empty
   end
   
+  it "should not allow to save record without :operation_author assigned" do
+    hourly_rate = HourlyRate.make(:operation_author => nil)
+    hourly_rate.save.should be_false
+    hourly_rate.errors.on(:operation_author).should_not be_empty
+  end
+  
   it "should have default order by :takes_effect_at" do
     hr1 = HourlyRate.gen(:takes_effect_at => Date.today - 2)
     hr2 = HourlyRate.gen(:takes_effect_at => Date.today    )

@@ -44,16 +44,24 @@ describe HourlyRates do
   describe "#create" do
     
     it "should make new record with given attributes and attempt to save it" do
-      @hourly_rate = mock('hourly rate', :date_format_for_json= => nil)
+      @hourly_rate = mock('hourly rate', :operation_author= => nil, :date_format_for_json= => nil)
       HourlyRate.should_receive(:new).with({'these' => 'attrs'}).and_return(@hourly_rate)
       @hourly_rate.should_receive(:save).and_return(true)
       
       @response = as(:admin).dispatch_to(HourlyRates, :create, :hourly_rate => {:these => :attrs})
     end
     
+    it "should set :operation_author attr of the record" do
+      @hourly_rate = mock('hourly rate', :operation_author= => nil, :save => true, :date_format_for_json= => nil)
+      HourlyRate.should_receive(:new).with({'these' => 'attrs'}).and_return(@hourly_rate)
+      @hourly_rate.should_receive(:operation_author=).with(fx(:admin))
+      
+      as(fx(:admin)).dispatch_to(HourlyRates, :create, :hourly_rate => {:these => :attrs})
+    end
+    
     context "if record created successfully" do
       before(:each) do
-        HourlyRate.stub!(:new => @hourly_rate = mock('hourly rate', :save => true, :date_format_for_json= => nil, :to_json => 'json attributes'.to_json))
+        HourlyRate.stub!(:new => @hourly_rate = mock('hourly rate', :operation_author= => nil, :save => true, :date_format_for_json= => nil, :to_json => 'json attributes'.to_json))
         @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :create, :hourly_rate => {:these => :attrs}) }
       end
       
@@ -75,7 +83,7 @@ describe HourlyRates do
     
     context "if record creation failed" do
       before(:each) do
-        HourlyRate.stub!(:new => @hourly_rate = mock('hourly rate', :save => false, :error_messages => 'Error messages'))
+        HourlyRate.stub!(:new => @hourly_rate = mock('hourly rate', :operation_author= => nil, :save => false, :error_messages => 'Error messages'))
         @response = as(:admin).dispatch_to(HourlyRates, :create)
       end
       
@@ -92,7 +100,7 @@ describe HourlyRates do
   describe "#update" do
     
     it "should look for the record of given id" do
-      @hourly_rate = mock('hourly rate', :update_attributes => true, :date_format_for_json= => nil)
+      @hourly_rate = mock('hourly rate', :operation_author= => nil, :update_attributes => true, :date_format_for_json= => nil)
       HourlyRate.should_receive(:get).with('39').and_return(@hourly_rate)
       
       @response = as(:admin).dispatch_to(HourlyRates, :update, :id => 39)
@@ -100,8 +108,15 @@ describe HourlyRates do
     
     context "if record of given :id existed" do
       
+      it "should set :operation_author attr of the record" do
+        HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :update_attributes => true, :date_format_for_json= => nil))
+        @hourly_rate.should_receive(:operation_author=).with(fx(:admin))
+      
+        as(:admin).dispatch_to(HourlyRates, :update, :id => 39, :hourly_rate => {:these => :attrs})
+      end
+      
       it "should attempt to update it with given attributes" do
-        HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :date_format_for_json= => nil))
+        HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :date_format_for_json= => nil))
         @hourly_rate.should_receive(:update_attributes).with({'these' => 'attrs'}).and_return(true)
       
         @response = as(:admin).dispatch_to(HourlyRates, :update, :id => 39, :hourly_rate => {:these => :attrs})
@@ -109,7 +124,7 @@ describe HourlyRates do
     
       context "and was successfully updated" do
         before(:each) do
-          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :update_attributes => true, :date_format_for_json= => nil, :to_json => 'json attributes'.to_json))
+          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :update_attributes => true, :date_format_for_json= => nil, :to_json => 'json attributes'.to_json))
           @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :update, :hourly_rate => {:these => :attrs}) }
         end
       
@@ -131,7 +146,7 @@ describe HourlyRates do
     
       context "and its update failed" do
         before(:each) do
-          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :update_attributes => false, :error_messages => 'Error messages'))
+          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :update_attributes => false, :error_messages => 'Error messages'))
           @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :update) }
         end
       
@@ -158,15 +173,23 @@ describe HourlyRates do
   describe "#destroy" do
     
     it "should look for the record of given id" do
-      @hourly_rate = mock('hourly rate', :destroy => true)
+      @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => true)
       HourlyRate.should_receive(:get).with('39').and_return(@hourly_rate)
       
       @response = as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39)
     end
     
     context "when record of given :id existed" do
+      
+      it "should set :operation_author attr of the record" do
+        HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :destroy => true))
+        @hourly_rate.should_receive(:operation_author=).with(fx(:admin))
+
+        as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39)
+      end
+      
       it "should attempt to destroy it" do
-        HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate'))
+        HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil))
         @hourly_rate.should_receive(:destroy).and_return(true)
 
         @response = as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39)
@@ -174,7 +197,7 @@ describe HourlyRates do
     
       context "and was successfully destroyed" do
         before(:each) do
-          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :destroy => true))
+          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => true))
           @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :destroy) }
         end
       
@@ -191,7 +214,7 @@ describe HourlyRates do
     
       context "and couldn't be destroyed" do
         before(:each) do
-          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :destroy => false))
+          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => false))
           @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :destroy) }
         end
       
