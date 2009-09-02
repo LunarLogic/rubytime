@@ -3,6 +3,7 @@ class Role
 
   property :id,   Serial
   property :name, String, :nullable => false, :unique => true
+  property :can_manage_financial_data, Boolean, :nullable => false, :default => false
   
   has n, :employees
 
