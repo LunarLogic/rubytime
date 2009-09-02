@@ -47,4 +47,14 @@ describe Client do
       end
     end
   end
+  
+  it "should have default order by :name" do
+    prefix = 'test for order of '
+    client_1 = Client.gen(:name => prefix + 'D')
+    client_2 = Client.gen(:name => prefix + 'B')
+    client_3 = Client.gen(:name => prefix + 'A')
+    client_4 = Client.gen(:name => prefix + 'C')
+
+    Client.all(:conditions => ["name LIKE ?", prefix + "%"]).should == [client_3, client_2, client_4, client_1]
+  end
 end

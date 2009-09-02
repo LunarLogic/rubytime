@@ -19,6 +19,8 @@ class Client
   
   before :destroy, :destroy_client_users_and_projects
   
+  default_scope(:default).update(:order => [:name])
+  
   def self.active
     all(:active => true)
   end
