@@ -1,6 +1,6 @@
 class HourlyRates < Application
   
-  before :ensure_admin_or_project_manager
+  before :ensure_admin_or_role_that_can_manage_financial_data
   
   only_provides :json
 
