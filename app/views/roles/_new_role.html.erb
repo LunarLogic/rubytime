@@ -5,7 +5,8 @@
       <%= text_field :name, :label => "Name" %>
     </p>
     <p>
-      <%= check_box :can_manage_financial_data, :label => "Can manage financial data" %>
+      <label for="role_can_manage_financial_data">Can manage financial data</label>
+      <%= check_box :can_manage_financial_data %>
     </p>
     <p class="buttons">
       <%= submit 'Create', :class => "button" %>
