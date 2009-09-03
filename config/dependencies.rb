@@ -33,3 +33,7 @@ dependency "bartes-rcov_stats" , :require_as => 'rcov_stats'
 
 require 'digest/sha1'
 require "csv" # dependency raises error
+
+if Merb.env == :test # dependencies for test environment only 
+  dependency 'webrat'
+end
