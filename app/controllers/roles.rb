@@ -16,6 +16,20 @@ class Roles < Application
     end
   end
   
+  def edit
+    @role = Role.get(params[:id]) or raise NotFound
+    render
+  end
+  
+  def update
+    @role = Role.get(params[:id]) or raise NotFound
+    if @role.update_attributes(params[:role]) || !@role.dirty?
+      redirect resource(:roles)
+    else
+      render :edit
+    end
+  end
+  
   def destroy
     raise NotFound unless @role = Role.get(params[:id])
     if @role.destroy
@@ -28,5 +42,9 @@ class Roles < Application
   protected
   def load_roles
     @roles = Role.all(:order => [:name])
+  end
+  
+  def number_of_columns
+    params[:action] == "edit" ? 1 : super
   end
 end # Roles

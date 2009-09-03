@@ -27,7 +27,7 @@ Merb::Router.prepare do
   match("/projects/:project_id/calendar").to(:controller => "activities", :action => "calendar")
   match("/activities/day").to(:controller => "activities", :action => "day").name(:activities_for_day)
 
-  match("/users/:id/settings").to(:controller => "users", :action => "settings").name(:settings)
+  match("/users/:id/settings").to(:controller => "users", :action => "settings").name(:user_settings)
   match("/users/request_password").to(:controller => "users", :action => "request_password").name(:request_password)
   match("/users/reset_password").to(:controller => "users", :action => "reset_password").name(:reset_password)
 

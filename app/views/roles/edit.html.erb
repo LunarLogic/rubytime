@@ -1,0 +1,14 @@
+<h1>Edit role</h1>
+<%= form_for @role, :action => resource(@role), :id => "role_form" do %>
+  <fieldset>
+    <p>
+      <%= text_field :name, :label => "Name", :disabled => true %>
+    </p>
+    <p>
+      <%= check_box :can_manage_financial_data, :label => "Can manage financial data" %>
+    </p>
+    <p class="buttons">
+      <%= submit 'Update', :class => "button" %>
+    </p>
+  </fieldset>
+<% end =%>
