@@ -34,11 +34,11 @@ describe Roles do
   describe "#update" do
     before do
       @role = Role.gen(:name => 'OriginalName')
-      @response = as(:admin).dispatch_to(Roles, :update, { :id => @role.id, :role => { :name => "NewName" }})
+      @response = as(:admin).dispatch_to(Roles, :update, { :id => @role.id, :role => { :can_manage_financial_data => true }})
     end
     
     it "should update the role" do
-      Role.get(@role.id).name.should == "NewName"
+      Role.get(@role.id).can_manage_financial_data.should == true
     end
     
     it "should redirect to #index" do
