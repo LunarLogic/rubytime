@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Roles do
   it "shouldn't show any action for guest, employee and client's user" do
-    [:index, :create, :destroy].each do |action|
+    [:index, :create, :edit, :update, :destroy].each do |action|
       block_should(raise_unauthenticated) { as(:guest).dispatch_to(Roles, action) }
       block_should(raise_forbidden) { as(:employee).dispatch_to(Roles, action) }
       block_should(raise_forbidden) { as(:client).dispatch_to(Roles, action) }
@@ -21,6 +21,28 @@ describe Roles do
         controller = as(:admin).dispatch_to(Roles, :create, { :role => { :name => "Mastah" }})
         controller.should redirect_to(resource(:roles))
       end
+    end
+  end
+  
+  describe "#edit" do
+    it "should show role edit form" do
+      role = Role.gen
+      as(:admin).dispatch_to(Roles, :edit, :id => role.id).should be_successful
+    end
+  end
+  
+  describe "#update" do
+    before do
+      @role = Role.gen(:name => 'OriginalName')
+      @response = as(:admin).dispatch_to(Roles, :update, { :id => @role.id, :role => { :name => "NewName" }})
+    end
+    
+    it "should update the role" do
+      Role.get(@role.id).name.should == "NewName"
+    end
+    
+    it "should redirect to #index" do
+      @response.should redirect_to(resource(:roles))
     end
   end
 

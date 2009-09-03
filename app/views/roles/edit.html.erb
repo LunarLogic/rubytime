@@ -1,0 +1,11 @@
+<h1>Edit role</h1>
+<%= form_for @role, :action => resource(@role), :id => "role_form" do %>
+  <fieldset>
+    <p>
+      <%= text_field :name, :label => "Name" %>
+    </p>
+    <p class="buttons">
+      <%= submit 'Update', :class => "button" %>
+    </p>
+  </fieldset>
+<% end =%>
