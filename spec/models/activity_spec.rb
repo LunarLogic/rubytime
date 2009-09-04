@@ -225,7 +225,7 @@ describe Activity do
     end
   end
 
-  describe "price" do
+  describe "#price" do
     context "setter and getter (value in DB saved as integer)" do
       it "should return price based on assigned attribuand do not lose " do
         a = Activity.make()
