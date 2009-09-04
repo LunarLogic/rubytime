@@ -29,7 +29,25 @@ class HourlyRate
   def value
     attribute_get(:value_multiplied_by_100) ? attribute_get(:value_multiplied_by_100) / 100.0 : nil
   end
+
+
+  def self.find_for(params)
+    return nil if params[:role_id].nil? || params[:project_id].nil? || params[:date].nil?
+    first(
+      :conditions => ["takes_effect_at <= ? AND project_id = ? AND role_id = ? ", params[:date], params[:project_id], params[:role_id] ],
+      :order => [:takes_effect_at.desc]
+    )
+  end
   
+  def self.find_for_activity(activity)
+    return nil if activity.user.nil?
+    find_for( 
+      :role_id => activity.user.role.id,
+      :project_id => activity.project_id,
+      :date => activity.date
+    )
+  end
+
   def to_json
     { :id => id,
       :project_id => project_id,

@@ -224,4 +224,50 @@ describe Activity do
       end
     end
   end
+
+  describe "price" do
+    context "setter and getter (value in DB saved as integer)" do
+      it "should return price based on assigned attribuand do not lose " do
+        a = Activity.make()
+        a.price = 1000000.11
+        a.price.should == 1000000.11
+        a.price.should be_a_kind_of BigDecimal
+        a.reload.price.should == 1000000.11
+      end
+    end
+
+    describe "getter" do
+
+      context "when price is nil" do
+        before { @activity = Activity.make(:price => nil) }
+
+        context "when there is no corresponding hourly rate" do
+          before { @activity.stub!(:hourly_rate => nil) }
+
+          it "should return nil" do
+            @activity.price.should == nil
+          end
+        end
+
+        context "when there is corresponding hourly rate" do
+          before { @activity.stub!(:hourly_rate => mock('hourly rate', :value => 37.50)) }
+
+          it "should return its value" do
+            @activity.price.should == 37.50
+          end
+        end
+      end
+
+    end
+  end
+
+  describe "#hourly_rate" do
+    it "should return HourlyRate.find_for_activity result" do
+      hr = HourlyRate.make
+      HourlyRate.should_receive(:find_for_activity).and_return(hr)
+      activity = Activity.make
+      activity.hourly_rate.should == hr
+    end
+  end
+
 end

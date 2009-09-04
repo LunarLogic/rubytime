@@ -10,6 +10,8 @@ class Activity
   property :project_id,  Integer, :nullable => false, :index => true
   property :user_id,     Integer, :nullable => false, :index => true
   property :invoice_id,  Integer, :index => true
+  property :price, BigDecimal, :scale => 2, :precision => 10, :nullable => true, :default => nil
+  property :price_currency, String, :nullable => true, :default => nil
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
@@ -68,6 +70,18 @@ class Activity
   
   def hours
     @hours ||= (minutes && format("%d:%.2d", minutes / 60, minutes % 60))
+  end
+
+  def hourly_rate
+    HourlyRate.find_for_activity(self)
+  end
+
+  def price
+    attribute_get(:price) || (hourly_rate && hourly_rate.value)
+  end
+
+  def price_currency
+    attribute_get(:price_currency) || (hourly_rate && hourly_rate.currency)
   end
   
   def invoiced?
