@@ -7,14 +7,14 @@ class HourlyRate
   property :project_id, Integer, :nullable => false
   property :role_id, Integer, :nullable => false
   property :takes_effect_at, Date, :nullable => false
-  property :value_multiplied_by_100, Integer, :accessor => :private
+  property :value, BigDecimal, :scale => 2, :precision => 10, :nullable => false
   property :currency, String, :nullable => false
 
   belongs_to :project
   belongs_to :role
   
   validates_is_unique :takes_effect_at, :scope => [:project_id, :role_id], :message => 'There already exists hourly rate for that project, role and date.'
-  validates_present :value, :operation_author
+  validates_present :operation_author
   validates_within :currency, :set => VALID_CURRENCIES
   
   default_scope(:default).update(:order => [:takes_effect_at])
@@ -23,11 +23,7 @@ class HourlyRate
   attr_accessor :date_format_for_json
   
   def value=(value)
-    attribute_set(:value_multiplied_by_100, (not value.nil? and not value.blank?) ? value.to_f * 100.0 : nil)
-  end
-  
-  def value
-    attribute_get(:value_multiplied_by_100) ? attribute_get(:value_multiplied_by_100) / 100.0 : nil
+    attribute_set(:value, value.blank? ? nil : value)
   end
   
   def to_json

@@ -66,7 +66,7 @@ describe HourlyRateLog do
       @hourly_rate_log.hr_project_id.should              == @hourly_rate.project_id
       @hourly_rate_log.hr_role_id.should                 == @hourly_rate.role_id
       @hourly_rate_log.hr_takes_effect_at.should         == @hourly_rate.takes_effect_at
-      @hourly_rate_log.hr_value_multiplied_by_100.should == @hourly_rate.value * 100
+      @hourly_rate_log.hr_value.should                   == @hourly_rate.value
       @hourly_rate_log.hr_currency.should                == @hourly_rate.currency
     end
   end
@@ -82,7 +82,7 @@ describe HourlyRateLog do
         @hourly_rate_log.hr_project_id.should              be_nil
         @hourly_rate_log.hr_role_id.should                 be_nil
         @hourly_rate_log.hr_takes_effect_at.should         be_nil
-        @hourly_rate_log.hr_value_multiplied_by_100.should be_nil
+        @hourly_rate_log.hr_value.should                   be_nil
         @hourly_rate_log.hr_currency.should                be_nil
       end
     end

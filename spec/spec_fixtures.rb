@@ -73,7 +73,7 @@ HourlyRate.fixture {{
   :project => Project.pick,
   :role => Role.pick,
   :takes_effect_at => unique { random_date(Date.today - 365 * 2, Date.today) },
-  :value => 20 + rand * 100,
+  :value => 20 + (rand * 10000).to_i / 100,
   :currency => HourlyRate::VALID_CURRENCIES[ rand(HourlyRate::VALID_CURRENCIES.size) ],
   :operation_author => Employee.pick
 }}

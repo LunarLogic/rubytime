@@ -10,6 +10,11 @@ describe HourlyRate do
       HourlyRate.first.value.should == 567.89
     end
     
+    it "should work with empty string" do
+      hourly_rate = HourlyRate.make :value => ''
+      hourly_rate.value.should == nil
+    end
+    
     it "should work with nil" do
       hourly_rate = HourlyRate.make :value => nil
       hourly_rate.value.should == nil
