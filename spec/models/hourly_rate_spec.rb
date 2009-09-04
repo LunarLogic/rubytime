@@ -21,6 +21,13 @@ describe HourlyRate do
     end
   end
   
+  describe "#value_formatted" do
+    it "should return formatted :value attribute" do
+      hourly_rate = HourlyRate.new :value => 123.45
+      hourly_rate.value_formatted.should == '123.45'
+    end
+  end
+  
   it "should not allow to save record without :project assigned" do
     hourly_rate = HourlyRate.make(:project => nil)
     hourly_rate.save.should be_false

@@ -26,6 +26,9 @@ class HourlyRate
     attribute_set(:value, value.blank? ? nil : value)
   end
 
+  def value_formatted
+    value.to_s('F')
+  end
 
   def self.find_for(params)
     return nil if params[:role_id].nil? || params[:project_id].nil? || params[:date].nil?
@@ -50,7 +53,7 @@ class HourlyRate
       :role_id => role_id,
       :takes_effect_at => (date_format_for_json ? takes_effect_at.formatted(date_format_for_json) : takes_effect_at),
       :takes_effect_at_unformatted => takes_effect_at,
-      :value => value,
+      :value => value_formatted,
       :currency => currency,
       :error_messages => error_messages
     }.to_json
