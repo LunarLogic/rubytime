@@ -2,6 +2,16 @@
 <p>
   Name: <%= @user.name %>
 </p>
+<% if @user.is_a?(Employee) %>
+  <p>
+    Role: <%= link_to @user.role.name, resource(@user.role) %>
+  </p>
+<% end %>
+<% if @user.is_a?(ClientUser) %>
+  <p>
+    Client: <%= link_to @user.client.name, resource(@user.client) %>
+  </p>
+<% end %>
 <p>
   Login: <%= @user.login %>
 </p>
