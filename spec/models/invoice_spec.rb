@@ -11,4 +11,20 @@ describe Invoice do
     Invoice.make.issued?.should be_false
     Invoice.make(:issued_at => DateTime.now).issued?.should be_true
   end
+
+  describe "#invoice" do
+    it "should mark invoice as issued and " do
+      i = Invoice.gen
+#      Activity.(:hourly_rate)
+      as = [Activity.gen, Activity.gen]
+      i.activities += as
+      i.issued?.should be_false
+      i.issue!
+      i.issued?.should be_true
+      i.reload
+      # TODO add mocks to retrurn hourly_rate for activities
+#      i.activities.map{|a| a.price_saved? }.should == [true, true]
+    end 
+  end
+
 end

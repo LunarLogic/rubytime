@@ -33,6 +33,13 @@ class Invoice
   def self.issued
     all(:issued_at.not => nil)
   end
+
+  def issue!
+#    transaction do
+      activities.each { |a| a.save_price! }
+      update_attributes(:issued_at => DateTime.now)
+#    end
+  end
   
   def issued?
     !self.issued_at.nil?

@@ -239,7 +239,7 @@ describe Activity do
     describe "getter" do
 
       context "when price is nil" do
-        before { @activity = Activity.make(:price => nil) }
+        before { @activity = Activity.make(:price => nil, :minutes => 30) }
 
         context "when there is no corresponding hourly rate" do
           before { @activity.stub!(:hourly_rate => nil) }
@@ -253,11 +253,17 @@ describe Activity do
           before { @activity.stub!(:hourly_rate => mock('hourly rate', :value => 37.50)) }
 
           it "should return its value" do
-            @activity.price.should == 37.50
+            @activity.price.should == 37.50 / 2
           end
         end
       end
 
+    end
+  end
+
+  describe "#save_price!" do
+    it "should save price value " do
+      
     end
   end
 
@@ -269,5 +275,18 @@ describe Activity do
       activity.hourly_rate.should == hr
     end
   end
+
+  describe "#save_price!" do
+    it "should save value returned by prive getter and save it in DB" do
+      activity = Activity.make(:price => nil, :minutes => 60*2)
+      hr = HourlyRate.make(:value => 11.11)
+      activity.stub(:hourly_rate).and_return(hr)
+      activity.save_price!
+      activity.should_not_receive(:hourly_rate)
+      activity.reload
+      activity.price.should == 11.11 * 2
+    end
+  end
+
 
 end

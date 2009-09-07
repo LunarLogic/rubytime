@@ -48,6 +48,11 @@ class Activity
     all :order => [:date.desc], :date.gte => Date.civil(year, month, 1), :date.lte => Date.civil(year, month, -1)
   end
 
+  def minutes=(minutes)
+    @hourly_rate_memoized = nil
+    attribute_set(:minutes, minutes)
+  end
+
   # Sets hours and minutes properties
   #
   # It automatically converts hours to minutes allowing to 
@@ -73,11 +78,24 @@ class Activity
   end
 
   def hourly_rate
-    HourlyRate.find_for_activity(self)
+    @hourly_rate_memoized ||= HourlyRate.find_for_activity(self)
   end
 
   def price
-    attribute_get(:price) || (hourly_rate && hourly_rate.value)
+    attribute_get(:price) || (hourly_rate && (hourly_rate.value * minutes / 60) )
+  end
+
+  def price_formatted
+    price.to_s("F")
+  end
+
+  def save_price!
+    puts price 
+    puts(attribute_get(:price).nil? && update_attributes(:price => price))
+  end
+
+  def price_saved?
+    !attribute_get(:price).nil?
   end
 
   def price_currency

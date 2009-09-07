@@ -56,8 +56,7 @@ class Invoices < Application
   end
   
   def issue
-    @invoice.issued_at = DateTime.now
-    @invoice.save
+    @invoice.issue!
     redirect resource(@invoice), :message => { :notice => "Invoice has been issued" }
   end
 
