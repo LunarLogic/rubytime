@@ -31,6 +31,7 @@ class HourlyRate
   end
 
   def self.find_for(params)
+    # TODO optimize this method, so it does not query DB each time activity.price is called (see any report showing prices )
     return nil if params[:role_id].nil? || params[:project_id].nil? || params[:date].nil?
     first(
       :conditions => ["takes_effect_at <= ? AND project_id = ? AND role_id = ? ", params[:date], params[:project_id], params[:role_id] ],
