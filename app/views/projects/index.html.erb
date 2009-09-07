@@ -10,6 +10,7 @@
     <% if current_user.is_admin? %>
       <th>Client</th>
     <% end %>
+    <th>Active</th>
     <th class="icons"></th>
   </tr>
   <% @projects.each do |project| %>
@@ -18,6 +19,7 @@
       <% if current_user.is_admin? %>
         <td><%= project.client.name %></td>
       <% end %>
+      <td><%= project.active ? 'Yes' : 'No' %></td>
       <td class="icons">
         <%= link_to image_tag("icons/calendar.png", :title => "Show calendar for this project", :alt => "C"), resource(project, :calendar) %>
         <% if current_user.is_admin? %>
