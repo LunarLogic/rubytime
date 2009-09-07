@@ -17,7 +17,7 @@
     <tr>
       <td><%= current_user.is_admin? ? link_to(project.name, resource(project)) : project.name %></td>
       <% if current_user.is_admin? %>
-        <td><%= project.client.name %></td>
+        <td><%= link_to project.client.name, resource(project.client) %></td>
       <% end %>
       <td><%= project.active ? 'Yes' : 'No' %></td>
       <td class="icons">

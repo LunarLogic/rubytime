@@ -10,7 +10,7 @@
   <% users.each do |user| %>
     <tr>
       <td><%= link_to(user.name, url(:user, user)) %></td>
-      <td><%= type == 'employees' ? user.role.name : user.client.name %></td>
+      <td><%= type == 'employees' ? link_to(user.role.name, resource(user.role)) : link_to(user.client.name, resource(user.client)) %></td>
       <td><%= user.active? ? 'Yes' : 'No' %></td>
       <td class="icons">
         <%= link_to_calendar user %>
