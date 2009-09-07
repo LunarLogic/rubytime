@@ -70,6 +70,10 @@ class User
     self.instance_of?(Employee)
   end
   
+  def can_manage_financial_data?
+    is_admin?
+  end
+  
   def editable_by?(user)
     user == self || user.is_admin?
   end

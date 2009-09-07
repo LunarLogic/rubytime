@@ -11,8 +11,8 @@ class Application < Merb::Controller
     raise Forbidden unless current_user.is_admin?
   end
   
-  def ensure_admin_or_role_that_can_manage_financial_data
-    raise Forbidden unless current_user.is_admin? or (current_user.is_a?(Employee) and current_user.role.can_manage_financial_data)
+  def ensure_user_that_can_manage_financial_data
+    raise Forbidden unless current_user.can_manage_financial_data?
   end
   
   def render_success(content = "", status = 200)

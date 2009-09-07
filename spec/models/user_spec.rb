@@ -94,6 +94,17 @@ describe User do
       fx(:stefan).has_activities_on?(Date.parse('2009-08-04')).should be_false
     end
   end
+  
+  describe "#can_manage_financial_data?" do
+    context "for admin user" do
+      before { @user = User.new :admin => true }
+      it { @user.can_manage_financial_data?.should == true }
+    end
+    context "for non-admin user" do
+      before { @user = User.new :admin => false }
+      it { @user.can_manage_financial_data?.should == false }
+    end
+  end
 end
 
 describe Employee do
@@ -217,6 +228,26 @@ describe Employee do
       UserMailer.should_receive(:new).with(:user => @user, :dates_range => @dates_range, :activities_by_dates_and_projects => @activities_by_dates_and_projects ).and_return(@user_mailer)
       
       @user.send_timesheet_summary_for(@dates_range)
+    end
+  end
+  
+  describe "#can_manage_financial_data?" do
+    context "for admin user" do
+      before { @employee = Employee.new :admin => true }
+      it { @employee.can_manage_financial_data?.should == true }
+    end
+    context "for non-admin user" do
+      before { @employee = Employee.new :admin => false }
+      
+      context "that has role that can manage financial data" do
+        before { @employee.role = Role.new(:can_manage_financial_data => true) }
+        it { @employee.can_manage_financial_data?.should == true }
+      end
+      
+      context "that has role that cannot manage financial data" do
+        before { @employee.role = Role.new(:can_manage_financial_data => false) }
+        it { @employee.can_manage_financial_data?.should == false }
+      end
     end
   end
   

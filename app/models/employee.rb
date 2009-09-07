@@ -9,6 +9,10 @@ class Employee < User
     throw :halt if activities.count > 0
   end
   
+  def can_manage_financial_data?
+    is_admin? or role.can_manage_financial_data
+  end
+  
   def send_timesheet_nagger_for(date)
     m = UserMailer.new(:user => self, :day_without_activities => date)
     m.dispatch_and_deliver(:timesheet_nagger, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet nagger for #{date}")
