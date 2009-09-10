@@ -53,15 +53,9 @@ describe HourlyRate do
   end
   
   it "should not allow to save record without :currency" do
-    hourly_rate = HourlyRate.make(:currency => '')
+    hourly_rate = HourlyRate.make(:currency => nil)
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:currency).should_not be_empty
-  end
-  
-  it "should not allow to save record with invalid :currency" do
-    hourly_rate = HourlyRate.make(:currency => 'invalid currency')
-    hourly_rate.save.should be_false
-    hourly_rate.errors.on(:currency).should_not be_empty
+    hourly_rate.errors.on(:currency_id).should_not be_empty
   end
   
   it "should not allow to save record with the same set of :project, :role and :takes_effect_at" do

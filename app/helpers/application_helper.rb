@@ -163,7 +163,7 @@ module Merb
     end
     
     def currency_options_for_hourly_rate
-      HourlyRate::VALID_CURRENCIES.map { |c| [c, c] }
+      Currency.all.map { |c| [c.id, c.plural_name] }
     end
   end
 end # Merb

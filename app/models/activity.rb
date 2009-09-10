@@ -11,7 +11,7 @@ class Activity
   property :user_id,     Integer, :nullable => false, :index => true
   property :invoice_id,  Integer, :index => true
   property :price, BigDecimal, :scale => 2, :precision => 10, :nullable => true, :default => nil
-  property :price_currency, String, :nullable => true, :default => nil
+  property :price_currency_id, Integer, :nullable => true, :default => nil
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
@@ -21,6 +21,7 @@ class Activity
   belongs_to :project
   belongs_to :user
   belongs_to :invoice
+  belongs_to :price_currency, :class_name => 'Currency', :child_key => [:price_currency_id]
   
   # Returns n recent activities
   def self.recent(n_)
@@ -98,9 +99,9 @@ class Activity
     !attribute_get(:price).nil?
   end
 
-  def price_currency
-    attribute_get(:price_currency) || (hourly_rate && hourly_rate.currency)
-  end
+  # def price_currency
+  #   attribute_get(:price_currency) || (hourly_rate && hourly_rate.currency)
+  # end
   
   def invoiced?
     !!self.invoice_id

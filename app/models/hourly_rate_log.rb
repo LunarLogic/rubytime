@@ -2,7 +2,7 @@ class HourlyRateLog
   include DataMapper::Resource
   
   VALID_OPERATION_TYPES = ['create', 'update', 'destroy']
-  ATTRIBUTES_TO_LOG = [:project_id, :role_id, :takes_effect_at, :value, :currency]
+  ATTRIBUTES_TO_LOG = [:project_id, :role_id, :takes_effect_at, :value, :currency_id]
   
   property :id, Serial
   property :logged_at, DateTime
@@ -13,9 +13,10 @@ class HourlyRateLog
   property :hr_role_id,                 Integer, :writter => :private
   property :hr_takes_effect_at,         Date,    :writter => :private
   property :hr_value,                   BigDecimal, :writter => :private, :scale => 2, :precision => 10
-  property :hr_currency,                String,  :writter => :private
+  property :hr_currency_id,             Integer, :writter => :private
   
   belongs_to :operation_author, :class_name => "User", :child_key => [:operation_author_id]
+  belongs_to :hr_currency, :class_name => "Currency", :child_key => [:hr_currency_id]
   
   default_scope(:default).update(:order => [:logged_at])
   

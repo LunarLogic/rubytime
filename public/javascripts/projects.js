@@ -187,7 +187,7 @@ $.extend(HourlyRateView.prototype, {
   populate: function() {
     this.node.find('.takes_effect_at').text(this.hourly_rate_controller.hourly_rate.takes_effect_at);
     this.node.find('.value          ').text(this.hourly_rate_controller.hourly_rate.value);
-    this.node.find('.currency       ').text(this.hourly_rate_controller.hourly_rate.currency);
+    this.node.find('.currency       ').text(this.hourly_rate_controller.hourly_rate.currency.plural_name);
   }
 });
 
@@ -220,7 +220,8 @@ $.extend( HourlyRateForm.prototype, {
     this.node.find(' input[name="hourly_rate[role_id]"]        ').val(this.hourly_rate_controller.hourly_rate.role_id);
     this.node.find(' input[name="hourly_rate[takes_effect_at]"]').val(this.hourly_rate_controller.hourly_rate.takes_effect_at);
     this.node.find(' input[name="hourly_rate[value]"]          ').val(this.hourly_rate_controller.hourly_rate.value);
-    this.node.find('select[name="hourly_rate[currency]"]       ').val(this.hourly_rate_controller.hourly_rate.currency);
+    if (this.hourly_rate_controller.hourly_rate.currency)
+      this.node.find('select[name="hourly_rate[currency_id]"]    ').val(this.hourly_rate_controller.hourly_rate.currency.id);
     
     this.node.find('input[name="_method"]').val(this.hourly_rate_controller.hourly_rate.isNewRecord() ? 'post' : 'put');
     

@@ -21,7 +21,7 @@
       </td>
       <td class="currency">
         <%= form_for HourlyRate.new do %>
-          <%= select :currency, :collection => currency_options_for_hourly_rate, :prompt => "Select..." %>
+          <%= select :currency_id, :collection => currency_options_for_hourly_rate, :prompt => "Select..." %>
         <% end =%>
       </td>
       <td class="buttons">

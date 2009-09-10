@@ -7,6 +7,13 @@ module Rubytime
       
         def prepare
           
+          # === Generating currencies
+          
+          add_fixture(:currence, :dollar, Currency.gen(:singular_name => 'dollar', :plural_name => 'dollars', :prefix => '$'))
+          add_fixture(:currence, :zloty,  Currency.gen(:singular_name => 'zloty',  :plural_name => 'zlotys',  :suffix => 'PLN'))
+          add_fixture(:currence, :euro,   Currency.gen(:singular_name => 'euro',   :plural_name => 'euros',   :prefix => '€'))
+          add_fixture(:currence, :pound,  Currency.gen(:singular_name => 'pound',  :plural_name => 'pounds',  :prefix => '£'))
+          
           # === Generating roles
           
           add_fixture(:role, :developer, Role.gen(:name => "Developer"))
