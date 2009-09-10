@@ -4,6 +4,18 @@ namespace :rubytime do
     
     Merb::Mailer.delivery_method = :test_send
 
+    # currencies
+    [{:singular_name => 'dollar', :plural_name => 'dollars', :prefix => '$'   },
+     {:singular_name => 'zloty',  :plural_name => 'zlotys',  :suffix => 'PLN' },
+     {:singular_name => 'euro',   :plural_name => 'euros',   :prefix => '€'   },
+     {:singular_name => 'pound',  :plural_name => 'pounds',  :prefix => '£'   }
+    ].each do |currency_attrs|
+      unless Currency.first(:singular_name => currency_attrs[:singular_name])
+        puts "creating currency #{currency_attrs[:singular_name]}"
+        Currency.create(currency_attrs)
+      end
+    end
+
     developer = Role.first(:name => "Developer") || Role.create(:name => "Developer")
     pm = Role.first(:name => "Project Manager") || Role.create(:name => "Project Manager")
     tester = Role.first(:name => "Tester") || Role.create(:name => "Tester")
