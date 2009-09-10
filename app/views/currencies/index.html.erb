@@ -1,0 +1,28 @@
+<% throw_content :secondary, partial(:new_currency) %>
+<h1>List of currencies</h1>
+
+<% if @currencies.empty? %>
+  No currencies found.
+<% else %>
+  <table id="currencies" class="list wide">
+  <tr>
+    <th>Singular name</th>
+    <th>Plural name</th>
+    <th>Prefix</th>
+    <th>Suffix</th>
+    <th>Example</th>
+  </tr>
+  <% @currencies.each do |currency| %>
+    <tr>
+      <td><%= currency.singular_name %></td>
+      <td><%= currency.plural_name %></td>
+      <td><%= currency.prefix %></td>
+      <td><%= currency.suffix %></td>
+      <td><%= currency.render(12345.67) %></td>
+      <td class="icons">
+        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(currency), :class => "delete_row" %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>

@@ -1,0 +1,20 @@
+<h1>Create new currency</h1>
+<%= form_for @currency, :action => resource(:currencies), :id => "currency_form" do %>
+  <fieldset>
+    <p>
+      <%= text_field :singular_name, :label => "Singular name" %>
+    </p>
+    <p>
+      <%= text_field :plural_name, :label => "Plural name" %>
+    </p>
+    <p>
+      <%= text_field :prefix, :label => "Prefix" %>
+    </p>
+    <p>
+      <%= text_field :suffix, :label => "Suffix" %>
+    </p>
+    <p class="buttons">
+      <%= submit 'Create', :class => "button" %>
+    </p>
+  </fieldset>
+<% end =%>

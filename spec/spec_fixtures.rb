@@ -83,3 +83,10 @@ HourlyRateLog.fixture {{
   :operation_author => Employee.pick,
   :hourly_rate => HourlyRate.gen
 }}
+
+Currency.fixture {{
+  :singular_name => (singular_name = unique { /\w{6,20}/.gen }),
+  :plural_name => singular_name + 's',
+  :prefix => /[$£€]/.gen,
+  :suffix => nil
+}}

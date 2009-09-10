@@ -23,7 +23,7 @@ module Merb
       end
       
       if current_user.is_admin?
-        selected = ['users', 'roles', 'projects', 'clients', 'settings'].include?(controller_name)
+        selected = ['users', 'roles', 'projects', 'clients', 'currencies', 'settings'].include?(controller_name)
         main_menu << { :title => "Manage", :path => resource(:users), :selected => selected }
       end
       
@@ -33,12 +33,13 @@ module Merb
     def sub_menu_items
       sub_menu = []
       case controller_name
-      when 'users', 'roles', 'projects', 'clients', 'settings'
+      when 'users', 'roles', 'projects', 'clients', 'currencies', 'settings'
         if current_user.is_admin?
           sub_menu << { :title => "Users", :path => url(:users), :selected => controller_name == 'users' }
           sub_menu << { :title => "Clients", :path => url(:clients), :selected => controller_name == 'clients' }
           sub_menu << { :title => "Projects", :path => url(:projects), :selected => controller_name == 'projects' }
           sub_menu << { :title => "Roles", :path => url(:roles), :selected => controller_name == 'roles' }
+          sub_menu << { :title => "Currencies", :path => url(:currencies), :selected => controller_name == 'currencies' }
           sub_menu << { :title => "Settings", :path => url(:edit_settings), :selected => controller_name == 'settings' }
         end
       when 'invoices'

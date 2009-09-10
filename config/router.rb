@@ -41,6 +41,7 @@ Merb::Router.prepare do
   end
   
   resources :sessions
+  resources :currencies
   resources :activities
   resources :clients
   resources :projects, :collection => { "for_clients" => :get } do
