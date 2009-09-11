@@ -224,46 +224,127 @@ describe Activity do
       end
     end
   end
-
-  describe "#price" do
-    context "setter and getter (value in DB saved as integer)" do
-      it "should return price based on assigned attribuand do not lose " do
-        a = Activity.make()
-        a.price = 1000000.11
-        a.price.should == 1000000.11
-        a.price.should be_a_kind_of BigDecimal
-        a.reload.price.should == 1000000.11
-      end
+  
+  describe "#price_frozen?" do
+    context "if :price_value and :price_currency are not nil and are saved" do
+      before { @activity = Activity.gen(:price_value => 10.99, :price_currency => fx(:euro) ) }
+      it { @activity.price_frozen?.should be_true }
     end
-
-    describe "getter" do
-
-      context "when price is nil" do
-        before { @activity = Activity.make(:price => nil, :minutes => 30) }
-
-        context "when there is no corresponding hourly rate" do
-          before { @activity.stub!(:hourly_rate => nil) }
-
-          it "should return nil" do
-            @activity.price.should == nil
-          end
-        end
-
-        context "when there is corresponding hourly rate" do
-          before { @activity.stub!(:hourly_rate => mock('hourly rate', :value => 37.50)) }
-
-          it "should return its value" do
-            @activity.price.should == 37.50 / 2
-          end
-        end
+    
+    context "if :price_value or :price_currency is nil" do
+      it do 
+        @activity = Activity.gen(:price_value => nil, :price_currency => fx(:dollar))
+        @activity.price_frozen?.should be_false
       end
-
+      
+      it do 
+        @activity = Activity.gen(:price_value => 10.99, :price_currency => nil)
+        @activity.price_frozen?.should be_false
+      end
     end
   end
-
-  describe "#save_price!" do
-    it "should save price value " do
+  
+  describe "#freeze_price!" do
+    context "if price is already frozen" do
+      before do 
+        @activity = Activity.gen(:price_value => 10.99, :price_currency => fx(:dollar))
+        @activity.price_frozen?.should be_true
+      end
       
+      it "should raise an Exception" do
+        lambda { @activity.freeze_price! }.should raise_error(Exception)
+      end
+    end
+    
+    context "if price is not frozen" do
+      before do 
+        @activity = Activity.gen(:price_value => nil, :price_currency => nil, :minutes => 30)
+        @activity.price_frozen?.should be_false
+      end
+      
+      context "if there is corresponding hourly rate" do
+        before do
+          @hourly_rate = mock('hourly rate')
+          @hourly_rate.should_receive(:*).with(0.5).at_least(:once).and_return( Money.new(12.89, fx(:dollar)) )
+          @activity.stub!(:hourly_rate => @hourly_rate)
+        end
+        
+        it "should calculate price based on hourly_rate and save it" do
+          @activity.freeze_price!
+          @activity.reload
+          @activity.price.should == Money.new(12.89, fx(:dollar))
+        end
+      end
+      
+      context "if there is no corresponding hourly rate" do
+        before do
+          @activity.stub!(:hourly_rate => nil)
+        end
+        
+        it "should set price to nil and save that" do
+          @activity.freeze_price!
+          @activity.reload
+          @activity.price.should be_nil
+        end
+      end
+    end
+  end
+  
+  describe "#price" do
+    context "if :price_value and :price_currency are both not nil" do
+      before { @activity = Activity.make(:price_value => 10.99, :price_currency => fx(:euro) ) }
+      
+      it "should return Money object with proper values" do
+        @activity.price.should be_instance_of(Money)
+        @activity.price.value.should == 10.99
+        @activity.price.currency.should == fx(:euro)
+      end
+    end
+    
+    context "if any of :price_value and :price_currency is nil" do
+      before { @activity = Activity.make(:price_value => nil, :price_currency => nil, :minutes => 90 ) }
+      
+      context "if there is corresponding hourly rate" do
+        before do 
+          @activity.stub!(:hourly_rate => mock('hourly rate', :* => Money.new(15.60, fx(:euro)) ) )
+        end
+        
+        it "should return Money object with properly computed values" do
+          @activity.price.should be_instance_of(Money)
+          @activity.price.value.should == 15.60
+          @activity.price.currency.should == fx(:euro)
+        end
+      end
+      
+      context "if there is not corresponding hourly rate" do
+        before { @activity.stub!(:hourly_rate => nil ) }
+        
+        it "should return nil" do
+          @activity.price.should be_nil
+        end
+      end
+    end
+  end
+  
+  describe "#price=" do
+    before { @activity = Activity.make(:price_value => 10.99, :price_currency => fx(:dollar) ) }
+    
+    context "if called with nil" do
+      before { @activity.price = nil }
+      
+      it "should set:price_value and :price_currency values" do
+        @activity.price_value.should be_nil
+        @activity.price_currency.should be_nil
+      end
+    end
+    
+    context "if called with Money object" do
+      before { @activity.price = Money.new(8.59, fx(:euro) ) }
+      
+      it "should set:price_value and :price_currency values" do
+        @activity.price_value.should == 8.59
+        @activity.price_currency.should == fx(:euro)
+      end
     end
   end
 
@@ -275,18 +356,4 @@ describe Activity do
       activity.hourly_rate.should == hr
     end
   end
-
-  describe "#save_price!" do
-    it "should save value returned by prive getter and save it in DB" do
-      activity = Activity.make(:price => nil, :minutes => 60*2)
-      hr = HourlyRate.make(:value => 11.11)
-      activity.stub(:hourly_rate).and_return(hr)
-      activity.save_price!
-      activity.should_not_receive(:hourly_rate)
-      activity.reload
-      activity.price.should == 11.11 * 2
-    end
-  end
-
-
 end

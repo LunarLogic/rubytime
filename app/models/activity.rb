@@ -10,7 +10,7 @@ class Activity
   property :project_id,  Integer, :nullable => false, :index => true
   property :user_id,     Integer, :nullable => false, :index => true
   property :invoice_id,  Integer, :index => true
-  property :price, BigDecimal, :scale => 2, :precision => 10, :nullable => true, :default => nil
+  property :price_value, BigDecimal, :scale => 2, :precision => 10, :nullable => true, :default => nil
   property :price_currency_id, Integer, :nullable => true, :default => nil
   property :updated_at,  DateTime
   property :created_at,  DateTime
@@ -81,27 +81,35 @@ class Activity
   def hourly_rate
     @hourly_rate_memoized ||= HourlyRate.find_for_activity(self)
   end
-
+  
   def price
-    attribute_get(:price) || (hourly_rate && (hourly_rate.value * minutes / 60) )
+    if price_value and price_currency
+      Money.new(price_value, price_currency)
+    else
+      hourly_rate && hourly_rate * (minutes / 60.0)
+    end
+  end
+  
+  def price=(money)
+    self.price_value = money ? money.value : nil
+    self.price_currency = money ? money.currency : nil
+  end
+  
+  def price_frozen?
+    persistent = Activity.get(id)
+    not persistent.nil? and
+    not persistent.price_value.nil? and 
+    not persistent.price_currency.nil?
   end
 
-  def price_formatted
-    price.to_s("F")
+  def freeze_price!
+    raise Exception.new('Price is already frozen') if price_frozen?
+    if price
+      update_attributes(:price_value => price.value, :price_currency => price.currency)
+    else
+      update_attributes(:price_value => nil,         :price_currency => nil)
+    end
   end
-
-  def save_price!
-    puts price 
-    puts(attribute_get(:price).nil? && update_attributes(:price => price))
-  end
-
-  def price_saved?
-    !attribute_get(:price).nil?
-  end
-
-  # def price_currency
-  #   attribute_get(:price_currency) || (hourly_rate && hourly_rate.currency)
-  # end
   
   def invoiced?
     !!self.invoice_id

@@ -36,7 +36,7 @@ class Invoice
 
   def issue!
 #    transaction do
-      activities.each { |a| a.save_price! }
+      activities.each { |a| a.freeze_price! }
       update_attributes(:issued_at => DateTime.now)
 #    end
   end
