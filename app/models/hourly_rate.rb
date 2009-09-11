@@ -58,8 +58,16 @@ class HourlyRate
     }.to_json
   end
   
+  def to_money
+    Money.new(value, currency)
+  end
+  
   def error_messages
     errors.full_messages.join('. ')
+  end
+  
+  def *(numeric)
+    to_money * numeric
   end
 
 end

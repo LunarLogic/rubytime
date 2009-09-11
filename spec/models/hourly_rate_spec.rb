@@ -94,4 +94,28 @@ describe HourlyRate do
     hr.should be_a_kind_of(HourlyRate)
     hr.should == hr2
   end
+  
+  describe "#to_money" do
+    before { @hourly_rate = HourlyRate.gen :value => 44.88, :currency => fx(:euro) }
+    
+    it "should return Money object" do
+      @hourly_rate.to_money.should be_instance_of(Money)
+    end
+    
+    it "should return proper Money object" do
+      @hourly_rate.to_money.should == Money.new(44.88, fx(:euro))
+    end
+  end
+  
+  describe "#*" do
+    before { @hourly_rate = HourlyRate.gen :value => 44.88, :currency => fx(:euro) }
+    
+    it "should return Money object" do
+      (@hourly_rate * 0.5).should be_instance_of(Money)
+    end
+    
+    it "should return properly calculated Money object" do
+      (@hourly_rate * 0.5).should == Money.new(22.44, fx(:euro))
+    end
+  end
 end
