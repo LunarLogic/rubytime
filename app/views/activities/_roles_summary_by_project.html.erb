@@ -1,0 +1,18 @@
+<table class="list wide">
+  <tr>
+    <th>Role</th>
+    <th>Billable hours</th>
+    <th>Price</th>
+    <th>Non-billable hours</th>
+  </tr>
+  
+  <% roles.map{|role| RoleActivitiesInProjectSummary.new(role, activities_from(@activities, client, project, role))}.each do |summary| %>
+    <tr>
+      <td><%= summary.role.name %></td>
+      <td class="right"><%= summary.billable_time %></td>
+      <td class="right"><%= summary.price %></td>
+      <td class="right"><%= summary.non_billable_time %></td>
+    </tr>
+  <% end %>
+  
+</table>

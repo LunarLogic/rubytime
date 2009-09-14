@@ -9,6 +9,7 @@
         <% activities = activities_from(@activities, client, project, current_user.role) %>
         <%= full_activities_table(activities) %>
       <% else %>
+        <%= partial("activities/roles_summary_by_project", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>
         <%= partial("activities/grouped_roles", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>
         <strong class="total">Total for project: <%= total_from(activities_from(@activities, client, project)) %></strong>
       <% end %>
