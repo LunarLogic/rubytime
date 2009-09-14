@@ -43,3 +43,7 @@
     </tr>
   <% end %>
 </table>
+
+<% if current_user.is_admin? %>
+  <p><%= link_to 'Create new user', resource(:users, :client_id => @client.id) %></p>
+<% end %>

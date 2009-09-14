@@ -8,7 +8,12 @@ class Users < Application
   before :check_authorization, :only => [:edit, :update, :show, :settings]
 
   def index
-    @user = Employee.new
+    @user = if params[:client_id]
+              ClientUser.new :client => Client.get(params[:client_id])
+            else
+              Employee.new
+            end
+            
     display @users
   end
 
