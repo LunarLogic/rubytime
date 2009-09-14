@@ -77,6 +77,14 @@ class Activity
   def hours
     @hours ||= (minutes && format("%d:%.2d", minutes / 60, minutes % 60))
   end
+  
+  def duration
+    minutes ? Duration.new(minutes * 1.minute) : nil
+  end
+  
+  def duration=(duration)
+    self.minutes = duration ? (1.0 * duration / 1.minute) : nil
+  end
 
   def hourly_rate
     @hourly_rate_memoized ||= HourlyRate.find_for_activity(self)

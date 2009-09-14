@@ -356,4 +356,40 @@ describe Activity do
       activity.hourly_rate.should == hr
     end
   end
+  
+  describe "#duration=" do
+    before { @activity = Activity.make }
+    
+    context "when called with a number" do
+      before { @activity.duration = 1.hour + 15.minutes }
+      it "should set :minutes attribute to the number" do
+        @activity.minutes.should == 75
+      end
+    end
+    
+    context "when called with nil" do
+      before { @activity.duration = nil }
+      it "should set :minutes attribute to nil" do
+        @activity.minutes.should be_nil
+      end
+    end
+  end
+  
+  describe "#duration" do
+    before { @activity = Activity.make }
+    
+    context "when :minutes is not nil" do
+      before { @activity.minutes = 10 }
+      it "should return number" do
+        @activity.duration.should == 10.minutes
+      end
+    end
+    
+    context "when :minutes is nil" do
+      before { @activity.minutes = nil }
+      it "should return nil" do
+        @activity.duration.should be_nil
+      end
+    end
+  end
 end
