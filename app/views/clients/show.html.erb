@@ -27,6 +27,10 @@
   <% end %>
 </table>
 
+<% if current_user.is_admin? %>
+  <p><%= link_to 'Create new project', resource(:projects, :client_id => @client.id) %></p>
+<% end %>
+
 <br/><br/>
 <h2>Client's users:</h2>
 <table class="padding5">

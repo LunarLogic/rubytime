@@ -8,7 +8,7 @@ class Projects < Application
   before :load_clients, :only => [:index, :new, :create, :edit, :update]
   
   def index
-    @project = Project.new
+    @project = Project.new :client => Client.get(params[:client_id])
     display @projects
   end
   
