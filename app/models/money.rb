@@ -20,7 +20,7 @@ class Money
   end
 
   def to_s
-    format(currency.format, value)
+    currency.render(value)
   end
 
   def +(other)

@@ -3,7 +3,7 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 describe Money do
   
   before do
-    @currency = mock('currency', :format => '$%.2f')
+    @currency = mock('currency')
     @money = Money.new(10.5, @currency)
   end
   
@@ -45,8 +45,9 @@ describe Money do
     end
   end
   
-  describe "#{to_s}" do    
+  describe "#{to_s}" do
     it "should return formatted value" do
+      @currency.should_receive(:render).with(10.5).and_return('$10.50')
       @money.to_s.should == "$10.50"
     end
   end
