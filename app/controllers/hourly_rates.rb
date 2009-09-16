@@ -46,7 +46,7 @@ class HourlyRates < Application
     if @hourly_rate.destroy
       display :status => :ok
     else
-      raise InternalServerError
+      display :status => :error, :hourly_rate => { :error_messages => @hourly_rate.error_messages }
     end
   end
 

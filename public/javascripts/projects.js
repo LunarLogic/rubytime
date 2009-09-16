@@ -152,6 +152,8 @@ $.extend( HourlyRateController.prototype, {
   onDestroyResponse: function(response) {
     if (response.status == 'ok')
       this.quit();
+    else if (response.status == 'error')
+      alert(response.hourly_rate.error_messages);
   },
   
   animateJustUpdated: function() {

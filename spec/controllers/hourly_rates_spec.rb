@@ -216,12 +216,13 @@ describe HourlyRates do
     
       context "and couldn't be destroyed" do
         before(:each) do
-          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => false))
+          HourlyRate.stub!(:get => @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => false, :error_messages => 'Cannot destroy'))
           @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :destroy) }
         end
       
-        it "should raise InternalServerError" do
-          @request.should raise_error(Merb::ControllerExceptions::InternalServerError)
+        it "should return json with status :error and error messages" do
+          @request.call
+          @response.body.should == { :status => :error, :hourly_rate => { :error_messages => 'Cannot destroy' } }.to_json
         end
       end
     end
