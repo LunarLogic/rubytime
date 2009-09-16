@@ -15,6 +15,8 @@ class Project
   
   before :destroy do
     throw :halt if activities.count > 0
+    
+    hourly_rates.all.destroy!
   end
 
   def self.active

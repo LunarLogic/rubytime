@@ -392,4 +392,26 @@ describe Activity do
       end
     end
   end
+  
+  describe "new record" do
+    before { @activity = Activity.make }
+    context "when there is no corresponding hourly rate" do
+      before { @activity.stub!(:hourly_rate => nil) }
+      it "should not be valid" do
+        @activity.should_not be_valid
+        @activity.errors.on(:hourly_rate).should_not be_empty
+      end
+    end
+  end
+  
+  describe "existing record" do
+    before { @activity = Activity.gen }
+    context "when there is no corresponding hourly rate" do
+      before { @activity.stub!(:hourly_rate => nil) }
+      it "should be valid" do
+        @activity.should be_valid
+        @activity.errors.on(:hourly_rate).should be_nil
+      end
+    end
+  end
 end

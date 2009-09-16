@@ -17,6 +17,7 @@ class Activity
   
   validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
   validates_with_method :hours, :method => :check_max_hours
+  validates_present :hourly_rate, :if => :new_record?, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
   belongs_to :user
