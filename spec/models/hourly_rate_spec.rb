@@ -118,4 +118,52 @@ describe HourlyRate do
       (@hourly_rate * 0.5).should == Money.new(22.44, fx(:euro))
     end
   end
+  
+  describe "#succ" do
+    context "if successor hourly rate exists" do
+      before do
+        @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+        @hourly_rate_B = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+      end
+      
+      it "should return it" do
+        @hourly_rate_B.succ.should == @hourly_rate_A
+      end
+    end
+    
+    context "if successor hourly rate doesn't exists" do
+      before do
+        @hourly_rate = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+      end
+      
+      it "should return nil" do
+        @hourly_rate.succ.should be_nil
+      end
+    end
+    
+    context "if there are hourly rates for this and other projects" do
+      before do
+        @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+        @hourly_rate_B = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+        @hourly_rate_C = HourlyRate.gen :project => fx(:apples_first_project ), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-03")
+      end
+      
+      it "should return only rates of the same project" do
+        @hourly_rate_B.succ.should == @hourly_rate_A
+      end
+    end
+    
+    context "if there are hourly rates for this and other roles" do
+      before do
+        @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+        @hourly_rate_B = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:tester   ), :takes_effect_at => Date.parse("2009-09-03")
+        @hourly_rate_C = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+      end
+      
+      it "should return only rates of the same project" do
+        @hourly_rate_C.succ.should == @hourly_rate_A
+      end
+    end
+    
+  end
 end

@@ -27,6 +27,10 @@ class HourlyRate
   def value_formatted
     value.to_s('F')
   end
+  
+  def succ
+    HourlyRate.first(:takes_effect_at.gt => takes_effect_at, :project_id => project.id, :role_id => role.id, :order => [:takes_effect_at.asc])
+  end
 
   def self.find_for(params)
     # TODO optimize this method, so it does not query DB each time activity.price is called (see any report showing prices )
