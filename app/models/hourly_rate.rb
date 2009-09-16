@@ -84,5 +84,12 @@ class HourlyRate
   def *(numeric)
     to_money * numeric
   end
+    
+  before :destroy do
+    if activities.count > 0
+      errors.add(:base, 'Cannot destroy: There are activities that use this hourly rate.')
+      throw :halt
+    end
+  end
 
 end

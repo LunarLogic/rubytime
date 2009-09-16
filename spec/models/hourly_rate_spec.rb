@@ -75,6 +75,33 @@ describe HourlyRate do
     hourly_rate.errors.on(:operation_author).should_not be_empty
   end
   
+  context "if there are activities that use it" do
+    before do
+      @hourly_rate = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+      Activity.all.destroy!
+      Activity.gen :project => fx(:oranges_first_project), :user => fx(:jola), :date => Date.parse("2009-09-06")
+    end
+
+    it "should not allow to destroy the record" do
+      @hourly_rate.destroy.should be_nil
+      HourlyRate.get(@hourly_rate.id).should_not be_nil
+      @hourly_rate.errors.on(:base).should_not be_empty
+    end
+  end
+  
+  context "if there are no activities that use it" do
+    before do
+      @hourly_rate = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+      Activity.all.destroy!
+      Activity.gen :project => fx(:oranges_first_project), :user => fx(:koza), :date => Date.parse("2009-09-06")
+    end
+
+    it "should allow to destroy the record" do
+      @hourly_rate.destroy.should be_true
+      HourlyRate.get(@hourly_rate.id).should be_nil
+    end
+  end
+  
   it "should have default order by :takes_effect_at" do
     HourlyRate.all.destroy!
     
