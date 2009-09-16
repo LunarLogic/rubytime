@@ -26,6 +26,8 @@ class Client
   protected 
   
   def destroy_client_users_and_projects
+    # TODO: 1. This code removes records without validation
+    # TODO: 2. This code can leave garbage in the database (related records are not removed in a cascade)
     client_users.destroy!
     projects.destroy!
   end
