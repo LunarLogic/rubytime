@@ -18,6 +18,8 @@ describe HourlyRates do
   
   describe "#index" do
     before(:each) do
+      HourlyRate.all.destroy!
+      
       @hourly_rates = [
         HourlyRate.gen(:takes_effect_at => Date.today - 10, :project => fx(:oranges_first_project), :role => fx(:developer)),
         HourlyRate.gen(:takes_effect_at => Date.today - 8, :project => fx(:oranges_first_project), :role => fx(:tester)),

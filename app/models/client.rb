@@ -29,6 +29,7 @@ class Client
     # TODO: 1. This code removes records without validation
     # TODO: 2. This code can leave garbage in the database (related records are not removed in a cascade)
     client_users.destroy!
+    projects.each{|project| project.hourly_rates.destroy! }
     projects.destroy!
   end
 end

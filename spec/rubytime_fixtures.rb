@@ -92,6 +92,14 @@ module Rubytime
           # Peach
           add_fixture(:project, :peachs_first_project, Project.gen(:client => fx(:peach)))
           
+          # === Generating hourly rates
+          
+          Project.all.each do |project|
+            Role.all.each do |role|
+              HourlyRate.gen(:project => project, :role => role, :takes_effect_at => random_date(Date.parse('2005-01-01'), Date.parse('2006-01-01') ))
+            end
+          end
+          
           # === Generating invoices
 
           # not locked
