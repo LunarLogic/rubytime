@@ -172,4 +172,66 @@ describe HourlyRate do
     end
     
   end
+  
+  describe "#activities" do
+    before do
+      Activity.all.destroy!
+      
+      @activity_A = Activity.gen :project => fx(:oranges_first_project), :user => fx(:jola ), :date => Date.parse("2009-09-01")
+      @activity_B = Activity.gen :project => fx(:oranges_first_project), :user => fx(:jola ), :date => Date.parse("2009-09-02")
+      @activity_C = Activity.gen :project => fx(:oranges_first_project), :user => fx(:misio), :date => Date.parse("2009-09-03")
+      @activity_D = Activity.gen :project => fx(:oranges_first_project), :user => fx(:jola ), :date => Date.parse("2009-09-04")
+      @activity_E = Activity.gen :project => fx(:oranges_first_project), :user => fx(:misio), :date => Date.parse("2009-09-05")
+    end
+    
+    context "if successor hourly rate exists" do
+      before do
+        @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+        @hourly_rate_B = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+      end
+      
+      it "should return activities that hourly rate relates to" do
+        @hourly_rate_B.activities.should == [@activity_B, @activity_C]
+      end
+    end
+    
+    context "if successor hourly rate doesn't exists" do
+      before do
+        @hourly_rate = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+      end
+      
+      it "should return nil" do
+        @hourly_rate.activities.should == [@activity_B, @activity_C, @activity_D, @activity_E]
+      end
+    end
+    
+    context "if there are activities for this and other projects" do
+      before do
+        Activity.gen :project => fx(:apples_first_project), :user => fx(:jola), :date => Date.parse("2009-09-02")
+        Activity.gen :project => fx(:apples_first_project), :user => fx(:jola), :date => Date.parse("2009-09-03")
+        
+        @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+        @hourly_rate_B = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+      end
+      
+      it "should return activities that hourly rate relates to" do
+        @hourly_rate_B.activities.should == [@activity_B, @activity_C]
+      end
+    end
+    
+    context "if there are activities for this and other roles" do
+      before do
+        Activity.gen :project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-09-02")
+        Activity.gen :project => fx(:oranges_first_project), :user => fx(:koza  ), :date => Date.parse("2009-09-03")
+        
+        @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
+        @hourly_rate_B = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-02")
+      end
+      
+      it "should return activities that hourly rate relates to" do
+        @hourly_rate_B.activities.should == [@activity_B, @activity_C]
+      end
+    end
+    
+  end
 end
