@@ -1,13 +1,11 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe HourlyRate do
-  
-  before { HourlyRate.all.destroy! }
 
   describe ":value accessor" do
     it "should work with numbers" do
-      HourlyRate.gen :value => 567.89
-      HourlyRate.first.value.should == 567.89
+      hr = HourlyRate.gen :value => 567.89
+      HourlyRate.get(hr.id).value.should == 567.89
     end
     
     it "should work with empty string" do
@@ -59,6 +57,8 @@ describe HourlyRate do
   end
   
   it "should not allow to save record with the same set of :project, :role and :takes_effect_at" do
+    HourlyRate.all.destroy!
+    
     attributes = { :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.today }
     
     hourly_rate = HourlyRate.make(attributes)
@@ -76,6 +76,8 @@ describe HourlyRate do
   end
   
   it "should have default order by :takes_effect_at" do
+    HourlyRate.all.destroy!
+    
     hr1 = HourlyRate.gen(:takes_effect_at => Date.today - 2)
     hr2 = HourlyRate.gen(:takes_effect_at => Date.today    )
     hr3 = HourlyRate.gen(:takes_effect_at => Date.today - 4)
@@ -84,6 +86,8 @@ describe HourlyRate do
   end
 
   it "should return HourlyRate object for specified activity " do 
+    HourlyRate.all.destroy!
+    
     hr1 = HourlyRate.gen(:takes_effect_at => Date.parse("2009-09-01"))
     hr2 = HourlyRate.gen(:takes_effect_at => Date.parse("2009-08-01"), :project => hr1.project, :role => hr1.role)
     [hr1.role_id, hr1.project_id].should == [hr2.role_id, hr2.project_id]
@@ -120,6 +124,8 @@ describe HourlyRate do
   end
   
   describe "#succ" do
+    before { HourlyRate.all.destroy! }
+    
     context "if successor hourly rate exists" do
       before do
         @hourly_rate_A = HourlyRate.gen :project => fx(:oranges_first_project), :role => fx(:developer), :takes_effect_at => Date.parse("2009-09-04")
