@@ -13,13 +13,14 @@ class Projects < Application
   end
   
   def show
+    @expand_hourly_rates = (params[:expand_hourly_rates] == 'yes')
     render
   end
   
   def create
     @project = Project.new(params[:project])
     if @project.save
-      redirect resource(@project)
+      redirect resource(@project, :expand_hourly_rates => 'yes')
     else
       render :index
     end

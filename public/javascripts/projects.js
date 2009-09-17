@@ -11,10 +11,11 @@ $(function() {
   });
 });
 
-HourlyRates = function(node_or_selector, data_url) {
+HourlyRates = function(node_or_selector, data_url, show_forms_for_empty_lists) {
   if (!HourlyRates.initialized) HourlyRates.init();
   
   this.node = $(node_or_selector);
+  this.show_forms_for_empty_lists = show_forms_for_empty_lists;
   $.getJSON(data_url, this.onGetResponse.bind(this));
 };
 
@@ -35,6 +36,8 @@ $.extend( HourlyRates.prototype, {
       for (var rateCounter = 0; rateCounter < data[roleCounter].hourly_rates.length; rateCounter++) {
         list.add( data[roleCounter].hourly_rates[rateCounter] );
       }
+      if (this.show_forms_for_empty_lists && list.isEmpty())
+        list.add({});
       this.node.append(list.node);
     }
   }
@@ -79,6 +82,10 @@ $.extend( RoleHourlyRateList.prototype, {
       else
         this.controllers[i - 1].node.after(this.controllers[i].node);
     }
+  },
+  
+  isEmpty: function() {
+    return this.controllers.length == 0;
   }
 });
 

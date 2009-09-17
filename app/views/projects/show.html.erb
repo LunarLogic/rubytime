@@ -18,11 +18,13 @@
 
 <div class="sections">
   <a class="head" href="#">Hourly rates</a>
-  <div id="project_hourly_rates">
+  <div id="project_hourly_rates"<%= @expand_hourly_rates ? ' class="expanded_by_default"' : '' %>>
     <%= partial 'projects/hourly_rates', :project => @project %>
   </div>
 </div>
 
 <script type="text/javascript">
-  $(function() { new HourlyRates('#project_hourly_rates', '<%= url(:hourly_rates, :project_id => @project.id) %>') });
+  $(function() { 
+    new HourlyRates('#project_hourly_rates', '<%= url(:hourly_rates, :project_id => @project.id) %>', <%= @expand_hourly_rates ? 'true' : 'false' %>) 
+  });
 </script>
