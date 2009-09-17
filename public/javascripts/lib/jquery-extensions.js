@@ -91,5 +91,8 @@ jQuery.prototype.expander = function() {
   this.click(function() {
     $(this).next().toggle('fast');
     return false;
-  }).next().hide();
+  });
+  
+  if (!this.next().hasClass("expanded_by_default"))
+    this.next().hide();
 };
