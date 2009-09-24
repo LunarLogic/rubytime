@@ -15,6 +15,7 @@ end
 Merb::BootLoader.before_app_loads do
   # This will get executed after dependencies have been loaded but before your app's classes have loaded.
   Merb.add_mime_type(:csv, :to_csv, %w[text/csv])
+  Merb.add_mime_type(:ics, :to_ics, %w[text/calendar])
   Merb::Mailer.delivery_method = :sendmail
   require Merb.root / "lib/rubytime/misc"
 end

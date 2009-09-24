@@ -1,6 +1,20 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe FreeDays do
+  
+  describe ".index" do
+    
+    it "should be successful" do
+      FreeDay.stub!(:to_ical => "iCalFileContent")
+      dispatch_to(FreeDays, :index).should be_successful
+    end
+    
+    it "should render free days iCalendar" do
+      FreeDay.should_receive(:to_ical).and_return("iCalFileContent")
+      dispatch_to(FreeDays, :index).body.should == "iCalFileContent"
+    end
+
+  end
 
   describe "#new" do
 

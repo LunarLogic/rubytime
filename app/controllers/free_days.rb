@@ -1,5 +1,12 @@
 class FreeDays < Application
+  
+  before :ensure_authenticated, :exclude => [:index]
 
+  def index
+    only_provides :ics
+    
+    render FreeDay.to_ical
+  end
 
   def new
 

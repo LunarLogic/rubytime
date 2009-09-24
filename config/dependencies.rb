@@ -28,6 +28,7 @@ dependency "randexp", ">=0.1.3"
 dependency "chronic", ">=0.2.3"
 dependency "html5", ">=0.10.0"
 dependency "merb_dm_xss_terminate", "0.5.3"
+dependency "icalendar", "~>1.1.0"
 
 dependency "bartes-rcov_stats" , :require_as => 'rcov_stats'
 
