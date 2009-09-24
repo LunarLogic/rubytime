@@ -20,6 +20,20 @@ class FreeDay
     ranges
   end
   
+  def self.to_ical
+    cal = Icalendar::Calendar.new
+    
+    all.ranges.each do |range|
+      cal.event do
+        dtstart     range[:start_date]
+        dtend       range[:end_date] + 1 # DTEND property specifies the non-inclusive end of the event, that's why "+1"
+        summary     range[:user].name
+      end
+    end
+    
+    cal.to_ical
+  end
+  
   private
   
   def self.user_ranges(free_days)

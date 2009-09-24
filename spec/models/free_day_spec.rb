@@ -41,5 +41,21 @@ describe FreeDay do
       ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-11'), :end_date => Date.parse('2009-09-12') })
     end
   end
+  
+  describe ".to_ical" do
+    before do
+      FreeDay.stub!(:ranges => [
+        { :start_date => Date.parse('2009-09-05'), :end_date => Date.parse('2009-09-06'), :user => fx(:koza) },
+      ])
+    end
+    
+    it "should render .ics file with free days iCalendar" do
+      ical = dispatch_to(FreeDays, :index).body
+
+      ical.should =~ /DTSTART:20090905/
+      ical.should =~ /DTEND:20090907/
+      ical.should =~ /SUMMARY:#{fx(:koza).name}/
+    end
+  end
 
 end
