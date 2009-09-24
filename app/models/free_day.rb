@@ -11,5 +11,26 @@ class FreeDay
     return false unless user.respond_to? :free_days
     user.free_days.count(:date => thisday) > 0
   end
-
+  
+  def self.ranges
+    ranges = []
+    all.group_by { |free_day| free_day.user }.each do |user, free_days|
+      ranges += user_ranges(free_days)
+    end
+    ranges
+  end
+  
+  private
+  
+  def self.user_ranges(free_days)
+    free_days.sort_by{|fd|fd.date}.inject([]) do |ranges,free_day|
+      if ranges.last and ranges.last[:end_date] + 1 == free_day.date
+        ranges.last[:end_date] = free_day.date
+      else
+        ranges << { :start_date => free_day.date, :end_date => free_day.date, :user => free_day.user }
+      end
+      ranges
+    end
+  end
+  
 end

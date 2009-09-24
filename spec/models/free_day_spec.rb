@@ -13,5 +13,33 @@ describe FreeDay do
     FreeDay.is_day_off(fx(:koza), Date.parse("2009-11-30")).should be_true
   end
 
+  describe ".ranges" do
+    before do
+      FreeDay.all.destroy!
+      
+      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-05')
+      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-06')
+      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-08')
+      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-11')
+      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-12')
+      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-13')
+      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-05')
+      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-08')
+      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-11')
+      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-12')
+    end
+    
+    it "should create ranges of free days" do
+      ranges = FreeDay.ranges
+      
+      ranges.size.should == 6
+      ranges.should include({ :user => fx(:koza),   :start_date => Date.parse('2009-09-05'), :end_date => Date.parse('2009-09-06') })
+      ranges.should include({ :user => fx(:koza),   :start_date => Date.parse('2009-09-08'), :end_date => Date.parse('2009-09-08') })
+      ranges.should include({ :user => fx(:koza),   :start_date => Date.parse('2009-09-11'), :end_date => Date.parse('2009-09-13') })
+      ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-05'), :end_date => Date.parse('2009-09-05') })
+      ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-08'), :end_date => Date.parse('2009-09-08') })
+      ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-11'), :end_date => Date.parse('2009-09-12') })
+    end
+  end
 
 end
