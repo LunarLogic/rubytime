@@ -50,7 +50,7 @@ describe FreeDay do
     end
     
     it "should render .ics file with free days iCalendar" do
-      ical = dispatch_to(FreeDays, :index).body
+      ical = FreeDay.to_ical
 
       ical.should =~ /DTSTART:20090905/
       ical.should =~ /DTEND:20090907/
