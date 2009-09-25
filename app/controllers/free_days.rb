@@ -5,6 +5,8 @@ class FreeDays < Application
   def index
     only_provides :ics
     
+    raise Forbidden unless params[:access_key] == Setting.free_days_access_key
+    
     render FreeDay.to_ical
   end
 

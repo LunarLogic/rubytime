@@ -3,15 +3,28 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 describe FreeDays do
   
   describe ".index" do
+    before { Setting.stub!(:free_days_access_key => 'access_key') }
     
-    it "should be successful" do
-      FreeDay.stub!(:to_ical => "iCalFileContent")
-      dispatch_to(FreeDays, :index).should be_successful
+    context "with valid :access_key" do
+      
+      it "should be successful" do
+        FreeDay.stub!(:to_ical => "iCalFileContent")
+        dispatch_to(FreeDays, :index, :access_key => 'access_key').should be_successful
+      end
+    
+      it "should render free days iCalendar" do
+        FreeDay.should_receive(:to_ical).and_return("iCalFileContent")
+        dispatch_to(FreeDays, :index, :access_key => 'access_key').body.should == "iCalFileContent"
+      end
+      
     end
     
-    it "should render free days iCalendar" do
-      FreeDay.should_receive(:to_ical).and_return("iCalFileContent")
-      dispatch_to(FreeDays, :index).body.should == "iCalFileContent"
+    context "with invalid :access_key" do
+      
+      it "should be successful" do
+        lambda { dispatch_to(FreeDays, :index, :access_key => 'invalid') }.should raise_error(Merb::ControllerExceptions::Forbidden)
+      end
+      
     end
 
   end
