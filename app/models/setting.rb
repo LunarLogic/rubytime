@@ -6,6 +6,10 @@ class Setting
   property :id, Serial
   property :enable_notifications, Boolean, :default  => false, :nullable => false
   property :free_days_access_key, String,  :default => Proc.new { Setting.generate_free_days_access_key }, :nullable => false
+  
+  before :valid? do
+    generate_free_days_access_key if free_days_access_key.blank?
+  end
     
   def self.get
     first || create

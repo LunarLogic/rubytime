@@ -13,3 +13,21 @@
     <% end =%>
   </fieldset>
 <% end =%>
+
+<h1>Security</h1>  
+  
+<h3>Free days iCal feed:</h3>
+<p><%= Rubytime::CONFIG[:site_url] + url(:free_days_index, :access_key => @setting.free_days_access_key, :format => :ics) %></p>
+
+<%= form_for(@setting, :action => resource(:settings), :id => "settings_form") do %>
+  <fieldset>
+    <%= fields_for :setting do %>
+      <p>
+        <%= hidden_field :free_days_access_key, :value => '' %>
+      </p>
+      <p class="buttons">
+        <%= submit "Re-generate", :class => "button" %>
+      </p>
+    <% end =%>
+  </fieldset>
+<% end =%>

@@ -26,6 +26,7 @@ Merb::Router.prepare do
   match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
   match("/projects/:project_id/calendar").to(:controller => "activities", :action => "calendar")
   match("/activities/day").to(:controller => "activities", :action => "day").name(:activities_for_day)
+  match("/free_days/:access_key(.:format)").to(:controller => "free_days", :action => "index").name(:free_days_index)
 
   match("/users/:id/settings").to(:controller => "users", :action => "settings").name(:user_settings)
   match("/users/request_password").to(:controller => "users", :action => "request_password").name(:request_password)
