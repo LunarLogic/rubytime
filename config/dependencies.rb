@@ -21,6 +21,9 @@ dependency "dm-sweatshop", dm_gems_version    # Data generator
 dependency "dm-serializer", dm_gems_version   # Serialization
 dependency "dm-constraints", '0.9.9'          # Validation framework
 
+dependency "do_mysql", dm_gems_version
+dependency "addressable", "~> 2.0.2", :require_as => 'addressable/uri'
+
 # dependency "merb-action-args", "0.9.10"   # Provides support for querystring arguments to be passed in to controller actions
 # dependency "merb-cache", "0.9.10"         # Provides your application with caching functions 
 
