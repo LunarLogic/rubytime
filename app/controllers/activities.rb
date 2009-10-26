@@ -42,7 +42,7 @@ class Activities < Application
   end
   
   def create
-    @activity = Activity.new(params[:activity])
+    @activity = Activity.new(params[:activity] || {})
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save
       self.content_type = :json
@@ -65,7 +65,7 @@ class Activities < Application
 
     @activity.user = current_user unless current_user.is_admin?
 
-    if @activity.update_attributes(params[:activity])
+    if @activity.update_attributes(params[:activity] || {})
       display(@activity)
     else
       render :edit, :status => 400, :layout => false
@@ -156,7 +156,7 @@ protected
   end
 
   def check_if_valid_project
-    unless Project.get(params[:activity][:project_id])
+    unless params[:activity] && Project.get(params[:activity][:project_id])
       raise BadRequest
     end
   end
