@@ -98,8 +98,8 @@ class Users < Application
   
   # this is for API, to let the client check if credentials are correct
   def authenticate
-    provides :json
-    display current_user.id
+    only_provides :json
+    display :id => current_user.id, :type => current_user.iphone_user_type
   end
     
   
