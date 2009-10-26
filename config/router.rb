@@ -47,6 +47,7 @@ Merb::Router.prepare do
   resources :clients
   resources :projects, :collection => { "for_clients" => :get } do
     resource :calendar
+    resources :activities
   end
   resources :roles
   resources :hourly_rates

@@ -18,6 +18,7 @@ class Activities < Application
     provides :csv
     @search_criteria = SearchCriteria.new(params[:search_criteria] || { :date_from => Date.today - current_user.recent_days_on_list}, current_user)
     @search_criteria.user_id = [params[:user_id]] if params[:user_id]
+    @search_criteria.project_id = [params[:project_id]] if params[:project_id]
     @search_criteria.include_inactive_projects = true if current_user.is_client_user?
     @activities = @search_criteria.found_activities
     if current_user.is_admin?
