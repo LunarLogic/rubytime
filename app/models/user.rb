@@ -53,7 +53,17 @@ class User
   def is_employee?
     self.instance_of?(Employee)
   end
-  
+
+  def iphone_user_type
+    if is_client_user?
+      :client
+    elsif is_admin?
+      :admin
+    else
+      :employee
+    end
+  end
+
   def can_see_users?
     self.is_admin? || self.is_client_user?
   end
