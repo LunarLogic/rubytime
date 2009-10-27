@@ -12,6 +12,18 @@ class Users < Application
     display @users
   end
 
+  def with_activities
+    only_provides :json
+    @users = if current_user.is_admin?
+               Employee.all(:order => [:name]).with_activities
+             elsif current_user.is_client_user?
+               Employee.all(:order => [:name]).with_activities_for_client(current_user.client)
+             else
+               raise Forbidden
+             end
+    display @users
+  end
+
   def show
     display @user
   end
