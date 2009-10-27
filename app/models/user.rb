@@ -38,6 +38,14 @@ class User
     all(:active => true)
   end
 
+  def self.with_activities
+    self.active.all(User.activities.id.not => nil, :unique => true)
+  end
+
+  def self.with_activities_for_client(client)
+    self.active.all('activities.project.client_id' => client.id, :unique => true)
+  end
+
   def authenticated?(password)
     crypted_password == encrypt(password) && active
   end

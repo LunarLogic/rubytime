@@ -36,7 +36,7 @@ Merb::Router.prepare do
   match("/invoices/pending").to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
   
   resources :users, :collection => { "with_roles" => :get, "request_password" => :get,
-      "reset_password" => :get, "authenticate" => :get } do
+      "reset_password" => :get, "authenticate" => :get, "with_activities" => :get } do
     resource :calendar
     resources :activities
   end
