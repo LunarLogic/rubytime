@@ -4,7 +4,7 @@ class Users < Application
   before :ensure_admin, :only => [:new, :create, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
   before :load_users, :only => [:index, :create]
-  before :load_clients_and_roles, :only => [:index, :create, :edit]
+  before :load_clients_and_roles, :only => [:index, :create, :edit, :update]
   before :check_authorization, :only => [:edit, :update, :show, :settings]
 
   def index
