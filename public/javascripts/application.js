@@ -58,6 +58,7 @@ var Application = {
     $(selector || ".datepicker").datepicker({
       dateFormat: window.rubytime_date_format || 'dd-mm-yy',
       duration: "",
+      firstDay: 1,
       showOn: "both",
       buttonImage: "/images/icons/calendar_month.png",
       buttonImageOnly: true
