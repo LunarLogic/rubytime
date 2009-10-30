@@ -32,7 +32,7 @@ class Activities < Application
     elsif request.xhr?
       render :index, :layout => false
     else
-      display @activities
+      display @activities, :methods => [:locked?]
     end
   end
   
