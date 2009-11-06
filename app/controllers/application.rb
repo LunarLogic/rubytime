@@ -1,6 +1,9 @@
 class Application < Merb::Controller
   before :ensure_authenticated
-  
+  before :set_api_version_header
+
+  JSON_API_VERSION = 1  # see CHANGELOG-API.txt
+
   def current_user
     session.user
   end
@@ -22,4 +25,19 @@ class Application < Merb::Controller
   def number_of_columns
     2
   end
+
+  def client_api_version
+    request.env["HTTP_X_API_VERSION"].to_i
+  end
+
+  def set_api_version_header
+    if request.env["HTTP_X_API_VERSION"]
+      headers["X-API-Version"] = JSON_API_VERSION.to_s
+    end
+  end
+
+  def send_api_version_error
+    render_failure("", 412) # :precondition_failed
+  end
+
 end

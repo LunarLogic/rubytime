@@ -1,0 +1,19 @@
+Please update this file and increment Application::JSON_API_VERSION if any changes are made to the JSON API (this
+includes only the functionality used by external clients (Plasma widget, iPhone app, etc.) - JSON methods used by AJAX
+actions are irrelevant in this context).
+
+This is done so that it's possible to handle incompatibilities between client and server versions (e.g. iPhone app has
+been updated to the newest version which uses some new API actions, but the server wasn't).
+
+-----
+
+Version 1 - November 6, 2009
+
+API actions available:
+* Activities index (with locked? field added; also /users/x/activities and /projects/x/activities)
+* Activities create
+* Activities update
+* Activities destroy
+* Projects index
+* Users with_activities (returns all users with any activities for admin, and all users with any activities in any of client's projects for client user)
+* Users authenticate (returns current_user as JSON, with iphone_user_type field added)
