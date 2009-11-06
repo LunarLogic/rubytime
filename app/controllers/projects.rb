@@ -9,7 +9,16 @@ class Projects < Application
   
   def index
     @project = Project.new :client => Client.get(params[:client_id])
-    display @projects
+    if content_type == :json
+      # for JSON API, add flag 'has_activities' which says if that project has any activities by current user
+      @projects_with_activities = Project.visible_for(current_user).with_activities_for(current_user)
+      @projects.each do |p|
+        p.has_activities = @projects_with_activities.any? { |pwa| pwa.id == p.id }
+      end
+      display @projects, :methods => [:has_activities]
+    else
+      display @projects
+    end
   end
   
   def show
@@ -64,13 +73,7 @@ protected
   end
   
   def load_projects
-    if current_user.is_admin?
-      @projects = Project.all(:order => [:name])
-    elsif current_user.is_employee?
-      @projects = Project.active.all(:order => [:name])
-    else
-      @projects = current_user.client.projects.all(:order => [:name])
-    end
+    @projects = Project.visible_for(current_user).all(:order => [:name])
   end
   
   def load_clients
