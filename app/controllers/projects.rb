@@ -11,7 +11,7 @@ class Projects < Application
     @project = Project.new :client => Client.get(params[:client_id])
     if content_type == :json
       # for JSON API, add flag 'has_activities' which says if that project has any activities by current user
-      @projects_with_activities = Project.visible_for(current_user).with_activities_for(current_user)
+      @projects_with_activities = Project.with_activities_for(current_user)
       @projects.each do |p|
         p.has_activities = @projects_with_activities.any? { |pwa| pwa.id == p.id }
       end
