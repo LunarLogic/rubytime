@@ -114,6 +114,46 @@ describe Users do
     end
   end
 
+  describe "#with_activities" do
+    it "should list all users with activities for Admin" do
+      Employee.should_receive(:with_activities)
+      as(:admin).dispatch_to(Users, :with_activities)
+    end
+
+    it "should list all users with activities in any of the client's projects for ClientUser" do
+      client = fx(:orange)
+      client_user = client.client_users.first
+      Employee.should_receive(:with_activities_for_client).with(client)
+      as(client_user).dispatch_to(Users, :with_activities)
+    end
+
+    it "shouldn't allow employee to see user list" do
+      block_should(raise_forbidden) do
+        as(:employee).dispatch_to(Users, :with_activities)
+      end
+    end
+  end
+
+  describe "#authenticate" do
+    it "should return user data as json, if login data is correct" do
+      employee = fx(:apple_user1)
+      response = as(employee).dispatch_to(Users, :authenticate)
+      response.should be_successful
+      response.body.should =~ /"login": "#{employee.login}"/
+    end
+
+    it "should include user_type field" do
+      response = as(:employee).dispatch_to(Users, :authenticate)
+      response.body.should =~ /"user_type": "employee"/
+    end
+
+    it "should block unauthenticated users" do
+      block_should(raise_unauthenticated) do
+        as(:guest).dispatch_to(Users, :authenticate)
+      end
+    end
+  end
+
   describe "#reset_password" do
     before :all do
       @user = fx(:admin)
