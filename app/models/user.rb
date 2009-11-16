@@ -62,9 +62,9 @@ class User
     self.instance_of?(Employee)
   end
 
-  def iphone_user_type
+  def user_type
     if is_client_user?
-      :client
+      :client_user
     elsif is_admin?
       :admin
     else
