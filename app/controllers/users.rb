@@ -111,7 +111,7 @@ class Users < Application
   # this is for API, to let the client check if credentials are correct
   def authenticate
     only_provides :json
-    display(current_user, :methods => [:iphone_user_type])
+    display(current_user, :methods => [:user_type])
   end
     
   

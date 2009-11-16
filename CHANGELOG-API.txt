@@ -7,7 +7,7 @@ been updated to the newest version which uses some new API actions, but the serv
 
 -----
 
-Version 1 - November 6, 2009
+Version 1 - November 16, 2009
 
 API actions available:
 * Activities index
@@ -23,4 +23,4 @@ API actions available:
   - for client user, returns all users with any activities in any of client's projects
 * Users authenticate
   - returns current_user as JSON
-  - adds iphone_user_type field
+  - adds user_type field
