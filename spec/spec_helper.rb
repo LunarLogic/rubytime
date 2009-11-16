@@ -1,5 +1,9 @@
 require "rubygems"
 
+
+# !! FIXME: change requires so that this file is executed only once, not 5 times...
+
+
 # Add the local gems dir if found within the app root; any dependencies loaded
 # hereafter will try to load from the local gems before loading system gems.
 if (local_gem_dir = File.join(File.dirname(__FILE__), '..', 'gems')) && $BUNDLE.nil?
