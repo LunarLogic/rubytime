@@ -5,6 +5,12 @@ describe Activities do
   it "should should match /activities to Activities#index" do
     request_to("/activities", :get).should route_to(Activities, :index)
   end
+
+  it "should should match /project/x/activities to Activities#index with :project_id set" do
+    project_id = fx(:oranges_first_project).id
+    request = request_to("/projects/#{project_id}/activities", :get)
+    request.should route_to(Activities, :index).with(:project_id => project_id.to_s)
+  end
   
   describe "#index" do
     it "should show list of activities" do
@@ -12,8 +18,19 @@ describe Activities do
       as(:client).dispatch_to(Activities, :index).should be_successful
       as(:admin).dispatch_to(Activities, :index).should be_successful
     end
+
+    it "should include activity locked? field in JSON response" do
+      response = as(:employee).dispatch_to(Activities, :index, :format => 'json')
+      response.body.should =~ /"locked\?"/
+    end
+
+    it "should filter by project if actions is accessed by /projects/x/activities" do
+      proj_id = fx(:oranges_first_project).id
+      response = as(:employee).dispatch_to(Activities, :index, :project_id => proj_id)
+      response.instance_variable_get("@search_criteria").selected_project_ids.should == [proj_id.to_s]
+    end
   end
-  
+
   describe "#new" do
     it "should show 3 recent and rest of projects when adding new activity" do
       jola = fx(:jola) #jola has 3 activities for orange project
@@ -97,6 +114,11 @@ describe Activities do
         user.reload # nedded to reload user.activities 
       end
     end
+
+    it "should not crash when :activity hash isn't set" do
+      block_should(raise_bad_request) { as(:employee).dispatch_to(Activities, :create) }
+    end
+
   end
 
   describe "#edit" do
@@ -135,6 +157,11 @@ describe Activities do
         })
       end
     end
+
+    it "should not crash when :activity hash isn't set" do
+      lambda { as(:employee).dispatch_to(Activities, :update, :id => fx(:jolas_activity1).id) }.should_not raise_error
+    end
+
   end
 
   describe "#destroy" do

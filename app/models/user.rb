@@ -38,6 +38,14 @@ class User
     all(:active => true)
   end
 
+  def self.with_activities
+    self.active.all(User.activities.id.not => nil, :unique => true)
+  end
+
+  def self.with_activities_for_client(client)
+    self.active.all('activities.project.client_id' => client.id, :unique => true)
+  end
+
   def authenticated?(password)
     crypted_password == encrypt(password) && active
   end
@@ -53,7 +61,17 @@ class User
   def is_employee?
     self.instance_of?(Employee)
   end
-  
+
+  def user_type
+    if is_client_user?
+      :client_user
+    elsif is_admin?
+      :admin
+    else
+      :employee
+    end
+  end
+
   def can_see_users?
     self.is_admin? || self.is_client_user?
   end

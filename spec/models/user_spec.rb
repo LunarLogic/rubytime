@@ -21,7 +21,7 @@ describe User do
       Employee.make(:login => login, :role => fx(:developer)).save.should be_true
     end
   end
-  
+
   it "shouldn't authenticate inactive user" do
     password = "awsumpass"
     login = "awsum-stefan"
@@ -105,6 +105,61 @@ describe User do
       it { @user.can_manage_financial_data?.should == false }
     end
   end
+
+  describe "with_activities" do
+    it "should include users which have added activities" do
+      user = Employee.generate!
+      Activity.generate! :user => user
+      User.with_activities.should include(user)
+    end
+
+    it "should not include users which haven't added any activities" do
+      user = Employee.generate!
+      User.with_activities.should_not include(user)
+    end
+
+    it "should not include duplicate entries" do
+      user = Employee.generate!
+      2.times { Activity.generate! :user => user }
+      User.with_activities.find_all { |u| u == user }.length.should == 1
+    end
+  end
+
+  describe "with_activities_for_client" do
+    it "should include users which have added activities for any of client's projects" do
+      user = Employee.generate!
+      client = Client.generate!
+      project = Project.generate! :client => client
+      Activity.generate! :user => user, :project => project
+      User.with_activities_for_client(client).should include(user)
+    end
+
+    it "should not include users which haven't added any activities for any of client's projects" do
+      user = Employee.generate!
+      client = Client.generate!
+      client2 = Client.generate!
+      project = Project.generate! :client => client
+      project2 = Project.generate! :client => client2
+      Activity.generate! :user => user, :project => project2
+      User.with_activities_for_client(client).should_not include(user)
+    end
+
+    it "should not include duplicate entries" do
+      user = Employee.generate!
+      client = Client.generate!
+      project = Project.generate! :client => client
+      project2 = Project.generate! :client => client
+      Activity.generate! :user => user, :project => project
+      Activity.generate! :user => user, :project => project2
+      User.with_activities_for_client(client).should == [user]
+    end
+  end
+end
+
+describe "admin" do
+  it "should return a proper user_type" do
+    Employee.new(:admin => true).user_type.should == :admin
+  end
 end
 
 describe Employee do
@@ -126,7 +181,11 @@ describe Employee do
   it "shouldn't be admin" do
     Employee.new.is_admin?.should be_false 
   end
-  
+
+  it "should return a proper user_type" do
+    Employee.new.user_type.should == :employee
+  end
+
   it "shouldn't create user without name" do
     user = Employee.gen :name => nil
     user.save.should be_false
@@ -254,6 +313,7 @@ describe Employee do
 end
 
 describe ClientUser do
+
   it "shouldn't be admin" do
     ClientUser.new.is_admin?.should be_false 
   end
@@ -266,6 +326,10 @@ describe ClientUser do
     client_user = ClientUser.make(:client => nil)
     client_user.save.should be_false
     client_user.errors.on(:client).should_not be_nil
+  end
+
+  it "should return a proper user_type" do
+    ClientUser.new.user_type.should == :client_user
   end
 
 end

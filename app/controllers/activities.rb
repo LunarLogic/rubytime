@@ -18,6 +18,7 @@ class Activities < Application
     provides :csv
     @search_criteria = SearchCriteria.new(params[:search_criteria] || { :date_from => Date.today - current_user.recent_days_on_list}, current_user)
     @search_criteria.user_id = [params[:user_id]] if params[:user_id]
+    @search_criteria.project_id = [params[:project_id]] if params[:project_id]
     @search_criteria.include_inactive_projects = true if current_user.is_client_user?
     @activities = @search_criteria.found_activities
     if current_user.is_admin?
@@ -31,7 +32,7 @@ class Activities < Application
     elsif request.xhr?
       render :index, :layout => false
     else
-      display @activities
+      display @activities, :methods => [:locked?]
     end
   end
   
@@ -42,7 +43,7 @@ class Activities < Application
   end
   
   def create
-    @activity = Activity.new(params[:activity])
+    @activity = Activity.new(params[:activity] || {})
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save
       self.content_type = :json
@@ -65,7 +66,7 @@ class Activities < Application
 
     @activity.user = current_user unless current_user.is_admin?
 
-    if @activity.update_attributes(params[:activity])
+    if @activity.update_attributes(params[:activity] || {})
       display(@activity)
     else
       render :edit, :status => 400, :layout => false
@@ -156,7 +157,7 @@ protected
   end
 
   def check_if_valid_project
-    unless Project.get(params[:activity][:project_id])
+    unless params[:activity] && Project.get(params[:activity][:project_id])
       raise BadRequest
     end
   end
