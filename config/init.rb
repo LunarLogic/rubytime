@@ -1,5 +1,5 @@
-require 'config/dependencies.rb'
- 
+require Merb.root / "gems" / "environment"
+
 use_orm :datamapper
 use_test :rspec
 use_template_engine :erb

@@ -8,3 +8,5 @@ Merb::Config.use { |c|
   # or redirect logger using IO handle
   # c[:log_stream] = STDOUT
 }
+
+Bundler.require_env "staging"
