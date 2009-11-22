@@ -6,7 +6,7 @@ class Invoice
   property :notes,       Text
   property :user_id,     Integer, :nullable => false, :index => true
   property :client_id,   Integer, :nullable => false, :index => true
-  property :issued_at,   DateTime, :default => nil
+  property :issued_at,   DateTime
   property :created_at,  DateTime
  
   belongs_to :client
@@ -17,7 +17,7 @@ class Invoice
 
   after :save do
     unless new_activities.blank?
-      new_activities.each { |activity| activity.update_attributes(:invoice_id => id) }
+      new_activities.each { |activity| activity.update(:invoice_id => id) }
     end
   end
   
@@ -37,7 +37,7 @@ class Invoice
   def issue!
 #    transaction do
       activities.each { |a| a.freeze_price! }
-      update_attributes(:issued_at => DateTime.now)
+      update(:issued_at => DateTime.now)
 #    end
   end
   

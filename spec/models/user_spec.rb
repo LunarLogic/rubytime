@@ -247,8 +247,8 @@ describe Employee do
   
   describe "#activities_by_dates_and_projects" do
     it "should return nested tables dates -> projects -> activities" do
-      fx(:oranges_first_project).update_attributes :name => 'BBB'
-      fx(:oranges_second_project).update_attributes :name => 'AAA'
+      fx(:oranges_first_project).update :name => 'BBB'
+      fx(:oranges_second_project).update :name => 'AAA'
       
       fx(:stefan).activities.destroy!
       fx(:stefan).activities << @activity1 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_first_project), :date => Date.parse('2009-08-10'))

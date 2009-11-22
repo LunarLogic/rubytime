@@ -66,7 +66,7 @@ class Activities < Application
 
     @activity.user = current_user unless current_user.is_admin?
 
-    if @activity.update_attributes(params[:activity] || {})
+    if @activity.update(params[:activity] || {})
       display(@activity)
     else
       render :edit, :status => 400, :layout => false

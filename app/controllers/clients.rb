@@ -31,7 +31,7 @@ class Clients < Application
   end
   
   def update
-    if @client.update_attributes(params[:client]) || !@client.dirty?
+    if @client.update(params[:client]) || !@client.dirty?
       redirect resource(@client)
     else
       raise BadRequest

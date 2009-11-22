@@ -51,7 +51,7 @@ class Users < Application
 
   def update
     params[:user].delete(:class_name)
-    if @user.update_attributes(params[:user]) || !@user.dirty?
+    if @user.update(params[:user]) || !@user.dirty?
       if current_user.is_admin?
         redirect url(:user, @user), :message => { :notice => "User has been updated" }
       else

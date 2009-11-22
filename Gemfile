@@ -17,9 +17,9 @@ gem "dm-migrations", dm_gems_version
 gem "dm-observer", dm_gems_version
 gem "dm-sweatshop", dm_gems_version
 gem "dm-serializer", dm_gems_version
-gem "dm-constraints", dm_gems_version
+# gem "dm-constraints", dm_gems_version
 
-merb_gems_version = "1.0.12"
+merb_gems_version = "1.0.15"
 
 gem "merb_datamapper", merb_gems_version
 gem "merb-assets", merb_gems_version
@@ -34,6 +34,7 @@ git "git://github.com/schwabsauce/merb_dm_xss_terminate.git" do
   gem "merb_dm_xss_terminate"
 end
 
+gem "ParseTree"
 gem "randexp", ">=0.1.3"
 gem "chronic", ">=0.2.3"
 gem "html5", ">=0.10.0"

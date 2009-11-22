@@ -8,15 +8,15 @@ class HourlyRateLog
   property :logged_at, DateTime
   property :operation_type, String, :nullable => false
   property :operation_author_id, Integer, :nullable => false
-  property :hr_id,                      Integer, :writter => :private
-  property :hr_project_id,              Integer, :writter => :private
-  property :hr_role_id,                 Integer, :writter => :private
-  property :hr_takes_effect_at,         Date,    :writter => :private
-  property :hr_value,                   BigDecimal, :writter => :private, :scale => 2, :precision => 10
-  property :hr_currency_id,             Integer, :writter => :private
+  property :hr_id,                      Integer, :accessor => :private
+  property :hr_project_id,              Integer, :accessor => :private
+  property :hr_role_id,                 Integer, :accessor => :private
+  property :hr_takes_effect_at,         Date,    :accessor => :private
+  property :hr_value,                   BigDecimal, :accessor => :private, :scale => 2, :precision => 10
+  property :hr_currency_id,             Integer, :accessor => :private
   
-  belongs_to :operation_author, :class_name => "User", :child_key => [:operation_author_id]
-  belongs_to :hr_currency, :class_name => "Currency", :child_key => [:hr_currency_id]
+  belongs_to :operation_author, :model => User, :child_key => [:operation_author_id]
+  belongs_to :hr_currency, :model => Currency, :child_key => [:hr_currency_id]
   
   default_scope(:default).update(:order => [:logged_at])
   

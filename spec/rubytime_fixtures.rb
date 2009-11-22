@@ -171,7 +171,7 @@ module Rubytime
         end
         
         def add_fixture(type, name, obj)
-          raise ArgumentError, "#{obj.class} object not saved, errors: #{obj.errors.inspect}" if obj.new_record?
+          raise ArgumentError, "#{obj.class} object not saved, errors: #{obj.errors.inspect}" if obj.new?
           @@fixtures[[type, name]] = obj
         end
         

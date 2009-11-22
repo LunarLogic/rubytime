@@ -8,7 +8,7 @@ class Role
   has n, :employees
   
   def name=(name)
-    raise 'The :name attribute is readonly' unless new_record? or name == self.name
+    raise 'The :name attribute is readonly' unless new? or name == self.name
     attribute_set(:name, name)
   end
 

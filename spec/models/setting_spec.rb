@@ -9,7 +9,7 @@ describe Setting do
     context 'when a Setting record exists' do
       before { @setting = Setting.create! }
       it 'should return the value of the setting'  do
-        Setting.first.update_attributes :enable_notifications => true
+        Setting.first.update :enable_notifications => true
         Setting.enable_notifications.should == true
       end
     end
@@ -30,7 +30,7 @@ describe Setting do
     context 'when a Setting record exists' do
       before { @setting = Setting.create! }
       it 'should return the value of the setting' do
-        Setting.first.update_attributes :free_days_access_key => 'thekey'
+        Setting.first.update :free_days_access_key => 'thekey'
         Setting.free_days_access_key.should == 'thekey'
       end
     end

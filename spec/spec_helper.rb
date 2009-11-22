@@ -33,7 +33,6 @@ require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/rubytime_controller_helper"
 require Merb.root / "spec/spec_fixtures"
 require Merb.root / "spec/rubytime_fixtures"
-require Merb.root / "spec/rubytime_sweatshop_fix"
 require Merb.root / "spec/mail_controller_specs_helper"
 
 DataMapper.auto_migrate!

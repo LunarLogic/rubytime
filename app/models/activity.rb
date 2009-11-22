@@ -1,4 +1,5 @@
 class Activity
+  # TODO: move to a custom DM type
   HOURS_REGEX = /^\d{1,2}([\.,]\d{1}|:[0-5]\d)?$/
 
   include DataMapper::Resource
@@ -10,19 +11,19 @@ class Activity
   property :project_id,  Integer, :nullable => false, :index => true
   property :user_id,     Integer, :nullable => false, :index => true
   property :invoice_id,  Integer, :index => true
-  property :price_value, BigDecimal, :scale => 2, :precision => 10, :nullable => true, :default => nil
-  property :price_currency_id, Integer, :nullable => true, :default => nil
+  property :price_value, BigDecimal, :scale => 2, :precision => 10, :nullable => true
+  property :price_currency_id, Integer, :nullable => true
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
   validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
   validates_with_method :hours, :method => :check_max_hours
-  validates_present :hourly_rate, :if => :new_record?, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
+  validates_present :hourly_rate, :if => :new?, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
-  belongs_to :user
+  belongs_to :user, :child_key => [:user_id]
   belongs_to :invoice
-  belongs_to :price_currency, :class_name => 'Currency', :child_key => [:price_currency_id]
+  belongs_to :price_currency, :model => Currency, :child_key => [:price_currency_id]
   
   # Returns n recent activities
   def self.recent(n_)
@@ -114,9 +115,9 @@ class Activity
   def freeze_price!
     raise Exception.new('Price is already frozen') if price_frozen?
     if price
-      update_attributes(:price_value => price.value, :price_currency => price.currency)
+      update(:price_value => price.value, :price_currency => price.currency)
     else
-      update_attributes(:price_value => nil,         :price_currency => nil)
+      update(:price_value => nil,         :price_currency => nil)
     end
   end
   

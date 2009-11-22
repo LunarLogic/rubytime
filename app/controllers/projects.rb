@@ -40,7 +40,7 @@ class Projects < Application
   end
   
   def update
-    if @project.update_attributes(params[:project]) || !@project.dirty?
+    if @project.update(params[:project]) || !@project.dirty?
       redirect resource(@project)
     else
       render :edit

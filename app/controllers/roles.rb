@@ -23,7 +23,7 @@ class Roles < Application
   
   def update
     @role = Role.get(params[:id]) or raise NotFound
-    if @role.update_attributes(params[:role]) || !@role.dirty?
+    if @role.update(params[:role]) || !@role.dirty?
       redirect resource(:roles)
     else
       render :edit

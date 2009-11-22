@@ -31,7 +31,7 @@ class HourlyRates < Application
     @hourly_rate = HourlyRate.get(params[:id])
     raise NotFound unless @hourly_rate
     @hourly_rate.operation_author = current_user
-    if @hourly_rate.update_attributes(params[:hourly_rate])
+    if @hourly_rate.update(params[:hourly_rate])
       @hourly_rate.date_format_for_json = current_user.date_format
       display :status => :ok, :hourly_rate => @hourly_rate
     else

@@ -1,6 +1,6 @@
-<h1><%= @user.new_record? ? "Add new user" : "User editing" %></h1>
+<h1><%= @user.new? ? "Add new user" : "User editing" %></h1>
 <%= error_messages_for @user %>
-<%= form_for(@user, :action => @user.new_record? ? url(:users) : url(:user, @user), :id => "user_form") do %>
+<%= form_for(@user, :action => @user.new? ? url(:users) : url(:user, @user), :id => "user_form") do %>
   <fieldset>
     <%= fields_for :user do %>
       <p>
@@ -21,7 +21,7 @@
       <p>
         <%= text_field :email, :label => "Email" %>
       </p>
-      <% unless @user.new_record? %>
+      <% unless @user.new? %>
         <p>
           <label for="user_active">Active?</label>
           <%= check_box :active %>
@@ -34,7 +34,7 @@
         <%= password_field :password_confirmation, :label => "Password confirmation" %>
       </p>
       <p class="buttons">
-        <%= submit @user.new_record? ? "Create" : "Update", :class => "button" %>
+        <%= submit @user.new? ? "Create" : "Update", :class => "button" %>
       </p>
     <% end =%>
   </fieldset>

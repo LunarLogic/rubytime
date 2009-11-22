@@ -22,7 +22,7 @@ class Invoices < Application
   end
 
   def update
-    if @invoice.update_attributes(params[:invoice]||{})
+    if @invoice.update(params[:invoice]||{})
       if request.xhr?
         @invoice.to_json
       else

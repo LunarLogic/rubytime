@@ -165,7 +165,7 @@ describe Activity do
     end
     
     context "with notifications enabled" do
-      before { Setting.get.update_attributes :enable_notifications => true }
+      before { Setting.get.update :enable_notifications => true }
       it "should call :notify_project_managers_about_saving" do
         @activity.should_receive(:notify_project_managers_about_saving).with(@kind_of_change)
         @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)
@@ -173,7 +173,7 @@ describe Activity do
     end
     
     context "with notifications disabled" do
-      before { Setting.get.update_attributes :enable_notifications => false }
+      before { Setting.get.update :enable_notifications => false }
       it "should not call :notify_project_managers_about_saving" do
         @activity.should_not_receive(:notify_project_managers_about_saving).with(@kind_of_change)
         @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)

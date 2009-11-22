@@ -131,13 +131,13 @@ class User
   
   def generate_password_reset_token
     now = Time.now
-    update_attributes(
+    update(
       :password_reset_token => Digest::SHA1.hexdigest("-#{login}-#{now}-"),
       :password_reset_token_exp => now+Rubytime::PASSWORD_RESET_LINK_EXP_TIME)
   end
 
   def clear_password_reset_token!
-    update_attributes(:password_reset_token => nil, :password_reset_token_exp => nil)
+    update(:password_reset_token => nil, :password_reset_token_exp => nil)
   end
   
   def class_name

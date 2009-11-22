@@ -1,8 +1,8 @@
 <%= error_messages_for(@activity) %>
 
-<%= form_for @activity, :action => @activity.new_record? ? url(:activities) : resource(@activity), :class => "activity_form" do %>
+<%= form_for @activity, :action => @activity.new? ? url(:activities) : resource(@activity), :class => "activity_form" do %>
   <fieldset>
-    <% if @activity.new_record? %><legend>New activity</legend><% end %>
+    <% if @activity.new? %><legend>New activity</legend><% end %>
     <% if current_user.is_admin? %>
       <p>
         <%= select :user_id, :label => "User", :collection =>  @users.map { |u| [u.id, u.name] } %>
@@ -24,7 +24,7 @@
       <%= text_area :comments, :label => "Comments" %>
     </p>
     <p class="buttons">
-      <%= submit((@activity.new_record? ? "Add" : "Save"), :class => "button") %> or <%= link_to "Cancel", "#", :id => "close_activity_form" %>
+      <%= submit((@activity.new? ? "Add" : "Save"), :class => "button") %> or <%= link_to "Cancel", "#", :id => "close_activity_form" %>
     </p>
   </fieldset>
 <% end =%> 

@@ -169,7 +169,7 @@ describe Users do
     end
     
     it 'should redirect to password_reset if a token has expired' do
-      @user.update_attributes(:password_reset_token_exp => DateTime.now-1.hour)
+      @user.update(:password_reset_token_exp => DateTime.now-1.hour)
       dispatch_to(Users, :reset_password, :token => @user.password_reset_token).should redirect_to(url(:password_reset))
     end
   end

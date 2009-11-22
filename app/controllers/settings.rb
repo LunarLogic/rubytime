@@ -12,7 +12,7 @@ class Settings < Application
   def update
     @setting = Setting.get
     raise NotFound unless @setting
-    if @setting.update_attributes(params[:setting])
+    if @setting.update(params[:setting])
       redirect url(:edit_settings)
     else
       display @setting, :edit
