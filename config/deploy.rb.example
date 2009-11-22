@@ -25,7 +25,13 @@ namespace :vlad do
     run "juicer merge #{current_path}/public/stylesheets/master.css -d #{current_path}/public"
   end
   
+  namespace :db do
+    remote_task :autoupgrade, :roles => [:app] do
+      run "cd #{current_path}; #{rake_cmd} MERB_ENV=#{merb_env} bin/rake db:autoupgrade"
+    end
+  end
+
   task :deploy => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'vlad:start_app']
   task :deploy_with_migrations => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'db:migrate', 'vlad:start_app']
-  task :deploy_with_autoupgrade => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'db:autoupgrade', 'vlad:start_app']
+  task :deploy_with_autoupgrade => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'vlad:db:autoupgrade', 'vlad:start_app']
 end
