@@ -19,6 +19,7 @@ class User
   property :remember_me_token_expiration,  DateTime
   property :remember_me_token,             String
   property :remind_by_email,               Boolean, :nullable => false, :default => false
+  property :activities_count,              Integer, :default => 0
 
   validates_length :name, :min => 3
 
@@ -39,11 +40,11 @@ class User
   end
 
   def self.with_activities
-    self.active.all(User.activities.id.not => nil, :unique => true)
+    active.all(:activities_count.gt => 0, :unique => true)
   end
 
   def self.with_activities_for_client(client)
-    self.active.all('activities.project.client_id' => client.id, :unique => true)
+    active.all('activities.project.client_id' => client.id, :unique => true)
   end
 
   def authenticated?(password)

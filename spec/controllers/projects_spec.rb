@@ -88,7 +88,7 @@ describe Projects do
     it "should update record successfully and redirect to index" do
       apple = fx(:apple)
       project = fx(:oranges_first_project)
-      
+
       as(:admin).dispatch_to(Projects, :update, { 
         :id => project.id, 
         :project => { 
@@ -97,10 +97,11 @@ describe Projects do
           :client_id => apple.id
         }
       }).should redirect_to(resource(project))
+
       project.reload
       project.name.should == "Misio"
       project.description.should == "Misiaczek"
-      project.client.should == apple
+      project.client_id.should == apple.id
     end
 
     it "should not update record and show errors" do

@@ -33,7 +33,7 @@ class FreeDay
     
     cal.to_ical
   end
-  
+
   private
   
   def self.user_ranges(free_days)

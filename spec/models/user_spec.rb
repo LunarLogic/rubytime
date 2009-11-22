@@ -108,8 +108,9 @@ describe User do
 
   describe "with_activities" do
     it "should include users which have added activities" do
-      user = Employee.generate!
+      user = Employee.generate!(:activities_count => 1)
       Activity.generate! :user => user
+
       User.with_activities.should include(user)
     end
 
@@ -119,7 +120,7 @@ describe User do
     end
 
     it "should not include duplicate entries" do
-      user = Employee.generate!
+      user = Employee.generate!(:activities_count => 1)
       2.times { Activity.generate! :user => user }
       User.with_activities.find_all { |u| u == user }.length.should == 1
     end

@@ -16,8 +16,7 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
-  validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
-  validates_with_method :hours, :method => :check_max_hours
+  validates_with_method :hours, :method => :validate_hours
   validates_present :hourly_rate, :if => :new?, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
@@ -108,8 +107,8 @@ class Activity
   def price_frozen?
     persistent = Activity.get(id)
     not persistent.nil? and
-    not persistent.price_value.nil? and 
-    not persistent.price_currency.nil?
+      not persistent.price_value.nil? and
+      not persistent.price_currency.nil?
   end
 
   def freeze_price!
@@ -158,13 +157,18 @@ class Activity
   protected
   
   # Checks if hours for this activity are under 24 hours
-  def check_max_hours
+  def validate_hours
     if minutes
       if minutes > (24 * 60)
         self.minutes = nil
         return [false, "Hours must be under 24"]
       end
     end
+
+    if (HOURS_REGEX =~ hours).nil?
+      return [false, "Hours has an invalid format"]
+    end
+
     true
   end
 end

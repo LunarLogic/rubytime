@@ -29,7 +29,7 @@ class SearchCriteria
     
     @include_inactive_projects = false
     
-    @errors = DataMapper::Validate::ValidationErrors.new
+    @errors = DataMapper::Validate::ValidationErrors.new(self)
   end
   
   # setters

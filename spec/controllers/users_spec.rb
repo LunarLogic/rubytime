@@ -80,8 +80,10 @@ describe Users do
       [admin, dev].each do |role|
         controller = as(employee.another).dispatch_to(Users, :update, { :id => employee.id, :user => { :role_id => role.id} })
         controller.should redirect_to(url(:user, employee.id))
-        employee.reload.role.should == role
       end
+
+      employee.reload.role.should_not == admin
+      employee.reload.role.should == dev
     end
   end
 
@@ -139,12 +141,12 @@ describe Users do
       employee = fx(:apple_user1)
       response = as(employee).dispatch_to(Users, :authenticate)
       response.should be_successful
-      response.body.should =~ /"login": "#{employee.login}"/
+      JSON::parse(response.body)["login"].should eql(employee.login)
     end
 
     it "should include user_type field" do
       response = as(:employee).dispatch_to(Users, :authenticate)
-      response.body.should =~ /"user_type": "employee"/
+      JSON::parse(response.body)["user_type"].should eql("employee")
     end
 
     it "should block unauthenticated users" do

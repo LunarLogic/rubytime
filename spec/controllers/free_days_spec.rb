@@ -1,12 +1,10 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe FreeDays do
-  
   describe ".index" do
     before { Setting.stub!(:free_days_access_key => 'access_key') }
     
     context "with valid :access_key" do
-      
       it "should be successful" do
         FreeDay.stub!(:to_ical => "iCalFileContent")
         dispatch_to(FreeDays, :index, :access_key => 'access_key').should be_successful
@@ -16,21 +14,16 @@ describe FreeDays do
         FreeDay.should_receive(:to_ical).and_return("iCalFileContent")
         dispatch_to(FreeDays, :index, :access_key => 'access_key').body.should == "iCalFileContent"
       end
-      
     end
     
     context "with invalid :access_key" do
-      
       it "should be successful" do
         lambda { dispatch_to(FreeDays, :index, :access_key => 'invalid') }.should raise_error(Merb::ControllerExceptions::Forbidden)
       end
-      
     end
-
   end
 
   describe "#new" do
-
     it "should add new vacation day" do
       employee = Employee.gen(:role => fx(:developer))
       controller = as(employee).dispatch_to(FreeDays, :new, :date => "2009-05-01", :user_id => employee.id)
@@ -42,12 +35,9 @@ describe FreeDays do
       controller = as(employee).dispatch_to(FreeDays, :new, :date => "333333333333", :user_id => employee.id)
       controller.status.should == 400
     end
-
   end
 
-
   describe "#delete" do
-
     it "should delete a vacation flag from free day" do
       employee = Employee.gen(:role => fx(:developer))
       controller = as(employee).dispatch_to(FreeDays, :new, :date => "2009-05-01", :user_id => employee.id)
@@ -55,10 +45,9 @@ describe FreeDays do
       
       controller2 = as(employee).dispatch_to(FreeDays, :delete, :date => "2009-05-01", :user_id => employee.id)
       controller2.should be_successful
-
     end
     
-    it "should not delete a vacation flag form working day" do
+    it "should not delete a vacation flag from working day" do
       employee = Employee.gen(:role => fx(:developer))
       employee2 = Employee.gen(:role => fx(:developer))
 
@@ -76,11 +65,6 @@ describe FreeDays do
 
       controller5 = as(employee).dispatch_to(FreeDays, :delete, :date => "2009-05-01", :user_id => employee.id)
       controller5.should be_successful
-
     end
-
-
   end
-
-
 end
