@@ -104,11 +104,12 @@ module Rubytime
           
           # === Generating hourly rates
           
-          Project.all.each do |project|
+          Project.all.each do |project, p|
             Role.all.each do |role|
-              HourlyRate.gen(
-                :project => project, :role => role,
-                :takes_effect_at => random_date(Date.parse('2005-01-01'), Date.parse('2006-01-01') ))
+              add_fixture(:hourly_rate, "hr_#{project.id}_#{role.id}",
+                HourlyRate.gen(
+                  :project => project, :role => role,
+                  :takes_effect_at => random_date(Date.parse('2005-01-01'), Date.parse('2006-01-01'))))
             end
           end
           

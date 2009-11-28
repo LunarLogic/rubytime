@@ -69,7 +69,7 @@ end
 Factory.define(:hourly_rate_log, :class => HourlyRateLog) do |hrl|
   hrl.operation_type 'update'
   hrl.operation_author { Employee.pick }
-  hrl.hourly_rate { |a| HourlyRate.pick }
+  hrl.hourly_rate { HourlyRate.pick }
 end
 
 Factory.define(:currency, :class => Currency) do |c|

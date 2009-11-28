@@ -25,18 +25,17 @@ class HourlyRateLog
   
   def hourly_rate=(hourly_rate)    
     (ATTRIBUTES_TO_LOG + [:id]).each do |attr_to_log|
-      self.send("hr_#{attr_to_log}=", hourly_rate ? hourly_rate.send(attr_to_log) : nil)
+      attribute_set("hr_#{attr_to_log}", hourly_rate ? hourly_rate.attribute_get(attr_to_log) : nil)
     end
   end
   
   before :save do
-    self.logged_at = DateTime.now unless logged_at
+    self.logged_at ||= DateTime.now
     
     if operation_type == 'destroy'
       ATTRIBUTES_TO_LOG.each do |attr_not_to_log|
-        self.send("hr_#{attr_not_to_log}=", nil)
+        attribute_set("hr_#{attr_not_to_log}", nil)
       end
     end
   end
-
 end

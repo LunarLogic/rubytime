@@ -72,7 +72,9 @@ describe HourlyRateLog do
   end
   
   context "with :operation_type == 'destroy'" do
-    before { @hourly_rate_log = HourlyRateLog.make(:operation_type => 'destroy') }
+    before do
+      @hourly_rate_log = HourlyRateLog.make(:operation_type => 'destroy')
+    end
     
     context "after saving" do
       before { @hourly_rate_log.save }
