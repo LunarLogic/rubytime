@@ -8,7 +8,7 @@ Factory.define(:employee, :class => Employee) do |u|
   u.sequence(:email) { |n| "user_#{n}@rubytime.org" }
   u.password 'asdf1234'
   u.password_confirmation { |u| u.password }
-  u.role {|r| r.association(:role) }
+  u.role {|r| Role.pick }
 end
 
 Factory.define(:admin, :parent => :employee) do |u|
@@ -35,8 +35,8 @@ Factory.define(:project, :class => Project) do |p|
 end
 
 Factory.define(:activity, :class => Activity) do |p|
-  p.user { |a| a.association(:employee) }
-  p.project { |a| a.association(:project) }
+  p.user { Employee.pick }
+  p.project { Project.pick }
   p.date { random_date(Date.today - 15, Date.today - 5) }
   p.minutes { 30 + rand * (23 * 60) }
   p.sequence(:comments) { |n| "Activity comment ##{n}" }
@@ -68,8 +68,8 @@ end
 
 Factory.define(:hourly_rate_log, :class => HourlyRateLog) do |hrl|
   hrl.operation_type 'update'
-  hrl.operation_author { |a| a.association(:employee) }
-  hrl.hourly_rate { |a| a.association(:hourly_rate) }
+  hrl.operation_author { Employee.pick }
+  hrl.hourly_rate { |a| HourlyRate.pick }
 end
 
 Factory.define(:currency, :class => Currency) do |c|

@@ -4,6 +4,10 @@ module Rubytime
       @@fixtures = {}
       
       class << self
+
+        def pick(what)
+          @@fixtures.map {|k, v| v if k.first == what}.compact.pick
+        end
       
         def prepare
           return if @prepared

@@ -6,7 +6,7 @@ require "dm-core"
 require 'factory_girl/syntax/sweatshop'
 require "spec"
 
-module RubyTime
+module Rubytime
   module Test
     module Model
       def gen(*args)
@@ -15,25 +15,29 @@ module RubyTime
 
         Factory.create(name, properties)
       end
+
+      def pick
+        Fixtures.pick(name.snake_case.to_sym)
+      end
     end
   end
 end
 
-DataMapper::Model.append_extensions(RubyTime::Test::Model)
+DataMapper::Model.append_extensions(Rubytime::Test::Model)
 
 # this loads all plugins required in your init file so don't add them
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 Merb::Mailer.delivery_method = :test_send
 
-require Merb.root / 'spec/rubytime_factories'
 require Merb.root / "spec/rubytime_fixtures"
+require Merb.root / 'spec/rubytime_factories'
 require Merb.root / "spec/rubytime_specs_helper"
 require Merb.root / "spec/rubytime_controller_helper"
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/mail_controller_specs_helper"
 
-Rubytime::Test::Fixtures::prepare
+Rubytime::Test::Fixtures.prepare
 
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
