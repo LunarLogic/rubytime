@@ -126,10 +126,12 @@ describe Activity do
   end
 
   it "should return activities for first and last day of month" do
-    employee = Employee.gen
-    Activity.make(:user => employee, :date => Date.parse("2008-11-01")).save.should be_true
-    Activity.make(:user => employee, :date => Date.parse("2008-11-30")).save.should be_true
-    employee.reload.activities.for(:year => 2008, :month => 11).count.should == 2
+    employee = fx(:lazy_dev)
+
+    Activity.gen(:user => employee, :date => Date.parse("2008-11-01"), :project => fx(:oranges_first_project))
+    Activity.gen(:user => employee, :date => Date.parse("2008-11-30"), :project => fx(:oranges_first_project))
+
+    employee.activities.for(:year => 2008, :month => 11).count.should == 2
   end
 
   it "should be deletable by admin and by owner" do
@@ -139,7 +141,7 @@ describe Activity do
   end
 
   it "should check if activity exist for date" do
-    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23")).save.should be_true
+    Activity.gen(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23"))
     Activity.is_activity_day(fx(:stefan), Date.parse("2008-11-23")).should be_true
   end
   

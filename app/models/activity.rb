@@ -42,12 +42,15 @@ class Activity
       [time[:year], time[:month]]
     end
 
-    raise ArgumentError.new("You have to pass either :now or a Hash with :year and :month") if year.nil? || month.nil?
+    if year.nil? || month.nil?
+      raise ArgumentError.new("You have to pass either :now or a Hash with :year and :month")
+    end
+
     if !(1..12).include?(month) || year > Date.today.year
       raise ArgumentError.new("Month should be in range 1-12 and year not greater than #{Date.today.year}") 
     end
     
-    all :order => [:date.desc], :date.gte => Date.civil(year, month, 1), :date.lte => Date.civil(year, month, -1)
+    all :date => Date.civil(year, month, 1)..Date.civil(year, month, -1), :order => [:date.desc]
   end
 
   def minutes=(minutes)

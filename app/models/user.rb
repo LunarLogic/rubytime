@@ -29,8 +29,7 @@ class User
   belongs_to :role # only for Employee
   belongs_to :client # only for ClientUser
   
-  has n, :activities #, :order => [:created_at.desc] - this order doesn't currently work when used in through relation below 
-  # according to lighthouse it's a bug in DM
+  has n, :activities, :order => [:created_at.desc]
   has n, :projects, :through => :activities
 
   has n, :free_days
