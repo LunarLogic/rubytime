@@ -6,9 +6,12 @@ module Rubytime
       class << self
       
         def prepare
+          return if @prepared
+
+          DataMapper.auto_migrate!
           
           # === Generating currencies
-          
+
           add_fixture(:currence, :dollar, Currency.gen(:singular_name => 'dollar', :plural_name => 'dollars', :prefix => '$'))
           add_fixture(:currence, :zloty,  Currency.gen(:singular_name => 'zloty',  :plural_name => 'zlotys',  :suffix => 'PLN'))
           add_fixture(:currence, :euro,   Currency.gen(:singular_name => 'euro',   :plural_name => 'euros',   :prefix => '€'))
@@ -24,18 +27,21 @@ module Rubytime
           
           # Admin (also project manager)
           add_fixture(:employee, :admin, Employee.gen(:admin, :role => fx(:project_manager)))
-          
+
+           # Koza (also admin, issues invoices for clients)
+          add_fixture(:employee, :koza, Employee.gen(:admin, :role => fx(:project_manager)))
+
           # Jola (main developer)
           add_fixture(:employee, :jola, Employee.gen(:role => fx(:developer)))
-          
+
           # Stefan (tester)
           add_fixture(:employee, :stefan, Employee.gen(:role => fx(:tester)))
-          
+
           # Misio (dev)
           add_fixture(:employee, :misio, Employee.gen(:role => fx(:developer)))
-          
-          # Koza (also admin, issues invoices for clients)
-          add_fixture(:employee, :koza, Employee.gen(:admin, :role => fx(:project_manager)))
+
+          # Lazy with no activities (dev)
+          add_fixture(:employee, :lazy_dev, Employee.gen(:role => fx(:developer)))
           
           
           # === Generating clients
@@ -90,13 +96,15 @@ module Rubytime
           add_fixture(:project, :bananas_second_project, Project.gen(:client => fx(:banana)))
           
           # Peach
-          add_fixture(:project, :peachs_first_project, Project.gen(:client => fx(:peach)))
+          add_fixture(:project, :peaches_first_project, Project.gen(:client => fx(:peach)))
           
           # === Generating hourly rates
           
           Project.all.each do |project|
             Role.all.each do |role|
-              HourlyRate.gen(:project => project, :role => role, :takes_effect_at => random_date(Date.parse('2005-01-01'), Date.parse('2006-01-01') ))
+              HourlyRate.gen(
+                :project => project, :role => role,
+                :takes_effect_at => random_date(Date.parse('2005-01-01'), Date.parse('2006-01-01') ))
             end
           end
           
@@ -106,7 +114,7 @@ module Rubytime
           add_fixture(:invoice, :oranges_first_invoice, Invoice.gen(:client => fx(:orange), :user => fx(:koza)))
           
           # locked
-          add_fixture(:invoice, :oranges_issued_invoice, Invoice.gen(:issued, :client => fx(:orange), :user => fx(:koza)))
+          add_fixture(:invoice, :oranges_issued_invoice, Invoice.gen(:invoice_issued, :client => fx(:orange), :user => fx(:koza)))
 
           # === Generating activities
           
@@ -114,14 +122,14 @@ module Rubytime
           
           # by Jola (total 8 active)
           add_fixture(:activity, :jolas_activity1, Activity.gen(:project => fx(:oranges_first_project), :user => fx(:jola)))
-          add_fixture(:activity, :jolas_invoiced_activity, Activity.gen(:project => fx(:oranges_first_project), 
-                                                                        :user    => fx(:jola), 
+          add_fixture(:activity, :jolas_invoiced_activity, Activity.gen(:project => fx(:oranges_first_project),
+                                                                        :user    => fx(:jola),
                                                                         :invoice => fx(:oranges_first_invoice)))
-          add_fixture(:activity, :jolas_locked_activity, Activity.gen(:project => fx(:oranges_first_project), 
-                                                                      :user    => fx(:jola), 
+          add_fixture(:activity, :jolas_locked_activity, Activity.gen(:project => fx(:oranges_first_project),
+                                                                      :user    => fx(:jola),
                                                                       :invoice => fx(:oranges_issued_invoice)))
-          add_fixture(:activity, :jolas_another_locked_activity, Activity.gen(:project => fx(:oranges_first_project), 
-                                                                              :user    => fx(:jola), 
+          add_fixture(:activity, :jolas_another_locked_activity, Activity.gen(:project => fx(:oranges_first_project),
+                                                                              :user    => fx(:jola),
                                                                               :invoice => fx(:oranges_issued_invoice)))
           # anonymous fixtures
           4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_second_project), :user => fx(:jola))) }
@@ -132,13 +140,13 @@ module Rubytime
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_second_project), :user => fx(:stefan))) }
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:stefan))) }
 
-          # by Misio (total 4 active) 
+          # by Misio (total 4 active)
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_first_project), :user => fx(:misio))) }
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_second_project), :user => fx(:misio))) }
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:misio))) }
-          
+
           # -- Apple
-          
+
           # by Jola (total 8 active)
           4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_first_project), :user => fx(:jola))) }
           4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_second_project), :user => fx(:jola))) }
@@ -153,9 +161,9 @@ module Rubytime
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_first_project), :user => fx(:misio))) }
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_second_project), :user => fx(:misio))) }
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:misio))) }
-          
+
           # -- Banana
-          
+
           # by Jola (total 3)
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:bananas_first_project), :user => fx(:jola))) }
 
@@ -168,6 +176,8 @@ module Rubytime
           
           # TODO: add some invoiced activities to oranges_inactive_project and 
           # uninvoiced activities to apples_inactive_project
+
+          @prepared = true
         end
         
         def add_fixture(type, name, obj)

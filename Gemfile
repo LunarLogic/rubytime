@@ -15,7 +15,6 @@ gem "dm-types" , dm_gems_version
 gem "dm-validations", dm_gems_version
 gem "dm-migrations", dm_gems_version
 gem "dm-observer", dm_gems_version
-gem "dm-sweatshop", dm_gems_version
 gem "dm-serializer", dm_gems_version
 # gem "dm-constraints", dm_gems_version
 
@@ -41,6 +40,8 @@ gem "html5", ">=0.10.0"
 gem "icalendar", "~>1.1.0"
 
 only :test do
+  gem "dm-factory_girl", "1.2.3", :require_as => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
+  gem "rspec", :require_as => "spec"
   gem 'webrat'
   gem "bartes-rcov_stats" , :require_as => 'rcov_stats'
 end
