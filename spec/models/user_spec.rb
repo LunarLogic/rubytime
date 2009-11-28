@@ -13,19 +13,20 @@ describe User do
   it "should validate login format" do
     ["stefan)(*&^%$)", "foo bar", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "][;'/.,?><!@#}{}]"].each do |login|
       user = Employee.make(:login => login)
-      user.save.should(be_false)
+      user.valid?.should(be_false)
       user.errors.on(:login).should_not(be_nil)
     end
     
     %w(maciej-lotkowski stefan_ks bob kiszka123 12foo123).each do |login|
-      Employee.make(:login => login, :role => fx(:developer)).save.should be_true
+      user = Employee.make(:login => login, :role => fx(:developer))
+      user.valid?.should be_true
     end
   end
 
   it "shouldn't authenticate inactive user" do
     password = "awsumpass"
     login = "awsum-stefan"
-    employee = Employee.make(:active => false, :login => login, :password => password, 
+    employee = Employee.make(:active => false, :login => login, :password => password,
       :password_confirmation => password, :role => fx(:developer))
     employee.save.should be_true
     User.authenticate(login, password).should be_nil
@@ -107,52 +108,55 @@ describe User do
   end
 
   describe "with_activities" do
-    it "should include users which have added activities" do
-      user = Employee.generate!(:activities_count => 1)
-      Activity.generate! :user => user
+    before :all do
+      @user = fx(:lazy_dev)
+      @project = fx(:bananas_first_project)
+    end
 
-      User.with_activities.should include(user)
+    it "should include users which have added activities" do
+#      user = Employee.generate!(:activities_count => 1)
+      Activity.generate! :user => @user, :project => @project
+      User.with_activities.should include(@user)
     end
 
     it "should not include users which haven't added any activities" do
-      user = Employee.generate!
-      User.with_activities.should_not include(user)
+      @user.activities.destroy!
+      User.with_activities.should_not include(@user)
     end
 
     it "should not include duplicate entries" do
-      user = Employee.generate!(:activities_count => 1)
-      2.times { Activity.generate! :user => user }
-      User.with_activities.find_all { |u| u == user }.length.should == 1
+#      user = Employee.generate!(:activities_count => 1)
+      2.times { Activity.generate! :user => @user, :project => @project }
+      User.with_activities.find_all { |u| u == @user }.length.should == 1
     end
   end
 
   describe "with_activities_for_client" do
+    before :all do
+      @user = fx(:stefan)
+      @project_one = fx(:bananas_first_project)
+      @project_two = fx(:peaches_first_project)
+      @client = @project_one.client
+    end
+
+    before :each do
+      [@project_one, @project_two].each { |p| p.activities.destroy! }
+    end
+
     it "should include users which have added activities for any of client's projects" do
-      user = Employee.generate!
-      client = Client.generate!
-      project = Project.generate! :client => client
-      Activity.generate! :user => user, :project => project
-      User.with_activities_for_client(client).should include(user)
+      Activity.generate! :user => @user, :project => @project_one
+      User.with_activities_for_client(@client).should include(@user)
     end
 
     it "should not include users which haven't added any activities for any of client's projects" do
-      user = Employee.generate!
-      client = Client.generate!
-      client2 = Client.generate!
-      project = Project.generate! :client => client
-      project2 = Project.generate! :client => client2
-      Activity.generate! :user => user, :project => project2
-      User.with_activities_for_client(client).should_not include(user)
+      Activity.generate! :user => @user, :project => @project_two
+      User.with_activities_for_client(@client).should_not include(@user)
     end
 
     it "should not include duplicate entries" do
-      user = Employee.generate!
-      client = Client.generate!
-      project = Project.generate! :client => client
-      project2 = Project.generate! :client => client
-      Activity.generate! :user => user, :project => project
-      Activity.generate! :user => user, :project => project2
-      User.with_activities_for_client(client).should == [user]
+      Activity.generate! :user => @user, :project => @project_one
+      Activity.generate! :user => @user, :project => @project_two
+      User.with_activities_for_client(@client).should == [@user]
     end
   end
 end
@@ -188,7 +192,7 @@ describe Employee do
   end
 
   it "shouldn't create user without name" do
-    user = Employee.gen :name => nil
+    user = Employee.make :name => nil
     user.save.should be_false
     user.errors.on(:name).should_not be_nil
   end
@@ -215,17 +219,20 @@ describe Employee do
   end
   
   it "should be admin" do
-    Employee.make(:admin).is_admin?.should be_true
+    Employee.new(:admin => true).is_admin?.should be_true
   end
   
   describe ".send_timesheet_naggers_for" do
     it "should send emails to employees that have no activities on given day" do
       Activity.all.destroy!
-      Activity.make(:user => fx(:stefan), :date => Date.parse('2009-08-03')).save!
-      Activity.make(:user => fx(:koza), :date => Date.parse('2009-08-03')).save!
+
+      date = Date.parse('2009-08-03')
+
+      Activity.make(:user => fx(:stefan), :date => date, :project => fx(:oranges_first_project)).save!
+      Activity.make(:user => fx(:koza), :date => date, :project => fx(:oranges_first_project)).save!
       
-      block_should change(Merb::Mailer.deliveries, :size).by(3) do
-        Employee.send_timesheet_naggers_for(Date.parse('2009-08-03'))
+      block_should change(Merb::Mailer.deliveries, :size).by(Employee.count-2) do
+        Employee.send_timesheet_naggers_for(date)
       end
     end
   end
