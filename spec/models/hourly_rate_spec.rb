@@ -112,13 +112,16 @@ describe HourlyRate do
     HourlyRate.all.should == [hr3, hr1, hr2]
   end
 
-  it "should return HourlyRate object for specified activity " do 
+  it "should return HourlyRate object for specified activity" do 
     HourlyRate.all.destroy!
     
     hr1 = HourlyRate.gen(:takes_effect_at => Date.parse("2009-09-01"))
     hr2 = HourlyRate.gen(:takes_effect_at => Date.parse("2009-08-01"), :project => hr1.project, :role => hr1.role)
+
     [hr1.role_id, hr1.project_id].should == [hr2.role_id, hr2.project_id]
+    
     u = hr1.role.employees.first
+
     u.should be_a_kind_of User
     a = Activity.new(:project => hr1.project, :user => u, :date => Date.parse("2009-08-02"))
     hr = HourlyRate.find_for_activity(a)

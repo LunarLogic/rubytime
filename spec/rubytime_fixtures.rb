@@ -16,10 +16,10 @@ module Rubytime
           
           # === Generating currencies
 
-          add_fixture(:currence, :dollar, Currency.gen(:singular_name => 'dollar', :plural_name => 'dollars', :prefix => '$'))
-          add_fixture(:currence, :zloty,  Currency.gen(:singular_name => 'zloty',  :plural_name => 'zlotys',  :suffix => 'PLN'))
-          add_fixture(:currence, :euro,   Currency.gen(:singular_name => 'euro',   :plural_name => 'euros',   :prefix => '€'))
-          add_fixture(:currence, :pound,  Currency.gen(:singular_name => 'pound',  :plural_name => 'pounds',  :prefix => '£'))
+          add_fixture(:currency, :dollar, Currency.gen(:singular_name => 'dollar', :plural_name => 'dollars', :prefix => '$'))
+          add_fixture(:currency, :zloty,  Currency.gen(:singular_name => 'zloty',  :plural_name => 'zlotys',  :suffix => 'PLN'))
+          add_fixture(:currency, :euro,   Currency.gen(:singular_name => 'euro',   :plural_name => 'euros',   :prefix => '€'))
+          add_fixture(:currency, :pound,  Currency.gen(:singular_name => 'pound',  :plural_name => 'pounds',  :prefix => '£'))
           
           # === Generating roles
           
@@ -101,6 +101,7 @@ module Rubytime
           
           # Peach
           add_fixture(:project, :peaches_first_project, Project.gen(:client => fx(:peach)))
+          add_fixture(:project, :peaches_inactive_project, Project.gen(:client => fx(:peach)))
           
           # === Generating hourly rates
           

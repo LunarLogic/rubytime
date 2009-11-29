@@ -58,11 +58,11 @@ Factory.define(:free_day, :class => FreeDay) do |fd|
 end
 
 Factory.define(:hourly_rate, :class => HourlyRate) do |hr|
-  hr.project { |a| a.association(:project) }
-  hr.role { |a| a.association(:role) }
+  hr.project { Project.pick }
+  hr.role { |a| Role.pick }
   hr.takes_effect_at { random_date(Date.today - 365 * 2, Date.today) }
   hr.value { 20 + (rand * 10000).to_i / 100 }
-  hr.currency { |a| a.association(:currency) }
+  hr.currency { Currency.pick }
   hr.operation_author { Employee.first }
 end
 
