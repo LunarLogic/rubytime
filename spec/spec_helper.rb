@@ -19,6 +19,10 @@ module Rubytime
       def pick
         Fixtures.pick(name.snake_case.to_sym)
       end
+
+      def gen_attrs
+        make.attributes.except(*(key + properties.select(&:default?)).map(&:name)).reject{|k,v| v.blank?}
+      end
     end
   end
 end
