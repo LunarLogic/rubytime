@@ -7,20 +7,17 @@ describe Project do
     end
   end
   
-  it "should find active projects" do
-    Project.count.should == 9
-    Project.active.count.should == 7
-  end
-
-  describe "visible_for" do
+  describe "#visible_for" do
     before :each do
-      @client = Client.generate!
-      @active = Project.generate! :active => true, :client => @client
-      @inactive = Project.generate! :active => false, :client => @client
-      @active_with_activity = Project.generate! :active => true, :client => @client
-      @inactive_with_activity = Project.generate! :active => false, :client => @client
-      Activity.generate! :project => @active_with_activity
-      Activity.generate! :project => @inactive_with_activity
+      @client = fx(:peach)
+
+      @active = fx(:peaches_first_project)
+      @inactive = fx(:peaches_inactive_project)
+
+      @active_with_activity = fx(:oranges_first_project)
+      @inactive_with_activity = fx(:oranges_inactive_project)
+
+      [@inactive, @inactive_with_activity].each { |p| p.update(:active => false) }
     end
 
     it "should return any project for admin" do
@@ -35,36 +32,33 @@ describe Project do
     end
 
     it "should only include client's projects for client" do
-      client = Client.generate!
-      client_user = ClientUser.generate! :client => client
-      client_project = Project.generate! :client => client
-      found = Project.visible_for(client_user)
-      found.should include(client_project)
+      found = Project.visible_for(fx(:apple_user1))
+      found.should include(fx(:apples_first_project))
+
       [@active, @inactive, @active_with_activity, @inactive_with_activity].each { |p| found.should_not include(p) }
     end
   end
 
-  describe "with_activities_for" do
+  describe "#with_activities_for" do
     before :each do
-      @user = Employee.generate!
-      @user2 = Employee.generate!
-      @client = Client.generate!
-      @project = Project.generate! :client => @client
+      @stefan = fx(:stefan)
+      @lazy_dev = fx(:lazy_dev)
+      @apple = fx(:apple)
+      @project = fx(:apples_first_project)
     end
 
     it "should include projects with activities added by user" do
-      Activity.generate! :user => @user, :project => @project
-      Project.with_activities_for(@user).should include(@project)
+      Project.with_activities_for(@stefan).should include(@project)
     end
 
     it "should not include projects for which the user hasn't added any activities" do
-      Activity.generate! :user => @user2, :project => @project
-      Project.with_activities_for(@user).should_not include(@project)
+      Project.with_activities_for(@lazy_dev).should_not include(@project)
     end
 
     it "should not include duplicate entries" do
-      2.times { Activity.generate! :user => @user, :project => @project }
-      Project.with_activities_for(@user).length.should == 1
+      @stefan.activities.destroy!
+      Activity.generate! :user => @stefan, :project => @project
+      Project.with_activities_for(@stefan).length.should == 1
     end
   end
 

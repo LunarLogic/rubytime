@@ -16,7 +16,7 @@ Factory.define(:admin, :parent => :employee) do |u|
 end
 
 Factory.define(:client_user, :parent => :employee, :class => ClientUser) do |u|
-  u.client { |a| a.association(:client) }
+  u.client { Client.pick }
 end
 
 Factory.define(:client, :class => Client) do |u|
