@@ -16,5 +16,5 @@ nbproject
 .idea/*
 
 # gems
-gems/*
+gems
 bin
