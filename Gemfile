@@ -45,6 +45,6 @@ only :test do
   gem "dm-factory_girl", "1.2.3", :require_as => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
   gem "rspec", :require_as => "spec"
   gem 'webrat'
-  gem "bartes-rcov_stats" , :require_as => 'rcov_stats', :git => "git://github.com/bartes/rcov_stats.git"
+  gem "bartes-rcov_stats", "1.1.5", :require_as => 'rcov_stats', :git => "git://github.com/bartes/rcov_stats.git"
   gem "ci_reporter"
 end
