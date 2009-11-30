@@ -17,5 +17,4 @@ nbproject
 
 # gems
 gems/*
-!gems/cache/
 bin
