@@ -1,19 +1,28 @@
 require "rubygems"
 
+require 'dm-core'
 require "merb-core"
 require "merb-mailer"
-require "dm-core"
-require 'factory_girl/syntax/sweatshop'
 require "spec"
 
 module Rubytime
   module Test
     module Model
-      def gen(*args)
+      def generate(*args)
         name = (args.first.is_a?(Symbol) ? args.shift : self.name.snake_case).to_sym
         properties = args.first || {}
 
         Factory.create(name, properties)
+      end
+      alias :gen generate
+      alias :generate! generate
+      alias :gen! generate
+
+      def make(*args)
+        name = (args.first.is_a?(Symbol) ? args.shift : self.name.snake_case).to_sym
+        properties = args.first || {}
+
+        Factory.build(name, properties)
       end
 
       def pick
