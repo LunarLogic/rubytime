@@ -33,6 +33,7 @@ git "git://github.com/schwabsauce/merb_dm_xss_terminate.git" do
   gem "merb_dm_xss_terminate"
 end
 
+gem "mongrel"
 gem "ParseTree"
 gem "randexp", ">=0.1.3"
 gem "chronic", ">=0.2.3"
@@ -44,5 +45,6 @@ only :test do
   gem "dm-factory_girl", "1.2.3", :require_as => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
   gem "rspec", :require_as => "spec"
   gem 'webrat'
-  gem "bartes-rcov_stats" , :require_as => 'rcov_stats'
+  gem "bartes-rcov_stats" , :require_as => 'rcov_stats', :git => "git://github.com/bartes/rcov_stats.git"
+  gem "ci_reporter"
 end
