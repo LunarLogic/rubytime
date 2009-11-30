@@ -45,3 +45,9 @@ end
 # ADD YOUR CUSTOM TASKS IN /lib/tasks
 # NAME YOUR RAKE FILES file_name.rake
 ##############################################################################
+
+begin
+  require 'rubygems'
+  gem 'ci_reporter'
+  require 'ci/reporter/rake/rspec'
+rescue LoadError; end
