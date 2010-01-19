@@ -10,7 +10,7 @@ h2. Setup
 
 h3. Prerequisites
 
-You need to have Ruby version 1.8.6 or 1.8.7 and Rubygems 1.3 installed on your server. If you don't have Rubygems installed get it at "http://www.rubygems.org":http://www.rubygems.org.
+You need to have Ruby version 1.8.6 or 1.8.7 and Rubygems 1.3 installed on your server. If you don't have Rubygems installed get it at "http://www.rubygems.org":http://www.rubygems.org. You also need the Bundler gem.
 
 h3. Get the source
 
@@ -20,16 +20,9 @@ Next get the source code from Rubytime github repository:
 
 h3. Install gems
 
-* make sure that Github is in your gem sources: @gem sources -a http://gems.github.com@
-* install gems: @html5@, @chronic@, @bartes-rcov_stats@, @jscruggs-metric_fu@ (any version)
-* install datamapper gems: @sudo gem install datamapper -v 0.9.11@
-* install merb gems: @sudo gem install merb -v 1.0.11@
-** if this fails because of merb-slices, then install the version it asks for, e.g. @sudo gem install merb-slices -v 1.0.12@ and try again
-* install @addressable 2.0.2@, @dm-constraints 0.9.9@, @icalendar 1.1.0@
-* install @do_mysql 0.9.11@
-** you may have to add some options to make sure it's compiled for proper architecture and that it finds mysql headers (e.g. on Mac try: @sudo env ARCHFLAGS='-arch x86_64' gem install do_mysql -v 0.9.11 -- --with-mysql-config=/usr/local/mysql/bin/mysql_config@ to install a version for 64-bit architecture (10.5/10.6) and for MySQL in /usr/local/mysql (installed from DMG))
-* make sure that @data_objects@ gem is installed only in version @0.9.11@
-* if anything other fails, @merb -v@ should help you figure out what's wrong
+  gem bundle
+
+Note: on 64 bit architectures, you may have to set ARCHFLAGS='-arch x86_64' in your shell environment, otherwise some compiled gems (do_mysql) may not work.
 
 h3. Configure
 
