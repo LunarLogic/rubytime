@@ -33,7 +33,7 @@ var Activities = {
   _deleteActivity: function(link) {
     var id = link.url().match(/\d+$/g)[0];
     var activities = $('#list_activity_' + id + ",#calendar_activity_" + id);
-    if (confirm("Are you sure?"))
+    if (confirm("Are you sure?")) {
       $.ajax({
         url: link.url(),
         type: "DELETE",
@@ -41,16 +41,15 @@ var Activities = {
           activities.disableLinks();
         },
         success: function() {
-          $(document).trigger(EVENTS.activity_deleted, {
-            id: id
-          });
+          $(document).trigger(EVENTS.activity_deleted, { id: id });
         },
         error: function(xhr) {
           activities.enableLinks();
           Application.errorFromXhr(xhr);
         }
       });
-    
+    }
+
     return false;
   },
   
@@ -58,7 +57,7 @@ var Activities = {
     var container = Activities._calendarContainer();
     var date = '?';
     if (memory) {
-      matches = memory.date.match(/(\d{4})-(\d{2})-\d{2}/)
+      matches = memory.date.match(/(\d{4})-(\d{2})-\d{2}/);
       date += 'year=' + matches[1] + '&month=' + matches[2];
     }
     container.load('/' + container.attr('id').replace(/_/g, '/') + date, Activities._initCalendar);
@@ -118,17 +117,17 @@ var Activities = {
     $("#create_invoice_form").submit(function() {
       var checkedActivityIds = $(".activities td .checkbox:checked");
 
-      if (checkedActivityIds.length == 0) {
+      if (checkedActivityIds.length === 0) {
         Application.error('You need to select activities for this invoice.');
         return false;
       }
 
       try {
         $.ajax({
-          type : 'POST',
-          url : $(this).url(),
-          data : Activities._createInvoiceActivityParams(checkedActivityIds)+'&'+$(this).serialize(),
-          success : function () {
+          type: 'POST',
+          url: $(this).url(),
+          data: Activities._createInvoiceActivityParams(checkedActivityIds) + '&' + $(this).serialize(),
+          success: function() {
             $("#activities_filter form:first").submit();
             Application.notice('Invoice has been created successfully');
           }
@@ -144,7 +143,7 @@ var Activities = {
     $("#update_invoice_button").click(function() {
       var checkedActivityIds = $(".activities td .checkbox:checked");
 
-      if (checkedActivityIds.length == 0) {
+      if (checkedActivityIds.length === 0) {
         Application.error('You need to select activities for this invoice.');
         return false;
       }
@@ -161,7 +160,7 @@ var Activities = {
         type: "PUT",
         url: "/invoices/" + invoiceId,
         data: params,
-        success: function () {
+        success: function() {
           $("#activities_filter form:first").submit();
           Application.notice('Activities have been added to invoice successfully');
         }
@@ -236,7 +235,7 @@ var Activities = {
   _getUnselectedOptions: function(group, select) {
     var siblingSelects = select.parent().siblings("p." + group).find("select");
     var unselected = select.find("option").filter(function() {
-      return siblingSelects.find("option:selected[value="+$(this).val()+"]").length == 0;
+      return siblingSelects.find("option:selected[value=" + $(this).val() + "]").length === 0;
     });
     return unselected;
   },
@@ -328,10 +327,11 @@ var Activities = {
 
 
     $("td.day").mouseover(function() {
-      $(this).find(".activity_icons").show()
+      $(this).find(".activity_icons").show();
     }).mouseout(function() {
-      $(this).find(".activity_icons").hide()
-    })
+      $(this).find(".activity_icons").hide();
+    });
+
     tb_init($(".show_day, td li.more a"));
   },
   

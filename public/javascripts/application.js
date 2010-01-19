@@ -9,7 +9,7 @@ var EVENTS = {
 
 function hoursFormat(value, element, params) {
   return this.optional(element) || (/^\d+([\.,]\d+|:[0-5]\d)?$/).test(value);
-};
+}
 
 var Application = {
   init: function() {
@@ -146,7 +146,7 @@ var Application = {
   },
   
   initDeleteLinks: function() {
-    $(".delete_row").click(function (e) {
+    $(".delete_row").click(function(e) {
       if (confirm('Are you sure?')) {
         var target = $(this);
         var row = target.parents('tr');
@@ -156,7 +156,8 @@ var Application = {
           type: "DELETE",
           url: $(this).url(),
           beforeSend: function() {
-            target.unbind('click', handler); row.disableLinks();
+            target.unbind('click', handler);
+            row.disableLinks();
           },
           success: function() {
             table = row.parents("table");
@@ -169,7 +170,7 @@ var Application = {
             Application.errorFromXhr(xhr);
           }
         });
-      };
+      }
       return false;
     });
   },
@@ -211,7 +212,10 @@ var Application = {
     // handle form submission
     container.find(".activity_form").submit(function() {
       var form = $(this);
-      if (!form.valid()) return false;
+      if (!form.valid()) {
+        return false;
+      }
+
       $.ajax({
         url: form.url(),
         type: "POST",
@@ -221,21 +225,15 @@ var Application = {
           var date = responseJson.date;
           Application._closeActivityPopup();
           // check if we were editing or creating new activity
-          if ((/\d+$/).test(form.url())) {
-            $(document).trigger(EVENTS.activity_updated, {
-              date: date
-            });
-          } else {
-            $(document).trigger(EVENTS.activity_added, {
-              date: date
-            });
-          }
+          var eventType = ((/\d+$/).test(form.url())) ? EVENTS.activity_updated : EVENTS.activity_added;
+          $(document).trigger(eventType, { date: date });
         },
         error: function(xhr) {
           container.html(xhr.responseText);
           Application._initActivityPopup(container);
         }
       });
+
       container.find(".activity_form input[type=submit]").attr("disabled", "true");
       return false;
     });
@@ -261,10 +259,11 @@ var Application = {
   },
   
   errorFromXhr: function(xhr) {
-    if (xhr.status >= 400 && xhr.status < 500)
+    if (xhr.status >= 400 && xhr.status < 500) {
       Application.error(xhr.responseText);
-    if(xhr.status >= 500)
+    } else if (xhr.status >= 500) {
       Application.error("Ooops! Something went wrong.");
+    }
   },
   
   initCommentsIcons: function() {
