@@ -40,11 +40,12 @@ gem "chronic", ">=0.2.3"
 gem "html5", ">=0.10.0"
 gem "icalendar", "~>1.1.0"
 
-only :test do
+only :development, :test do
   gem "rand"
   gem "dm-factory_girl", "1.2.3", :require_as => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
   gem "rspec", :require_as => "spec"
   gem "rcov"
   gem "webrat"
   gem "ci_reporter"
+  gem "jslint_on_rails"
 end

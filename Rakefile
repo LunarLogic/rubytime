@@ -27,6 +27,9 @@ end
 require 'spec/rake/spectask'
 require 'merb-core/test/tasks/spectasks'
 
+require 'jslint/tasks'
+JSLint.config_path = (Merb.root / "config" / "jslint.yml").to_s
+
 desc 'Default: run spec examples'
 task :default => 'spec'
 
