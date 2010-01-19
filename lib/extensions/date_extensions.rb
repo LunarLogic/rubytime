@@ -18,4 +18,9 @@ class Date
     end
     day
   end
+
+  def first_day_of_month
+    Date.parse("#{year}-#{month}-1")
+  end
+
 end

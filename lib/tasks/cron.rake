@@ -6,7 +6,7 @@ namespace :rubytime do
   # TODO: rename this?...
   task :send_emails => :merb_env do
     for user in User.all(:remind_by_email => true)
-      missed_days = user.indefinite_activities
+      missed_days = user.days_without_activities
       if missed_days.count > 0
         puts "Emailing #{user.name}"
         m = UserMailer.new(:user => user, :missed_days => missed_days)
@@ -33,11 +33,9 @@ namespace :rubytime do
   desc 'Send timesheet report email for previous weekday'
   task :send_timesheet_report_email_for_previous_weekday => :merb_env do
     if Date.today.weekday?
-      Employee.send_timesheet_reporter_for__if_enabled(
-        Date.today.previous_weekday, 
-        Rubytime::CONFIG[:timesheet_report_addressee_email],
-        Logger.new(Merb.root / "log/timesheet_reporter.log")
-      )
+      logger = Logger.new(Merb.root / "log/timesheet_reporter.log")
+      date = Date.today.previous_weekday
+      Employee.send_timesheet_reporter_for__if_enabled(date, logger)
     end
   end
 

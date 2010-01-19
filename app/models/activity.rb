@@ -139,10 +139,6 @@ class Activity
     self.user == user || user.is_admin?
   end
 
-  def self.is_activity_day(user, thisday)
-    user.activities.count(:date => thisday) > 0
-  end
-  
   def notify_project_managers_about_saving(kind_of_change)
     Employee.all('role.name' => 'Project Manager').each do |project_manager|
       m = UserMailer.new(:activity => self, :kind_of_change => kind_of_change, :project_manager => project_manager)

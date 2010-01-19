@@ -73,12 +73,12 @@ describe User do
 
   # in april 2009 were 22 working days
   it "should have 18 days without activity besides two days with activities, vacation days and weekends in april 2009" do
-    fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").size.should == 22
+    fx(:stefan).days_without_activities(Date.parse("2009-04-01"), Date.parse("2009-04-30")).should have(22).days
     Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-04-17")).save.should be_true
     Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-04-15")).save.should be_true
     FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-21")).save.should be_true
     FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-22")).save.should be_true
-    fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").size.should == 18
+    fx(:stefan).days_without_activities(Date.parse("2009-04-01"), Date.parse("2009-04-30")).should have(18).days
   end
   
   describe '#has_activities_on?' do
@@ -221,7 +221,12 @@ describe Employee do
   it "should be admin" do
     Employee.new(:admin => true).is_admin?.should be_true
   end
-  
+
+  it "should check if user has any activities for a date" do
+    Activity.gen(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23"))
+    fx(:stefan).has_activities_on_day(Date.parse("2008-11-23")).should be_true
+  end
+
   describe ".send_timesheet_naggers_for" do
     it "should send emails to employees that have no activities on given day" do
       Activity.all.destroy!
@@ -244,7 +249,7 @@ describe Employee do
       Activity.make(:user => fx(:koza), :date => Date.parse('2009-08-03')).save!
       
       block_should change(Merb::Mailer.deliveries, :size).by(1) do
-        Employee.send_timesheet_reporter_for(Date.parse('2009-08-03'), 'email@localhost')
+        Employee.send_timesheet_reporter_for(Date.parse('2009-08-03'))
       end
       
       Merb::Mailer.deliveries.last.text.should include(fx(:admin).name)

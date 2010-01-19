@@ -10,7 +10,7 @@ describe FreeDay do
 
   it "should be created correctly" do
     FreeDay.make(:user => fx(:koza), :date => Date.parse("2009-11-30")).save.should be_true
-    FreeDay.is_day_off(fx(:koza), Date.parse("2009-11-30")).should be_true
+    fx(:koza).has_free_day_on(Date.parse("2009-11-30")).should be_true
   end
 
   describe ".ranges" do

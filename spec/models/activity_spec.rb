@@ -140,11 +140,6 @@ describe Activity do
     fx(:jolas_activity1).deletable_by?(fx(:stefan)).should be_false
   end
 
-  it "should check if activity exist for date" do
-    Activity.gen(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23"))
-    Activity.is_activity_day(fx(:stefan), Date.parse("2008-11-23")).should be_true
-  end
-  
   describe "#notify_project_managers_about_saving method" do
     it "should send emails to project managers" do
       @activity = Activity.gen

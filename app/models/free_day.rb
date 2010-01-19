@@ -7,11 +7,6 @@ class FreeDay
 
   belongs_to :user
 
-  def self.is_day_off(user, thisday)
-    return false unless user.respond_to? :free_days
-    user.free_days.count(:date => thisday) > 0
-  end
-  
   def self.ranges
     ranges = []
     all.group_by { |free_day| free_day.user }.each do |user, free_days|

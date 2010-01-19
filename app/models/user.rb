@@ -144,13 +144,17 @@ class User
     self.class.to_s
   end
 
-  def indefinite_activities(from_date="#{Date.today.year}-#{Date.today.month}-1", to_date=Date.today.to_s)
-    days = []
-    Date.parse(from_date).upto(Date.parse(to_date)) do |thisday|
-      days += [thisday] unless thisday.wday==0  or thisday.wday==6 or
-        FreeDay.is_day_off(self, thisday) or Activity.is_activity_day(self, thisday)
-    end
-    days
+  def has_free_day_on(day)
+    free_days.count(:date => day) > 0
+  end
+
+  def has_activities_on_day(day)
+    activities.count(:date => day) > 0
+  end
+
+  def days_without_activities(from_date = Date.today.first_day_of_month, to_date = Date.today)
+    range = (from_date..to_date)
+    range.reject { |day| day.weekend? || has_free_day_on(day) || has_activities_on_day(day) }
   end
 
   def has_activities_on?(date)

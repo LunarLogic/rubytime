@@ -39,15 +39,22 @@ class Employee < User
     end
   end
   
-  def self.send_timesheet_reporter_for(date, email, logger = Logger.new(nil))
+  def self.send_timesheet_reporter_for(date, logger = Logger.new(nil))
     logger.info "Sending timesheet report email to #{email}."
-    m = UserMailer.new(:employees_without_activities => Employee.without_activities_on(date), :day_without_activities => date)
-    m.dispatch_and_deliver(:timesheet_reporter, :to => email, :from => Rubytime::CONFIG[:mail_from], :subject => "RubyTime timesheet report for #{date}")
+    m = UserMailer.new(
+      :employees_without_activities => Employee.without_activities_on(date),
+      :day_without_activities => date
+    )
+    m.dispatch_and_deliver(:timesheet_reporter,
+      :from => Rubytime::CONFIG[:mail_from],
+      :to => Rubytime::CONFIG[:timesheet_report_addressee_email],
+      :subject => "RubyTime timesheet report for #{date}"
+    )
   end
   
-  def self.send_timesheet_reporter_for__if_enabled(date, email, logger = Logger.new(nil))
+  def self.send_timesheet_reporter_for__if_enabled(date, logger = Logger.new(nil))
     if Setting.enable_notifications
-      send_timesheet_reporter_for(date, email, logger)
+      send_timesheet_reporter_for(date, logger)
     else
       logger.error "Won't send timesheet report: notifications are disabled."
     end
