@@ -9,15 +9,14 @@ describe Project do
   
   describe "#visible_for" do
     before :each do
-      @client = fx(:peach)
+      @client = Client.generate
 
-      @active = fx(:peaches_first_project)
-      @inactive = fx(:peaches_inactive_project)
+      @active = Project.generate :active => true, :client => @client
+      @inactive = Project.generate :active => false, :client => @client
 
-      @active_with_activity = fx(:oranges_first_project)
-      @inactive_with_activity = fx(:oranges_inactive_project)
-
-      [@inactive, @inactive_with_activity].each { |p| p.update(:active => false) }
+      @active_with_activity = Project.generate :active => true, :client => @client
+      @inactive_with_activity = Project.generate :active => false, :client => @client
+      [@active_with_activity, @inactive_with_activity].each { |p| Activity.generate :project => p }
     end
 
     it "should return any project for admin" do
@@ -32,8 +31,12 @@ describe Project do
     end
 
     it "should only include client's projects for client" do
-      found = Project.visible_for(fx(:apple_user1))
-      found.should include(fx(:apples_first_project))
+      other_client = Client.generate
+      other_clients_user = ClientUser.generate :client => other_client
+      other_project = Project.generate :client => other_client
+
+      found = Project.visible_for(other_clients_user)
+      found.should include(other_project)
 
       [@active, @inactive, @active_with_activity, @inactive_with_activity].each { |p| found.should_not include(p) }
     end

@@ -18,16 +18,24 @@ describe HourlyRates do
   
   describe "#index" do
     before(:each) do
+      @project = fx(:oranges_first_project)
+      @dev = fx(:developer)
+      @tester = fx(:tester)
+      @manager = fx(:project_manager)
+
       HourlyRate.all.destroy!
-      
-      @hourly_rates = [
-        HourlyRate.gen(:takes_effect_at => Date.today - 10, :project => fx(:oranges_first_project), :role => fx(:developer)),
-        HourlyRate.gen(:takes_effect_at => Date.today - 8, :project => fx(:oranges_first_project), :role => fx(:tester)),
-        HourlyRate.gen(:takes_effect_at => Date.today - 6, :project => fx(:oranges_first_project), :role => fx(:tester))
+      Role.all(:id.not => [@dev.id, @tester.id, @manager.id]).destroy!
+
+      @rates = [
+        # dev has 1, tester has 2, manager hasn't got any
+        HourlyRate.gen(:takes_effect_at => Date.today - 10, :project => @project, :role => @dev),
+        HourlyRate.gen(:takes_effect_at => Date.today - 8, :project => @project, :role => @tester),
+        HourlyRate.gen(:takes_effect_at => Date.today - 6, :project => @project, :role => @tester)
       ]
-      @response = as(:admin).dispatch_to(HourlyRates, :index, :project_id => fx(:oranges_first_project).id)
-      
-      @hourly_rates.each { |hourly_rate| hourly_rate.date_format_for_json = fx(:admin).date_format }
+
+      @response = as(:admin).dispatch_to(HourlyRates, :index, :project_id => @project.id)
+
+      @rates.each { |hourly_rate| hourly_rate.date_format_for_json = fx(:admin).date_format }
     end
     
     it "should respond successfully" do
@@ -36,9 +44,9 @@ describe HourlyRates do
     
     it "should return hourly rates grouped by roles" do
       @response.body.should == [
-        {:project_id => fx(:oranges_first_project).id, :role_id => fx(:developer).id,       :role_name => 'Developer',       :hourly_rates => [@hourly_rates[0]] },
-        {:project_id => fx(:oranges_first_project).id, :role_id => fx(:project_manager).id, :role_name => 'Project Manager', :hourly_rates => [] },
-        {:project_id => fx(:oranges_first_project).id, :role_id => fx(:tester).id,          :role_name => 'Tester',          :hourly_rates => [@hourly_rates[1], @hourly_rates[2]] }
+        { :project_id => @project.id, :role_id => @dev.id, :role_name => 'Developer', :hourly_rates => [@rates[0]] },
+        { :project_id => @project.id, :role_id => @manager.id, :role_name => 'Project Manager', :hourly_rates => [] },
+        { :project_id => @project.id, :role_id => @tester.id, :role_name => 'Tester', :hourly_rates => @rates[1..2] }
       ].to_json
     end
   end

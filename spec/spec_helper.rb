@@ -8,29 +8,30 @@ require "spec"
 module Rubytime
   module Test
     module Model
-      def generate(*args)
-        name = (args.first.is_a?(Symbol) ? args.shift : self.name.snake_case).to_sym
+      def parse_factory_arguments(args)
+        factory_name = (args.first.is_a?(Symbol) ? args.shift : self.name.snake_case).to_sym
         properties = args.first || {}
-
-        Factory.create(name, properties)
+        [factory_name, properties]
       end
+
+      def generate(*args)
+        Factory.create(*parse_factory_arguments(args))
+      end
+
       alias :gen generate
       alias :generate! generate
       alias :gen! generate
 
       def make(*args)
-        name = (args.first.is_a?(Symbol) ? args.shift : self.name.snake_case).to_sym
-        properties = args.first || {}
-
-        Factory.build(name, properties)
+        Factory.build(*parse_factory_arguments(args))
       end
 
       def pick
         Fixtures.pick(name.snake_case.to_sym)
       end
 
-      def gen_attrs
-        make.attributes.except(*(key + properties.select(&:default?)).map(&:name)).reject{|k,v| v.blank?}
+      def gen_attrs(*args)
+        Factory.attributes_for(*parse_factory_arguments(args))
       end
     end
   end

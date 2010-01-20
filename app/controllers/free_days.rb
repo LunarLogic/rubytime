@@ -20,14 +20,14 @@ class FreeDays < Application
     end
   end
 
-  
   def delete
     @free_day = current_user.free_days(:date => params[:date])
 
-    if @free_day.destroy!
+    if !@free_day.empty? && @free_day.destroy!
       render_success "Vacation at #{params[:date]} was removed"
     else
       render_failure "Couldn't remove vacation"
     end
   end
+
 end

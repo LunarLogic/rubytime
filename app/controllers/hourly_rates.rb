@@ -6,11 +6,13 @@ class HourlyRates < Application
 
   def index
     @project = Project.get(params[:project_id])
-    @hourly_rates = @project.hourly_rates_grouped_by_roles.keys.sort_by{|role|role.name}.map do |role|
-      { :project_id => @project.id, 
-        :role_id => role.id, 
+    grouped_rates = @project.hourly_rates_grouped_by_roles
+    @hourly_rates = grouped_rates.keys.sort_by { |role| role.name }.map do |role|
+      {
+        :project_id => @project.id,
+        :role_id => role.id,
         :role_name => role.name, 
-        :hourly_rates => @project.hourly_rates_grouped_by_roles[role].each{|hr|hr.date_format_for_json = current_user.date_format}
+        :hourly_rates => grouped_rates[role].each { |hr| hr.date_format_for_json = current_user.date_format }
       }
     end
     display @hourly_rates

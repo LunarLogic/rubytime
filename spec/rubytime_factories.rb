@@ -2,13 +2,20 @@ def random_date(start_date, end_date)
   start_date + (rand * (end_date - start_date)).to_i
 end
 
+def ensure_rate_exists(args)
+  params = { :project => args[:project], :role => args[:role] }
+  existing = HourlyRate.first(params.merge(:takes_effect_at.lte => args[:takes_effect_at]))
+  existing || Factory.create(:hourly_rate, params.merge(:takes_effect_at => Date.parse("2000-01-01")))
+end
+
+
 Factory.define(:employee, :class => Employee) do |u|
   u.sequence(:name) { |n| "RubyTime User ##{n}" }
   u.sequence(:login) { |n| "user_#{n}" }
   u.sequence(:email) { |n| "user_#{n}@rubytime.org" }
   u.password 'asdf1234'
   u.password_confirmation { |u| u.password }
-  u.role {|r| Role.pick }
+  u.association :role
 end
 
 Factory.define(:admin, :parent => :employee) do |u|
@@ -16,11 +23,11 @@ Factory.define(:admin, :parent => :employee) do |u|
 end
 
 Factory.define(:client_user, :parent => :employee, :class => ClientUser) do |u|
-  u.client { Client.pick }
+  u.association :client
 end
 
 Factory.define(:client, :class => Client) do |u|
-  u.sequence(:name) { |n| "Cient ##{n}" }
+  u.sequence(:name) { |n| "Client ##{n}" }
   u.sequence(:description) { |n| "The decription of client ##{n}" }
   u.sequence(:email) { |n| "client_#{n}@company.com" }
 end
@@ -31,15 +38,16 @@ end
 
 Factory.define(:project, :class => Project) do |p|
   p.sequence(:name) { |n| "Project ##{n}" }
-  p.client { |a| a.association(:client) }
+  p.association :client
 end
 
-Factory.define(:activity, :class => Activity) do |p|
-  p.user { Employee.pick }
-  p.project { Project.pick }
-  p.date { random_date(Date.today - 15, Date.today - 5) }
-  p.minutes { 30 + rand * (23 * 60) }
-  p.sequence(:comments) { |n| "Activity comment ##{n}" }
+Factory.define(:activity, :class => Activity) do |a|
+  a.user { Employee.pick }
+  a.project { Project.pick }
+  a.date { random_date(Date.today - 15, Date.today - 5) }
+  a.minutes { 30 + rand * (23 * 60) }
+  a.sequence(:comments) { |n| "Activity comment ##{n}" }
+  a.after_build { |a| ensure_rate_exists(:project => a.project, :role => a.user.role, :takes_effect_at => a.date) }
 end
 
 Factory.define(:invoice, :class => Invoice) do |i|
