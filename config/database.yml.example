@@ -7,7 +7,7 @@ development: &defaults
   password: 
   host: localhost
   socket: /opt/local/var/run/mysql5/mysqld.sock
-  encoding: utf8
+  encoding: UTF-8
 
 test:
   <<:       *defaults
