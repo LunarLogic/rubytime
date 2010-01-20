@@ -45,6 +45,7 @@ only :development, :test do
   gem "dm-factory_girl", "1.2.3", :require_as => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
   gem "rspec", :require_as => "spec"
   gem "rcov"
+  gem "rcov_stats"
   gem "webrat"
   gem "ci_reporter"
   gem "jslint_on_rails"
