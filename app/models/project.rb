@@ -13,12 +13,14 @@ class Project
   has n, :activities
   has n, :users, :through => :activities
   has n, :hourly_rates
-  
+
   before :destroy do
     throw :halt if activities.count > 0
     
     hourly_rates.all.destroy!
   end
+
+  # class methods
 
   def self.active
     all(:active => true)
@@ -38,6 +40,8 @@ class Project
     all('activities.user_id' => user.id, :unique => true)
   end
 
+  # instance methods
+
   def calendar_viewable?(user)
     user.client == self.client || user.is_admin?
   end
@@ -45,4 +49,5 @@ class Project
   def hourly_rates_grouped_by_roles
     Role.all.inject({}) { |hash, role| hash[role] = []; hash }.update(hourly_rates.group_by { |hr| hr.role })
   end
+
 end

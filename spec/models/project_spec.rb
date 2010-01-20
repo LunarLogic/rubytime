@@ -1,12 +1,13 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe Project do
+
   it "should be created" do
     block_should(change(Project, :count).by(1)) do
-      Project.make(:client => fx(:orange)).save.should be_true
+      Project.make.save.should be_true
     end
   end
-  
+
   describe "#visible_for" do
     before :each do
       @client = Client.generate
@@ -20,12 +21,14 @@ describe Project do
     end
 
     it "should return any project for admin" do
-      found = Project.visible_for(fx(:admin))
+      admin = Employee.make(:admin)
+      found = Project.visible_for(admin)
       [@active, @inactive, @active_with_activity, @inactive_with_activity].each { |p| found.should include(p) }
     end
 
     it "should return only active projects for employee" do
-      found = Project.visible_for(fx(:stefan))
+      user = Employee.make
+      found = Project.visible_for(user)
       [@active_with_activity, @active].each { |p| found.should include(p) }
       [@inactive_with_activity, @inactive].each { |p| found.should_not include(p) }
     end
@@ -43,25 +46,49 @@ describe Project do
   end
 
   describe "#with_activities_for" do
-    before :each do
-      @stefan = fx(:stefan)
-      @lazy_dev = fx(:lazy_dev)
-      @apple = fx(:apple)
-      @project = fx(:apples_first_project)
-    end
-
     it "should include projects with activities added by user" do
-      Project.with_activities_for(@stefan).should include(@project)
+      project = Project.gen
+      user = Employee.gen
+      Activity.gen :user => user, :project => project
+
+      Project.with_activities_for(user).should include(project)
     end
 
     it "should not include projects for which the user hasn't added any activities" do
-      Project.with_activities_for(@lazy_dev).should_not include(@project)
+      project = Project.gen
+      user1 = Employee.gen
+      user2 = Employee.gen
+      Activity.gen :user => user1, :project => project
+      Project.with_activities_for(user2).should_not include(project)
     end
 
     it "should not include duplicate entries" do
-      @stefan.activities.destroy!
-      Activity.generate! :user => @stefan, :project => @project
-      Project.with_activities_for(@stefan).length.should == 1
+      project = Project.gen
+      user = Employee.gen
+      2.times { Activity.gen :user => user, :project => project }
+      Project.with_activities_for(user).should == [project]
+    end
+  end
+
+  describe "calendar_viewable?" do
+    before :each do
+      @client = Client.gen
+      @project = Project.gen :client => @client
+    end
+
+    it "should be viewable by client's users" do
+      user = ClientUser.gen :client => @client
+      @project.calendar_viewable?(user).should be_true
+    end
+
+    it "should NOT be viewable by other clients' users" do
+      user = ClientUser.gen
+      @project.calendar_viewable?(user).should be_false
+    end
+
+    it "should be viewable by admin" do
+      admin = User.gen :admin
+      @project.calendar_viewable?(admin).should be_true
     end
   end
 
