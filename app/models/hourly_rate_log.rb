@@ -6,8 +6,8 @@ class HourlyRateLog
   
   property :id, Serial
   property :logged_at, DateTime
-  property :operation_type, String, :nullable => false
-  property :operation_author_id, Integer, :nullable => false
+  property :operation_type, String, :required => true
+  property :operation_author_id, Integer, :required => true
   property :hr_id,                      Integer, :writer => :private
   property :hr_project_id,              Integer, :writer => :private
   property :hr_role_id,                 Integer, :writer => :private

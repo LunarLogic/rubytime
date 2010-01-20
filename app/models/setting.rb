@@ -4,8 +4,8 @@ class Setting
   ACCESS_KEY_CHARS = "1234567890qwrtpsdfghjklzxcvbnmQWRTPSDFGHJKLZXCVBNM"
   
   property :id, Serial
-  property :enable_notifications, Boolean, :default  => false, :nullable => false
-  property :free_days_access_key, String,  :default => Proc.new { Setting.generate_free_days_access_key }, :nullable => false
+  property :enable_notifications, Boolean, :default  => false, :required => true
+  property :free_days_access_key, String,  :default => Proc.new { Setting.generate_free_days_access_key }, :required => true
   
   before :valid? do
     generate_free_days_access_key if free_days_access_key.blank?

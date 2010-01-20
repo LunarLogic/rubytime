@@ -5,14 +5,14 @@ class Activity
   include DataMapper::Resource
   
   property :id,          Serial
-  property :comments,    Text, :nullable => false
-  property :date,        Date, :nullable => false, :index => true
-  property :minutes,     Integer, :nullable => false, :auto_validation => false
-  property :project_id,  Integer, :nullable => false, :index => true
-  property :user_id,     Integer, :nullable => false, :index => true
+  property :comments,    Text, :required => true
+  property :date,        Date, :required => true, :index => true
+  property :minutes,     Integer, :required => true, :auto_validation => false
+  property :project_id,  Integer, :required => true, :index => true
+  property :user_id,     Integer, :required => true, :index => true
   property :invoice_id,  Integer, :index => true
-  property :price_value, BigDecimal, :scale => 2, :precision => 10, :nullable => true
-  property :price_currency_id, Integer, :nullable => true
+  property :price_value, BigDecimal, :scale => 2, :precision => 10
+  property :price_currency_id, Integer
   property :updated_at,  DateTime
   property :created_at,  DateTime
   

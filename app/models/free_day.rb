@@ -2,8 +2,8 @@ class FreeDay
   include DataMapper::Resource
   
   property :id, Serial
-  property :user_id,     Integer, :nullable => false, :index => true
-  property :date,        Date, :nullable => false, :index => true
+  property :user_id,     Integer, :required => true, :index => true
+  property :date,        Date, :required => true, :index => true
 
   belongs_to :user
 
