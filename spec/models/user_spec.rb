@@ -260,31 +260,25 @@ describe Employee do
   
   describe "#activities_by_dates_and_projects" do
     it "should return nested tables dates -> projects -> activities" do
-      fx(:oranges_first_project).update :name => 'BBB'
-      fx(:oranges_second_project).update :name => 'AAA'
-      
-      fx(:stefan).activities.destroy!
-      fx(:stefan).activities << @activity1 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_first_project), :date => Date.parse('2009-08-10'))
-      fx(:stefan).activities << @activity2 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_second_project), :date => Date.parse('2009-08-12'))
-      fx(:stefan).activities << @activity3 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_first_project), :date => Date.parse('2009-08-12'))
-      fx(:stefan).activities << @activity4 = Activity.gen(:user => fx(:stefan), :project => fx(:oranges_second_project), :date => Date.parse('2009-08-12'))
-      
-      fx(:stefan).activities_by_dates_and_projects(Date.parse('2009-08-10')..Date.parse('2009-08-12')).should == [
-        [ Date.parse('2009-08-10'),
-          [
-            [ fx(:oranges_first_project) , [@activity1] ]
-          ]
-        ],
-        [ Date.parse('2009-08-11'),
-          [
-          ]
-        ],
-        [ Date.parse('2009-08-12'),
-          [
-            [ fx(:oranges_second_project), [@activity2, @activity4] ],
-            [ fx(:oranges_first_project),  [@activity3] ]
-          ]
-        ]
+      @proj1 = Project.generate :name => 'BBB'
+      @proj2 = Project.generate :name => 'AAA'
+
+      @user = Employee.generate
+
+      @activity1 = Activity.gen(:user => @user, :project => @proj1, :date => Date.parse('2009-08-10'))
+      @activity2 = Activity.gen(:user => @user, :project => @proj2, :date => Date.parse('2009-08-12'))
+      @activity3 = Activity.gen(:user => @user, :project => @proj1, :date => Date.parse('2009-08-12'))
+      @activity4 = Activity.gen(:user => @user, :project => @proj2, :date => Date.parse('2009-08-12'))
+
+      @user.activities_by_dates_and_projects(Date.parse('2009-08-10')..Date.parse('2009-08-12')).should == [
+        [Date.parse('2009-08-10'), [
+          [@proj1, [@activity1]]
+        ]],
+        [Date.parse('2009-08-11'), []],
+        [Date.parse('2009-08-12'), [
+          [@proj2, [@activity2, @activity4]],
+          [@proj1, [@activity3]]
+        ]]
       ]
     end
   end

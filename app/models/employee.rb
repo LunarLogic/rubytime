@@ -73,12 +73,15 @@ class Employee < User
     )
   end
   
-  def activities_by_dates_and_projects(dates_range)
-    activities_grouped_by_days = activities(:date => dates_range).group_by{|a| a.date}
-    activities_grouped_by_days.default = []
-    
-    dates_range.to_a.map do |date|
-      [ date, activities_grouped_by_days[date].group_by{|a|a.project}.map.sort_by{|project,activity|project.name} ]
+  def activities_by_dates_and_projects(date_range)
+    all_in_range = activities(:date => date_range, :order => ['created_at'])
+    grouped_by_day = all_in_range.group_by { |a| a.date }
+    grouped_by_day.default = []
+
+    date_range.to_a.map do |date|
+      all_on_date = grouped_by_day[date]
+      grouped_by_project = all_on_date.group_by { |a| a.project }
+      [date, grouped_by_project.map.sort_by { |project, activity| project.name }]
     end
   end
   
