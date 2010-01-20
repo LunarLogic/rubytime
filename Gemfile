@@ -6,7 +6,7 @@ bundle_path 'gems'
 
 gem "do_mysql"
 
-dm_gems_version = "0.10.1"
+dm_gems_version = "0.10.2"
 
 gem "dm-core", dm_gems_version
 gem "dm-aggregates", dm_gems_version
