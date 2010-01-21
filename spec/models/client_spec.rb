@@ -1,4 +1,4 @@
-require File.join( File.dirname(__FILE__), '..', "spec_helper" )
+require 'spec_helper'
 
 describe Client do
   it "should be deleted with associated users and projects if has no invoices and no activities" do

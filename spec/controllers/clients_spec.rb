@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
+require 'spec_helper'
 
 describe Clients do
   it "shouldn't allow Employee or Client to create a client, do update, display index or render edit" do
