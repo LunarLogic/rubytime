@@ -49,4 +49,5 @@ only :development, :test do
   gem "webrat"
   gem "ci_reporter"
   gem "jslint_on_rails"
+  gem 'ruby-debug'
 end
