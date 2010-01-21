@@ -1,0 +1,34 @@
+TODO before 3.2 release:
+
+* release version 3.1.1
+  -> create a new branch based on latest stable release (the one currently at rt.llp.pl)
+  -> cherry-pick commits from master related to iPhone support and minor bug fixes that won't affect anything else
+  -> test a bit and release to rt.llp.pl
+
+* the tests are completely unstable at the moment; entire test suite needs to be refactored & fixed:
+  -> work in the "refactor" branch
+  -> replace calls to fixtures with calls to factories (factory_girl; use our custom helpers gen()/make())
+  -> remove all code related to generating and loading fixtures
+  -> turn off transactional tests, and clear the database after every test
+
+* upgrade Merb to 1.1 ('pre' version, if final doesn't come out by then)
+
+* once the test suite is stable, and DM & Merb are updated: fix all critical bugs from Pivotal/Kanbanery
+
+* perform thorough QA testing again
+
+* when there are no more critical bugs -> release 3.2
+
+=====
+
+After 3.2 (in any order):
+
+* convert CSS to LESS
+
+* upgrade jQuery to 1.4
+
+* migrate to Rails 3
+
+* prepare some basic documentation to help new developers
+
+* fix minor bugs, implement new features
