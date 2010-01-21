@@ -276,7 +276,6 @@ describe Activity do
       context "if there is no corresponding hourly rate" do
         before do
           @activity.stub!(:hourly_rate => nil)
-          @activity.reset
         end
         
         it "should set price to nil and save that" do

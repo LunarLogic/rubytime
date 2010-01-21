@@ -29,31 +29,31 @@ describe HourlyRate do
   it "should not allow to save record without :project assigned" do
     hourly_rate = HourlyRate.make(:project => nil)
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:project_id).should_not be_empty
+    hourly_rate.errors.on(:project_id).should_not be_nil
   end
   
   it "should not allow to save record without :role assigned" do
     hourly_rate = HourlyRate.make(:role => nil)
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:role_id).should_not be_empty
+    hourly_rate.errors.on(:role_id).should_not be_nil
   end
   
   it "should not allow to save record without :takes_effect_at" do
     hourly_rate = HourlyRate.make(:takes_effect_at => '')
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:takes_effect_at).should_not be_empty
+    hourly_rate.errors.on(:takes_effect_at).should_not be_nil
   end
   
   it "should not allow to save record without :value" do
     hourly_rate = HourlyRate.make(:value => '')
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:value).should_not be_empty
+    hourly_rate.errors.on(:value).should_not be_nil
   end
   
   it "should not allow to save record without :currency" do
     hourly_rate = HourlyRate.make(:currency => nil)
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:currency_id).should_not be_empty
+    hourly_rate.errors.on(:currency_id).should_not be_nil
   end
   
   it "should not allow to save record with the same set of :project, :role and :takes_effect_at" do
@@ -66,13 +66,13 @@ describe HourlyRate do
     
     hourly_rate.save.should be_true
     duplicated_hourly_rate.save.should be_false
-    duplicated_hourly_rate.errors.on(:takes_effect_at).should_not be_empty
+    duplicated_hourly_rate.errors.on(:takes_effect_at).should_not be_nil
   end
   
   it "should not allow to save record without :operation_author assigned" do
     hourly_rate = HourlyRate.make(:operation_author => nil)
     hourly_rate.save.should be_false
-    hourly_rate.errors.on(:operation_author).should_not be_empty
+    hourly_rate.errors.on(:operation_author).should_not be_nil
   end
   
   context "if there are activities that use it" do
@@ -85,7 +85,7 @@ describe HourlyRate do
     it "should not allow to destroy the record" do
       @hourly_rate.destroy.should be_nil
       HourlyRate.get(@hourly_rate.id).should_not be_nil
-      @hourly_rate.errors.on(:base).should_not be_empty
+      @hourly_rate.errors.on(:base).should_not be_nil
     end
   end
   
