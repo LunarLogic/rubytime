@@ -1,4 +1,4 @@
-require File.join( File.dirname(__FILE__), '..', "spec_helper" )
+require 'spec_helper'
 
 describe Client do
   it "should be deleted with associated users and projects if has no invoices and no activities" do
@@ -46,5 +46,15 @@ describe Client do
         end
       end
     end
+  end
+  
+  it "should have default order by :name" do
+    prefix = 'test for order of '
+    client_1 = Client.gen(:name => prefix + 'D')
+    client_2 = Client.gen(:name => prefix + 'B')
+    client_3 = Client.gen(:name => prefix + 'A')
+    client_4 = Client.gen(:name => prefix + 'C')
+
+    Client.all(:conditions => ["name LIKE ?", prefix + "%"]).should == [client_3, client_2, client_4, client_1]
   end
 end
