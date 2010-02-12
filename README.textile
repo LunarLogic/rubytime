@@ -6,6 +6,10 @@ h2. Changes
 
  * See CHANGELOG.txt 
 
+h2. Status
+
+**Currently, the master version is very unstable** - we've added lots of new features, but this has also introduced lots of new bugs, which we didn't have time to fix yet. If you're looking for a stable version, try "the 3.1.1 branch":http://github.com/LunarLogicPolska/rubytime/tree/3.1.1.
+
 h2. Setup
 
 h3. Prerequisites
@@ -44,6 +48,10 @@ Run the application:
   merb
 
 Point your browser to url set in config/local/config.rb and login as @admin@ with password @password@
+
+h2. iPhone app
+
+There is an iPhone app for RubyTime, called iRubyTime, "also available on GitHub":http://github.com/psionides/iRubyTime. You can also download it from "the AppStore":http://itunes.apple.com/us/app/irubytime/id355303566?mt=8.
 
 h2. Contact & information
 
