@@ -51,7 +51,7 @@ Point your browser to url set in config/local/config.rb and login as @admin@ wit
 
 h2. iPhone app
 
-There is an iPhone app for RubyTime, called iRubyTime, "also available on GitHub":http://github.com/psionides/iRubyTime. You can also download it from "the AppStore":http://itunes.apple.com/us/app/irubytime/id355303566?mt=8.
+There is an iPhone app for RubyTime, called iRubyTime, "also available on GitHub":http://github.com/psionides/iRubyTime. You can also download it from "the AppStore":http://itunes.apple.com/us/app/irubytime/id355303566?mt=8. You need RubyTime 3.1.1 or later if you want to use iRubyTime.
 
 h2. Contact & information
 
