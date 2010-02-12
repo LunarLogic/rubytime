@@ -20,11 +20,11 @@ h3. Get the source
 
 Next get the source code from Rubytime github repository:
 
-  git clone git://github.com/LunarLogicPolska/rubytime.git
+bc. git clone git://github.com/LunarLogicPolska/rubytime.git
 
 h3. Install gems
 
-  gem bundle
+bc. gem bundle
 
 Note: on 64 bit architectures, you may have to set ARCHFLAGS='-arch x86_64' in your shell environment, otherwise some compiled gems (do_mysql) may not work.
 
@@ -32,7 +32,7 @@ h3. Configure
 
 Enter application directory:
 
-  cd rubytime
+bc. cd rubytime
 
 Then:
 
@@ -45,7 +45,7 @@ h3. Run
 
 Run the application:
 
-  merb
+bc. merb
 
 Point your browser to url set in config/local/config.rb and login as @admin@ with password @password@
 
