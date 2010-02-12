@@ -16,7 +16,7 @@ h3. Get the source
 
 Next get the source code from Rubytime github repository:
 
-  git clone git://github.com/LunarLogicPolska/rubytime.git
+bc. git clone git://github.com/LunarLogicPolska/rubytime.git
 
 h3. Install gems
 
@@ -35,7 +35,7 @@ h3. Configure
 
 Enter application directory:
 
-  cd rubytime
+bc. cd rubytime
 
 Then:
 
@@ -48,9 +48,13 @@ h3. Run
 
 Run the application:
 
-  merb
+bc. merb
 
 Point your browser to url set in config/local/config.rb and login as @admin@ with password @password@
+
+h2. iPhone app
+
+There is an iPhone app for RubyTime, called iRubyTime, "also available on GitHub":http://github.com/psionides/iRubyTime. You can also download it from "the AppStore":http://itunes.apple.com/us/app/irubytime/id355303566?mt=8. You need RubyTime 3.1.1 or later if you want to use iRubyTime.
 
 h2. Contact & information
 
