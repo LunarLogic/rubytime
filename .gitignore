@@ -6,3 +6,5 @@ coverage/*
 spec/controllers/log/*
 config/local_config.rb
 .idea/*
+bin
+gems

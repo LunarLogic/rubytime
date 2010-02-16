@@ -1,4 +1,7 @@
-require 'config/dependencies.rb'
+require Merb.root / "gems" / "environment"
+
+require 'digest/sha1'
+require "csv" # dependency raises error
  
 use_orm :datamapper
 use_test :rspec
