@@ -1,0 +1,25 @@
+<% throw_content :secondary, partial(:new_activity_type, :with => @new_activity_type, :as => :activity_type) if current_user.is_admin? %>
+
+<h1>List of activity types</h1>
+
+<% if @activity_types.empty? %>
+  The list is empty.
+<% else %>
+  <table id="activity_types" class="list wide">
+  <tr>
+    <th>Name</th>
+    <th class="icons"></th>
+  </tr>
+  <% @activity_types.each do |activity_type| %>
+    <tr>
+      <td><%= link_to activity_type.name, resource(activity_type) %></td>
+      <td class="icons">
+        <% if current_user.is_admin? %>
+          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(activity_type, :edit) %>
+          <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), resource(activity_type), :class => "delete_row" %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>

@@ -18,6 +18,7 @@ gem "dm-migrations", dm_gems_version
 gem "dm-observer", dm_gems_version
 gem "dm-sweatshop", dm_gems_version
 gem "dm-serializer", dm_gems_version
+gem "dm-is-tree", dm_gems_version
 gem "dm-constraints", '0.9.9'
 
 merb_gems_version = "1.0.11"
