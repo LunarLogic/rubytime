@@ -16,7 +16,9 @@
       <td class="icons">
         <% if current_user.is_admin? %>
           <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(activity_type, :edit) %>
-          <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), resource(activity_type), :class => "delete_row" %>
+          <% if activity_type.destroy_allowed? %>
+            <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), resource(activity_type), :class => "delete_row" %>
+          <% end %>
         <% end %>
       </td>
     </tr>

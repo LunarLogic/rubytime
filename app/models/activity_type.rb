@@ -13,5 +13,14 @@ class ActivityType
   before :destroy do
     children.each { |at| at.destroy }
   end
+  
+  def destroy_allowed?
+    projects.empty? and children.all? { |at| at.destroy_allowed? }
+  end
+  
+  def destroy(force = false)
+    return false unless destroy_allowed? or force
+    super()
+  end
 
 end
