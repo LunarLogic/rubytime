@@ -10,6 +10,7 @@ class Project
 
   attr_accessor :has_activities
   belongs_to :client
+  has n, :activity_types, :through => Resource
   has n, :activities
   has n, :users, :through => :activities
   
@@ -37,5 +38,14 @@ class Project
 
   def calendar_viewable?(user)
     user.client == self.client || user.is_admin?
+  end
+  
+  def activity_type_ids
+    activity_types.map { |at| at.id }
+  end
+  
+  def activity_type_ids=(activity_type_ids)
+    activity_type_projects.all.destroy!
+    activity_type_ids.each { |activity_type_id| activity_type_projects.create(:activity_type_id => activity_type_id) }
   end
 end

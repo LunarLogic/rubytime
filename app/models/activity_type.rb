@@ -8,6 +8,7 @@ class ActivityType
   property :created_at,  DateTime
   
   is :tree, :order => :name
+  has n, :projects, :through => Resource
   
   before :destroy do
     children.each { |at| at.destroy }

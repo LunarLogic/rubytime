@@ -98,6 +98,26 @@ form input.error, form textarea.error  {
   color:#ff0000;
   background:#ffefef;
 }
+#project_form .activity_types a.toggler {
+  margin-bottom: 10px;
+}
+#project_form .activity_types input[type=checkbox] {
+  margin-right: 5px;
+}
+#project_form .activity_types li {
+  margin-top: 5px;
+  padding: 1px;
+}
+#project_form .activity_types ul {
+  margin: 0 10px 5px 0;
+}
+#project_form .activity_types ul li ul {
+  margin-left: 15px;
+}
+#project_form .activity_types {
+  border: solid 1px #aaa;
+  padding: 10px;
+}
 label.radio {
   width: auto;
 }

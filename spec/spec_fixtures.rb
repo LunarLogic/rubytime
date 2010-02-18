@@ -68,3 +68,7 @@ FreeDay.fixture {{
   :user => Employee.pick,
   :date => random_date(Date.today - 15, Date.today - 5),
 }}
+
+ActivityType.fixture {{
+  :name => /\w{6,10}/.gen
+}}
