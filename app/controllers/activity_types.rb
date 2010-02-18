@@ -42,9 +42,9 @@ class ActivityTypes < Application
     @activity_type = ActivityType.get(params[:id]) or raise NotFound
     if @activity_type.update_attributes(params[:activity_type])
        if @activity_type.parent
-         redirect resource(@activity_type.parent), :message => {:notice => "Sub-activity type was successfully updated"}
+         redirect resource(@activity_type.parent) # TODO: not for ajax requests: , :message => {:notice => "Sub-activity type was successfully updated"}
        else
-         redirect resource(:activity_types), :message => {:notice => "Activity type was successfully updated"}
+         redirect resource(:activity_types) # TODO: not for ajax requests: , :message => {:notice => "Activity type was successfully updated"}
        end
     else
       display @activity_type, :edit

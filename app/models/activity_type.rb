@@ -4,10 +4,12 @@ class ActivityType
   property :id, Serial
   property :name,  String, :nullable => false, :index => true
   property :parent_id, Integer
+  property :position, Integer
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
-  is :tree, :order => :name
+  is :tree, :order => :position
+  is :list, :scope => [:parent_id]
   has n, :projects, :through => Resource
   
   before :destroy do

@@ -49,6 +49,14 @@ jQuery.fn.extend((function() {
     this.find("tr:not(.no_zebra):odd").addClass('odd').removeClass("even");
     this.find("tr:not(.no_zebra):even").addClass('even').removeClass("odd");
     return this;
+  },
+  
+  recordId: function() {
+    return this.attr('id').match('[A-Za-z0-9_]+-([0-9]+)').pop();
+  },
+  
+  positionInParent: function(childSelector) {
+    return 1 + this.parent().children(childSelector).index(this);
   }
   };
 })());

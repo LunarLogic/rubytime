@@ -12,7 +12,7 @@
     <th class="icons"></th>
   </tr>
   <% @activity_types.each do |activity_type| %>
-    <tr>
+    <tr id="activity-type-<%= activity_type.id %>">
       <td><%= link_to activity_type.name, resource(activity_type) %></td>
       <td><%= activity_type_children_summary(activity_type) %></td>
       <td class="icons">
