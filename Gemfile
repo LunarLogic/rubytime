@@ -49,6 +49,11 @@ gem "ParseTree", "3.0.4"
 
 gem "mongrel", "1.1.5"
 
+only :development do
+  gem 'vlad', '2.0.0', :require_as => []
+  gem 'vlad-git', '2.0.0', :require_as => []
+end
+
 only :test do
   gem 'webrat'
   gem "bartes-rcov_stats" , :require_as => 'rcov_stats'
