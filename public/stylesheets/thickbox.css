@@ -34,7 +34,11 @@
 	width:100%;
 }
 
+/*
+WTF is this?
 .TB_overlayMacFFBGHack {background: url(macFFBgHack.png) repeat;}
+*/
+
 .TB_overlayBG {
 	background-color:#000;
 	filter:alpha(opacity=75);
