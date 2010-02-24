@@ -33,6 +33,7 @@ class ActivityTypes < Application
         @activity_type = @new_activity_type.parent
         render :show
       else
+        @activity_types = ActivityType.roots
         render :index
       end
     end
@@ -74,7 +75,7 @@ class ActivityTypes < Application
   end
   
   def number_of_columns
-    params[:action] == "edit" || params[:action] == "index" && current_user.is_client_user? ? 1 : super
+    params[:action] == "edit" || params[:action] == "update" || params[:action] == "index" && current_user.is_client_user? ? 1 : super
   end
 
 end # ActivityTypes
