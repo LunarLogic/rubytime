@@ -18,7 +18,7 @@ class ActivityType
   end
   
   def destroy_allowed?
-    projects.empty? and children.all? { |at| at.destroy_allowed? }
+    projects.empty? and activities.empty? and children.all? { |at| at.destroy_allowed? }
   end
   
   def destroy(force = false)

@@ -18,6 +18,15 @@ describe ActivityType do
       it { @activity_type.destroy_allowed?.should be_false }
     end
     
+    context "when assigned to activities" do
+      before do
+        @activity_type.activities << Activity.generate!(:project => Project.generate!(:client => Client.generate!))
+        @activity_type.save
+      end
+      
+      it { @activity_type.destroy_allowed?.should be_false }
+    end
+    
     context "when has children that are not allowed to destroy" do
       before do
         child_activity_type = ActivityType.generate!
