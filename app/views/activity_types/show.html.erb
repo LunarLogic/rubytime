@@ -11,7 +11,7 @@
     <th class="icons"></th>
   </tr>
   <% @activity_type.children.each do |activity_type| %>
-    <tr>
+    <tr id="activity-type-<%= activity_type.id %>" class="activity-type">
       <td><%= activity_type.name %></td>
       <td class="icons">
         <% if current_user.is_admin? %>
