@@ -194,3 +194,6 @@ td.day li.more {
   font-style: italic;
   font-size: 10px;
 }
+table#activity_types tr.activity-type {
+  cursor: move;
+}
