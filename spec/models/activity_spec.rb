@@ -143,4 +143,125 @@ describe Activity do
     Activity.is_activity_day(fx(:stefan), Date.parse("2008-11-23")).should be_true
   end
   
+  describe "main- and sub- activity_type_id setters" do
+    before do
+      @activity_type_A  = ActivityType.gen
+      @activity_type_B  = ActivityType.gen
+      @activity_type_B1 = ActivityType.gen(:parent => @activity_type_B)
+      @activity_type_B2 = ActivityType.gen(:parent => @activity_type_B)
+      
+      @activity = Activity.gen
+    end
+    
+    context "when setting to nil" do
+      before do
+        @activity.main_activity_type_id = nil
+        @activity.sub_activity_type_id = nil
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should be_nil
+      end
+    end
+    
+    context "when setting to nil (reverse order)" do
+      before do
+        @activity.sub_activity_type_id = nil
+        @activity.main_activity_type_id = nil
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should be_nil
+      end
+    end
+
+    context "when setting only main- activity_type_id" do
+      before do
+        @activity.main_activity_type_id = @activity_type_A.id
+        @activity.sub_activity_type_id = nil
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_A
+      end
+    end
+    
+    context "when setting only main- activity_type_id (reverse order)" do
+      before do
+        @activity.sub_activity_type_id = nil
+        @activity.main_activity_type_id = @activity_type_A.id
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_A
+      end
+    end
+    
+    context "when setting both main- and sub- activity_type_id" do
+      before do
+        @activity.main_activity_type_id = @activity_type_B.id
+        @activity.sub_activity_type_id = @activity_type_B1.id
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_B1
+      end
+    end
+    
+    context "when setting both main- and sub- activity_type_id (reverse order)" do
+      before do
+        @activity.sub_activity_type_id = @activity_type_B1.id
+        @activity.main_activity_type_id = @activity_type_B.id
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_B1
+      end
+    end
+  end
+  
+  describe "main- and sub- activity_type_id getters" do
+    before do
+      @activity_type_A  = ActivityType.gen
+      @activity_type_B  = ActivityType.gen
+      @activity_type_B1 = ActivityType.gen(:parent => @activity_type_B)
+      @activity_type_B2 = ActivityType.gen(:parent => @activity_type_B)
+      
+      @activity = Activity.gen
+    end
+    
+    context "when activity_type is nil" do
+      before do
+        @activity.activity_type = nil
+      end
+      
+      it "should get proper values" do
+        @activity.main_activity_type_id.should be_nil
+        @activity.sub_activity_type_id.should be_nil
+      end
+    end
+    
+    context "when activity_type is one of root activity types" do
+      before do
+        @activity.activity_type = @activity_type_A
+      end
+      
+      it "should get proper values" do
+        @activity.main_activity_type_id.should == @activity_type_A.id
+        @activity.sub_activity_type_id.should be_nil
+      end
+    end
+
+    context "when activity_type is one of sub activity types" do
+      before do
+        @activity.activity_type = @activity_type_B2
+      end
+      
+      it "should get proper values" do
+        @activity.main_activity_type_id.should == @activity_type_B.id
+        @activity.sub_activity_type_id.should  == @activity_type_B2.id
+      end
+    end
+
+  end
 end

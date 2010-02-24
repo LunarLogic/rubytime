@@ -1,6 +1,6 @@
 class ActivityTypes < Application
   
-  before :ensure_admin
+  before :ensure_admin, :exclude => [:available]
 
   def index
     @activity_types = ActivityType.roots
@@ -58,6 +58,19 @@ class ActivityTypes < Application
     else
       raise InternalServerError
     end
+  end
+
+  def available
+    # TODO: authorization
+    provides :json
+    
+    @activity_types = ActivityType.available(
+      Project.get(params[:project_id]), 
+      ActivityType.get(params[:activity_type_id]), 
+      Activity.get(params[:activity_id])
+    )
+    
+    display @activity_types
   end
   
   def number_of_columns

@@ -8,6 +8,7 @@ class Activity
   property :date,        Date, :nullable => false, :index => true
   property :minutes,     Integer, :nullable => false, :auto_validation => false
   property :project_id,  Integer, :nullable => false, :index => true
+  property :activity_type_id, Integer, :index => true
   property :user_id,     Integer, :nullable => false, :index => true
   property :invoice_id,  Integer, :index => true
   property :updated_at,  DateTime
@@ -17,9 +18,54 @@ class Activity
   validates_with_method :hours, :method => :check_max_hours
 
   belongs_to :project
+  belongs_to :activity_type
   belongs_to :user
   belongs_to :invoice
   
+  def available_main_activity_types
+    ActivityType.available(project, nil, self)
+  end
+  
+  def available_sub_activity_types
+    return [] if main_activity_type.nil?
+    ActivityType.available(project, main_activity_type, self)
+  end
+  
+  def main_activity_type_id
+    return nil unless activity_type
+    activity_type.parent ? activity_type.parent.id : activity_type.id
+  end
+  
+  def main_activity_type
+    ActivityType.get(main_activity_type_id)
+  end
+  
+  def main_activity_type_id=(main_activity_type_id)
+    main_activity_type = ActivityType.get(main_activity_type_id)
+    self.activity_type = main_activity_type unless sub_activity_type_id and ActivityType.get(sub_activity_type_id).parent == main_activity_type
+  end
+  
+  def main_activity_type=(main_activity_type)
+    self.main_activity_type_id = main_activity_type.id
+  end
+  
+  def sub_activity_type_id
+    return nil unless activity_type
+    activity_type.parent ? activity_type.id : nil
+  end
+  
+  def sub_activity_type
+    ActivityType.get(sub_activity_type_id)
+  end
+  
+  def sub_activity_type_id=(sub_activity_type_id)
+    self.activity_type = ActivityType.get(sub_activity_type_id) unless sub_activity_type_id.nil?
+  end
+  
+  def sub_activity_type=(sub_activity_type)
+    self.sub_activity_type_id = sub_activity_type.id
+  end
+
   # Returns n recent activities
   def self.recent(n_)
     all(:order => [:date.desc], :limit => n_)

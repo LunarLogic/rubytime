@@ -37,7 +37,9 @@ class Activities < Application
   
   def new
     preselected_user = (current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])) || current_user
-    @activity = Activity.new(:date => params[:date] || Date.today, :user => preselected_user)
+    @activity = Activity.new(:date => params[:date] || Date.today, :user => preselected_user, :project => (@recent_projects + @other_projects).first)
+    @activity.main_activity_type = @activity.available_main_activity_types.first
+    @activity.sub_activity_type = @activity.available_sub_activity_types.first
     render :layout => false
   end
   
