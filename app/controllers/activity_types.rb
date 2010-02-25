@@ -1,6 +1,7 @@
 class ActivityTypes < Application
   
   before :ensure_admin, :exclude => [:available]
+  before :ensure_can_see_available, :only => [:available]
 
   def index
     @activity_types = ActivityType.roots
@@ -62,7 +63,6 @@ class ActivityTypes < Application
   end
 
   def available
-    # TODO: authorization
     provides :json
     
     @activity_types = ActivityType.available(
@@ -76,6 +76,12 @@ class ActivityTypes < Application
   
   def number_of_columns
     params[:action] == "edit" || params[:action] == "update" || params[:action] == "index" && current_user.is_client_user? ? 1 : super
+  end
+  
+  protected
+  
+  def ensure_can_see_available
+    raise Forbidden unless current_user.is_admin? || current_user.is_employee? || (current_user.is_client_user? and current_user.client.projects.get(params[:project_id]))
   end
 
 end # ActivityTypes
