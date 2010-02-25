@@ -24,12 +24,12 @@
       <ul style="display: none">
         <% ActivityType.roots.each do |activity_type| %>
         <li>
-          <%= activity_type_check_box(activity_type, @project.activity_types.include?(activity_type)) %>
+          <%= activity_type_check_box(activity_type, @project.activity_types.include?(activity_type), @project.used_activity_types.include?(activity_type)) %>
           <% unless activity_type.children.empty? %>
             <ul<%= @project.activity_types.include?(activity_type) ? '' : ' style="display: none"' %>>
               <% activity_type.children.each do |sub_activity_type| %>
               <li>
-                <%= activity_type_check_box(sub_activity_type, @project.activity_types.include?(sub_activity_type)) %>
+                <%= activity_type_check_box(sub_activity_type, @project.activity_types.include?(sub_activity_type), @project.used_activity_types.include?(sub_activity_type)) %>
               </li>
               <% end %>
             </ul>

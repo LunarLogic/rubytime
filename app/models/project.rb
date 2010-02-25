@@ -46,6 +46,15 @@ class Project
   
   def activity_type_ids=(activity_type_ids)
     activity_type_projects.all.destroy!
-    activity_type_ids.each { |activity_type_id| activity_type_projects.create(:activity_type_id => activity_type_id) }
+    (activity_type_ids + used_activity_type_ids).uniq.each { |activity_type_id| activity_type_projects.create(:activity_type_id => activity_type_id) }
   end
+  
+  def used_activity_types
+    ActivityType.all("activities.project_id" => id).map { |at| at.ancestors + [at] }.flatten
+  end
+  
+  def used_activity_type_ids
+    used_activity_types.map { |at| at.id }
+  end
+  
 end
