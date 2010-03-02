@@ -134,7 +134,9 @@ module Merb
       row << %(</td>)
 
       klass, visibility = (options[:expanded] ? ["", ""] : ["no_zebra", "display: none"])
-      row << %(</tr><tr class="comments #{klass}" style="#{visibility}"><td colspan="5">#{h(activity.comments).gsub(/\n/, "<br/>")}</td></tr>)
+      row << %(</tr><tr class="comments #{klass}" style="#{visibility}"><td colspan="5">)
+      row << %(<p><strong>#{h(activity.full_type_name)}</strong></p>) if activity.full_type_name
+      row << %(#{h(activity.comments).gsub(/\n/, "<br/>")}</td></tr>)
       row
     end
 

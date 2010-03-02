@@ -136,6 +136,11 @@ class Activity
     user.activities.count(:date => thisday) > 0
   end
   
+  def full_type_name
+    return nil if activity_type.nil?
+    activity_type.parent ? "#{activity_type.parent.name} -> #{activity_type.name}" : "#{activity_type.name}"
+  end
+  
   protected
   
   # Checks if hours for this activity are under 24 hours
