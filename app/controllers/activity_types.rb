@@ -1,6 +1,6 @@
 class ActivityTypes < Application
   
-  before :ensure_admin, :exclude => [:available]
+  before :ensure_admin, :exclude => [:available, :for_projects]
   before :ensure_can_see_available, :only => [:available]
 
   def index
@@ -72,6 +72,15 @@ class ActivityTypes < Application
     )
     
     display @activity_types
+  end
+  
+  def for_projects
+    # TODO: add authorization
+    # raise Forbidden unless current_user.is_admin? || current_user.is_employee? || (current_user.is_client_user? and current_user.has_projects?(params[:search_criteria][:project_id]))
+    
+    only_provides :json
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
+    display @search_criteria.all_activity_types.map { |at| { :id => at.id, :name => at.name } }
   end
   
   def number_of_columns

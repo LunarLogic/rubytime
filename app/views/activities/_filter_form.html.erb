@@ -7,6 +7,8 @@
   
   <%= partial(:criteria_group, :with => :project, :as => :group) %>
   
+  <%= partial(:criteria_group, :with => :activity_type, :as => :group) %>
+  
   <% if current_user.can_see_users? %>
     <%= partial(:criteria_group, :with => :role, :as => :group) %>
     <%= partial(:criteria_group, :with => :user, :as => :group) %>

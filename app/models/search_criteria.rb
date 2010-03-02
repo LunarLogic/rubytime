@@ -1,6 +1,7 @@
 class SearchCriteria
   attr_reader :selected_client_ids
   attr_reader :selected_project_ids
+  attr_reader :selected_activity_type_ids
   attr_reader :selected_role_ids
   attr_reader :selected_user_ids
   attr_reader :date_from
@@ -18,6 +19,7 @@ class SearchCriteria
     @selected_role_ids = []
     @selected_client_ids = []
     @selected_project_ids = []
+    @selected_activity_type_ids = []
     @limit = nil
     @offset = 0
     @since_activity = nil
@@ -37,8 +39,8 @@ class SearchCriteria
     @date_to = date.is_a?(Date) ? date : (Date.parse(date) rescue nil)
   end
   
-  # Setters for multiple user_id[], project_id[], client_id[] and role_id[] properties
-  [:user, :client, :project, :role].each do |prop|
+  # Setters for multiple user_id[], project_id[], activity_type_id[], client_id[] and role_id[] properties
+  [:user, :client, :project, :activity_type, :role].each do |prop|
     define_method "#{prop}_id=" do |value|
       instance_variable_set("@selected_#{prop}_ids", value.reject { |v| v.blank? })
     end
@@ -55,6 +57,21 @@ class SearchCriteria
     return @all_projects if @all_projects
     conditions.merge!(:client_id => get_ids(self.found_clients)) unless self.found_clients.empty?
     @all_projects = Project.active.all({ :order => [:name] }.merge(conditions))
+  end
+  
+  def all_raw_activity_types(conditions={})
+    return @all_raw_activity_types if @all_raw_activity_types
+    conditions.merge!('activity_type_projects.project_id' => get_ids(self.found_projects)) unless self.found_projects.empty?
+    @all_raw_activity_types = ActivityType.all(conditions)
+  end
+  
+  def all_activity_types(conditions={})
+    return @all_activity_types if @all_activity_types
+    
+    grouped = all_raw_activity_types(conditions).group_by{ |at| at.parent }
+    root_activity_types = (grouped[nil] || []).uniq
+    ordered_activity_types = root_activity_types.inject([]) { |agg, at| agg + [at] + (grouped[at] || []).uniq }
+    @all_activity_types = ordered_activity_types.map { |at| ActivityTypeOption.new(at) }
   end
   
   def all_roles(conditions={})
@@ -84,6 +101,14 @@ class SearchCriteria
   def found_projects
     @selected_project_ids.empty? ? self.all_projects : self.all_projects(:id => @selected_project_ids)
   end
+  
+  def found_raw_activity_types_and_their_children
+    if @selected_activity_type_ids.empty?
+      self.all_raw_activity_types
+    else
+      self.all_raw_activity_types(:conditions => ["(id IN ? OR parent_id IN ?)", @selected_activity_type_ids, @selected_activity_type_ids])
+    end
+  end
 
   # Returns found roles only
   # Takes user type into account
@@ -106,6 +131,7 @@ class SearchCriteria
     conditions = {}
     conditions.merge!(:user_id => get_ids(self.found_users)) 
     conditions.merge!(:project_id => get_ids(self.found_projects)) 
+    conditions.merge!(:activity_type_id => get_ids(self.found_raw_activity_types_and_their_children)) unless self.found_raw_activity_types_and_their_children.empty?
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
     conditions.merge!(:limit => @limit.to_i) if @limit
@@ -124,5 +150,19 @@ class SearchCriteria
   
   def get_ids(collection)
     collection.map { |o| o.id }
+  end
+end
+
+class ActivityTypeOption
+  def initialize(activity_type)
+    @activity_type = activity_type
+  end
+  
+  def id
+    @activity_type.id
+  end
+  
+  def name
+    @activity_type.parent ? "- #{@activity_type.name}" : "#{@activity_type.name}"
   end
 end
