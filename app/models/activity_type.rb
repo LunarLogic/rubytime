@@ -25,16 +25,5 @@ class ActivityType
     return false unless destroy_allowed? or force
     super()
   end
-  
-  def self.available(project, activity_type, activity = nil)
-    return [] unless project
-    
-    parent_id = activity_type ? activity_type.id : nil
-    extra_activity_type = activity ? activity.activity_type : nil
-    
-    ( project.activity_types(:parent_id => parent_id) +
-      (extra_activity_type.nil? ? [] : ActivityType.all(:parent_id => parent_id, :id => (extra_activity_type.ancestors.to_a + [extra_activity_type]).map{|at| at.id}))
-    ).uniq
-  end
 
 end

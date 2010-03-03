@@ -223,9 +223,8 @@ var Application = {
     
     container.find(".activity_form select#activity_project_id").change(function() {
       var projectId = container.find(".activity_form select#activity_project_id").val();
-      var activityId = (container.find(".activity_form").attr('action').match('activities/([0-9]+)') || []).pop();
       var targetSelect = container.find(".activity_form select#activity_main_activity_type_id");
-      var url = '/activity_types/available?project_id=' + projectId + (activityId ? '&activity_id=' + activityId : '');
+      var url = '/activity_types/available?project_id=' + projectId;
       
       if ($(this).val()) {
         $.getJSON(url, function(activityTypesJSON) { 
@@ -239,9 +238,8 @@ var Application = {
     container.find(".activity_form select#activity_main_activity_type_id").change(function() {
       var projectId = container.find(".activity_form select#activity_project_id").val();
       var mainActivityTypeId = container.find(".activity_form select#activity_main_activity_type_id").val();
-      var activityId = (container.find(".activity_form").attr('action').match('activities/([0-9]+)') || []).pop();
       var targetSelect = container.find(".activity_form select#activity_sub_activity_type_id");
-      var url = '/activity_types/available?project_id=' + projectId + '&activity_type_id=' + mainActivityTypeId + (activityId ? '&activity_id=' + activityId : '');
+      var url = '/activity_types/available?project_id=' + projectId + '&activity_type_id=' + mainActivityTypeId;
       
       if (projectId && mainActivityTypeId) {
         $.getJSON(url, function(activityTypesJSON) { 

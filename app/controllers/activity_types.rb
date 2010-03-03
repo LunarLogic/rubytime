@@ -65,11 +65,10 @@ class ActivityTypes < Application
   def available
     provides :json
     
-    @activity_types = ActivityType.available(
-      Project.get(params[:project_id]), 
-      ActivityType.get(params[:activity_type_id]), 
-      Activity.get(params[:activity_id])
-    )
+    project = Project.get(params[:project_id]) or raise NotFound
+    activity_type = ActivityType.get(params[:activity_type_id])
+    
+    @activity_types = project.activity_types.all(:parent_id => activity_type ? activity_type.id : nil)
     
     display @activity_types
   end
