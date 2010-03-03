@@ -28,6 +28,7 @@ Randexp::Dictionary.dict_path = File.join(File.dirname(__FILE__), "words.txt")
 
 Merb::Mailer.delivery_method = :test_send
 
+require Merb.root / "spec/matchers"
 require Merb.root / "spec/rubytime_specs_helper"
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/rubytime_controller_helper"
