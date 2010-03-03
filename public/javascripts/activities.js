@@ -179,7 +179,7 @@ var Activities = {
         return 'invoice['+f.name.replace('[]', '')+'][]='+f.value })).join('&');
   },
   
-  _reloadSelects: function(url, group) {
+  _reloadSelects: function(url, group, feedback) {
     url += "?"+$("#activities_filter form").serialize();
     $.getJSON(url, function(json) {
       var options = '<option value="">All</option>';
@@ -189,15 +189,24 @@ var Activities = {
       $("p." + group + ":not(:first)").remove();
       $("p." + group + " select").html(options);
       Activities._updateIcons(group);
+      
+      if (feedback) feedback(json);
     });
   },
 
   _reloadProjects: function() {
-    Activities._reloadSelects('/projects/for_clients', 'project');
+    Activities._reloadSelects('/projects/for_clients', 'project', function() {
+      Activities._reloadActivityTypes();
+    });
   },
   
   _reloadActivityTypes: function() {
-    Activities._reloadSelects('/activity_types/for_projects', 'activity_type');
+    Activities._reloadSelects('/activity_types/for_projects', 'activity_type', function(json) {
+      json.options.length > 0 ? $("p.activity_type").show() : $("p.activity_type").hide();
+      
+      var element = $("#activities_filter form input.include_activities_without_types").parent();
+      json.projects_without_activity_types_selected ? element.show() : element.hide();
+    });
   },
   
   _reloadUsers: function() {

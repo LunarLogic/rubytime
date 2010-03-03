@@ -2,6 +2,7 @@ class SearchCriteria
   attr_reader :selected_client_ids
   attr_reader :selected_project_ids
   attr_reader :selected_activity_type_ids
+  attr_reader :include_activities_without_types
   attr_reader :selected_role_ids
   attr_reader :selected_user_ids
   attr_reader :date_from
@@ -23,6 +24,9 @@ class SearchCriteria
     @limit = nil
     @offset = 0
     @since_activity = nil
+    
+    self.include_activities_without_types = true
+    
     attrs && attrs.each do |attr, value|
       send("#{attr}=", value) if respond_to?("#{attr}=")
     end
@@ -30,6 +34,10 @@ class SearchCriteria
   end
   
   # setters
+  
+  def include_activities_without_types=(value)
+    @include_activities_without_types = (value == true or value == '1')
+  end
 
   def date_from=(date)
     @date_from = date.is_a?(Date) ? date : (Date.parse(date) rescue nil)
@@ -102,6 +110,10 @@ class SearchCriteria
     @selected_project_ids.empty? ? self.all_projects : self.all_projects(:id => @selected_project_ids)
   end
   
+  def found_projects_without_activity_types_assigned
+    found_projects.select { |project| project.activity_types.empty? }
+  end
+  
   def found_raw_activity_types_and_their_children
     if @selected_activity_type_ids.empty?
       self.all_raw_activity_types
@@ -131,7 +143,20 @@ class SearchCriteria
     conditions = {}
     conditions.merge!(:user_id => get_ids(self.found_users)) 
     conditions.merge!(:project_id => get_ids(self.found_projects)) 
-    conditions.merge!(:activity_type_id => get_ids(self.found_raw_activity_types_and_their_children)) unless self.found_raw_activity_types_and_their_children.empty?
+    
+    if include_activities_without_types
+      conditions.merge!(:conditions => [
+        "(activity_type_id IN ? OR project_id IN ?)", 
+        get_ids(self.found_raw_activity_types_and_their_children),
+        get_ids(self.found_projects_without_activity_types_assigned) 
+      ])
+    else
+      conditions.merge!(:conditions => [
+        "(activity_type_id IN ?)", 
+        get_ids(self.found_raw_activity_types_and_their_children)
+      ])
+    end
+    
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
     conditions.merge!(:limit => @limit.to_i) if @limit
