@@ -202,7 +202,7 @@ var Application = {
           hours: true
         },
         "activity[comments]": {
-          required: true
+          required: function() { return container.find(".activity_form select[name='activity[main_activity_type_id]']").attr('disabled') }
         }
       }
     });

@@ -17,10 +17,10 @@
         "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
     </p>
     <p<%= @activity.available_main_activity_types.any? ? '' : ' style="display: none"' %>>
-      <%= select :main_activity_type_id, :label => "Type", :collection => @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s %>
+      <%= select :main_activity_type_id, :label => "Type", :collection => @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s, :disabled => @activity.available_main_activity_types.empty? %>
     </p>
     <p<%= @activity.available_sub_activity_types.any? ? '' : ' style="display: none"' %>>
-      <%= select :sub_activity_type_id, :label => "Sub-type", :collection => @activity.available_sub_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.sub_activity_type_id.to_s %>
+      <%= select :sub_activity_type_id, :label => "Sub-type", :collection => @activity.available_sub_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.sub_activity_type_id.to_s, :disabled => @activity.available_sub_activity_types.empty? %>
     </p>
     <p>
       <%= text_field :hours, :label => "Time spent" %>

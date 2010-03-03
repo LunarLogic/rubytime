@@ -6,6 +6,34 @@ describe Activity do
       Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan)).save.should be_true
     end
   end
+  
+  context "with empty :comments property" do
+    before { @activity = Activity.new(:comments => "") }
+    
+    context "when activity_type assigned" do
+      before { @activity.activity_type = ActivityType.gen }
+      it { @activity.should_not have_errors_on(:comments) }
+    end
+    
+    context "when activity_type not assigned" do
+      before { @activity.activity_type = nil }
+      it { @activity.should have_errors_on(:comments) }
+    end
+  end
+  
+  context "with not empty :comments property" do
+    before { @activity = Activity.new(:comments => "Some comments") }
+    
+    context "when activity_type assigned" do
+      before { @activity.activity_type = ActivityType.gen }
+      it { @activity.should_not have_errors_on(:comments) }
+    end
+    
+    context "when activity_type not assigned" do
+      before { @activity.activity_type = nil }
+      it { @activity.should_not have_errors_on(:comments) }
+    end
+  end
 
   it "should not be locked when does not belong to invoice" do
     fx(:jolas_activity1).locked?.should be_false

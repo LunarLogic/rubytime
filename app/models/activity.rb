@@ -4,7 +4,7 @@ class Activity
   include DataMapper::Resource
   
   property :id,          Serial
-  property :comments,    Text, :nullable => false
+  property :comments,    Text
   property :date,        Date, :nullable => false, :index => true
   property :minutes,     Integer, :nullable => false, :auto_validation => false
   property :project_id,  Integer, :nullable => false, :index => true
@@ -14,6 +14,7 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
+  validates_present :comments, :if => proc { |a| a.activity_type.nil? }
   validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
   validates_with_method :hours, :method => :check_max_hours
 
