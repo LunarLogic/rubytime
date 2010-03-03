@@ -183,8 +183,8 @@ var Activities = {
     url += "?"+$("#activities_filter form").serialize();
     $.getJSON(url, function(json) {
       var options = '<option value="">All</option>';
-      for (var i = 0; i < json.length; i++) {
-        options += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+      for (var i = 0; i < json.options.length; i++) {
+        options += '<option value="' + json.options[i].id + '">' + json.options[i].name + '</option>';
       }
       $("p." + group + ":not(:first)").remove();
       $("p." + group + " select").html(options);

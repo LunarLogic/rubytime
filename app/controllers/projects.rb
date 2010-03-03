@@ -59,7 +59,7 @@ class Projects < Application
     raise Forbidden if current_user.is_client_user?
     only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    display @search_criteria.all_projects.map { |p| { :id => p.id, :name => p.name } }
+    display :options => @search_criteria.all_projects.map { |p| { :id => p.id, :name => p.name } }
   end
 
 protected
