@@ -82,7 +82,7 @@ describe SearchCriteria do
     sc.should have(6).found_activities
   end
 
-  it "should return 'crash_testing' activities for two specific projects" do
+  it "should return 'graphic_design' activities for two specific projects" do
     sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id, fx(:apples_first_project).id], :activity_type_id => [fx(:graphic_design).id] }, fx(:admin))
     sc.should have(6).found_activities
   end
