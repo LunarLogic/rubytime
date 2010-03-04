@@ -144,17 +144,10 @@ class SearchCriteria
     conditions.merge!(:user_id => get_ids(self.found_users)) 
     conditions.merge!(:project_id => get_ids(self.found_projects)) 
     
-    if include_activities_without_types
-      conditions.merge!(:conditions => [
-        "(activity_type_id IN ? OR activity_type_id IS NULL)", 
-        get_ids(self.found_raw_activity_types_and_their_children)
-      ])
-    else
-      conditions.merge!(:conditions => [
-        "(activity_type_id IN ?)", 
-        get_ids(self.found_raw_activity_types_and_their_children)
-      ])
-    end
+    conditions.merge!(:conditions => [
+      "(activity_type_id IN ?" + (include_activities_without_types ? " OR activity_type_id IS NULL" : "") + ")", 
+      get_ids(self.found_raw_activity_types_and_their_children)
+    ])
     
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
