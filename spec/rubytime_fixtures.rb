@@ -144,34 +144,34 @@ module Rubytime
                                                                               :invoice => fx(:oranges_issued_invoice)))
           # anonymous fixtures
           4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_second_project), :user => fx(:jola), :activity_type => fx(:graphic_design))) }
-          4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:jola))) }
+          4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:jola), :activity_type => nil)) }
 
           # by Stefan (total 6 active)
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_first_project), :user => fx(:stefan), :activity_type => fx(:coding))) }
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_second_project), :user => fx(:stefan), :activity_type => fx(:crash_testing))) }
-          3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:stefan))) }
+          3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:stefan), :activity_type => nil)) }
 
           # by Misio (total 4 active) 
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_first_project), :user => fx(:misio), :activity_type => fx(:coding))) }
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_second_project), :user => fx(:misio), :activity_type => fx(:graphic_design))) }
-          2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:misio))) }
+          2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:oranges_inactive_project), :user => fx(:misio), :activity_type => nil)) }
           
           # -- Apple
           
           # by Jola (total 8 active)
           4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_first_project), :user => fx(:jola), :activity_type => fx(:coding))) }
           4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_second_project), :user => fx(:jola), :activity_type => fx(:coding))) }
-          4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:jola))) }
+          4.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:jola), :activity_type => nil)) }
 
           # by Stefan (total 6 active)
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_first_project), :user => fx(:stefan), :activity_type => fx(:crash_testing))) }
           3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_second_project), :user => fx(:stefan), :activity_type => fx(:coding))) }
-          3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:stefan))) }
+          3.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:stefan), :activity_type => nil)) }
 
           # by Misio (total 4 active)
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_first_project), :user => fx(:misio), :activity_type => fx(:coding))) }
           2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_second_project), :user => fx(:misio), :activity_type => fx(:coding))) }
-          2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:misio))) }
+          2.times { add_fixture(:activity, nil, Activity.gen(:project => fx(:apples_inactive_project), :user => fx(:misio), :activity_type => nil)) }
           
           # -- Banana
           

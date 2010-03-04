@@ -3,7 +3,11 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 describe Activity do
   it "should be created" do
     block_should(change(Activity, :count).by(1)) do
-      Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan)).save.should be_true
+      Activity.make(
+        :project => fx(:oranges_first_project), 
+        :activity_type => fx(:oranges_first_project).activity_types.first, 
+        :user => fx(:stefan)
+      ).save.should be_true
     end
   end
   
@@ -33,6 +37,64 @@ describe Activity do
       before { @activity.activity_type = nil }
       it { @activity.should_not have_errors_on(:comments) }
     end
+  end
+  
+  context "with no project assigned" do
+    before { @activity = Activity.new(:project => nil) }
+    
+    context "with nil activity_type" do
+      before { @activity.activity_type = nil }
+      it { @activity.should_not have_errors_on(:activity_type_id) }
+    end
+    
+    context "with activity_type" do
+      before { @activity.activity_type = ActivityType.gen }
+      it { @activity.should have_errors_on(:activity_type_id) }
+    end
+  end
+  
+  context "with project assigned" do
+    before do
+      @project = Project.gen(:client => Client.gen)
+      @activity = Activity.gen(:project => @project)
+    end
+
+    context "when project has activity_types assigned" do
+      before do
+        @activity_type = ActivityType.gen
+        @project.activity_type_projects.create(:activity_type => @activity_type)
+      end
+      
+      context "with nil activity_type" do
+        before { @activity.activity_type = nil }
+        it { @activity.should have_errors_on(:activity_type_id) }
+      end
+
+      context "with activity_type that is also assigned to the project" do
+        before { @activity.activity_type = @activity_type }
+        it { @activity.should_not have_errors_on(:activity_type_id) }
+      end
+      
+      context "with activity_type that is not assigned to the project" do
+        before { @activity.activity_type = ActivityType.gen }
+        it { @activity.should have_errors_on(:activity_type_id) }
+      end
+    end
+    
+    context "when project has no activity_types assigned" do
+      before { @project.activity_types.count.should == 0 }
+      
+      context "with nil activity_type" do
+        before { @activity.activity_type = nil }
+        it { @activity.should_not have_errors_on(:activity_type_id) }
+      end
+      
+      context "with activity_type assigned" do
+        before { @activity.activity_type = ActivityType.gen }
+        it { @activity.should have_errors_on(:activity_type_id) }
+      end
+    end
+    
   end
 
   it "should not be locked when does not belong to invoice" do
@@ -104,7 +166,7 @@ describe Activity do
   end
   
   it "should return formatted hours for saved activity" do
-    a = Activity.gen(:project => fx(:oranges_first_project), :user => fx(:jola), :minutes => 7.5 * 60)
+    a = Activity.gen(:project => fx(:oranges_first_project), :user => fx(:jola), :minutes => 7.5 * 60, :activity_type => fx(:oranges_first_project).activity_types.first)
     a = Activity.get(a.id)
     a.hours.should == "7:30"
   end
@@ -167,7 +229,7 @@ describe Activity do
   end
 
   it "should check if activity exist for date" do
-    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23")).save.should be_true
+    Activity.make(:project => fx(:oranges_first_project), :activity_type => fx(:oranges_first_project).activity_types.first, :user => fx(:stefan), :date => Date.parse("2008-11-23")).save.should be_true
     Activity.is_activity_day(fx(:stefan), Date.parse("2008-11-23")).should be_true
   end
   

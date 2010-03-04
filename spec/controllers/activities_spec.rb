@@ -57,6 +57,7 @@ describe Activities do
       as(fx(:misio)).dispatch_to(Activities, :create, :activity => { 
         :date => Date.today,
         :project_id => fx(:bananas_first_project).id,
+        :activity_type_id => fx(:bananas_first_project).activity_types.first.id,
         :hours => "7",
         :comments => "this & that"
       }).status.should == 201
@@ -90,6 +91,7 @@ describe Activities do
         as(employee).dispatch_to(Activities, :create, :activity => { 
           :date => Date.today,
           :project_id => fx(:oranges_first_project).id,
+          :activity_type_id => fx(:oranges_first_project).activity_types.first.id,
           :hours => "7",
           :comments => "this & that",
           :user_id => another_employee.id
@@ -106,6 +108,7 @@ describe Activities do
         as(admin).dispatch_to(Activities, :create, :activity => { 
           :date => Date.today,
           :project_id => fx(:oranges_first_project).id,
+          :activity_type_id => fx(:oranges_first_project).activity_types.first.id,
           :hours => "7",
           :comments => "this & that",
           :user_id => user.id

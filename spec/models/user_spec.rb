@@ -73,8 +73,10 @@ describe User do
   # in april 2009 were 22 working days
   it "should have 18 days without activity besides two days with activities, vacation days and weekends in april 2009" do
     fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").count.should == 22
-    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-04-17")).save.should be_true
-    Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2009-04-15")).save.should be_true
+    Activity.make(:project => fx(:oranges_first_project), :activity_type => fx(:oranges_first_project).activity_types.first, :user => fx(:stefan), 
+      :date => Date.parse("2009-04-17")).save.should be_true
+    Activity.make(:project => fx(:oranges_first_project), :activity_type => fx(:oranges_first_project).activity_types.first, :user => fx(:stefan), 
+      :date => Date.parse("2009-04-15")).save.should be_true
     FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-21")).save.should be_true
     FreeDay.make(:user => fx(:stefan), :date => Date.parse("2009-04-22")).save.should be_true
     fx(:stefan).indefinite_activities("2009-04-01", "2009-04-30").count.should == 18

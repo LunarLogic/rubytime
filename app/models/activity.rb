@@ -17,6 +17,9 @@ class Activity
   validates_present :comments, :if => proc { |a| a.activity_type.nil? }
   validates_format :hours, :with => HOURS_REGEX, :if => proc { |a| a.minutes.nil? }
   validates_with_method :hours, :method => :check_max_hours
+  validates_absent  :activity_type_id, :unless => proc { |a| a.activity_type_required? }
+  validates_present :activity_type_id,     :if => proc { |a| a.activity_type_required? }
+  validates_with_method :activity_type_id, :method => :activity_type_must_be_assigned_to_project, :if => proc { |a| a.activity_type_required? and a.activity_type }
 
   belongs_to :project
   belongs_to :activity_type
@@ -143,6 +146,10 @@ class Activity
     activity_type.parent ? "#{activity_type.parent.name} -> #{activity_type.name}" : "#{activity_type.name}"
   end
   
+  def activity_type_required?
+    project and project.activity_types.count > 0
+  end
+  
   protected
   
   # Checks if hours for this activity are under 24 hours
@@ -155,4 +162,9 @@ class Activity
     end
     true
   end
+  
+  def activity_type_must_be_assigned_to_project
+    project.activity_types.get(activity_type_id) ? true : [false, "Activity type must be one of those assigned to the project"]
+  end
+  
 end
