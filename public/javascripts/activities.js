@@ -205,7 +205,7 @@ var Activities = {
       json.options.length > 0 ? $("p.activity_type").show() : $("p.activity_type").hide();
       
       var element = $("#activities_filter form input.include_activities_without_types").parent();
-      json.projects_without_activity_types_selected ? element.show() : element.hide();
+      json.projects_with_activities_without_types_selected ? element.show() : element.hide();
     });
   },
   

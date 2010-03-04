@@ -110,8 +110,8 @@ class SearchCriteria
     @selected_project_ids.empty? ? self.all_projects : self.all_projects(:id => @selected_project_ids)
   end
   
-  def found_projects_without_activity_types_assigned
-    found_projects.select { |project| project.activity_types.empty? }
+  def found_projects_with_activities_without_types?
+    found_projects.activities.all(:activity_type_id => nil).count > 0
   end
   
   def found_raw_activity_types_and_their_children
@@ -146,9 +146,8 @@ class SearchCriteria
     
     if include_activities_without_types
       conditions.merge!(:conditions => [
-        "(activity_type_id IN ? OR project_id IN ?)", 
-        get_ids(self.found_raw_activity_types_and_their_children),
-        get_ids(self.found_projects_without_activity_types_assigned) 
+        "(activity_type_id IN ? OR activity_type_id IS NULL)", 
+        get_ids(self.found_raw_activity_types_and_their_children)
       ])
     else
       conditions.merge!(:conditions => [

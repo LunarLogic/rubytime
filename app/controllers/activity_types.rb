@@ -80,7 +80,7 @@ class ActivityTypes < Application
     only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     display :options => @search_criteria.all_activity_types.map { |at| { :id => at.id, :name => at.name } }, 
-      :projects_without_activity_types_selected => @search_criteria.found_projects_without_activity_types_assigned.any?
+      :projects_with_activities_without_types_selected => @search_criteria.found_projects_with_activities_without_types?
   end
   
   def number_of_columns

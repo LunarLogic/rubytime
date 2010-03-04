@@ -9,7 +9,7 @@
   
   <%= partial(:criteria_group, :with => :activity_type, :as => :group) %>
   
-  <p<%= @search_criteria.found_projects_without_activity_types_assigned.any? ? '' : ' style="display: none"'%>>
+  <p<%= @search_criteria.found_projects_with_activities_without_types? ? '' : ' style="display: none"'%>>
     <%= label "Include activities without types", :for => :include_activities_without_types %>
     <%= check_box :include_activities_without_types, :class => 'include_activities_without_types' %>
   </p>
