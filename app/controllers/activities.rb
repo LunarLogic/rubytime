@@ -191,10 +191,13 @@ protected
   def convert_to_csv(activities)
     report = StringIO.new
     CSV::Writer.generate(report, ',') do |csv|
-      csv << %w(Client Project Role User Date Hours Comments)
+      csv << %w(Client Project Role User Date Hours Type SubType Comments)
       activities.each do |activity|
         csv << [activity.project.client.name, activity.project.name, activity.user.role.name, activity.user.name, 
-                activity.date, format("%.2f", activity.minutes / 60.0), activity.comments.strip]
+                activity.date, format("%.2f", activity.minutes / 60.0),
+                (activity.main_activity_type ? activity.main_activity_type.name : nil),
+                (activity.sub_activity_type ? activity.sub_activity_type.name : nil),
+                activity.comments.strip]
       end
     end
     report.rewind
