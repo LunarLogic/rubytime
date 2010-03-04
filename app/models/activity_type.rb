@@ -13,6 +13,8 @@ class ActivityType
   has n, :projects, :through => Resource
   has n, :activities
   
+  validates_is_unique :name, :scope => :parent_id
+  
   before :destroy do
     children.each { |at| at.destroy }
   end
