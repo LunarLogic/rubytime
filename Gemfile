@@ -50,4 +50,5 @@ only :development, :test do
   gem "ci_reporter"
   gem "jslint_on_rails"
   gem 'ruby-debug'
+  gem 'delorean'
 end

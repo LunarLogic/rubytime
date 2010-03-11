@@ -116,11 +116,12 @@ class Activity
 
   def freeze_price!
     raise Exception.new('Price is already frozen') if price_frozen?
-    if price
+    success = if price
       update(:price_value => price.value, :price_currency => price.currency)
     else
       update(:price_value => nil,         :price_currency => nil)
     end
+    success or raise Exception.new("Can't freeze price")
   end
   
   def invoiced?
@@ -140,7 +141,7 @@ class Activity
   end
 
   def notify_project_managers_about_saving(kind_of_change)
-    Employee.all('role.name' => 'Project Manager').each do |project_manager|
+    Employee.managers.each do |project_manager|
       m = UserMailer.new(:activity => self, :kind_of_change => kind_of_change, :project_manager => project_manager)
       m.dispatch_and_deliver(:timesheet_changes_notifier,
         :to => project_manager.email,
@@ -148,7 +149,8 @@ class Activity
         :subject => "Timesheet update notification")
     end
   end
-  
+
+  # FIXME: wtf, double underscores?
   def notify_project_managers_about_saving__if_enabled(kind_of_change)
     notify_project_managers_about_saving(kind_of_change) if Setting.enable_notifications
   end

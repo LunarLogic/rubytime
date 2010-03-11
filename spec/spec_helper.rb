@@ -14,25 +14,36 @@ module Rubytime
         [factory_name, properties]
       end
 
+      def first_or_generate(attributes = {})
+        first(attributes) || generate(attributes)
+      end
+
       def generate(*args)
         Factory.create(*parse_factory_arguments(args))
       end
 
+      # deprecated, use only 'generate'
       alias :gen generate
       alias :generate! generate
       alias :gen! generate
 
+      # deprecated, use 'prepare'
       def make(*args)
         Factory.build(*parse_factory_arguments(args))
       end
+
+      alias :prepare make
 
       def pick
         Fixtures.pick(name.snake_case.to_sym)
       end
 
+      # deprecated, use 'prepare_attributes'
       def gen_attrs(*args)
         Factory.attributes_for(*parse_factory_arguments(args))
       end
+
+      alias :prepare_attributes gen_attrs
     end
   end
 end
@@ -60,6 +71,7 @@ Spec::Runner.configure do |config|
   config.include(Rubytime::Test::ControllerHelper)
   config.include(Rubytime::Test::SpecsHelper)
   config.include(Rubytime::Test::Fixtures::FixturesHelper)
+  config.include(Delorean)
 
   config.after(:each) do
     repository(:default) do

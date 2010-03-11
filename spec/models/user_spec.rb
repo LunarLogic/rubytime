@@ -222,6 +222,16 @@ describe Employee do
     Employee.new(:admin => true).is_admin?.should be_true
   end
 
+  it "should find managers" do
+    manager_role = Role.first_or_generate :name => 'Project Manager'
+    manager = Employee.generate :role => manager_role
+    other = Employee.generate
+
+    managers = Employee.managers.all
+    managers.should include(manager)
+    managers.should_not include(other)
+  end
+
   it "should check if user has any activities for a date" do
     Activity.gen(:project => fx(:oranges_first_project), :user => fx(:stefan), :date => Date.parse("2008-11-23"))
     fx(:stefan).has_activities_on_day(Date.parse("2008-11-23")).should be_true

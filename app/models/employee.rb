@@ -6,7 +6,11 @@ class Employee < User
   before :destroy do
     throw :halt if activities.count > 0
   end
-  
+
+  def self.managers
+    all('role.name' => 'Project Manager')
+  end
+
   def can_manage_financial_data?
     is_admin? or role.can_manage_financial_data
   end
