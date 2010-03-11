@@ -1,27 +1,24 @@
-TODO before 3.2 release:
-
-* release version 3.1.1
-  -> create a new branch based on latest stable release (the one currently at rt.llp.pl)
-  -> cherry-pick commits from master related to iPhone support and minor bug fixes that won't affect anything else
-  -> test a bit and release to rt.llp.pl
+TODO before 3.3 release:
 
 * the tests are completely unstable at the moment; entire test suite needs to be refactored & fixed:
   -> work in the "refactor" branch
-  -> replace calls to fixtures with calls to factories (factory_girl; use our custom helpers gen()/make())
+  -> replace calls to fixtures with calls to factories (factory_girl; use our custom helpers generate()/prepare())
   -> remove all code related to generating and loading fixtures
   -> turn off transactional tests, and clear the database after every test
 
-* upgrade Merb to 1.1 ('pre' version, if final doesn't come out by then)
+* upgrade to latest Merb and DataMapper (+ fix tests again if they break)
 
-* once the test suite is stable, and DM & Merb are updated: fix all critical bugs from Pivotal/Kanbanery
+* merge 3.2 branch
 
-* perform thorough QA testing again
+* fix all critical bugs from Pivotal/Kanbanery
 
-* when there are no more critical bugs -> release 3.2
+* ask Wojtek or Kuba Obstarczyk to test it again
+
+* when there are no more critical bugs -> release 3.3
 
 =====
 
-After 3.2 (in any order):
+After 3.3 (in any order):
 
 * convert CSS to LESS
 
