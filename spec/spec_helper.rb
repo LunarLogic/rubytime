@@ -27,12 +27,9 @@ module Rubytime
       alias :generate! generate
       alias :gen! generate
 
-      # deprecated, use 'prepare'
-      def make(*args)
+      def prepare(*args)
         Factory.build(*parse_factory_arguments(args))
       end
-
-      alias :prepare make
 
       def pick
         Fixtures.pick(name.snake_case.to_sym)
