@@ -7,11 +7,11 @@ describe Activities do
   end
 
   it "should should match /project/x/activities to Activities#index with :project_id set" do
-    project_id = fx(:oranges_first_project).id
-    request = request_to("/projects/#{project_id}/activities", :get)
-    request.should route_to(Activities, :index).with(:project_id => project_id.to_s)
+    project = Project.generate
+    request = request_to("/projects/#{project.id}/activities", :get)
+    request.should route_to(Activities, :index).with(:project_id => project.id.to_s)
   end
-  
+
   describe "#index" do
     it "should show list of activities" do
       as(:employee).dispatch_to(Activities, :index).should be_successful
@@ -20,52 +20,72 @@ describe Activities do
     end
 
     it "should include activity locked? field in JSON response" do
-      response = as(:employee).dispatch_to(Activities, :index, :format => 'json')
+      user = Employee.generate
+      project = Project.generate
+      Activity.generate :user => user, :project => project
+
+      response = as(user).dispatch_to(Activities, :index, :search_criteria => { :limit => 1 }, :format => 'json')
       response.body.should =~ /"locked\?"/
     end
 
     it "should filter by project if actions is accessed by /projects/x/activities" do
-      proj_id = fx(:oranges_first_project).id
-      response = as(:employee).dispatch_to(Activities, :index, :project_id => proj_id)
-      response.instance_variable_get("@search_criteria").selected_project_ids.should == [proj_id.to_s]
+      project = Project.generate
+      response = as(:employee).dispatch_to(Activities, :index, :project_id => project.id)
+      response.instance_variable_get("@search_criteria").selected_project_ids.should == [project.id.to_s]
     end
   end
 
   describe "#new" do
     it "should show 3 recent and rest of projects when adding new activity" do
-      jola = fx(:jola) #jola has 3 activities for orange project
-      
-      controller = as(jola).dispatch_to(Activities, :new)
-      controller.should be_successful
-      recent_projects = controller.instance_variable_get(:@recent_projects)
-      recent_projects.size.should == 3
-      
-      other_projects = controller.instance_variable_get(:@other_projects)
-      other_projects.size.should == Project.active.count - 3
+      user = Employee.generate
+      projects = (0..4).map { |i| Project.generate :name => "Project#{i}" }
+
+      Activity.generate :user => user, :project => projects[0], :date => Date.parse('2009-07-01')
+      Activity.generate :user => user, :project => projects[1], :date => Date.parse('2009-07-03')
+      Activity.generate :user => user, :project => projects[2], :date => Date.parse('2009-07-07')
+      Activity.generate :user => user, :project => projects[3], :date => Date.parse('2009-07-02')
+      Activity.generate :user => user, :project => projects[4], :date => Date.parse('2009-07-04')
+      Activity.generate :user => Employee.generate, :project => projects[0], :date => Date.parse('2009-07-11')
+
+      response = as(user).dispatch_to(Activities, :new)
+      response.should be_successful
+      recent_projects = response.instance_variable_get(:@recent_projects)
+      recent_projects.should == [projects[2], projects[4], projects[1]]
+
+      other_projects = response.instance_variable_get(:@other_projects)
+      other_projects.should include(projects[0])
+      other_projects.should include(projects[3])
     end
-  
+
     it "should preselect current user in new activity form when user is admin" do
-      admin = fx(:admin)
+      admin = Employee.generate(:admin)
       controller = as(admin).dispatch_to(Activities, :new)
       controller.should be_successful
       controller.instance_variable_get(:@activity).user.should == admin
     end
   end
-  
+
   describe "#create" do
+
+    before :each do
+      @user = Employee.generate
+      @project = Project.generate
+      ensure_rate_exists :project => @project, :role => @user.role, :takes_effect_at => Date.today
+    end
+
     it "should add new activity" do
-      as(fx(:misio)).dispatch_to(Activities, :create, :activity => { 
+      as(@user).dispatch_to(Activities, :create, :activity => {
         :date => Date.today,
-        :project_id => fx(:bananas_first_project).id,
+        :project_id => @project.id,
         :hours => "7",
         :comments => "this & that"
       }).status.should == 201
     end
-    
+
     it "should not add invalid activity" do
-      as(:employee).dispatch_to(Activities, :create, :activity => { 
+      as(@user).dispatch_to(Activities, :create, :activity => {
         :date => Date.today,
-        :project_id => fx(:apples_first_project).id,
+        :project_id => @project.id,
         :hours => "6:30",
         :comments => ""
       }).status.should == 400
@@ -73,75 +93,78 @@ describe Activities do
 
     it "should raise bad request if adding activity for nonexistent project" do
       block_should(raise_bad_request) do
-        as(:employee).dispatch_to(Activities, :create, :activity => {
+        as(@user).dispatch_to(Activities, :create, :activity => {
           :date => Date.today,
-          :project_id => 1234567,
+          :project_id => 923874293,
           :hours => "6:30",
           :comments => "boo"
         })
       end
     end
-    
+
     it "should not add activity for other user if he isn't admin" do
-      employee = fx(:jola)
-      another_employee = fx(:misio)
-  
-      block_should(change(employee.activities, :count).by(1)).and_not(change(another_employee.activities, :count)) do
-        as(employee).dispatch_to(Activities, :create, :activity => { 
+      other = Employee.generate
+
+      block_should(change(@user.activities, :count).by(1)).and_not(change(other.activities, :count)) do
+        as(@user).dispatch_to(Activities, :create, :activity => {
           :date => Date.today,
-          :project_id => fx(:oranges_first_project).id,
+          :project_id => @project.id,
           :hours => "7",
           :comments => "this & that",
-          :user_id => another_employee.id
+          :user_id => other.id
         }).status.should == 201
-        employee.reload # nedded to reload employee.activity 
       end
     end
-    
+
     it "should add activity for other user if he is admin" do
-      admin = fx(:admin)
-      user = fx(:misio)
-      
-      block_should(change(user.activities, :count).by(1)).and_not(change(admin.activities, :count)) do
+      admin = Employee.generate(:admin)
+
+      block_should(change(@user.activities, :count).by(1)).and_not(change(admin.activities, :count)) do
         as(admin).dispatch_to(Activities, :create, :activity => { 
           :date => Date.today,
-          :project_id => fx(:oranges_first_project).id,
+          :project_id => @project.id,
           :hours => "7",
           :comments => "this & that",
-          :user_id => user.id
+          :user_id => @user.id
         }).status.should == 201
-        admin.reload # needed to reload admin.activities
-        user.reload # nedded to reload user.activities 
       end
     end
 
     it "should not crash when :activity hash isn't set" do
-      block_should(raise_bad_request) { as(:employee).dispatch_to(Activities, :create) }
+      block_should(raise_bad_request) { as(@user).dispatch_to(Activities, :create) }
     end
 
   end
 
   describe "#edit" do
+    before :each do
+      @activity = Activity.generate
+    end
+
     it "should show edit form for activity owner" do
-      as(fx(:jola)).dispatch_to(Activities, :edit, :id => fx(:jolas_activity1).id).status.should be_successful
+      as(@activity.user).dispatch_to(Activities, :edit, :id => @activity.id).status.should be_successful
     end
 
     it "should show edit form for admin" do
-      as(fx(:admin)).dispatch_to(Activities, :edit, :id => fx(:jolas_activity1).id).status.should be_successful
+      as(:admin).dispatch_to(Activities, :edit, :id => @activity.id).status.should be_successful
     end
 
     it "shouldn't show edit form for other user" do
       block_should(raise_not_found) do
-        as(fx(:misio)).dispatch_to(Activities, :edit, :id => fx(:jolas_activity1).id)
+        as(:employee).dispatch_to(Activities, :edit, :id => @activity.id)
       end
     end
   end
 
   describe "#update" do
+    before :each do
+      @activity = Activity.generate
+    end
+
     it "should update user's activity" do
-      as(fx(:jola)).dispatch_to(Activities, :update, :id => fx(:jolas_activity1).id, :activity => {
+      as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
         :date => Date.today,
-        :project_id => fx(:apples_first_project).id,
+        :project_id => @activity.project.id,
         :hours => "3:03",
         :comments => "updated this stuff"
       }).status.should be_successful
@@ -149,9 +172,9 @@ describe Activities do
 
     it "shouldn't update other user's activity" do
       block_should(raise_not_found) do
-        as(fx(:misio)).dispatch_to(Activities, :update, :id => fx(:jolas_activity1).id, :activity => {
+        as(:employee).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
           :date => Date.today,
-          :project_id => fx(:apples_first_project).id,
+          :project_id => @activity.id,
           :hours => "3:03",
           :comments => "updated this stuff"
         })
@@ -159,33 +182,37 @@ describe Activities do
     end
 
     it "should not crash when :activity hash isn't set" do
-      lambda { as(:employee).dispatch_to(Activities, :update, :id => fx(:jolas_activity1).id) }.should_not raise_error
+      lambda { as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id) }.should_not raise_error
     end
-
   end
 
   describe "#destroy" do
+
+    before :each do
+      @activity = Activity.generate
+    end
+
     it "should allow admin to delete activity" do
       block_should(change(Activity, :count).by(-1)) do
-        delete_jolas_activity_as(:admin).should be_successful
+        as(:admin).dispatch_to(Activities, :destroy, { :id => @activity.id }).should be_successful
       end    
     end
-    
+
     it "should allow owner to delete activity" do
       block_should(change(Activity, :count).by(-1)) do
-        delete_jolas_activity_as(fx(:jola)).should be_successful
+        as(@activity.user).dispatch_to(Activities, :destroy, { :id => @activity.id }).should be_successful
       end
     end
-    
+
     it "shouldn't allow user to delete other's activities" do
       block_should(raise_not_found).and_not(change(Activity, :count)) do
-        delete_jolas_activity_as fx(:stefan)
+        as(:employee).dispatch_to(Activities, :destroy, { :id => @activity.id }).should be_successful
       end
     end
-    
+
     it "should raise not found for deleting activity with nonexistent id" do
       block_should(raise_not_found) do
-        as(:admin).dispatch_to(Activities, :destroy, { :id => 123123123 })
+        as(:admin).dispatch_to(Activities, :destroy, { :id => 290384923 })
       end
     end
   end
@@ -202,54 +229,64 @@ describe Activities do
       response.should route_to(Activities, :calendar)
       response[:project_id].should == "4"
     end
-    
+
     it "should render calendar for current month if no date given in the request" do
       repository(:default) do # identity map doesn't work outside repository block
-        employee = Employee.gen(:role => fx(:developer))
+        employee = Employee.generate
         employee.activities.should_receive(:for).with(:this_month).and_return([])
         as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id }).should be_successful
       end
     end
-    
+
     it "should render calendar for given month" do
       repository(:default) do # same as above
-        employee = Employee.first
+        employee = Employee.generate
         year, month = 2007, 10
         employee.activities.should_receive(:for).with(:year => year, :month => month).and_return([])
-        controller = as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id, :month => month, :year => year })
-        controller.should be_successful
+        response = as(employee).dispatch_to(Activities, :calendar, {
+          :user_id => employee.id,
+          :month => month,
+          :year => year
+        })
+        response.should be_successful
       end
     end
-  
+
     it "should render bad request error for wrong date" do
       block_should(raise_bad_request) do
-        as(employee = Employee.gen(:role => fx(:developer))).dispatch_to(
-          Activities, :calendar, { :user_id => employee.id, :year => 3300, :month => 10 })
+        employee = Employee.generate
+        as(employee).dispatch_to(Activities, :calendar, { :user_id => employee.id, :year => 3300, :month => 10 })
       end
     end
-    
+
     it "should be successful for user requesting his calendar" do
-      user = fx(:stefan)
-      as(user).dispatch_to(Activities, :calendar, :user_id => user.id).should be_successful
+      employee = Employee.generate
+      as(employee).dispatch_to(Activities, :calendar, :user_id => employee.id).should be_successful
     end
 
     it "should raise forbidden for trying to view other's calendars" do
       block_should(raise_forbidden) do
-        as(fx(:misio)).dispatch_to(Activities, :calendar, :user_id => fx(:jola).id)
+        employee = Employee.generate
+        as(:employee).dispatch_to(Activities, :calendar, :user_id => employee.id)
       end
     end
 
     it "should be successful for admin requesting user's calendar" do
-      as(:admin).dispatch_to(Activities, :calendar, :user_id => fx(:jola).id).should be_successful
+      employee = Employee.generate
+      as(:admin).dispatch_to(Activities, :calendar, :user_id => employee.id).should be_successful
     end
 
     it "should be successful for client requesting his project's calendar" do
-      as(fx(:apple_user1)).dispatch_to(Activities, :calendar, :project_id => fx(:apples_first_project).id).should be_successful
+      project = Project.generate
+      client_user = ClientUser.generate :client => project.client
+      as(client_user).dispatch_to(Activities, :calendar, :project_id => project.id).should be_successful
     end
-    
+
     it "should raise forbidden for trying to view other client's project's calendar" do
+      project = Project.generate
+      other_client_user = ClientUser.generate
       block_should(raise_forbidden) do
-        as(fx(:orange_user1)).dispatch_to(Activities, :calendar, :project_id => fx(:apples_first_project).id)
+        as(other_client_user).dispatch_to(Activities, :calendar, :project_id => project.id)
       end
     end
   end
@@ -260,33 +297,31 @@ describe Activities do
     end
 
     it "should raise Forbidden when user's trying to view other user calendar" do
-      day_with_jolas_activities = fx(:jola).activities.first.created_at
+      user = Employee.generate
       block_should(raise_forbidden) do
-        as(fx(:misio)).dispatch_to(Activities, :day, { :search_criteria => { 
-          :user_id => [fx(:jola).id], :date_from => day_with_jolas_activities, :date_to => day_with_jolas_activities 
-        }})
+        as(:employee).dispatch_to(Activities, :day, :search_criteria => { :user_id => [user.id] })
       end
     end
-    
+
     it "should show day on calendar for client's project" do
-      project = fx(:apples_first_project)
-      as(fx(:apple_user1)).dispatch_to(Activities, :day, { :search_criteria => { 
-          :project_id => [project.id], :date_from => project.activities.first.date.to_s
-      }}).should be_successful
+      project = Project.generate
+      client_user = ClientUser.generate :client => project.client
+      response = as(client_user).dispatch_to(Activities, :day, {
+        :search_criteria => {
+          :project_id => [project.id],
+          :date_from => '2000-01-01'
+        }
+      })
+      response.should be_successful
     end
-    
+
     it "should raise Forbidden when client is trying to view other client's calendar" do
+      project = Project.generate
+      other_client_user = ClientUser.generate
       block_should(raise_forbidden) do
-        as(fx(:orange_user1)).dispatch_to(Activities, :day, { :search_criteria => { 
-          :project_id => [fx(:apples_first_project).id], :date_from => "2008-11-24"
-        }})
+        as(other_client_user).dispatch_to(Activities, :day, { :search_criteria => { :project_id => [project.id] }})
       end
     end
   end
-  
-  protected 
-  
-  def delete_jolas_activity_as(user)
-    as(user).dispatch_to(Activities, :destroy, { :id => fx(:jolas_activity1).id })
-  end
+
 end

@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe Clients do
+
+  before :each do
+    @client = Client.generate
+  end
+
   it "shouldn't allow Employee or Client to create a client, do update, display index or render edit" do
     %w(client employee).each do |user_type|
       method_name = "dispatch_to_as_#{user_type}".to_sym
@@ -16,40 +21,46 @@ describe Clients do
       end
     end
   end
-  
-  it("should render edit for admin") { as(:admin).dispatch_to(Clients, :edit, :id => fx(:orange).id).should be_successful }
 
+  it "should render edit for admin" do
+    as(:admin).dispatch_to(Clients, :edit, :id => @client.id).should be_successful
+  end
 
   it "should render show for admin" do
-    as(:admin).dispatch_to(Clients, :show, :id => fx(:banana).id).should be_successful
+    as(:admin).dispatch_to(Clients, :show, :id => @client.id).should be_successful
   end
-    
+
   it "should render index for admin" do
-     as(:admin).dispatch_to(Clients, :index).should be_successful
-   end
-    
-   describe "#create" do
-     it "should allow admin to create new client and create client user for this client" do
-       block_should(change(Client, :count)).and(change(ClientUser, :count)) do
-         controller = as(:admin).dispatch_to(Clients, :create, :client => Client.gen_attrs, 
-          :client_user => ClientUser.gen_attrs)
-         controller.should redirect_to(resource(controller.instance_variable_get(:@client)))
-       end
-     end
-    
-     it "should render new with errors and not save objects when client is invalid" do
-       block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
-         as(:admin).dispatch_to(Clients, :create, :client => { :name => "", :email => "" },
-           :client_user => ClientUser.gen_attrs).should be_successful
-       end
+    as(:admin).dispatch_to(Clients, :index).should be_successful
+  end
+
+  describe "#create" do
+    it "should allow admin to create new client and create client user for this client" do
+      block_should(change(Client, :count)).and(change(ClientUser, :count)) do
+        response = as(:admin).dispatch_to(Clients, :create,
+          :client => Client.prepare_hash,
+          :client_user => ClientUser.prepare_hash
+        )
+        client = response.instance_variable_get(:@client)
+        response.should redirect_to(resource(client))
+      end
     end
-  
+
+    it "should render new with errors and not save objects when client is invalid" do
+      block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
+        as(:admin).dispatch_to(Clients, :create,
+          :client => { :name => "", :email => "" },
+          :client_user => ClientUser.prepare_hash
+        ).should be_successful
+      end
+    end
+
     it "should render new with errors and not save objects when ClientUser is invalid" do
       block_should_not(change(ClientUser, :count)).and_not(change(Client, :count)) do
         as(:admin).dispatch_to(Clients, :create,
-            :client => Client.gen_attrs, 
-            :client_user => { :name => "John" }
-          ).should be_successful
+          :client => Client.prepare_hash,
+          :client_user => { :name => "John" }
+        ).should be_successful
       end
     end
   end

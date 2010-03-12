@@ -6,17 +6,11 @@ module Rubytime
       class As
         def initialize(user, spec)
           @user = case user
-                  when :admin
-                    # Employee.admin.first WTF? why it doesn't work sometimes?
-                    User.first(:admin => true) or raise "There is no admin user in database"
-                  when :employee
-                    Employee.not_admin.first or raise "There is employee user in database"
-                  when :client
-                    ClientUser.first or raise "There is no client user in database"
-                  when :guest
-                    nil
-                  else 
-                    user
+                    when :admin then Employee.generate(:admin)
+                    when :employee then Employee.generate
+                    when :client then ClientUser.generate
+                    when :guest then nil
+                    else user
                   end
           @spec = spec
         end

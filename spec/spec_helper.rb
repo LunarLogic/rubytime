@@ -35,12 +35,12 @@ module Rubytime
         Fixtures.pick(name.snake_case.to_sym)
       end
 
-      # deprecated, use 'prepare_attributes'
+      # deprecated, use 'prepare_hash'
       def gen_attrs(*args)
         Factory.attributes_for(*parse_factory_arguments(args))
       end
 
-      alias :prepare_attributes gen_attrs
+      alias :prepare_hash gen_attrs
     end
   end
 end
