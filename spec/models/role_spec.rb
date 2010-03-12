@@ -10,16 +10,16 @@ describe Role do
 
   describe ":name attribute writer" do
     context "for new records" do
-      before { @role = Role.gen(:name => 'Original Name') }
-      
+      before { @role = Role.generate(:name => 'Original Name') }
+
       it "should normally assign values" do
         @role.name.should == 'Original Name'
       end
     end
 
     context "for existing records" do
-      before { @role = Role.gen(:name => 'Original Name') }
-      
+      before { @role = Role.generate(:name => 'Original Name') }
+
       it "should raise Exception" do
         lambda { @role.name = 'New Name' }.should raise_error(Exception)
       end

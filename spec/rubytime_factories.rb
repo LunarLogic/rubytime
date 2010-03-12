@@ -61,7 +61,7 @@ Factory.define(:invoice_issued, :parent => :invoice) do |i|
 end
 
 Factory.define(:free_day, :class => FreeDay) do |fd|
-  fd.user { |a| a.association(:user) }
+  fd.user { |a| a.association(:employee) }
   fd.date { random_date(Date.today - 15, Date.today - 5) }
 end
 
