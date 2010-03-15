@@ -130,13 +130,13 @@ describe Activity do
       last_month_count = 8
       this_month_count = 10
 
-      last_month_count.times do
-        date = beginning_of_last_month + rand(25)
+      last_month_count.times do |i|
+        date = beginning_of_last_month + i
         activity = Activity.prepare :user => @employee, :date => date
         activity.save.should be_true
       end
-      this_month_count.times do
-        date = beginning_of_month + rand(25)
+      this_month_count.times do |i|
+        date = beginning_of_month + i
         activity = Activity.prepare :user => @employee, :date => date
         activity.save.should be_true
       end
