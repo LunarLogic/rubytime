@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe UserMailer do
 
-  include MailControllerTestHelper
-
   before :each do
     clear_mail_deliveries
     @user = Employee.generate

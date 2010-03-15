@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe User do
 
-  def date(s)
-    Date.parse(s)
-  end
-
   it "should generate password" do
     user = User.new
     user.password.should be_nil
@@ -45,7 +41,7 @@ describe User do
     block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
       Employee.generate
     end
-    Merb::Mailer.deliveries.last.text.should include("welcome")
+    last_delivered_mail.text.should include("welcome")
   end
 
   it "should generate a password reset token with expiration time" do
@@ -59,7 +55,7 @@ describe User do
     block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
       user.generate_password_reset_token
     end
-    Merb::Mailer.deliveries.last.text.should include("reset password")
+    last_delivered_mail.text.should include("reset password")
   end
 
   it "should require password" do
@@ -181,16 +177,12 @@ end
 
 describe Employee do
 
-  def date(s)
-    Date.parse(s)
-  end
-
   before :each do
     @user = Employee.generate
     @other = Employee.generate
     @admin = Employee.generate(:admin)
     @client_user = ClientUser.generate
-    Merb::Mailer.deliveries = []
+    clear_mail_deliveries
   end
 
   it "should have calendar viewable by himself and admin" do
@@ -200,7 +192,7 @@ describe Employee do
   end
 
   it "should create user" do
-    lambda { Employee.prepare.save.should be_true }.should change(Employee, :count).by(1)
+    block_should(change(Employee, :count).by(1)) { Employee.prepare.save.should be_true }
   end
 
   it "should be an employee" do
@@ -278,11 +270,11 @@ describe Employee do
       Activity.all.destroy!
       Activity.generate :user => @user, :date => date('2009-08-03')
 
-      lambda {
+      block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
         Employee.send_timesheet_reporter_for(Date.parse('2009-08-03'))
-      }.should change(Merb::Mailer.deliveries, :size).by(1)
+      end
 
-      message = Merb::Mailer.deliveries.last.text
+      message = last_delivered_mail.text
       message.should_not include(@user.name) 
       message.should include(@other.name)
     end

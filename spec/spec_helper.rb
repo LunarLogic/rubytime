@@ -22,25 +22,22 @@ module Rubytime
         Factory.create(*parse_factory_arguments(args))
       end
 
-      # deprecated, use only 'generate'
-      alias :gen generate
-      alias :generate! generate
-      alias :gen! generate
-
       def prepare(*args)
         Factory.build(*parse_factory_arguments(args))
       end
 
       def pick
-        Fixtures.pick(name.snake_case.to_sym)
+        records = count
+        (records > 0) ? first(:limit => 1, :offset => rand(records)) : nil
       end
 
-      # deprecated, use 'prepare_hash'
-      def gen_attrs(*args)
+      def pick_or_generate
+        pick || generate
+      end
+
+      def prepare_hash(*args)
         Factory.attributes_for(*parse_factory_arguments(args))
       end
-
-      alias :prepare_hash gen_attrs
     end
   end
 end
@@ -52,14 +49,13 @@ DataMapper::Model.append_extensions(Rubytime::Test::Model)
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 Merb::Mailer.delivery_method = :test_send
 
-require Merb.root / "spec/rubytime_fixtures"
 require Merb.root / 'spec/rubytime_factories'
 require Merb.root / "spec/rubytime_specs_helper"
 require Merb.root / "spec/rubytime_controller_helper"
 require Merb.root / "spec/model_extensions"
 require Merb.root / "spec/mail_controller_specs_helper"
 
-Rubytime::Test::Fixtures.prepare
+DataMapper.auto_migrate!
 
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
@@ -67,7 +63,7 @@ Spec::Runner.configure do |config|
   config.include(Merb::Test::ControllerHelper)
   config.include(Rubytime::Test::ControllerHelper)
   config.include(Rubytime::Test::SpecsHelper)
-  config.include(Rubytime::Test::Fixtures::FixturesHelper)
+  config.include(MailControllerTestHelper)
   config.include(Delorean)
 
   config.after(:each) do

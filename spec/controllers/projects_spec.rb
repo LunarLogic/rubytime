@@ -87,7 +87,7 @@ describe Projects do
     end
 
     it "shouldn't show edit project form for nonexistent project" do
-      lambda { as(:admin).dispatch_to(Projects, :edit, :id => 12345678) }.should raise_not_found
+      block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :edit, :id => 12345678) }
     end
   end
 

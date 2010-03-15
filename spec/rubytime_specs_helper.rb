@@ -23,7 +23,6 @@ module Rubytime
         private
   
         def run(&blk)
-
           @matchers.inject(blk) { |memo, matcher|
             proc { memo.send matcher[0], matcher[1] }
           }.call
@@ -36,6 +35,10 @@ module Rubytime
 
       def block_should_not(matcher, &blk)
         BlockMatcher.new.and_not(matcher, &blk)
+      end
+
+      def date(s)
+        Date.parse(s)
       end
 
       def raise_argument_error

@@ -13,7 +13,8 @@ module MailControllerTestHelper
 
   # Helper to deliver
   def deliver(action, mail_params = {}, send_params = {})
-    UserMailer.dispatch_and_deliver(action, { :from => "no-reply@webapp.com", :to => "recepient@person.com" }.merge(mail_params), send_params)
+    mailer_params = { :from => "no-reply@webapp.com", :to => "recepient@person.com" }.merge(mail_params)
+    UserMailer.dispatch_and_deliver(action, mailer_params, send_params)
     @delivery = last_delivered_mail
   end
 end

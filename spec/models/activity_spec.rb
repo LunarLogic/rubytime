@@ -271,7 +271,7 @@ describe Activity do
       end
 
       it "should raise an Exception" do
-        lambda { @activity.freeze_price! }.should raise_error(Exception)
+        block_should(raise_error(Exception)) { @activity.freeze_price! }
       end
     end
 

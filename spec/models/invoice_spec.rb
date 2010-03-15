@@ -3,9 +3,7 @@ require 'spec_helper'
 describe Invoice do
 
   it "should be created" do
-    lambda {
-      Invoice.prepare.save.should be_true
-    }.should change(Invoice, :count).by(1)
+    block_should(change(Invoice, :count).by(1)) { Invoice.prepare.save.should be_true }
   end
 
   it "should be issued if issued_at date is set" do

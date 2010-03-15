@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe FreeDay do
 
-  def date(s)
-    Date.parse(s)
-  end
-
   it "should be created" do
     block_should(change(FreeDay, :count).by(1)) do
       FreeDay.prepare.save.should be_true

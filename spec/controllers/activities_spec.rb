@@ -182,7 +182,7 @@ describe Activities do
     end
 
     it "should not crash when :activity hash isn't set" do
-      lambda { as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id) }.should_not raise_error
+      block_should_not(raise_error) { as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id) }
     end
   end
 

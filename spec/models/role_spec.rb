@@ -21,12 +21,12 @@ describe Role do
       before { @role = Role.generate(:name => 'Original Name') }
 
       it "should raise Exception" do
-        lambda { @role.name = 'New Name' }.should raise_error(Exception)
+        block_should(raise_error(Exception)) { @role.name = 'New Name' }
       end
 
       context "when assigning unchanged value" do
         it "should not raise any Exception" do
-          lambda { @role.name = 'Original Name' }.should_not raise_error(Exception)
+          block_should_not(raise_error(Exception)) { @role.name = 'Original Name' }
         end
       end
     end

@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe HourlyRate do
 
-  def date(s)
-    Date.parse(s)
-  end
-
   describe ":value accessor" do
     it "should work with numbers" do
       hr = HourlyRate.generate :value => 567.89

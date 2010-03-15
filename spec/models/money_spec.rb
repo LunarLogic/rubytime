@@ -9,14 +9,14 @@ describe Money do
 
   describe ".new" do
     it "should take two parameters: value and currency" do
-      lambda { Money.new(10.50, mock('currency')) }.should_not raise_error
+      block_should_not(raise_error) { Money.new(10.50, mock('currency')) }
     end
   end
 
   describe "#value=" do
     context "when called with nil" do
       it do
-        lambda { @money.value = nil }.should raise_error(ArgumentError)
+        block_should(raise_error(ArgumentError)) { @money.value = nil }
       end
     end
 
@@ -32,7 +32,7 @@ describe Money do
   describe "#currency=" do    
     context "when called with nil" do
       it do
-        lambda { @money.currency = nil }.should raise_error(ArgumentError)
+        block_should(raise_error(ArgumentError)) { @money.currency = nil }
       end
     end
 
@@ -55,7 +55,7 @@ describe Money do
   describe "#+" do
     context "when called with money of different currency" do
       it do
-        lambda { @money + Money.new(3.03, mock('other currency')) }.should raise_error(ArgumentError)
+        block_should(raise_error(ArgumentError)) { @money + Money.new(3.03, mock('other currency')) }
       end
     end
 
@@ -78,7 +78,7 @@ describe Money do
   describe "#*" do
     context "when called with sth different than Numeric instance" do
       it do
-        lambda { @money * Money.new(3.03, mock('some currency')) }.should raise_error(ArgumentError)
+        block_should(raise_error(ArgumentError)) { @money * Money.new(3.03, mock('some currency')) }
       end
     end
 
@@ -101,7 +101,7 @@ describe Money do
   describe "#<=>" do
     context "when called with money of different currency" do
       it do
-        lambda { @money <=> Money.new(3.03, mock('other currency')) }.should raise_error(ArgumentError)
+        block_should(raise_error(ArgumentError)) { @money <=> Money.new(3.03, mock('other currency')) }
       end
     end
 

@@ -58,13 +58,13 @@ describe RoleActivitiesInProjectSummary do
 
     context "if called with activity of improper role" do
       it "should add activity" do
-        lambda {
+        block_should(raise_error(ArgumentError)) do
           @summary << mock('activity',
             :user => mock('another user', :role => mock('another role')),
             :duration => 1.hour,
             :price => nil
           )
-        }.should raise_error(ArgumentError)
+        end
       end
     end
   end

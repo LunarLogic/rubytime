@@ -118,9 +118,7 @@ describe Currencies do
     context "when record of given :id didn't exist" do
       it "should raise NotFound error" do
         Currency.stub! :get => nil
-        lambda do
-          as(:admin).dispatch_to(Currencies, :destroy, :id => 39)
-        end.should raise_error(Merb::ControllerExceptions::NotFound)
+        block_should(raise_not_found) { as(:admin).dispatch_to(Currencies, :destroy, :id => 39) }
       end
     end
   end

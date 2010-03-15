@@ -18,9 +18,7 @@ describe FreeDays do
 
     context "with invalid :access_key" do
       it "should return an error" do
-        lambda do
-          dispatch_to(FreeDays, :index, :access_key => 'invalid')
-        end.should raise_error(Merb::ControllerExceptions::Forbidden)
+        block_should(raise_forbidden) { dispatch_to(FreeDays, :index, :access_key => 'invalid') }
       end
     end
   end

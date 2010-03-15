@@ -201,9 +201,7 @@ describe HourlyRates do
     context "if record of given :id didn't exist" do
       it "should raise NotFound error" do
         HourlyRate.stub! :get => nil
-        lambda do
-          as(:admin).dispatch_to(HourlyRates, :update, :id => 39)
-        end.should raise_error(Merb::ControllerExceptions::NotFound)
+        block_should(raise_not_found) { as(:admin).dispatch_to(HourlyRates, :update, :id => 39) }
       end
     end
   end
@@ -278,9 +276,7 @@ describe HourlyRates do
     context "when record of given :id didn't exist" do
       it "should raise NotFound error" do
         HourlyRate.stub! :get => nil
-        lambda do
-          as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39)
-        end.should raise_error(Merb::ControllerExceptions::NotFound)
+        block_should(raise_not_found) { as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39) }
       end
     end
   end
