@@ -25,18 +25,26 @@ describe Projects do
         as(:employee).dispatch_to(Projects, :index)
       end
     end
-    
+
     it "should show index for client's user listing only client's projects" do
-      user = fx(:apple_user1)
-      response = as(user).dispatch_to(Projects, :index)
+      client1 = Client.generate
+      user1 = ClientUser.generate :client => client1
+      project1 = Project.generate :client => client1
+
+      client2 = Client.generate
+      project2 = Project.generate :client => client2
+
+      response = as(user1).dispatch_to(Projects, :index)
       response.should be_successful
-      response.instance_variable_get(:@projects).reject { |p| p.client == user.client }.should be_empty
+      response.instance_variable_get(:@projects).should include(project1)
+      response.instance_variable_get(:@projects).should_not include(project2)
     end
 
     it "should set has_activities flag for projects with activities, if requested via JSON" do
-      project = fx(:apples_first_project)
-      user = fx(:koza)
+      project = Project.generate
+      user = Employee.generate
       Project.should_receive(:with_activities_for).with(user).and_return([project])
+
       response = as(user).dispatch_to(Projects, :index, :format => 'json')
       found_projects = response.instance_variable_get("@projects")
       found_projects.should include(project)
@@ -47,73 +55,69 @@ describe Projects do
 
   describe "#show" do
     it "should render user information for admin" do
-      as(:admin).dispatch_to(Projects, :show, { :id => fx(:apples_first_project).id }).should be_successful
+      project = Project.generate
+      as(:admin).dispatch_to(Projects, :show, { :id => project.id }).should be_successful
     end
   end
 
   describe "#create" do
     it "should create new record successfully and redirect to index" do
       block_should(change(Project, :count)) do
-        controller = as(:admin).dispatch_to(Projects, :create, { 
-          :project => { 
-            :name => "Jola", 
-            :description => "Jolanta", 
-            :client_id => fx(:apple).id
-          }
+        response = as(:admin).dispatch_to(Projects, :create, :project => {
+          :name => "Jola",
+          :description => "Jolanta",
+          :client_id => Client.generate.id
         })
-        controller.should redirect_to(resource(controller.instance_variable_get(:@project)))
+        response.should redirect_to(resource(response.instance_variable_get(:@project)))
       end
     end
 
     it "should should not create record and show errors when invalid data" do
-      controller = dispatch_to_as_admin(Projects, :create, { :project => { :name => "Jola" } })
-      controller.should be_successful
-      controller.should_not redirect_to(url(:projects))
+      response = as(:admin).dispatch_to(Projects, :create, :project => { :name => "Jola" })
+      response.should be_successful
+      response.should_not redirect_to(url(:projects))
     end
   end
-  
+
   describe "#edit" do
     it "should show edit project form" do
-      project = Project.gen
+      project = Project.generate
       Project.should_receive(:get).with(project.id.to_s).and_return(project)
       as(:admin).dispatch_to(Projects, :edit, :id => project.id).should be_successful
     end
 
-    it "shouldn't show edit project form nonexistent project" do
-      lambda { dispatch_to_as_admin(Projects, :edit, :id => 12345678)}.should raise_not_found
+    it "shouldn't show edit project form for nonexistent project" do
+      lambda { as(:admin).dispatch_to(Projects, :edit, :id => 12345678) }.should raise_not_found
     end
   end
-  
+
   describe "#update" do
     it "should update record successfully and redirect to index" do
-      apple = fx(:apple)
-      project = fx(:oranges_first_project)
-
-      as(:admin).dispatch_to(Projects, :update, { 
-        :id => project.id, 
-        :project => { 
-          :name => "Misio", 
-          :description => "Misiaczek", 
-          :client_id => apple.id
-        }
+      project = Project.generate
+      client = project.client
+      as(:admin).dispatch_to(Projects, :update, :id => project.id, :project => {
+        :name => "Misio",
+        :description => "Misiaczek",
+        :client_id => client.id
       }).should redirect_to(resource(project))
 
       project.reload
       project.name.should == "Misio"
       project.description.should == "Misiaczek"
-      project.client_id.should == apple.id
+      project.client_id.should == client.id
     end
 
     it "should not update record and show errors" do
-      project = fx(:oranges_first_project)
-      as(:admin).dispatch_to(Projects, :update, { :id => project.id , :project => { :name => "" } }).should be_successful
+      project = Project.generate
+      response = as(:admin).dispatch_to(Projects, :update, { :id => project.id, :project => { :name => "" } })
+      response.should be_successful
     end
-  
+
     it "shouldn't update nonexistent project" do
-      block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :update, :id => 12345678, :project => {} ) }
+      block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :update, :id => 12345678, :project => {}) }
     end
   end
-  
+
   describe "#destroy" do
     it "shouldn't delete nonexistent project" do
       block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :destroy, :id => 12345678) }
@@ -124,7 +128,7 @@ describe Projects do
     it "should allow admin to see projects for specific clients" do
       as(:admin).dispatch_to(Projects, :for_clients, :search_criteria => {}).status.should == 200
     end
-  
+
     it "should allow employee to see projects for specific clients" do
       as(:employee).dispatch_to(Projects, :for_clients, :search_criteria => {}).status.should == 200
     end
@@ -135,4 +139,5 @@ describe Projects do
       end
     end
   end
+
 end
