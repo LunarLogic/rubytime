@@ -355,30 +355,29 @@ describe Activity do
 
   end
   
-  describe "#full_type_name" do
+  describe "#breadcrumb_name" do
     context "when no activity type assigned" do
       before { @activity = Activity.gen(:activity_type => nil) }
       it "should return nil" do
-        @activity.full_type_name.should be_nil
+        @activity.breadcrumb_name.should be_nil
+      end
+    end
+    
+    context "when an activity type assigned" do
+      before { @activity = Activity.gen(:activity_type => nil) }
+      it "should return nil" do
+        @activity.breadcrumb_name.should be_nil
       end
     end
     
     context "when main activity type assigned" do
-      before { @activity = Activity.gen(:activity_type => ActivityType.gen(:name => 'Main Type', :parent => nil)) }
-      it "should return the name" do
-        @activity.full_type_name.should == 'Main Type'
-      end
-    end
-    
-    context "when sub activity type assigned" do
       before do 
-        @activity = Activity.gen(:activity_type => 
-          ActivityType.gen(:name => 'Sub Type', :parent => 
-            ActivityType.gen(:name => 'Main Type', :parent => nil))) 
-        
+        @activity_type = ActivityType.gen
+        @activity_type.stub!(:breadcrumb_name => 'The breadcrumb name')
+        @activity = Activity.gen(:activity_type => @activity_type)
       end
       it "should return the name" do
-        @activity.full_type_name.should == 'Main Type -> Sub Type'
+        @activity.breadcrumb_name.should == 'The breadcrumb name'
       end
     end
   end

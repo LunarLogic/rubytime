@@ -1,6 +1,20 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 
 describe ActivityType do
+  
+  describe "#breadcrumb_name" do
+    before do
+      @activity_type_AAA = ActivityType.new :name => 'AAA'
+      @activity_type_BBB = ActivityType.new :name => 'BBB', :parent => @activity_type_AAA
+      @activity_type_CCC = ActivityType.new :name => 'CCC', :parent => @activity_type_BBB
+    end
+    
+    it "should properly generate breadcrumb string" do
+      @activity_type_AAA.breadcrumb_name.should == 'AAA'
+      @activity_type_BBB.breadcrumb_name.should == 'AAA -> BBB'
+      @activity_type_CCC.breadcrumb_name.should == 'AAA -> BBB -> CCC'
+    end
+  end
 
   describe "#destroy_allowed?" do
     before { @activity_type = ActivityType.generate! }

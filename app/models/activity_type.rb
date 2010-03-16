@@ -15,6 +15,10 @@ class ActivityType
   
   validates_is_unique :name, :scope => :parent_id
   
+  def breadcrumb_name
+    parent ? "#{parent.breadcrumb_name} -> #{name}" : "#{name}"
+  end
+  
   before :destroy do
     children.each { |at| at.destroy }
   end
