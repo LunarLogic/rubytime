@@ -1,12 +1,11 @@
 TODO before 3.3 release:
 
-* the tests are completely unstable at the moment; entire test suite needs to be refactored & fixed:
-  -> work in the "refactor" branch
-  -> replace calls to fixtures with calls to factories (factory_girl; use our custom helpers generate()/prepare())
-  -> remove all code related to generating and loading fixtures
+* tests
   -> turn off transactional tests, and clear the database after every test
 
-* upgrade to latest Merb and DataMapper (+ fix tests again if they break)
+* fixes
+  -> don't let user change his role
+  -> round results from rate calculations to 2 decimal digits
 
 * merge 3.2 branch
 
