@@ -51,6 +51,7 @@ Merb::Router.prepare do
   resources :invoices, :member => { "issue" => :put }
   
   resources :activity_types, :collection => { "available" => :get, "for_projects" => :get }
+  resources :activity_custom_properties
   
   # Adds the required routes for merb-auth using the password slice 
   slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
