@@ -4,57 +4,52 @@ describe FreeDay do
 
   it "should be created" do
     block_should(change(FreeDay, :count).by(1)) do
-      FreeDay.make(:user => fx(:koza)).save.should be_true
+      FreeDay.prepare.save.should be_true
     end
   end
 
   it "should be created correctly" do
-    FreeDay.make(:user => fx(:koza), :date => Date.parse("2009-11-30")).save.should be_true
-    fx(:koza).has_free_day_on(Date.parse("2009-11-30")).should be_true
+    user = Employee.generate
+    FreeDay.prepare(:user => user, :date => date("2009-11-30")).save.should be_true
+    user.has_free_day_on(date("2009-11-30")).should be_true
   end
 
   describe ".ranges" do
-    before do
-      FreeDay.all.destroy!
-      
-      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-05')
-      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-06')
-      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-08')
-      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-11')
-      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-12')
-      FreeDay.gen :user => fx(:koza),   :date => Date.parse('2009-09-13')
-      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-05')
-      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-08')
-      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-11')
-      FreeDay.gen :user => fx(:stefan), :date => Date.parse('2009-09-12')
-    end
-    
     it "should create ranges of free days" do
+      user1 = Employee.generate
+      user2 = Employee.generate
+
+      FreeDay.all.destroy!
+      ['2009-09-05', '2009-09-06', '2009-09-08', '2009-09-11', '2009-09-12', '2009-09-13'].each do |d|
+        FreeDay.generate :user => user1, :date => date(d)
+      end
+      ['2009-09-05', '2009-09-08', '2009-09-11', '2009-09-12'].each do |d|
+        FreeDay.generate :user => user2, :date => date(d)
+      end
+
       ranges = FreeDay.ranges
-      
       ranges.size.should == 6
-      ranges.should include({ :user => fx(:koza),   :start_date => Date.parse('2009-09-05'), :end_date => Date.parse('2009-09-06') })
-      ranges.should include({ :user => fx(:koza),   :start_date => Date.parse('2009-09-08'), :end_date => Date.parse('2009-09-08') })
-      ranges.should include({ :user => fx(:koza),   :start_date => Date.parse('2009-09-11'), :end_date => Date.parse('2009-09-13') })
-      ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-05'), :end_date => Date.parse('2009-09-05') })
-      ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-08'), :end_date => Date.parse('2009-09-08') })
-      ranges.should include({ :user => fx(:stefan), :start_date => Date.parse('2009-09-11'), :end_date => Date.parse('2009-09-12') })
+
+      ranges.should include({ :user => user1, :start_date => date('2009-09-05'), :end_date => date('2009-09-06') })
+      ranges.should include({ :user => user1, :start_date => date('2009-09-08'), :end_date => date('2009-09-08') })
+      ranges.should include({ :user => user1, :start_date => date('2009-09-11'), :end_date => date('2009-09-13') })
+      ranges.should include({ :user => user2, :start_date => date('2009-09-05'), :end_date => date('2009-09-05') })
+      ranges.should include({ :user => user2, :start_date => date('2009-09-08'), :end_date => date('2009-09-08') })
+      ranges.should include({ :user => user2, :start_date => date('2009-09-11'), :end_date => date('2009-09-12') })
     end
   end
-  
-  describe ".to_ical" do
-    before do
-      FreeDay.stub!(:ranges => [
-        { :start_date => Date.parse('2009-09-05'), :end_date => Date.parse('2009-09-06'), :user => fx(:koza) },
-      ])
-    end
-    
-    it "should render .ics file with free days iCalendar" do
-      ical = FreeDay.to_ical
 
+  describe ".to_ical" do
+    it "should render .ics file with free days iCalendar" do
+      user = Employee.generate
+      FreeDay.stub!(:ranges => [
+        { :start_date => date('2009-09-05'), :end_date => date('2009-09-06'), :user => user },
+      ])
+
+      ical = FreeDay.to_ical
       ical.should =~ /DTSTART:20090905/
       ical.should =~ /DTEND:20090907/
-      ical.should =~ /SUMMARY:#{fx(:koza).name}/
+      ical.should =~ /SUMMARY:#{user.name}/
     end
   end
 

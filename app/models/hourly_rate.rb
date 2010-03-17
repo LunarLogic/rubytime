@@ -2,11 +2,11 @@ class HourlyRate
   include DataMapper::Resource
     
   property :id, Serial
-  property :project_id, Integer, :nullable => false
-  property :role_id, Integer, :nullable => false
-  property :takes_effect_at, Date, :nullable => false
-  property :value, BigDecimal, :scale => 2, :precision => 10, :nullable => false
-  property :currency_id, Integer, :nullable => false
+  property :project_id, Integer, :required => true
+  property :role_id, Integer, :required => true
+  property :takes_effect_at, Date, :required => true
+  property :value, BigDecimal, :scale => 2, :precision => 10, :required => true
+  property :currency_id, Integer, :required => true
 
   belongs_to :project
   belongs_to :role

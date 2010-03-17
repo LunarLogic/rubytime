@@ -1,7 +1,3 @@
-def random_date(start_date, end_date)
-  start_date + (rand * (end_date - start_date)).to_i
-end
-
 def ensure_rate_exists(args)
   params = { :project => args[:project], :role => args[:role] }
   existing = HourlyRate.first(params.merge(:takes_effect_at.lte => args[:takes_effect_at]))
@@ -42,10 +38,10 @@ Factory.define(:project, :class => Project) do |p|
 end
 
 Factory.define(:activity, :class => Activity) do |a|
-  a.user { Employee.pick }
-  a.project { Project.pick }
-  a.date { random_date(Date.today - 15, Date.today - 5) }
-  a.minutes { 30 + rand * (23 * 60) }
+  a.user { |rec| rec.association(:employee) }
+  a.project { |rec| rec.association(:project) }
+  a.date { Date.today }
+  a.minutes { 30 }
   a.sequence(:comments) { |n| "Activity comment ##{n}" }
   a.after_build { |a| ensure_rate_exists(:project => a.project, :role => a.user.role, :takes_effect_at => a.date) }
 end
@@ -57,27 +53,27 @@ Factory.define(:invoice, :class => Invoice) do |i|
 end
 
 Factory.define(:invoice_issued, :parent => :invoice) do |i|
-  i.issued_at { random_date(Date.today - 180, Date.today) }
+  i.issued_at { Date.today }
 end
 
 Factory.define(:free_day, :class => FreeDay) do |fd|
-  fd.user { |a| a.association(:user) }
-  fd.date { random_date(Date.today - 15, Date.today - 5) }
+  fd.user { |a| a.association(:employee) }
+  fd.date { Date.today }
 end
 
 Factory.define(:hourly_rate, :class => HourlyRate) do |hr|
-  hr.project { Project.pick }
-  hr.role { |a| Role.pick }
-  hr.takes_effect_at { random_date(Date.today - 365 * 2, Date.today) }
-  hr.value { 20 + (rand * 10000).to_i / 100 }
-  hr.currency { Currency.pick }
+  hr.project { Project.pick_or_generate }
+  hr.role { Role.pick_or_generate }
+  hr.takes_effect_at { Date.today }
+  hr.value { 1000 }
+  hr.currency { Currency.pick_or_generate }
   hr.operation_author { Employee.first }
 end
 
 Factory.define(:hourly_rate_log, :class => HourlyRateLog) do |hrl|
   hrl.operation_type 'update'
-  hrl.operation_author { Employee.pick }
-  hrl.hourly_rate { HourlyRate.pick }
+  hrl.operation_author { Employee.pick_or_generate }
+  hrl.hourly_rate { HourlyRate.pick_or_generate }
 end
 
 Factory.define(:currency, :class => Currency) do |c|

@@ -15,5 +15,3 @@ Merb::Config.use { |c|
 }
 
 $GIT_REVISION = `git --git-dir #{Merb.root}/.git show HEAD | head -n1 | awk '{print $2}'`.strip
-
-Bundler.require_env "development"

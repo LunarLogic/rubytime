@@ -4,8 +4,8 @@ class Currency
   PREFIX_REGEX = SUFFIX_REGEX = /^[^0-9]*$/
   
   property :id, Serial
-  property :singular_name, String, :nullable => false
-  property :plural_name,   String, :nullable => false
+  property :singular_name, String, :required => true
+  property :plural_name,   String, :required => true
   property :prefix,        String
   property :suffix,        String
   

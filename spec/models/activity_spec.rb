@@ -3,164 +3,190 @@ require 'spec_helper'
 describe Activity do
   it "should be created" do
     block_should(change(Activity, :count).by(1)) do
-      Activity.make(:project => fx(:oranges_first_project), :user => fx(:stefan)).save.should be_true
+      Activity.prepare.save.should be_true
     end
   end
 
-  it "should not be locked when does not belong to invoice" do
-    fx(:jolas_activity1).locked?.should be_false
-  end
+  context "marking as locked" do
+    it "should not be locked when does not belong to invoice" do
+      activity = Activity.generate
+      activity.should_not be_locked
+    end
 
-  it "should not be locked when invoice is not locked" do
-    fx(:jolas_invoiced_activity).locked?.should be_false
-  end
+    it "should not be locked when invoice is not locked" do
+      invoice = Invoice.generate
+      activity = Activity.generate :invoice => invoice
+      activity.should_not be_locked
+    end
 
-  it "should be locked when invoice is locked" do
-    fx(:jolas_locked_activity).locked?.should be_true
+    it "should be locked when invoice is locked" do
+      invoice = Invoice.generate
+      activity = Activity.generate :invoice => invoice
+      invoice.issue!
+      activity.should be_locked
+    end
   end
 
   it "should find n recent activities" do
-    10.downto(1) { |i| Activity.gen(:date => Date.today-(i*2)) }
-    recent_activities = Activity.recent(3)
-    recent_activities.size.should == 3
-    recent_activities[0].date.should == Date.today - 2
-    recent_activities[1].date.should == Date.today - 4
-    recent_activities[2].date.should == Date.today - 6
-  end
-  
-  it "should parse time correctly" do
-    a = Activity.new(:hours => 5)
-    a.minutes.should == 5 * 60
-
-    a = Activity.new(:hours => "6")
-    a.minutes.should == 6 * 60
-
-    a = Activity.new(:hours => "7:15")
-    a.minutes.should == 7 * 60 + 15
-
-    a = Activity.new(:hours => " 8.5")
-    a.minutes.should == 8.5 * 60
-
-    a = Activity.new(:hours => " 8.9")
-    a.minutes.should == 8.9 * 60
-
-    a = Activity.new(:hours => "9,5 ")
-    a.minutes.should == 9 * 60 + 30
-
-    a = Activity.new(:hours => 24)
-    a.minutes.should == 24 * 60
-
-    a = Activity.new(:hours => 25)
-    a.valid?
-    a.minutes.should be_nil
-    a.errors[:hours].size.should == 1
-
-    a = Activity.new(:hours => "24:01")
-    a.valid?
-    a.minutes.should be_nil
-    a.errors[:hours].size.should == 1
-
-    a = Activity.new(:hours => "1:80")
-    a.valid?
-    a.minutes.should be_nil
-    a.errors[:hours].size.should == 1
-
-    a = Activity.new(:hours => "jola")
-    a.valid?
-    a.minutes.should be_nil
-    a.errors[:hours].size.should == 1
-
-    a = Activity.new(:minutes => 123)
-    a.valid?
-    a.errors[:hours].should be_blank
-  end
-  
-  it "should return formatted hours for saved activity" do
-    a = Activity.gen(:project => fx(:oranges_first_project), :user => fx(:jola), :minutes => 7.5 * 60)
-    a = Activity.get(a.id)
-    a.hours.should == "7:30"
-  end
-
-  it "should return entered hours for new activity" do
-    a = Activity.new(:hours => "3,5")
-    a.hours.should == "3,5"
-  end
-
-  it "should raise an ArgumentError when #for called with something else than :now or Hash with :year and :month" do
-    args = [ :kiszonka,
-             :nuwee,
-             { :foo => "bar", :year => 123 },
-             { :month => 2, :kiszka => "ki5zk4"},
-             [:year, :month] ]
-    args.each do |arg|
-      block_should(raise_argument_error) { fx(:jola).activities.for(arg) }
-    end
-  end
-
-  it "should raise an ArgumentError when #for called with :month not included in 1..12 or future year" do
-    [ { :month => 0, :year => 2007 },
-      { :month => 13, :year => 2004 },
-      { :month => 10, :year => Date.today.year + 1 } ].each do |date|
-        block_should(raise_argument_error) { fx(:jola).activities.for(date) }
+    time_travel_to(1.month.from_now) do
+      10.times do |i|
+        Activity.generate :date => Date.today - i, :comments => i.to_s
       end
+
+      recent_activities = Activity.recent(3)
+      recent_activities.should have(3).records
+      recent_activities.map(&:comments).should == ['0', '1', '2']
+    end
   end
 
-  it "should return activities for given month" do
-    day_number = Date.today.mday
-    employee = Employee.gen
-    previous_month_count = 8
-    this_month_count = 10
+  context "setting time" do
+    it "should parse time correctly if proper hours value is set" do
+      tests = {
+        5      => 5 * 60,
+        '6'    => 6 * 60,
+        '7:15' => 7 * 60 + 15,
+        ' 8.5' => 8.5 * 60,
+        ' 8.9' => 8.9 * 60,
+        '9,5'  => 9 * 60 + 30,
+        24     => 24 * 60
+      }
 
-    previous_month = (month = Date.today.month) == 1 ? 12 : month -1
-    year = previous_month == 12 ? Date.today.year - 1 : Date.today.year
+      tests.each do |entry, result|
+        a = Activity.new :hours => entry
+        a.minutes.should == result
+      end
+    end
 
-    previous_month_count.times do
-      Activity.make(:user => employee, :date => Date.today - (day_number + rand(25))).save.should be_true
+    it "should set an error if incorrect hours value is set" do
+      tests = [25, '24:01', '1:80', 'jola']
+      tests.each do |entry|
+        a = Activity.new :hours => entry
+        a.should_not be_valid
+        a.minutes.should be_nil
+        a.errors[:hours].should have(1).element
+      end
     end
-    this_month_count.times do
-      Activity.make(:user => employee, :date => Date.today - (rand(day_number) - 1)).save.should be_true
+
+    it "should allow to set time using minutes field" do
+      a = Activity.new :minutes => 123
+      a.valid?
+      a.errors[:hours].should be_blank
     end
-    # WTF? why it does work sometimes and sometimes doesn't?
-    employee.reload.activities.for(:this_month).count.should == this_month_count
-    employee.reload.activities.for(:year => year, :month => previous_month).count.should == previous_month_count
   end
 
-  it "should return activities for first and last day of month" do
-    employee = fx(:lazy_dev)
+  context "formatting hours field" do
+    it "should return formatted hours for saved activity" do
+      a = Activity.prepare
+      a.hours = "3,5"
+      a.save!
+      a = Activity.get(a.id) # it must be reloaded
+      a.hours.should == "3:30"
+    end
 
-    Activity.gen(:user => employee, :date => Date.parse("2008-11-01"), :project => fx(:oranges_first_project))
-    Activity.gen(:user => employee, :date => Date.parse("2008-11-30"), :project => fx(:oranges_first_project))
+    it "should return entered hours for new activity" do
+      a = Activity.new :hours => "3,5"
+      a.hours.should == "3,5"
+    end
+  end
 
-    employee.activities.for(:year => 2008, :month => 11).count.should == 2
+  describe "#for" do
+
+    before :each do
+      @employee = Employee.generate
+    end
+
+    it "should raise an ArgumentError when #for called with something else than :now or Hash with :year and :month" do
+      tests = [
+        :kiszonka,
+        :nuwee,
+        { :foo => "bar", :year => 123 },
+        { :month => 2, :kiszka => "ki5zk4"},
+        [:year, :month]
+      ]
+      tests.each do |arg|
+        block_should(raise_argument_error) { @employee.activities.for(arg) }
+      end
+    end
+
+    it "should raise an ArgumentError when #for called with :month not included in 1..12 or future year" do
+      tests = [
+        { :month => 0, :year => 2007 },
+        { :month => 13, :year => 2004 },
+        { :month => 10, :year => Date.today.year + 1 }
+      ]
+      tests.each do |date|
+        block_should(raise_argument_error) { @employee.activities.for(date) }
+      end
+    end
+
+    it "should return activities for given month" do
+      today = Date.today
+      beginning_of_month = Date.new(today.year, today.month, 1)
+      end_of_last_month = beginning_of_month - 1
+      last_month = end_of_last_month.month
+      last_month_year = end_of_last_month.year
+      beginning_of_last_month = Date.new(last_month_year, last_month, 1)
+
+      last_month_count = 8
+      this_month_count = 10
+
+      last_month_count.times do |i|
+        date = beginning_of_last_month + i
+        activity = Activity.prepare :user => @employee, :date => date
+        activity.save.should be_true
+      end
+      this_month_count.times do |i|
+        date = beginning_of_month + i
+        activity = Activity.prepare :user => @employee, :date => date
+        activity.save.should be_true
+      end
+
+      @employee.reload
+      @employee.activities.for(:this_month).count.should == this_month_count
+      @employee.activities.for(:year => last_month_year, :month => last_month).count.should == last_month_count
+    end
+
+    it "should return activities for first and last day of month" do
+      Activity.generate :user => @employee, :date => Date.parse("2008-11-01")
+      Activity.generate :user => @employee, :date => Date.parse("2008-11-30")
+
+      @employee.activities.for(:year => 2008, :month => 11).count.should == 2
+    end
   end
 
   it "should be deletable by admin and by owner" do
-    fx(:jolas_activity1).deletable_by?(fx(:jola)).should be_true
-    fx(:jolas_activity1).deletable_by?(fx(:admin)).should be_true
-    fx(:jolas_activity1).deletable_by?(fx(:stefan)).should be_false
+    activity = Activity.generate
+    admin = Employee.generate :admin
+    other = Employee.generate
+
+    activity.should be_deletable_by(activity.user)
+    activity.should be_deletable_by(admin)
+    activity.should_not be_deletable_by(other)
   end
 
-  describe "#notify_project_managers_about_saving method" do
+  describe "#notify_project_managers_about_saving" do
     it "should send emails to project managers" do
-      @activity = Activity.gen
-      @kind_of_change = "updated"
-      
-      block_should change(Merb::Mailer.deliveries, :size).by(2) do
-        @activity.notify_project_managers_about_saving(@kind_of_change)
+      @activity = Activity.generate
+      manager_role = Role.first_or_generate :name => 'Project Manager'
+      Employee.generate :role => manager_role
+      managers = Employee.managers.all
+
+      block_should change(Merb::Mailer.deliveries, :size).by(managers.length) do
+        @activity.notify_project_managers_about_saving("updated")
       end
-      
-      deliveries = Merb::Mailer.deliveries[-2,2].map { |d| d.to }
-      deliveries.should include([fx(:admin).email])
-      deliveries.should include([fx(:koza).email])
+
+      included_emails = Merb::Mailer.deliveries.last(managers.length).map(&:to).flatten
+      expected_emails = managers.map(&:email)
+      included_emails.sort.should == expected_emails.sort
     end
   end
-  
+
   describe "#notify_project_managers_about_saving__if_enabled method" do
     before do
-      @activity = Activity.gen
+      @activity = Activity.generate
       @kind_of_change = "updated"
     end
-    
+
     context "with notifications enabled" do
       before { Setting.get.update :enable_notifications => true }
       it "should call :notify_project_managers_about_saving" do
@@ -168,7 +194,7 @@ describe Activity do
         @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)
       end
     end
-    
+
     context "with notifications disabled" do
       before { Setting.get.update :enable_notifications => false }
       it "should not call :notify_project_managers_about_saving" do
@@ -177,108 +203,104 @@ describe Activity do
       end
     end
   end
-  
+
   describe "after create observer" do
-    before { @activity = Activity.make }
-    
+    before { @activity = Activity.prepare }
+
     context "if activity date is more than a day ago" do
       before { @activity.date = Date.today - 5 }
-      
+
       it "should call :notify_project_managers_about_saving__if_enabled with 'created' argument" do
         @activity.should_receive(:notify_project_managers_about_saving__if_enabled).with('created')
         @activity.save
       end
     end
-    
+
     context "if activity date is less than a day ago" do
       before { @activity.date = Date.today }
-      
+
       it "should not call :notify_project_managers_about_saving__if_enabled" do
         @activity.should_not_receive(:notify_project_managers_about_saving__if_enabled)
         @activity.save
       end
     end
   end
-  
+
   describe "after update observer" do
-    before { @activity = Activity.gen }
-    
+    before { @activity = Activity.generate }
+
     context "if activity date is more than a day ago" do
       before { @activity.date = Date.today - 5 }
-      
+
       it "should call :notify_project_managers_about_saving__if_enabled with 'updated' argument" do
         @activity.should_receive(:notify_project_managers_about_saving__if_enabled).with('updated')
         @activity.save
       end
     end
-    
+
     context "if activity date is less than a day ago" do
       before { @activity.date = Date.today }
-      
+
       it "should not call :notify_project_managers_about_saving__if_enabled" do
         @activity.should_not_receive(:notify_project_managers_about_saving__if_enabled)
         @activity.save
       end
     end
   end
-  
+
   describe "#price_frozen?" do
-    context "if :price_value and :price_currency are not nil and are saved" do
-      before { @activity = Activity.gen(:price_value => 10.99, :price_currency => fx(:euro) ) }
-      it { @activity.price_frozen?.should be_true }
+    it "should be true if :price_value and :price_currency are not nil and are saved" do
+      activity = Activity.generate :price_value => 10.99, :price_currency => Currency.generate
+      activity.price_frozen?.should be_true
     end
-    
-    context "if :price_value or :price_currency is nil" do
-      it do 
-        @activity = Activity.gen(:price_value => nil, :price_currency => fx(:dollar))
-        @activity.price_frozen?.should be_false
-      end
-      
-      it do 
-        @activity = Activity.gen(:price_value => 10.99, :price_currency => nil)
-        @activity.price_frozen?.should be_false
-      end
+
+    it "should be false if :price_value or :price_currency is nil" do
+      activity = Activity.generate :price_value => nil, :price_currency => Currency.generate
+      activity.price_frozen?.should be_false
+
+      activity = Activity.generate :price_value => 10.99, :price_currency => nil
+      activity.price_frozen?.should be_false
     end
   end
-  
+
   describe "#freeze_price!" do
     context "if price is already frozen" do
       before do 
-        @activity = Activity.gen(:price_value => 10.99, :price_currency => fx(:dollar))
+        @activity = Activity.generate :price_value => 10.99, :price_currency => Currency.generate
         @activity.price_frozen?.should be_true
       end
-      
+
       it "should raise an Exception" do
-        lambda { @activity.freeze_price! }.should raise_error(Exception)
+        block_should(raise_error(Exception)) { @activity.freeze_price! }
       end
     end
-    
+
     context "if price is not frozen" do
       before do 
-        @activity = Activity.gen(:price_value => nil, :price_currency => nil, :minutes => 30)
+        @activity = Activity.generate :price_value => nil, :price_currency => nil, :minutes => 30
         @activity.price_frozen?.should be_false
       end
-      
+
       context "if there is corresponding hourly rate" do
         before do
+          @money = Money.new(12.89, Currency.first_or_generate)
           @hourly_rate = mock('hourly rate')
-          @hourly_rate.should_receive(:*).with(0.5).at_least(:once).and_return( Money.new(12.89, fx(:dollar)) )
+          @hourly_rate.should_receive(:*).with(0.5).at_least(:once).and_return(@money)
           @activity.stub!(:hourly_rate => @hourly_rate)
         end
-        
+
         it "should calculate price based on hourly_rate and save it" do
           @activity.freeze_price!
           @activity.reload
-          @activity.price.should == Money.new(12.89, fx(:dollar))
+          @activity.price.should == @money
         end
       end
-      
+
       context "if there is no corresponding hourly rate" do
         before do
           @activity.stub!(:hourly_rate => nil)
-          @activity.reset
         end
-        
+
         it "should set price to nil and save that" do
           @activity.freeze_price!
           @activity.reload
@@ -287,129 +309,129 @@ describe Activity do
       end
     end
   end
-  
+
   describe "#price" do
     context "if :price_value and :price_currency are both not nil" do
-      before { @activity = Activity.make(:price_value => 10.99, :price_currency => fx(:euro) ) }
-      
       it "should return Money object with proper values" do
+        @currency = Currency.first_or_generate
+        @activity = Activity.prepare :price_value => 10.99, :price_currency => @currency
         @activity.price.should be_instance_of(Money)
         @activity.price.value.should == 10.99
-        @activity.price.currency.should == fx(:euro)
+        @activity.price.currency.should == @currency
       end
     end
-    
+
     context "if any of :price_value and :price_currency is nil" do
-      before { @activity = Activity.make(:price_value => nil, :price_currency => nil, :minutes => 90 ) }
-      
+      before { @activity = Activity.prepare(:price_value => nil, :price_currency => nil, :minutes => 90 ) }
+
       context "if there is corresponding hourly rate" do
-        before do 
-          @activity.stub!(:hourly_rate => mock('hourly rate', :* => Money.new(15.60, fx(:euro)) ) )
-        end
-        
         it "should return Money object with properly computed values" do
+          @currency = Currency.first_or_generate
+          @activity.stub! :hourly_rate => mock('hourly rate', :* => Money.new(15.60, @currency))
           @activity.price.should be_instance_of(Money)
           @activity.price.value.should == 15.60
-          @activity.price.currency.should == fx(:euro)
+          @activity.price.currency.should == @currency
         end
       end
-      
-      context "if there is not corresponding hourly rate" do
-        before { @activity.stub!(:hourly_rate => nil ) }
-        
+
+      context "if there is no corresponding hourly rate" do
         it "should return nil" do
+          @activity.stub! :hourly_rate => nil
           @activity.price.should be_nil
         end
       end
     end
   end
-  
+
   describe "#price=" do
-    before { @activity = Activity.make(:price_value => 10.99, :price_currency => fx(:dollar) ) }
-    
+    before :each do
+      @activity = Activity.prepare :price_value => 10.99, :price_currency => Currency.generate
+    end
+
     context "if called with nil" do
-      before { @activity.price = nil }
-      
-      it "should set:price_value and :price_currency values" do
+      it "should clear :price_value and :price_currency fields" do
+        @activity.price = nil
         @activity.price_value.should be_nil
         @activity.price_currency.should be_nil
       end
     end
-    
+
     context "if called with Money object" do
-      before { @activity.price = Money.new(8.59, fx(:euro) ) }
-      
-      it "should set:price_value and :price_currency values" do
+      it "should set :price_value and :price_currency fields" do
+        euro = Currency.generate
+        @activity.price = Money.new(8.59, euro)
         @activity.price_value.should == 8.59
-        @activity.price_currency.should == fx(:euro)
+        @activity.price_currency.should == euro
       end
     end
   end
 
   describe "#hourly_rate" do
     it "should return HourlyRate.find_for_activity result" do
-      hr = HourlyRate.make
+      hr = HourlyRate.prepare
       HourlyRate.should_receive(:find_for_activity).and_return(hr)
-      activity = Activity.make
+      activity = Activity.prepare
       activity.hourly_rate.should == hr
     end
   end
-  
+
   describe "#duration=" do
-    before { @activity = Activity.make }
-    
-    context "when called with a number" do
-      before { @activity.duration = 1.hour + 15.minutes }
-      it "should set :minutes attribute to the number" do
-        @activity.minutes.should == 75
-      end
+    before { @activity = Activity.prepare }
+
+    it "should set :minutes attribute to a correct value when called with a number" do
+      @activity.duration = 1.hour + 15.minutes
+      @activity.minutes.should == 75
     end
-    
-    context "when called with nil" do
-      before { @activity.duration = nil }
-      it "should set :minutes attribute to nil" do
-        @activity.minutes.should be_nil
-      end
+
+    it "should set :minutes attribute to nil when called with nil" do
+      @activity.duration = nil
+      @activity.minutes.should be_nil
     end
   end
-  
+
   describe "#duration" do
-    before { @activity = Activity.make }
-    
-    context "when :minutes is not nil" do
-      before { @activity.minutes = 10 }
-      it "should return number" do
-        @activity.duration.should == 10.minutes
-      end
+    before { @activity = Activity.prepare }
+
+    it "should return a number when :minutes is not nil" do
+      @activity.minutes = 10
+      @activity.duration.should == 10.minutes
     end
-    
-    context "when :minutes is nil" do
-      before { @activity.minutes = nil }
-      it "should return nil" do
-        @activity.duration.should be_nil
-      end
+
+    it "should return nil when :minutes is nil" do
+      @activity.minutes = nil
+      @activity.duration.should be_nil
     end
   end
-  
+
   describe "new record" do
-    before { @activity = Activity.make }
-    context "when there is no corresponding hourly rate" do
-      before { @activity.stub!(:hourly_rate => nil) }
-      it "should not be valid" do
-        @activity.should_not be_valid
-        @activity.errors.on(:hourly_rate).should_not be_empty
-      end
+    before { @activity = Activity.prepare }
+
+    it "should not be valid when there is no corresponding hourly rate" do
+      @activity.stub! :hourly_rate => nil
+      @activity.should_not be_valid
+      @activity.errors.on(:hourly_rate).should_not be_blank
+    end
+
+    it "should be valid when there is a corresponding hourly rate" do
+      @rate = HourlyRate.first_or_generate(
+        :project => @activity.project,
+        :role => @activity.user.role,
+        :takes_effect_at => @activity.date
+      )
+      @activity.stub! :hourly_rate => @rate
+      @activity.should be_valid
+      @activity.errors.on(:hourly_rate).should be_blank
     end
   end
-  
+
   describe "existing record" do
-    before { @activity = Activity.gen }
-    context "when there is no corresponding hourly rate" do
-      before { @activity.stub!(:hourly_rate => nil) }
-      it "should be valid" do
-        @activity.should be_valid
-        @activity.errors.on(:hourly_rate).should be_nil
-      end
+    before { @activity = Activity.generate }
+
+    it "should be valid even when there is no corresponding hourly rate" do
+      @activity.stub! :hourly_rate => nil
+      @activity.should be_valid
+      @activity.errors.on(:hourly_rate).should be_nil
     end
   end
+
 end
