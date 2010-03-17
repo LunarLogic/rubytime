@@ -1,15 +1,12 @@
 TODO before 3.3 release:
 
-* tests
-  -> turn off transactional tests, and clear the database after every test
-
 * fixes
   -> don't let user change his role
   -> round results from rate calculations to 2 decimal digits
 
-* merge 3.2 branch
-
 * fix all critical bugs from Pivotal/Kanbanery
+
+* merge 3.2 branch
 
 * ask Wojtek or Kuba Obstarczyk to test it again
 
