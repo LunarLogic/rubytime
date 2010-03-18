@@ -3,6 +3,10 @@ require 'logger'
 class Employee < User
   validates_present :role
   
+  before :valid? do
+    self.client_id = nil
+  end
+  
   before :destroy do
     throw :halt if activities.count > 0
   end
