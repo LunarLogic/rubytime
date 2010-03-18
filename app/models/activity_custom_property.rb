@@ -5,6 +5,7 @@ class ActivityCustomProperty
   property :name, String, :nullable => false, :index => true
   property :unit, String, :nullable => true
   property :required, Boolean, :nullable => false, :default => false
+  property :show_as_column_in_tables, Boolean, :nullable => false, :default => false
   property :updated_at,  DateTime
   property :created_at,  DateTime
   

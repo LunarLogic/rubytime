@@ -10,6 +10,7 @@
     <th>Name</th>
     <th>Unit</th>
     <th>Required</th>
+    <th>Show as column</th>
     <th class="icons"></th>
   </tr>
   <% @activity_custom_properties.each do |custom_property| %>
@@ -17,6 +18,7 @@
       <td><%= custom_property.name %></td>
       <td><%= custom_property.unit %></td>
       <td><%= custom_property.required ? 'Yes' : 'No' %></td>
+      <td><%= custom_property.show_as_column_in_tables ? 'Yes' : 'No' %></td>
       <td class="icons">
         <% if current_user.is_admin? %>
           <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(custom_property, :edit) %>
