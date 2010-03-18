@@ -173,6 +173,12 @@ label.error {
 #add_activity input, #add_activity select, #add_activity textarea {
   width:250px;
 }
+#add_activity .custom-property input {
+  width:150px;
+}
+#add_activity .custom-property span {
+  margin-left:5px;
+}
 #add_activity textarea, #TB_ajaxContent textarea {
   height:120px;
 }

@@ -381,4 +381,75 @@ describe Activity do
       end
     end
   end
+  
+  describe "#custom_properties= and #custom_properties" do
+    before do
+      @custom_property_AAA = ActivityCustomProperty.gen(:name => "AAA")
+      @custom_property_BBB = ActivityCustomProperty.gen(:name => "BBB")
+      @custom_property_CCC = ActivityCustomProperty.gen(:name => "CCC")
+      
+      @activity = Activity.gen
+    end
+    
+    it "should assign only properties with not-blank values" do
+      @activity.custom_properties = { @custom_property_BBB.id.to_s => "125", @custom_property_CCC.id.to_s => "" }
+      @activity.custom_properties.should == { @custom_property_BBB.id => 125 }
+    end
+    
+    describe "with save operation following" do
+      before do
+        @activity.activity_custom_property_values.create(:activity_custom_property => @custom_property_AAA, :value => 12)
+        @activity.activity_custom_property_values.create(:activity_custom_property => @custom_property_CCC, :value => 45)
+        
+        @activity.custom_properties = { 
+          @custom_property_AAA.id.to_s => "15", 
+          @custom_property_BBB.id.to_s => "125", 
+          @custom_property_CCC.id.to_s => "" }
+          
+        @activity.save
+      end
+      
+      it "should update custom value for changed value" do
+        @activity.activity_custom_property_values.first(:activity_custom_property_id => @custom_property_AAA.id).should_not be_nil
+        @activity.custom_properties[@custom_property_AAA.id].should == 15
+      end
+      
+      it "should create new custom value for new value" do
+        @activity.activity_custom_property_values.first(:activity_custom_property_id => @custom_property_BBB.id).should_not be_nil
+        @activity.custom_properties[@custom_property_BBB.id].should == 125
+      end
+      
+      it "should remove custom value for blank value" do
+        @activity.activity_custom_property_values.first(:activity_custom_property_id => @custom_property_CCC.id).should be_nil
+        @activity.custom_properties[@custom_property_CCC.id].should == nil
+      end
+    end
+    
+  end
+  
+  describe "#destroy" do
+    before do
+      @activity = Activity.gen
+      @activity.activity_custom_property_values.create(:activity_custom_property => ActivityCustomProperty.gen, :value => 12)
+      @activity.activity_custom_property_values.create(:activity_custom_property => ActivityCustomProperty.gen, :value => 45)
+    end
+    
+    it "should destroy assigned custom property values" do
+      @activity.activity_custom_property_values.count.should > 0
+      @activity.destroy
+      @activity.activity_custom_property_values.count.should == 0
+    end
+  end
+  
+  context "without required custom property" do
+    before do
+      @custom_property = ActivityCustomProperty.gen(:name => "AAA", :required => true)
+      
+      @activity = Activity.gen
+      @activity.activity_custom_property_values.count.should == 0
+    end
+    
+    it { @activity.should have_errors_on(:activity_custom_property_values) }
+  end
+        
 end

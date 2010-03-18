@@ -26,6 +26,13 @@
       <%= text_field :hours, :label => "Time spent" %>
       <span class="description">ie: 7:30 or 7.5 for seven hours and thirty minutes</span>
     </p>
+    <% @activity_custom_properties.each do |activity_custom_property| %>
+      <p class="custom-property">
+        <%= label activity_custom_property.name, :for => "activity[custom_properties][#{activity_custom_property.id}]" %>
+        <%= tag :input, nil, :name => "activity[custom_properties][#{activity_custom_property.id}]", :value => @activity.custom_properties[activity_custom_property.id], :class => (activity_custom_property.required ? 'required' : nil) %>
+        <span><%= activity_custom_property.unit %></span>
+      </p>
+    <% end %>
     <p>
       <%= text_area :comments, :label => "Comments" %>
     </p>

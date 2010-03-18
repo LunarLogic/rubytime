@@ -75,3 +75,15 @@ FreeDay.fixture {{
 ActivityType.fixture {{
   :name => /\w{6,10}/.gen
 }}
+
+ActivityCustomProperty.fixture {{
+  :name => unique { /\w{6,20}/.gen },
+  :unit => unique { /\w{6,20}/.gen },
+  :required => false
+}}
+
+ActivityCustomPropertyValue.fixture {{
+  :value => rand * 1000,
+  :activity => Activity.pick,
+  :activity_custom_property => ActivityCustomProperty.pick
+}}

@@ -7,6 +7,7 @@ class Activities < Application
   before :authorize,                  :only => [:new]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,             :only => [:new, :edit, :update, :create]
+  before :load_activity_custom_properties, :only => [:new, :create, :edit, :update]
   before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
@@ -186,6 +187,10 @@ protected
   
   def load_users
     @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
+  end
+  
+  def load_activity_custom_properties
+    @activity_custom_properties = ActivityCustomProperty.all
   end
   
   def convert_to_csv(activities)

@@ -20,11 +20,14 @@ class Activity
   validates_absent  :activity_type_id, :unless => proc { |a| a.activity_type_required? }
   validates_present :activity_type_id,     :if => proc { |a| a.activity_type_required? }
   validates_with_method :activity_type_id, :method => :activity_type_must_be_assigned_to_project, :if => proc { |a| a.activity_type_required? and a.activity_type }
+  validates_with_method :activity_custom_property_values, :method => :required_custom_properties_are_present
 
   belongs_to :project
   belongs_to :activity_type
   belongs_to :user
   belongs_to :invoice
+  
+  has n, :activity_custom_property_values
   
   def available_main_activity_types
     return [] if project.nil?
@@ -150,6 +153,37 @@ class Activity
     project and project.activity_types.count > 0
   end
   
+  def custom_properties=(custom_properties)
+    @custom_properties = {}
+    custom_properties.each_pair do |custom_property_id, value|
+      @custom_properties[custom_property_id.to_i] = ActivityCustomPropertyValue.new(:value => value).value unless value.blank?
+    end
+    @custom_properties
+  end
+  
+  def custom_properties
+    @custom_properties ||= activity_custom_property_values.inject({}) do |agg, property| 
+      agg[property.activity_custom_property.id] = property.value
+      agg
+    end
+  end
+  
+  after :save do
+    activity_custom_property_values.all(:activity_custom_property_id.not => custom_properties.keys).each { |pv| pv.destroy }
+    
+    custom_properties.each_pair do |custom_property_id, custom_property_value|
+      custom_property = ActivityCustomProperty.get(custom_property_id)
+      ActivityCustomPropertyValue.first_or_create(
+        :activity_custom_property_id => custom_property.id,
+        :activity_id => self.id
+      ).update_attributes({:value => custom_property_value})
+    end
+  end
+  
+  before :destroy do
+    activity_custom_property_values.each { |pv| pv.destroy }
+  end
+  
   protected
   
   # Checks if hours for this activity are under 24 hours
@@ -165,6 +199,15 @@ class Activity
   
   def activity_type_must_be_assigned_to_project
     project.activity_types.get(activity_type_id) ? true : [false, "Activity type must be one of those assigned to the project"]
+  end
+  
+  def required_custom_properties_are_present
+    required_custom_properties = ActivityCustomProperty.all(:required => true)
+    if required_custom_properties.map { |acp| acp.id }.none? { |id| custom_properties[id].blank? }
+      true
+    else
+      [false, "The following custom properties are required: " + required_custom_properties.map { |acp| acp.name }.join(', ')]
+    end
   end
   
 end
