@@ -8,10 +8,26 @@ class Application < Merb::Controller
     session.user
   end
   
-  protected
-  
+  private
+
+  def self.protect_fields_for(record, fields = {})
+    if fields[:in]
+      before(nil, :only => fields[:in]) do |c|
+        c.params[record] ||= {}
+        fields_to_delete = []
+        fields_to_delete += fields[:always] if fields[:always]
+        fields_to_delete += fields[:admin] if fields[:admin] && !c.current_user.is_admin?
+        fields_to_delete.each { |f| c.params[record].delete(f) }
+      end
+    end
+  end
+
   def ensure_admin
     raise Forbidden unless current_user.is_admin?
+  end
+
+  def ensure_not_client_user
+    raise Forbidden if current_user.is_client_user?
   end
   
   def ensure_user_that_can_manage_financial_data

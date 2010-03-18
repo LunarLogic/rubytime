@@ -4,15 +4,18 @@ class Activities < Application
 
   provides :json
 
-  before :authorize,                  :only => [:new]
+  before :ensure_not_client_user,     :only => [:new, :create]
   before :load_projects,              :only => [:new, :edit, :update, :create]
-  before :load_users,             :only => [:new, :edit, :update, :create]
+  before :load_users,                 :only => [:new, :edit, :update, :create]
   before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability     , :only => [:day]
   before :load_activity             , :only => [:edit, :update, :destroy]
   before :check_deletable_by        , :only => [:destroy]
   before :check_if_valid_project,     :only => [:create]
+
+  protect_fields_for :activity, :in => [:create, :update],
+    :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
     provides :csv
@@ -43,7 +46,7 @@ class Activities < Application
   end
   
   def create
-    @activity = Activity.new(params[:activity] || {})
+    @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin?
     if @activity.save
       self.content_type = :json
@@ -66,7 +69,7 @@ class Activities < Application
 
     @activity.user = current_user unless current_user.is_admin?
 
-    if @activity.update(params[:activity] || {})
+    if @activity.update(params[:activity])
       display(@activity)
     else
       render :edit, :status => 400, :layout => false
@@ -133,10 +136,6 @@ class Activities < Application
   
 protected
 
-  def authorize
-    throw :halt, "You don't have permissions to do that!" if current_user.is_client_user?
-  end
-  
   def check_day_viewability
     raise BadRequest if params[:search_criteria][:user_id] && params[:search_criteria][:user_id].size > 1 || params[:search_criteria][:project_id] && params[:search_criteria][:project_id].size > 1
     if current_user.is_client_user? || current_user.is_admin? && params[:search_criteria][:project_id]

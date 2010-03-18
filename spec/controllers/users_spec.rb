@@ -29,6 +29,11 @@ describe Users do
       block_should(raise_forbidden) { as(:employee).dispatch_to(Users, :edit, :id => @user.id) }
     end
 
+    it "should raise forbidden from edit if user is not admin and trying to edit his own account" do
+      # user should only have access to /settings page
+      block_should(raise_forbidden) { as(@user).dispatch_to(Users, :edit, :id => @user.id) }
+    end
+
     it "should raise forbidden for client users" do
       block_should(raise_forbidden) { as(:client).dispatch_to(Users, :edit, :id => @user.id) }
     end
@@ -98,17 +103,45 @@ describe Users do
       end
     end
 
-    # it "shouldn't allow user to update his role" do
-    #   devs = Role.generate
-    #   admins = Role.generate
-    #   user = Employee.generate :role => devs
-    # 
-    #   response = as(user).dispatch_to(Users, :update, :id => user.id, :user => { :role_id => admins.id })
-    #   response.should redirect_to(url(:activities))
-    # 
-    #   user.reload
-    #   user.role.should == devs
-    # end
+    it "shouldn't allow client user to change his client" do
+      apple = Client.generate
+      microsoft = Client.generate
+      steveb = ClientUser.generate :client => microsoft
+
+      response = as(steveb).dispatch_to(Users, :update, :id => steveb.id, :user => {
+        :client_id => apple.id,
+      })
+      response.should redirect_to(url(:activities))
+
+      steveb.reload
+      steveb.client.should == microsoft
+    end
+
+    it "shouldn't allow user to update his role, type, admin rights, login or active state" do
+      devs = Role.generate
+      admins = Role.generate
+      user = Employee.generate :role => devs, :login => 'oldlogin', :active => true
+
+      response = as(user).dispatch_to(Users, :update, {
+        :id => user.id,
+        :user => {
+          :role_id => admins.id,
+          :login => 'newlogin',
+          :active => false,
+          :type => 'ClientUser',
+          :admin => true
+        }
+      })
+      response.should redirect_to(url(:activities))
+
+      user.reload
+      user.role.should == devs
+      user.login.should == 'oldlogin'
+      user.should be_active
+      user.should be_an_instance_of(Employee)
+      user.type.should == Employee
+      user.should_not be_admin
+    end
 
     it "shouldn't allow user to update other users" do
       user = Employee.generate

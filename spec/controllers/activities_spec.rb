@@ -71,63 +71,73 @@ describe Activities do
       @user = Employee.generate
       @project = Project.generate
       ensure_rate_exists :project => @project, :role => @user.role, :takes_effect_at => Date.today
+      @fields = {
+        :date => Date.today,
+        :hours => "7",
+        :project_id => @project.id,
+        :comments => "this & that",
+      }
     end
 
     it "should add new activity" do
-      as(@user).dispatch_to(Activities, :create, :activity => {
-        :date => Date.today,
-        :project_id => @project.id,
-        :hours => "7",
-        :comments => "this & that"
-      }).status.should == 201
+      as(@user).dispatch_to(Activities, :create, :activity => @fields).status.should == 201
+      Activity.last.user.should == @user
     end
 
     it "should not add invalid activity" do
-      as(@user).dispatch_to(Activities, :create, :activity => {
-        :date => Date.today,
-        :project_id => @project.id,
-        :hours => "6:30",
+      as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(
         :comments => ""
-      }).status.should == 400
+      )).status.should == 400
     end
 
     it "should raise bad request if adding activity for nonexistent project" do
       block_should(raise_bad_request) do
-        as(@user).dispatch_to(Activities, :create, :activity => {
-          :date => Date.today,
-          :project_id => 923874293,
-          :hours => "6:30",
-          :comments => "boo"
-        })
+        as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(:project_id => 923874293))
       end
     end
 
-    it "should not add activity for other user if he isn't admin" do
+    it "should not add activity for other user if current user isn't admin" do
       other = Employee.generate
 
       block_should(change(@user.activities, :count).by(1)).and_not(change(other.activities, :count)) do
-        as(@user).dispatch_to(Activities, :create, :activity => {
-          :date => Date.today,
-          :project_id => @project.id,
-          :hours => "7",
-          :comments => "this & that",
+        as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(
           :user_id => other.id
-        }).status.should == 201
+        )).status.should == 201
       end
+      Activity.last.user.should == @user
     end
 
-    it "should add activity for other user if he is admin" do
+    it "should add activity for other user if current user is admin" do
       admin = Employee.generate(:admin)
 
       block_should(change(@user.activities, :count).by(1)).and_not(change(admin.activities, :count)) do
-        as(admin).dispatch_to(Activities, :create, :activity => { 
-          :date => Date.today,
+        as(admin).dispatch_to(Activities, :create, :activity => @fields.merge(
           :project_id => @project.id,
-          :hours => "7",
-          :comments => "this & that",
           :user_id => @user.id
-        }).status.should == 201
+        )).status.should == 201
       end
+      Activity.last.user.should == @user
+    end
+
+    it "should not add activity for client user" do
+      client_user = ClientUser.generate :client => @project.client
+
+      block_should(raise_forbidden).and_not(change(Activity, :count)) do
+        as(client_user).dispatch_to(Activities, :create, :activity => @fields.merge(:user_id => client_user.id))
+      end
+    end
+
+    it "should not set activity's frozen price or invoice" do
+      block_should(change(Activity, :count).by(1)) do
+        as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(
+          :price_value => 2.5,
+          :price_currency_id => Currency.first_or_generate.id,
+          :invoice_id => Invoice.generate(:client => @project.client).id
+        )).status.should == 201
+      end
+      Activity.last.price_currency.should be_nil
+      Activity.last.price_value.should be_nil
+      Activity.last.invoice.should be_nil
     end
 
     it "should not crash when :activity hash isn't set" do
@@ -173,12 +183,61 @@ describe Activities do
     it "shouldn't update other user's activity" do
       block_should(raise_not_found) do
         as(:employee).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
-          :date => Date.today,
-          :project_id => @activity.id,
-          :hours => "3:03",
-          :comments => "updated this stuff"
+          :comments => "updated again"
         })
       end
+    end
+
+    it "should update other user's activity if current user is admin" do
+      as(:admin).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
+        :comments => "and once again"
+      })
+    end
+
+    it "should not change activity ownership if current user is not admin" do
+      old_user = @activity.user
+      as(old_user).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
+        :user_id => Employee.generate.id
+      })
+      @activity.reload.user.should == old_user
+    end
+
+    it "should change activity ownership if current user is admin" do
+      old_user = @activity.user
+      new_user = Employee.generate
+      as(:admin).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
+        :user_id => new_user.id
+      })
+      @activity.reload.user.should == new_user
+    end
+
+    it "should not change activity's frozen price or invoice" do
+      invoice = Invoice.generate :client => @activity.project.client
+      currency = Currency.first_or_generate
+
+      as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
+        :price_value => 2.5,
+        :price_currency_id => currency.id,
+        :invoice_id => invoice.id
+      }).status.should be_successful
+
+      @activity.reload
+      @activity.price_currency.should be_nil
+      @activity.price_value.should be_nil
+      @activity.invoice.should be_nil
+
+      @activity.update :price_currency_id => currency.id, :price_value => 1.0, :invoice_id => invoice.id
+
+      as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
+        :price_value => 2.5,
+        :price_currency_id => Currency.generate.id,
+        :invoice_id => Invoice.generate(:client => @activity.project.client).id
+      }).status.should be_successful
+
+      @activity.reload
+      @activity.price_currency.should == currency
+      @activity.price_value.should == 1.0
+      @activity.invoice.should == invoice
     end
 
     it "should not crash when :activity hash isn't set" do
