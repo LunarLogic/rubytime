@@ -11,6 +11,7 @@
       <% else %>
         <%= partial("activities/grouped_roles", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>
         <strong class="total">Total for project: <%= total_from(activities_from(@activities, client, project)) %></strong>
+        <%= total_custom_properties(@activities, client, project) %>
       <% end %>
     </li>
   <% end %>

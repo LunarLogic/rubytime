@@ -82,6 +82,18 @@ module Merb
       format_minutes(activities.inject(0) { |a,act| a + act.minutes })
     end
     
+    def total_custom_properties(activities, client, project=nil, role=nil)
+      html = ""
+      ActivityCustomProperty.all.each do |activity_custom_property|
+        html << %(<p>)
+        html << %(Total #{activity_custom_property.name}: )
+        html << %(#{Activity.custom_property_values_sum(activities_from(@activities, client), activity_custom_property)})
+        html << %( #{activity_custom_property.unit})
+        html << %(</p>)
+      end
+      html
+    end
+    
     def activities_table(activities, options={})
       default_options = { :show_checkboxes => false, :show_users => true,
                           :show_details_link => true, :show_edit_link => true,
