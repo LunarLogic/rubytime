@@ -451,5 +451,27 @@ describe Activity do
     
     it { @activity.should have_errors_on(:activity_custom_property_values) }
   end
+  
+  def self.custom_property_values_sum(activities, custom_property)
+    activities.inject(0) { |sum, activity| sum + (activity.custom_properties[custom_property.id] || 0) }
+  end
+  
+  describe ".custom_property_values_sum" do
+    before do
+      @custom_property_AAA = ActivityCustomProperty.gen(:name => "AAA")
+      @custom_property_BBB = ActivityCustomProperty.gen(:name => "BBB")
+      
+      @activities = [
+        Activity.gen(:custom_properties => { @custom_property_AAA.id => 10.05 }),
+        Activity.gen(:custom_properties => { @custom_property_AAA.id =>  5.03, @custom_property_BBB.id => 120 }),
+        Activity.gen(:custom_properties => { @custom_property_AAA.id =>  1.00, @custom_property_BBB.id =>  17 })
+      ]
+    end
+    
+    it "should return the sum of given custom property values" do
+      Activity.custom_property_values_sum(@activities, @custom_property_AAA).to_s.should == 16.08.to_s
+      Activity.custom_property_values_sum(@activities, @custom_property_BBB).should == 137
+    end
+  end
         
 end

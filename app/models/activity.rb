@@ -184,6 +184,10 @@ class Activity
     activity_custom_property_values.each { |pv| pv.destroy }
   end
   
+  def self.custom_property_values_sum(activities, custom_property)
+    activities.inject(0) { |sum, activity| sum + (activity.custom_properties[custom_property.id] || 0) }
+  end
+  
   protected
   
   # Checks if hours for this activity are under 24 hours

@@ -119,7 +119,12 @@ module Merb
         html << %(<td></td>) if options[:show_project]
         html << %(<td></td>) if options[:show_users]
         html << %(<td class="right"><strong>Total:</strong></td>)
-        html << %(<td class="right"><strong>#{total_from(activities)}</strong></td></tr>)
+        html << %(<td class="right"><strong>#{total_from(activities)}</strong></td>)
+        options[:custom_properties_to_show_in_columns].each do |custom_property|
+          html << %(<td class="right"><strong>#{Activity.custom_property_values_sum(activities, custom_property)}</strong></td>)
+        end
+        html << %(<td></td>)
+        html << %(</tr>)
       end
     end
 
@@ -146,7 +151,7 @@ module Merb
       row << %(</td>)
 
       klass, visibility = (options[:expanded] ? ["", ""] : ["no_zebra", "display: none"])
-      row << %(</tr><tr class="comments #{klass}" style="#{visibility}"><td colspan="5">)
+      row << %(</tr><tr class="comments #{klass}" style="#{visibility}"><td colspan="#{options[:custom_properties_to_show_in_columns].size + 5}">)
       row << %(<p><strong>#{h(activity.breadcrumb_name)}</strong></p>) if activity.breadcrumb_name
       options[:custom_properties_to_show_in_expanded_view].each do |custom_property|
         if activity.custom_properties[custom_property.id]
