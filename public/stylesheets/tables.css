@@ -44,6 +44,18 @@ table.list td.checkbox, table.list th.checkbox {
 table.activities {
   background-color: #FFF;
 }
+table.activities td {
+  border-left: 1px solid #ddd;
+}
+table.activities td:first-child {
+  border-left: none;
+}
+table.activities th {
+  border-left: 1px solid #fff;
+}
+table.activities th:first-child {
+  border-left: none;
+}
 table.activities td p {
   border-top: 1px solid #ddd;
   padding: 4px 0;
@@ -157,8 +169,8 @@ table.activities {
 tr.comments {
 }
 tr.comments td {
-  border-top: 1px solid #EEEEEE;
   padding-left: 23px;
+  padding-bottom: 20px;
 }
 td.icons, th.icons {
   width: 1%;
