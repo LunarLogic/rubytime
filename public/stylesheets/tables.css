@@ -44,6 +44,13 @@ table.list td.checkbox, table.list th.checkbox {
 table.activities {
   background-color: #FFF;
 }
+table.activities td p {
+  border-top: 1px solid #ddd;
+  padding: 4px 0;
+}
+table.activities td p:first-child {
+  border-top: none;
+}
 table#calendar { 
   border: 1px solid #888;
   border-collapse: collapse;

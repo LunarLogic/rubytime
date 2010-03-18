@@ -86,7 +86,9 @@ module Merb
       default_options = { :show_checkboxes => false, :show_users => true,
                           :show_details_link => true, :show_edit_link => true,
                           :show_delete_link => true, :show_exclude_from_invoice_link => false,
-                          :expanded => false, :show_date => true }
+                          :expanded => false, :show_date => true,
+                          :custom_properties_to_show_in_columns => ActivityCustomProperty.all(:show_as_column_in_tables => true),
+                          :custom_properties_to_show_in_expanded_view => ActivityCustomProperty.all(:show_as_column_in_tables => false) }
 
       options = default_options.merge(options)
 
@@ -100,6 +102,11 @@ module Merb
         html << %(<th>#{image_tag("icons/role.png", :alt => 'role') if options[:show_header_icons]} User</th>) if options[:show_users]
         html << %(<th>Date</th>) if options[:show_date]
         html << %(<th class="right">#{image_tag("icons/clock.png", :alt => 'clock') if options[:show_header_icons]} Hours</th>)
+        
+        options[:custom_properties_to_show_in_columns].each do |custom_property|
+          html << %(<th class="right">#{custom_property.name}#{' (' + custom_property.unit + ')' if custom_property.unit}</th>)
+        end
+        
         html << %(<th class="icons">)
         html << link_to(image_tag("icons/magnifier.png", :title => "Toggle all details", :alt => 'I'), "#", :class => "toggle_all_comments_link") if options[:show_details_link]
         html << %(</th>)
@@ -125,6 +132,10 @@ module Merb
       row << %(<td>#{h(activity.user.name)}</td>) if options[:show_users]
       row << %(<td>#{activity.date.formatted(current_user.date_format)}</td>) if options[:show_date]
       row << %(<td class="right">#{activity.hours}</td>)
+      
+      options[:custom_properties_to_show_in_columns].each do |custom_property|
+        row << %(<td class="right">#{activity.custom_properties[custom_property.id]}</td>)
+      end
 
       # icons
       row << %(<td class="icons">)
@@ -137,7 +148,12 @@ module Merb
       klass, visibility = (options[:expanded] ? ["", ""] : ["no_zebra", "display: none"])
       row << %(</tr><tr class="comments #{klass}" style="#{visibility}"><td colspan="5">)
       row << %(<p><strong>#{h(activity.breadcrumb_name)}</strong></p>) if activity.breadcrumb_name
-      row << %(#{h(activity.comments).gsub(/\n/, "<br/>")}</td></tr>)
+      options[:custom_properties_to_show_in_expanded_view].each do |custom_property|
+        if activity.custom_properties[custom_property.id]
+          row << %(<p><strong>#{custom_property.name}</strong>: #{activity.custom_properties[custom_property.id]} #{custom_property.unit}</p>)
+        end
+      end
+      row << %(<p>#{h(activity.comments).gsub(/\n/, "<br/>")}</p></td></tr>)
       row
     end
 
