@@ -57,11 +57,30 @@ describe Activities do
       other_projects.should include(projects[3])
     end
 
-    it "should preselect current user in new activity form when user is admin" do
+    it "should preselect given user in new activity form when user is admin" do
       admin = Employee.generate(:admin)
+      user = Employee.generate
+
       controller = as(admin).dispatch_to(Activities, :new)
       controller.should be_successful
       controller.instance_variable_get(:@activity).user.should == admin
+
+      controller = as(admin).dispatch_to(Activities, :new, :user_id => user.id)
+      controller.should be_successful
+      controller.instance_variable_get(:@activity).user.should == user
+    end
+
+    it "should preselect current user in new activity form when user is not admin" do
+      user = Employee.generate
+      other_user = Employee.generate
+
+      controller = as(user).dispatch_to(Activities, :new)
+      controller.should be_successful
+      controller.instance_variable_get(:@activity).user.should == user
+
+      controller = as(user).dispatch_to(Activities, :new, :user_id => other_user.id)
+      controller.should be_successful
+      controller.instance_variable_get(:@activity).user.should == user
     end
   end
 

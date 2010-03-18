@@ -7,11 +7,11 @@ class Activities < Application
   before :ensure_not_client_user,     :only => [:new, :create]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,                 :only => [:new, :edit, :update, :create]
+  before :load_activity,              :only => [:edit, :update, :destroy]
   before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
-  before :check_day_viewability     , :only => [:day]
-  before :load_activity             , :only => [:edit, :update, :destroy]
-  before :check_deletable_by        , :only => [:destroy]
+  before :check_day_viewability,      :only => [:day]
+  before :check_deletable_by,         :only => [:destroy]
   before :check_if_valid_project,     :only => [:create]
 
   protect_fields_for :activity, :in => [:create, :update],
@@ -19,7 +19,8 @@ class Activities < Application
 
   def index
     provides :csv
-    @search_criteria = SearchCriteria.new(params[:search_criteria] || { :date_from => Date.today - current_user.recent_days_on_list}, current_user)
+    params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
+    @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @search_criteria.user_id = [params[:user_id]] if params[:user_id]
     @search_criteria.project_id = [params[:project_id]] if params[:project_id]
     @search_criteria.include_inactive_projects = true if current_user.is_client_user?
@@ -40,11 +41,12 @@ class Activities < Application
   end
   
   def new
-    preselected_user = (current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])) || current_user
+    preselected_user = current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])
+    preselected_user ||= current_user
     @activity = Activity.new(:date => params[:date] || Date.today, :user => preselected_user)
     render :layout => false
   end
-  
+
   def create
     @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin?
@@ -78,8 +80,8 @@ class Activities < Application
   
   def destroy
     if @activity.destroy
-     render_success
-   else
+      render_success
+    else
       render "Could not delete activity.", :status => 403
     end 
   end
@@ -137,12 +139,16 @@ class Activities < Application
 protected
 
   def check_day_viewability
-    raise BadRequest if params[:search_criteria][:user_id] && params[:search_criteria][:user_id].size > 1 || params[:search_criteria][:project_id] && params[:search_criteria][:project_id].size > 1
-    if current_user.is_client_user? || current_user.is_admin? && params[:search_criteria][:project_id]
-      raise Forbidden unless params[:search_criteria][:user_id].nil?
-      @owner = Project.get(params[:search_criteria][:project_id].first) or raise NotFound
+    user_id = params[:search_criteria][:user_id]
+    project_id = params[:search_criteria][:project_id]
+
+    raise BadRequest if (user_id && user_id.size > 1) || (project_id && project_id.size > 1)
+
+    if current_user.is_client_user? || current_user.is_admin? && project_id
+      raise Forbidden unless user_id.nil?
+      @owner = Project.get(project_id.first) or raise NotFound
     else
-      @owner = User.get(params[:search_criteria][:user_id].first) or raise NotFound
+      @owner = User.get(user_id.first) or raise NotFound
     end
     check_calendar_viewability
   end
@@ -156,16 +162,14 @@ protected
   end
 
   def check_if_valid_project
-    unless params[:activity] && Project.get(params[:activity][:project_id])
-      raise BadRequest
-    end
+    raise BadRequest unless params[:activity] && Project.get(params[:activity][:project_id])
   end
 
   def load_activity
-    @activity = (current_user.is_admin? ?
-      Activity : current_user.activities).get(params[:id]) or raise NotFound
+    source = (current_user.is_admin?) ? Activity : current_user.activities
+    @activity = source.get(params[:id]) or raise NotFound
   end
-  
+
   def load_owner
     if params[:user_id]
       @owner = User.get(params[:user_id]) or raise NotFound
@@ -175,8 +179,10 @@ protected
   end
 
   def load_projects
-    @recent_projects = current_user.projects.active.sort_by { |p| Activity.first(:project_id => p.id, :user_id => current_user.id, 
-                                                                                 :order => [:date.desc]).date }
+    @recent_projects = current_user.projects.active.sort_by do |p|
+      last_activity = Activity.first(:project_id => p.id, :user_id => current_user.id, :order => [:date.desc])
+      last_activity.date
+    end
     @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
     # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
     @other_projects = Project.active.all(:order => [:name]) - @recent_projects
@@ -203,4 +209,4 @@ protected
     params[:action] == "calendar" ? 1 : super
   end
  
-end # Activities
+end
