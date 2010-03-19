@@ -22,6 +22,11 @@ describe User do
       user = Employee.prepare :login => login
       user.should be_valid
     end
+  end  
+  
+  it "should have a globally unique login" do
+    Factory.create(:employee, {:login => 'foo'})
+    Factory.build(:client_user, {:login => 'foo'}).should_not be_valid
   end
 
   it "shouldn't authenticate inactive user" do

@@ -4,7 +4,7 @@ class User
   property :id,                            Serial
   property :name,                          String, :required => true, :unique => true
   property :type,                          Discriminator, :index => true
-  property :login,                         String, :required => true, :unique => true, :index => true, :format => /^[\w_\.-]{3,20}$/
+  property :login,                         String, :required => true, :index => true, :format => /^[\w_\.-]{3,20}$/
   property :email,                         String, :required => true, :unique => true, :format => :email_address
   property :active,                        Boolean, :required => true, :default => true
   property :admin,                         Boolean, :required => true, :default => false
@@ -25,6 +25,17 @@ class User
 
   validates_length :password, :min => 6 , :if => :password_required?
   #validates_is_confirmed :password, :if => :password_required?
+  
+  validates_with_method :login, :method => :check_login_is_unique
+  
+  def check_login_is_unique
+    db_user = User.first(:login => self.login)
+    if db_user.blank? || db_user.id == self.id
+      true
+    else
+      [false, "An account has already be created with this login."]
+    end 
+  end
 
   belongs_to :role # only for Employee
   belongs_to :client # only for ClientUser
