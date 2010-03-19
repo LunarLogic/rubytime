@@ -9,7 +9,7 @@
     <%= auto_link %>
     <% if session.user %>
     <script type="text/javascript">
-      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[session.user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %> ';
+      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[session.user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %>';
     </script>
     <% end %>
   </head>

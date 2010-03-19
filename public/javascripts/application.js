@@ -55,8 +55,9 @@ var Application = {
   },
 
   initDatepickers: function(selector) {
+    window.rubytime_date_format = window.rubytime_date_format || 'dd-mm-yy';
     $(selector || ".datepicker").datepicker({
-      dateFormat: window.rubytime_date_format || 'dd-mm-yy',
+      dateFormat: window.rubytime_date_format,
       duration: "",
       firstDay: 1,
       showOn: "both",

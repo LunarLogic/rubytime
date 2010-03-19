@@ -72,12 +72,29 @@ var Activities = {
   },
   
   _addOnFilterSubmit: function() {
+    $.validator.addMethod("laterThanDateFrom", function(dateToString) {
+      var dateFromString = $("#search_criteria_date_from").val();
+      if (dateFromString === '' || dateToString === '') {
+        return true;
+      } else {
+        var dateFrom = $.datepicker.parseDate(window.rubytime_date_format, dateFromString);
+        var dateTo = $.datepicker.parseDate(window.rubytime_date_format, dateToString);
+        return (dateTo >= dateFrom);
+      }
+    }, "End date must be equal or later than start date");
+
     var form = $("#activities_filter form:first");
-    form.submit(function() {
-      $("#primary").load(form.url()+'?' + form.serialize(), null, function() {
-        Activities._initActivitiesList();
-      });
-      return false;
+    form.validate({
+      focusInvalid: false,
+      rules: {
+        "search_criteria[date_to]": 'laterThanDateFrom'
+      },
+      submitHandler: function() {
+        $("#primary").load(form.url() + '?' + form.serialize(), null, function() {
+          Activities._initActivitiesList();
+        });
+        return false;
+      }
     });
   },
   
