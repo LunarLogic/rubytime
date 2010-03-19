@@ -98,12 +98,14 @@ class Activity
     if price_value and price_currency
       Money.new(price_value, price_currency)
     else
-      hourly_rate && hourly_rate * (minutes / 60.0)
+      money = hourly_rate && hourly_rate * (minutes / 60.0)
+      money.value = money.value.round_to_2_digits unless money.nil?
+      money
     end
   end
   
   def price=(money)
-    self.price_value = money ? money.value : nil
+    self.price_value = money ? money.value.round_to_2_digits : nil
     self.price_currency = money ? money.currency : nil
   end
   
