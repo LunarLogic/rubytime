@@ -211,6 +211,10 @@ describe Employee do
     @user.name = nil
     @user.save.should be_false
     @user.errors.on(:name).should_not be_nil
+  end  
+  
+  it "shouldn't have client_id set" do
+    @user.client_id.should be_nil
   end
 
   it "should be editable by himself and admin" do
@@ -368,6 +372,10 @@ describe ClientUser do
 
   it "should return a proper user_type" do
     ClientUser.new.user_type.should == :client_user
+  end  
+  
+  it "shouldn't have role_id set" do
+    ClientUser.new.role_id.should be_nil
   end
 
 end
