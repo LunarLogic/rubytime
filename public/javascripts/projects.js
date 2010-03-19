@@ -263,10 +263,11 @@ $.extend(HourlyRateForm.prototype, {
   
   populateErrorMessages: function(error_messages) {
     var messagesDiv = this.node.find('.error_messages');
+    
     if (error_messages) {
-      div.text(error_messages).show();
+      messagesDiv.text(error_messages).show();
     } else {
-      div.text('').hide();
+      messagesDiv.text('').hide();
     }
   },
   
