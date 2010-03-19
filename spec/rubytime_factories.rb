@@ -4,13 +4,15 @@ def ensure_rate_exists(args)
   existing || Factory.create(:hourly_rate, params.merge(:takes_effect_at => Date.parse("2000-01-01")))
 end
 
-
-Factory.define(:employee, :class => Employee) do |u|
+Factory.define(:user, :class => 'User') do |u|
   u.sequence(:name) { |n| "RubyTime User ##{n}" }
   u.sequence(:login) { |n| "user_#{n}" }
   u.sequence(:email) { |n| "user_#{n}@rubytime.org" }
   u.password 'asdf1234'
   u.password_confirmation { |u| u.password }
+end
+
+Factory.define(:employee, :parent => :user, :class => Employee) do |u|
   u.association :role
 end
 
@@ -18,7 +20,7 @@ Factory.define(:admin, :parent => :employee) do |u|
   u.admin true
 end
 
-Factory.define(:client_user, :parent => :employee, :class => ClientUser) do |u|
+Factory.define(:client_user, :parent => :user, :class => ClientUser) do |u|
   u.association :client
 end
 
