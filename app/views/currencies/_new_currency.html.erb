@@ -1,4 +1,5 @@
 <h1>Create new currency</h1>
+<%= error_messages_for(@currency) %>
 <%= form_for @currency, :action => resource(:currencies), :id => "currency_form" do %>
   <fieldset>
     <p>
