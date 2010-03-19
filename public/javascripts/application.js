@@ -142,7 +142,7 @@ var Application = {
 
   initFlash: function() {
     $("#flash").click(Application._closeFlash);
-    //setTimeout(Application._closeFlash, 5000);
+    setTimeout(Application._closeFlash, 5000);
   },
   
   initDeleteLinks: function() {
