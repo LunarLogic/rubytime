@@ -1,6 +1,5 @@
 @import '/stylesheets/reset.css';
 @import '/stylesheets/layout.css';
-@import '/stylesheets/master.css';
 @import '/stylesheets/tables.css';
 @import '/stylesheets/forms.css';
 @import '/stylesheets/thickbox.css';
@@ -27,6 +26,9 @@ h3 {
 }
 p {
   line-height:1.25em;
+}
+strong {
+  font-weight: 900;
 }
 /* clearfix - http://www.webtoolkit.info/css-clearfix.html */
 .clearfix:after {

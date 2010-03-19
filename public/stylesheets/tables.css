@@ -43,6 +43,10 @@ table.list td.checkbox, table.list th.checkbox {
 }
 table.activities {
   background-color: #FFF;
+  margin: 10px 0;
+}
+table.roles {
+  margin-top: 10px;
 }
 table#calendar { 
   border: 1px solid #888;
@@ -143,11 +147,6 @@ table.padding5 td {
 }
 #activitites_for_day { 
   margin-left:20px;
-}
-table.activities {
-  margin:20px 0;
-}
-tr.comments {
 }
 tr.comments td {
   border-top: 1px solid #EEEEEE;
