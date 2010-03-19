@@ -1,4 +1,5 @@
 <h1>Create new role</h1>
+<%= error_messages_for(@role) %>
 <%= form_for @role, :action => resource(@role.id ? @role : :roles), :id => "role_form" do %>
   <fieldset>
     <p>
