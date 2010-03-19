@@ -37,6 +37,11 @@ gem "chronic", ">=0.2.3"
 gem "html5", ">=0.10.0"
 gem "icalendar", "~>1.1.0"
 
+group :development do
+  gem 'vlad', '2.0.0', :require => []
+  gem 'vlad-git', '2.0.0', :require => []
+end
+
 group :development, :test do
   gem "rand"
   gem "dm-factory_girl", "1.2.3", :require => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
