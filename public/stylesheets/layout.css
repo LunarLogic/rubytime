@@ -186,31 +186,21 @@ div.activity {
 div#flash {
   font-size:10pt;
   font-weight:bold;
-  padding:15px;
-  text-align:center;
-  width:880px;
-  position:absolute;
-  top:10px;
-  left:10px;
+  padding:15px 0 15px 40px;
   display: none;
   margin-bottom: 10px;
-  background-position:left center;
-  background-repeat:no-repeat;
+  text-align:left;
 }
 div#flash.notice {
   color:#008800;
   border: 1px solid #008800;
   background:#eeffee url(/images/icons/tick_circle.png) 10px center no-repeat;
-  text-align:left;
-  padding-left:40px;
   display:block;
 }
 div#flash.error, div.error {
   color:#cc0000;
   border: 1px solid #cc0000;
   background:#ffeeee url(/images/icons/minus_circle.png) 10px center no-repeat;
-  text-align:left;
-  padding-left:40px;
   display:block;
 }
 div.error {

@@ -142,7 +142,7 @@ var Application = {
 
   initFlash: function() {
     $("#flash").click(Application._closeFlash);
-    setTimeout(Application._closeFlash, 5000);
+    //setTimeout(Application._closeFlash, 5000);
   },
   
   initDeleteLinks: function() {
@@ -245,7 +245,7 @@ var Application = {
   },
   
   _closeFlash: function() {
-    $("#flash").fadeOut(function() {
+    $("#flash").slideUp(function() {
       $(this).removeClass("notice").removeClass("error").hide();
     });
   },
