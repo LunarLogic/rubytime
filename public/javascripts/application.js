@@ -229,7 +229,12 @@ var Application = {
           $(document).trigger(eventType, { date: date });
         },
         error: function(xhr) {
-          container.html(xhr.responseText);
+          var json = JSON.parse(xhr.responseText);
+          var errors = json.errors;
+          var html = jQuery.wrapWithTag(errors);
+          
+          container.html(html);
+          
           Application._initActivityPopup(container);
         }
       });

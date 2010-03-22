@@ -50,12 +50,13 @@ class Activities < Application
   def create
     @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin?
+    
     if @activity.save
       self.content_type = :json
       display @activity, :status => 201
     else
       if content_type == :json
-        display @activity.errors, :status => 400
+        display({:errors => @activity.errors.full_messagesfull_messages}, {:status => 400})
       else
         render :new, :status => 400, :layout => false
       end
