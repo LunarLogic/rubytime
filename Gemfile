@@ -15,8 +15,9 @@ gem "dm-observer", dm_gems_version
 gem "dm-serializer", dm_gems_version
 # gem "dm-constraints", dm_gems_version
 
-merb_gems_version = "1.1.0.rc1"
+merb_gems_version = "1.1.0.pre"
 
+gem "merb-core", merb_gems_version
 gem "merb_datamapper", merb_gems_version
 gem "merb-assets", merb_gems_version
 gem "merb-helpers", merb_gems_version
