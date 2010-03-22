@@ -230,9 +230,11 @@ var Application = {
           $(document).trigger(eventType, { date: date });
         },
         error: function(xhr) {
-          var json = JSON.parse(xhr.responseText);
+          var json = $.parseJSON(xhr.responseText);
           var errors = json.errors;
-          var html = jQuery.wrapWithTag(errors);
+          var html = $.errorsHtml(errors);
+          
+          html.children().last().addClass('last');
           
           container.html(html);
           

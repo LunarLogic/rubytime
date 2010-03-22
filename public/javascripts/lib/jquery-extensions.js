@@ -60,17 +60,12 @@ jQuery.extend({
     return s.match(/\d+/)[0];
   },
   
-  // wraps each text element into given tag 
-  wrapWithTag: function(arr, tag) {
-    this.wrapTag = tag || 'p';
-    
-    return arr.map(this.wrapCallback.bind(this)).join('');
+  errorsHtml: function(errors) {
+    return $('<ul>' + errors.map(this.getErrorItem.bind(this)).join('') + '</ul>');
   },
   
-  wrapCallback: function(i, idx) {
-    var tag = this.wrapTag;
-    
-    return '<' + tag + '>' + i + '</' + tag + '>';
+  getErrorItem: function(i, idx) {
+    return '<li>' + i + '</li>';
   },
   
   once: (function() {

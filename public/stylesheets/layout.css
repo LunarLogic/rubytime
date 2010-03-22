@@ -150,8 +150,16 @@
   padding:10px;
   z-index: 999;
 }
-#add_activity legend, #add_activity p {
+#add_activity legend, 
+#add_activity p, 
+#add_activity li {
   color:#fff;
+}
+#add_activity li {
+  margin-bottom: 8px;
+}
+#add_activity li.last {
+  margin-bottom: 0;
 }
 #add_activity legend {
   font-size:13px;
