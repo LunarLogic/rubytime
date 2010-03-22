@@ -294,6 +294,14 @@ describe Activity do
           @activity.reload
           @activity.price.should == @money
         end
+
+        it "should round money values to 2 decimal digits" do
+          @money.value = 20.0 / 7.0
+          block_should_not(raise_error) do
+            @activity.freeze_price!
+            @activity.price_value.should == 2.86
+          end
+        end
       end
 
       context "if there is no corresponding hourly rate" do
@@ -334,6 +342,14 @@ describe Activity do
         end
       end
 
+      it "should round money values to 2 decimal digits" do
+        @currency = Currency.first_or_generate
+        @activity.stub! :hourly_rate => mock('hourly rate', :* => Money.new(8.0 / 3.0, @currency))
+        @activity.price.should be_instance_of(Money)
+        @activity.price.value.should == 2.67
+        @activity.price.currency.should == @currency
+      end
+
       context "if there is no corresponding hourly rate" do
         it "should return nil" do
           @activity.stub! :hourly_rate => nil
@@ -363,6 +379,13 @@ describe Activity do
         @activity.price_value.should == 8.59
         @activity.price_currency.should == euro
       end
+    end
+
+    it "should round money values to 2 decimal digits" do
+      euro = Currency.first_or_generate
+      @activity.price = Money.new(4.0 / 3.0, euro)
+      @activity.price_value.should == 1.33
+      @activity.price_currency.should == euro
     end
   end
 
