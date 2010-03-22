@@ -1,9 +1,16 @@
-require 'rubygems'
-require 'merb-core'
+begin
+  require File.expand_path('../.bundle/environment', __FILE__)
+rescue LoadError
+  require "rubygems"
+  require "bundler"
+  Bundler.setup
+end
+
+Bundler.require :default, ENV['RACK_ENV'] || :production
 
 Merb::Config.setup(
   :merb_root   => ::File.expand_path(::File.dirname(__FILE__)),
-  :environment => ENV['RACK_ENV']
+  :environment => ENV['RACK_ENV'] || 'production'
 )
 Merb.environment = Merb::Config[:environment]
 Merb.root = Merb::Config[:merb_root]
