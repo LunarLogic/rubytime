@@ -56,7 +56,7 @@ class Activities < Application
       display @activity, :status => 201
     else
       if content_type == :json
-        display({:errors => @activity.errors.full_messagesfull_messages}, {:status => 400})
+        display({:errors => @activity.errors.full_messages}, {:status => 400})
       else
         render :new, :status => 400, :layout => false
       end
