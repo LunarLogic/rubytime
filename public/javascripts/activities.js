@@ -225,10 +225,10 @@ var Activities = {
 
   _updateIcons: function(group) {
     var criteria = $("p." + group);
+    var first_select = $("p." + group + " select:first");
     if (criteria.length == 1) {
       // single criteria of this kind
     
-      var first_select = $("p." + group + " select:first");
       if (first_select.val() == '') {
         // 'All' selected - hiding '+' button
         first_select.siblings('a.add_criterium').hide();
@@ -239,13 +239,15 @@ var Activities = {
     } else {
       // multiple criterias of this kind
     
-      // hide '+' button at all selects except last
-      $("p." + group + " a.add_criterium:not(:last)").hide();
+      // hide '+' button at all selects
+      $("p." + group + " a.add_criterium").hide();
       // show '-' button at all selects except first
       $("p." + group + " a.remove_criterium:not(:first)").show();
 
-      // show '+' button
-      $("p." + group + " a.add_criterium:last").show();
+      if ((first_select.find('option').length - 1) > criteria.length){
+        // show '+' button
+        $("p." + group + " a.add_criterium:last").show();
+      }
     }
   },
 
