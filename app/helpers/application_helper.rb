@@ -112,7 +112,9 @@ module Merb
         html << %(<td></td>) if options[:show_project]
         html << %(<td></td>) if options[:show_users]
         html << %(<td class="right"><strong>Total:</strong></td>)
-        html << %(<td class="right"><strong>#{total_from(activities)}</strong></td></tr>)
+        html << %(<td class="right"><strong>#{total_from(activities)}</strong></td>)
+        html << %(<td></td>)
+        html << %(</tr>)
       end
     end
 
