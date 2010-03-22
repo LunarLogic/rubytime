@@ -6,7 +6,7 @@ rescue LoadError
   Bundler.setup
 end
 
-Bundler.require :default, ENV['RACK_ENV'] || :production
+require 'merb-core'
 
 Merb::Config.setup(
   :merb_root   => ::File.expand_path(::File.dirname(__FILE__)),

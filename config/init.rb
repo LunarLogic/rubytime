@@ -1,3 +1,5 @@
+Bundler.require :default, ENV['RACK_ENV'] || ENV['MERB_ENV'] || :development
+
 use_orm :datamapper
 use_test :rspec
 use_template_engine :erb
