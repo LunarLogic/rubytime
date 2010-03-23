@@ -177,12 +177,11 @@ class User
   end
 
   def becomes(klass)
-    became = klass.new(attributes.merge(:type => klass))
+    became = klass.new
     self.instance_variables.each do |v|
-      unless became.respond_to?("#{v}=")
-        became.instance_variable_set(v, self.instance_variable_get(v))
-      end
+      became.instance_variable_set(v,self.instance_variable_get(v))
     end
+    became.type = klass
     became
   end
 
