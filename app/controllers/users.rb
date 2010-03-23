@@ -8,8 +8,8 @@ class Users < Application
   before :check_authorization, :only => [:edit, :update, :show, :settings]
 
   protect_fields_for :user, :in => [:update],
-    :always => [:class_name, :activities_count],
-    :admin => [:role_id, :client_id, :login, :active, :admin, :type]
+    :always => [:activities_count],
+    :admin => [:role_id, :client_id, :login, :active, :admin, :type, :class_name]
 
   def index
     @user = if params[:client_id]
@@ -53,7 +53,13 @@ class Users < Application
   end
 
   def update
-    if @user.update(params[:user]) || !@user.dirty?
+    class_name = params[:user].delete(:class_name)
+    klass = Object.const_get(class_name) if ['Employee', 'ClientUser'].include?(class_name)
+    @user.attributes = params[:user]
+    if klass && klass != @user.type
+      @user = @user.becomes(klass)
+    end
+    if @user.save || !@user.dirty?
       if current_user.is_admin?
         redirect url(:user, @user), :message => { :notice => "User has been updated" }
       else
