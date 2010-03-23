@@ -21,6 +21,7 @@ class Activity
   validates_present :activity_type_id,     :if => proc { |a| a.activity_type_required? }
   validates_with_method :activity_type_id, :method => :activity_type_must_be_assigned_to_project, :if => proc { |a| a.activity_type_required? and a.activity_type }
   validates_with_method :activity_custom_property_values, :method => :required_custom_properties_are_present
+  validates_with_method :activity_custom_property_values, :method => :custom_properties_are_valid
 
   belongs_to :project
   belongs_to :activity_type
@@ -171,13 +172,7 @@ class Activity
   after :save do
     activity_custom_property_values.all(:activity_custom_property_id.not => custom_properties.keys).each { |pv| pv.destroy }
     
-    custom_properties.each_pair do |custom_property_id, custom_property_value|
-      custom_property = ActivityCustomProperty.get(custom_property_id)
-      ActivityCustomPropertyValue.first_or_create(
-        :activity_custom_property_id => custom_property.id,
-        :activity_id => self.id
-      ).update_attributes({:value => custom_property_value})
-    end
+    records_from_custom_properties.each { |activity_custom_property_value| activity_custom_property_value.save }
   end
   
   before :destroy do
@@ -211,6 +206,30 @@ class Activity
       true
     else
       [false, "The following custom properties are required: " + required_custom_properties.map { |acp| acp.name }.join(', ')]
+    end
+  end
+  
+  def records_from_custom_properties
+    records = []
+    custom_properties.each_pair do |custom_property_id, custom_property_value|
+      activity_custom_property = ActivityCustomProperty.get(custom_property_id)
+      
+      activity_custom_property_value = 
+        activity_custom_property_values.first(:activity_custom_property_id => activity_custom_property.id) ||
+        ActivityCustomPropertyValue.new(:activity_custom_property_id => activity_custom_property.id, :activity_id => self.id)
+      
+      activity_custom_property_value.value = custom_property_value
+      records << activity_custom_property_value
+    end
+    records
+  end
+  
+  def custom_properties_are_valid
+    invalid_custom_property_values = records_from_custom_properties.select { |value| not value.valid? }
+    if invalid_custom_property_values.empty?
+      true
+    else
+      [false, "The following custom properties are invalid: " + invalid_custom_property_values.map { |v| v.activity_custom_property.name }.join(', ')]
     end
   end
   
