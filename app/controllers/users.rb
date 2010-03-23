@@ -1,11 +1,15 @@
 class Users < Application
   # provides :xml, :yaml, :js
   before :ensure_authenticated, :exclude => [:request_password, :reset_password]
-  before :ensure_admin, :only => [:new, :create, :destroy, :index]
+  before :ensure_admin, :only => [:new, :create, :edit, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
   before :load_users, :only => [:index, :create]
   before :load_clients_and_roles, :only => [:index, :create, :edit]
   before :check_authorization, :only => [:edit, :update, :show, :settings]
+
+  protect_fields_for :user, :in => [:update],
+    :always => [:class_name, :activities_count],
+    :admin => [:role_id, :client_id, :login, :active, :admin, :type]
 
   def index
     @user = Employee.new
@@ -36,7 +40,6 @@ class Users < Application
   def create
     class_name = params[:user].delete(:class_name)
     @user = (class_name == "Employee" ? Employee : ClientUser).new(params[:user])
-    #@user = User.new(params[:user])
     if @user.save
       redirect url(:user, @user)
     else
@@ -45,7 +48,6 @@ class Users < Application
   end
 
   def update
-    params[:user].delete(:class_name)
     if @user.update_attributes(params[:user]) || !@user.dirty?
       if current_user.is_admin?
         redirect url(:user, @user), :message => { :notice => "User has been updated" }
