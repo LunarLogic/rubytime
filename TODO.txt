@@ -1,24 +1,20 @@
 TODO before 3.3 release:
 
-* fixes
-  -> don't let user change his role
-  -> round results from rate calculations to 2 decimal digits
-
-* fix all critical bugs from Pivotal/Kanbanery
+* fix all major bugs from Pivotal
 
 * merge 3.2 branch
 
-* ask Wojtek or Kuba Obstarczyk to test it again
+* test it again
 
 * when there are no more critical bugs -> release 3.3
+
+* update iRubyTime and Plasmoid (?)
 
 =====
 
 After 3.3 (in any order):
 
 * convert CSS to LESS
-
-* upgrade jQuery to 1.4
 
 * migrate to Rails 3
 
