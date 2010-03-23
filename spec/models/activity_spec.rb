@@ -445,10 +445,6 @@ describe Activity do
     it { @activity.should have_errors_on(:activity_custom_property_values) }
   end
   
-  def self.custom_property_values_sum(activities, custom_property)
-    activities.inject(0) { |sum, activity| sum + (activity.custom_properties[custom_property.id] || 0) }
-  end
-  
   describe ".custom_property_values_sum" do
     before do
       @custom_property_AAA = ActivityCustomProperty.gen(:name => "AAA")
