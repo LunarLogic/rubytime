@@ -87,7 +87,7 @@ module Merb
       ActivityCustomProperty.all.each do |activity_custom_property|
         html << %(<p>)
         html << %(Total #{activity_custom_property.name}: )
-        html << %(#{Activity.custom_property_values_sum(activities_from(@activities, client), activity_custom_property)})
+        html << %(#{Activity.custom_property_values_sum(activities_from(activities, client, project, role), activity_custom_property)})
         html << %( #{activity_custom_property.unit})
         html << %(</p>)
       end
