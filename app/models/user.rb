@@ -2,10 +2,10 @@ class User
   include DataMapper::Resource
   
   property :id,                            Serial
-  property :name,                          String, :required => true, :unique => true
+  property :name,                          String, :required => true
   property :type,                          Discriminator, :index => true
   property :login,                         String, :required => true, :index => true, :format => /^[\w_\.-]{3,20}$/
-  property :email,                         String, :required => true, :unique => true, :format => :email_address
+  property :email,                         String, :required => true, :format => :email_address
   property :active,                        Boolean, :required => true, :default => true
   property :admin,                         Boolean, :required => true, :default => false
   property :role_id,                       Integer, :index => true
@@ -25,16 +25,20 @@ class User
 
   validates_length :password, :min => 6 , :if => :password_required?
   #validates_is_confirmed :password, :if => :password_required?
-  
-  validates_with_method :login, :method => :check_login_is_unique
-  
-  def check_login_is_unique
-    db_user = User.first(:login => self.login)
-    if db_user.blank? || db_user.id == self.id
-      true
-    else
-      [false, "An account has already be created with this login."]
-    end 
+
+  validates_with_method :login, :method => :validates_login_globally_unique
+  validates_with_method :name, :method => :validates_name_globally_unique
+  validates_with_method :email, :method => :validates_email_globally_unique
+
+  [:login, :name, :email].each do |attr|
+    define_method "validates_#{attr}_globally_unique" do
+      db_user = User.first(attr => self.send(attr))
+      if db_user.blank? || db_user.id == self.id
+        true
+      else
+        [false, "#{attr.to_s.capitalize} is already taken."]
+      end 
+    end
   end
 
   belongs_to :role # only for Employee
@@ -171,5 +175,14 @@ class User
   def has_activities_on?(date)
     activities.count(:date => date) > 0
   end
-  
+
+  def becomes(klass)
+    became = klass.new
+    self.instance_variables.each do |v|
+      became.instance_variable_set(v,self.instance_variable_get(v))
+    end
+    became.type = klass
+    became
+  end
+
 end

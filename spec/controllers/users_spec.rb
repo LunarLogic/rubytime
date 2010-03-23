@@ -153,6 +153,19 @@ describe Users do
       user.reload
       user.name.should_not == "Bob"
     end
+    
+    it "should allow admin to change client user into employee user" do
+       user = ClientUser.generate
+       block_should(change(user, :type)) do
+         response = as(:admin).dispatch_to(Users, :update, :id => user.id, :user => { :class_name => 'Employee', :role_id => Role.generate.id })
+         response.should redirect_to(url(:user, user))
+         user.reload
+       end
+       user.reload
+       user.type.should == Employee
+       user.role.should_not be_nil
+       user.client.should be_nil
+    end
   end
 
   describe "#destroy" do
