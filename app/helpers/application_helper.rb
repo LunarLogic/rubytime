@@ -116,7 +116,7 @@ module Merb
         html << %(<th class="right">#{image_tag("icons/clock.png", :alt => 'clock') if options[:show_header_icons]} Hours</th>)
         
         options[:custom_properties_to_show_in_columns].each do |custom_property|
-          html << %(<th class="right">#{custom_property.name}#{' (' + custom_property.unit + ')' if custom_property.unit}</th>)
+          html << %(<th class="right">#{custom_property.name_with_unit}</th>)
         end
         
         html << %(<th class="icons">)

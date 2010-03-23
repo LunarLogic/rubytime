@@ -13,6 +13,10 @@ class ActivityCustomProperty
   
   validates_is_unique :name
   
+  def name_with_unit
+    name + (unit.blank? ? "" : " (#{unit})")
+  end
+  
   def destroy_allowed?
     activity_custom_property_values.count == 0
   end
