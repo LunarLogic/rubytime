@@ -259,7 +259,7 @@ div.error h2 {
 .revision_info {
   width:960px;
   font-size:10px;
-  margin:0 auto;
+  margin:0 auto 5px;
   text-align:center;
   margin-top:10px;
 }

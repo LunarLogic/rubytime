@@ -48,6 +48,7 @@ gem "metric_fu", "1.1.5"
 gem "ParseTree", "3.0.4"
 
 gem "mongrel", "1.1.5"
+gem 'rack_revision_info'
 
 only :development do
   gem 'vlad', '2.0.0', :require_as => []
