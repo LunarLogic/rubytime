@@ -364,13 +364,6 @@ describe Activity do
     end
     
     context "when an activity type assigned" do
-      before { @activity = Activity.gen(:activity_type => nil) }
-      it "should return nil" do
-        @activity.breadcrumb_name.should be_nil
-      end
-    end
-    
-    context "when main activity type assigned" do
       before do 
         @activity_type = ActivityType.gen
         @activity_type.stub!(:breadcrumb_name => 'The breadcrumb name')
