@@ -24,6 +24,6 @@
 <% end %>
 
 <p>
-  <%= link_to 'Back to invoices', url(:invoices) %>
-  <%= link_to('Edit', resource(@invoice, :edit))if current_user.is_admin? %>
+  <%= link_to 'Back to invoices', url(:invoices, filter_hash) %>
+  <%= link_to('Edit', resource(@invoice, :edit, filter_hash))if current_user.is_admin? %>
 </p>

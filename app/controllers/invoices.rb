@@ -26,7 +26,7 @@ class Invoices < Application
       if request.xhr?
         @invoice.to_json
       else
-        redirect resource(@invoice), :message => { :notice => "Invoice has been updated" }
+        redirect resource(@invoice, filter_hash), :message => { :notice => "Invoice has been updated" }
       end
     else
       load_clients
@@ -47,7 +47,6 @@ class Invoices < Application
       end
     end
   end
-  
   
   def destroy
     if @invoice.destroy

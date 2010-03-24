@@ -52,10 +52,8 @@ module Merb
         sub_menu << { :title => "Pending", :path => url(:pending_invoices), :selected => params[:filter] == 'pending' }
       when 'activities'
         if current_user.is_employee?
-          sub_menu << { :title => "List", :path => resource(:activities), 
-                        :selected => action_name == 'index' }
-          sub_menu << { :title => "Calendar", :path => url(:user_calendar, current_user.id), 
-                        :selected => action_name == 'calendar' }
+          sub_menu << { :title => "List", :path => resource(:activities), :selected => action_name == 'index' }
+          sub_menu << { :title => "Calendar", :path => url(:user_calendar, current_user.id), :selected => action_name == 'calendar' }
         end
       end
       sub_menu
@@ -87,10 +85,16 @@ module Merb
     end
     
     def activities_table(activities, options={})
-      default_options = { :show_checkboxes => false, :show_users => true,
-                          :show_details_link => true, :show_edit_link => true,
-                          :show_delete_link => true, :show_exclude_from_invoice_link => false,
-                          :expanded => false, :show_date => true }
+      default_options = { 
+        :show_checkboxes => false, 
+        :show_users => true, 
+        :show_details_link => true, 
+        :show_edit_link => true,
+        :show_delete_link => true, 
+        :show_exclude_from_invoice_link => false, 
+        :expanded => false, 
+        :show_date => true
+      }
 
       options = default_options.merge(options)
 
