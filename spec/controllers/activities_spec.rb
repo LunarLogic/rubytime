@@ -223,7 +223,7 @@ describe Activities do
 
     it "should change activity ownership if current user is admin" do
       old_user = @activity.user
-      new_user = Employee.generate
+      new_user = Employee.generate(:role_id => old_user.role_id)
       as(:admin).dispatch_to(Activities, :update, :id => @activity.id, :activity => {
         :user_id => new_user.id
       })

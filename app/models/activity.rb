@@ -17,7 +17,7 @@ class Activity
   property :created_at,  DateTime
   
   validates_with_method :hours, :method => :validate_hours
-  validates_present :hourly_rate, :if => :new?, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
+  validates_present :hourly_rate, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
   belongs_to :user, :child_key => [:user_id]
