@@ -198,8 +198,8 @@ protected
       csv << %w(Client Project Role User Date Hours) + ActivityCustomProperty.all.map { |p| p.name_with_unit } + %w(Type SubType Comments)
       activities.each do |activity|
         csv << [activity.project.client.name, activity.project.name, activity.user.role.name, activity.user.name, 
-                activity.date, format("%.2f", activity.minutes / 60.0)] +
-                ActivityCustomProperty.all.map { |p| activity.custom_properties[p.id] } +
+                activity.date, format_number(activity.minutes / 60.0, :precision => 2)] +
+                ActivityCustomProperty.all.map { |p| format_number(activity.custom_properties[p.id]) } +
                [(activity.main_activity_type ? activity.main_activity_type.name : nil),
                 (activity.sub_activity_type ? activity.sub_activity_type.name : nil),
                 activity.comments.strip]
