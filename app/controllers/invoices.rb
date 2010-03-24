@@ -29,7 +29,9 @@ class Invoices < Application
         redirect resource(@invoice), :message => { :notice => "Invoice has been updated" }
       end
     else
-      render :edit, :status => 400, :layout => false
+      load_clients
+      
+      render :edit
     end
   end
   
