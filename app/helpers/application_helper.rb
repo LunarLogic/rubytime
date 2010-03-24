@@ -4,7 +4,11 @@ module Merb
       return "0" unless minutes
       format("%d:%.2d", minutes / 60, minutes % 60)
     end
-  
+
+    def site_url
+      Rubytime::CONFIG[:site_url]
+    end
+
     def main_menu_items 
       return [] unless current_user
       main_menu = []

@@ -23,16 +23,16 @@ describe FreeDays do
     end
   end
 
-  describe "#new" do
+  describe "#create" do
     it "should add new vacation day if date is correct" do
       employee = Employee.generate
-      controller = as(employee).dispatch_to(FreeDays, :new, :date => "2009-05-01", :user_id => employee.id)
+      controller = as(employee).dispatch_to(FreeDays, :create, :date => "2009-05-01", :user_id => employee.id)
       controller.should be_successful
     end
 
     it "should not add new vacation day if date is incorrect" do
       employee = Employee.generate
-      controller = as(employee).dispatch_to(FreeDays, :new, :date => "333333333333", :user_id => employee.id)
+      controller = as(employee).dispatch_to(FreeDays, :create, :date => "333333333333", :user_id => employee.id)
       controller.status.should == 400
     end
   end
@@ -40,7 +40,7 @@ describe FreeDays do
   describe "#delete" do
     it "should delete a vacation flag from free day" do
       employee = Employee.generate
-      controller = as(employee).dispatch_to(FreeDays, :new, :date => "2009-05-01", :user_id => employee.id)
+      controller = as(employee).dispatch_to(FreeDays, :create, :date => "2009-05-01", :user_id => employee.id)
       controller.should be_successful
 
       controller2 = as(employee).dispatch_to(FreeDays, :delete, :date => "2009-05-01", :user_id => employee.id)
@@ -51,7 +51,7 @@ describe FreeDays do
       employee = Employee.generate
       employee2 = Employee.generate
 
-      controller = as(employee).dispatch_to(FreeDays, :new, :date => "2009-05-01", :user_id => employee.id)
+      controller = as(employee).dispatch_to(FreeDays, :create, :date => "2009-05-01", :user_id => employee.id)
       controller.should be_successful
 
       controller2 = as(employee).dispatch_to(FreeDays, :delete, :date => "2009-06-01", :user_id => employee.id)
