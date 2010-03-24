@@ -192,5 +192,19 @@ module Merb
                                      :show_details_link => false, :show_edit_link => true, :show_delete_link => false,
                                      :show_project => true, :expanded => true, :show_date => false }.merge!(options))
     end
+    
+    def decimal_separator
+      current_user ? current_user.decimal_separator : Rubytime::DATE_FORMATS.first
+    end
+    
+    def format_number(number, options = {})
+      return if number.nil?
+      
+      if options.has_key?(:precision)
+        number.with_precision(decimal_separator, options)
+      else
+        number.with_delimiter(decimal_separator, options)
+      end
+    end
   end
 end # Merb

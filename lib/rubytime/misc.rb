@@ -11,6 +11,13 @@ module Rubytime
       r
     end
   end
+  
+  decimal_separator_formats = {
+    :dot   => { :number => { :delimiter => '', :separator => '.' } },
+    :comma => { :number => { :delimiter => '', :separator => ',' } }
+  }
+  
+  Numeric::Transformer.add_format(decimal_separator_formats)
 
   DATE_FORMAT_NAMES = [:european, :american]
   DATE_FORMATS = { :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" }, :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" } }
