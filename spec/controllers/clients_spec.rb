@@ -63,12 +63,22 @@ describe Clients do
       end
     end
   end
-
-  it "should update client and redirect to show" do
-    client = Client.generate
-    response = as(:admin).dispatch_to(Clients, :update, :id => client.id, :client => { :name => "new name"})
-    response.should redirect_to(resource(client))
-    client.reload.name.should == "new name"
+  
+  describe "#update" do
+    it "should update client and redirect to show" do
+      response = as(:admin).dispatch_to(Clients, :update, :id => @client.id, :client => { :name => "new name"})
+      response.should redirect_to(resource(@client))
+      @client.reload.name.should == "new name"
+    end
+    
+    it "should render edit with errors and not save objects when client is invalid" do
+      block_should_not(change(Client, :count)).and_not(change(ClientUser, :count)) do
+        as(:admin).dispatch_to(Clients, :update,
+          :id => @client.id,
+          :client => { :name => "", :email => "" }
+        ).should be_successful
+      end
+    end
   end
 
   describe "#destroy" do

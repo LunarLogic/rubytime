@@ -34,7 +34,7 @@ class Clients < Application
     if @client.update(params[:client]) || !@client.dirty?
       redirect resource(@client)
     else
-      raise BadRequest
+      render :edit
     end
   end
   
