@@ -151,8 +151,7 @@
   z-index: 999;
 }
 #add_activity legend, 
-#add_activity p, 
-#add_activity li {
+#add_activity p {
   color:#fff;
 }
 #add_activity li {
@@ -304,4 +303,11 @@ li.role strong {
 }
 .sections div {
   margin: 10px 0;
+}
+#errors {
+  color: #CF3333;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #CF3333;
 }

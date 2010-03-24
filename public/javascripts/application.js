@@ -192,7 +192,9 @@ var Application = {
     container.find("#close_activity_form").click(Application._closeActivityPopup);
 
     // set validation rules
-    container.find(".activity_form").validate({
+    var activityForm = container.find(".activity_form");
+    
+    activityForm.validate({
       rules: {
         "activity[hours]": {
           required: true,
@@ -208,15 +210,18 @@ var Application = {
     Application.initDatepickers(".activity_form .datepicker");
 
     // focus first blank field (hours)
-    container.find(".activity_form").focusFirstBlank();
+    activityForm.focusFirstBlank();
 
     // handle form submission
-    container.find(".activity_form").submit(function() {
+    activityForm.submit(function() {
       var form = $(this);
+      
       if (!form.valid()) {
         return false;
       }
 
+      var submit = container.find(".activity_form input[type=submit]");
+      
       $.ajax({
         url: form.url(),
         type: "POST",
@@ -233,16 +238,24 @@ var Application = {
           var json = $.parseJSON(xhr.responseText);
           var errors = json.errors;
           var html = $.errorsHtml(errors);
+          var errorsContainer = form.prev().first();
+          var errorElementId = 'errors';
+          
+          if (errorsContainer.attr('id') != errorElementId) {
+            errorsContainer = $('<div id="' + errorElementId + '">');
+            form.before(errorsContainer);
+          }
           
           html.children().last().addClass('last');
           
-          container.html(html);
+          errorsContainer.html(html);
           
-          Application._initActivityPopup(container);
+          submit.attr("disabled", null);
         }
       });
 
-      container.find(".activity_form input[type=submit]").attr("disabled", "true");
+      submit.attr("disabled", "true");
+      
       return false;
     });
   },

@@ -1,5 +1,3 @@
-<%= error_messages_for(@activity) %>
-
 <%= form_for @activity, :action => @activity.new? ? url(:activities) : resource(@activity), :class => "activity_form" do %>
   <fieldset>
     <% if @activity.new? %><legend>New activity</legend><% end %>
