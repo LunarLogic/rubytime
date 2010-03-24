@@ -19,6 +19,7 @@ class User
   property :remember_me_token_expiration,  DateTime
   property :remember_me_token,             String
   property :remind_by_email,               Boolean, :nullable => false, :default => false
+  property :decimal_separator,             Enum[*::Rubytime::DECIMAL_SEPARATORS], :nullable => false, :default => ::Rubytime::DECIMAL_SEPARATORS.first
 
   validates_length :name, :min => 3
 
