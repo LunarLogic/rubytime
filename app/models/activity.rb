@@ -216,7 +216,7 @@ class Activity
       
       activity_custom_property_value = 
         activity_custom_property_values.first(:activity_custom_property_id => activity_custom_property.id) ||
-        ActivityCustomPropertyValue.new(:activity_custom_property_id => activity_custom_property.id, :activity_id => self.id)
+        ActivityCustomPropertyValue.new(:activity_custom_property => activity_custom_property, :activity => self)
       
       activity_custom_property_value.value = custom_property_value
       records << activity_custom_property_value
@@ -225,7 +225,7 @@ class Activity
   end
   
   def custom_properties_are_valid
-    invalid_custom_property_values = records_from_custom_properties.select { |value| not value.valid? }
+    invalid_custom_property_values = records_from_custom_properties.select { |value| value.incorrect_value? }
     if invalid_custom_property_values.empty?
       true
     else

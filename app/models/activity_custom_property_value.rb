@@ -22,5 +22,9 @@ class ActivityCustomPropertyValue
     return nil if numeric_value.nil?
     numeric_value.to_i == numeric_value ? numeric_value.to_i : numeric_value.to_f
   end
+  
+  def incorrect_value?
+    not valid? and (errors.on(:value) or errors.on(:numeric_value))
+  end
 
 end
