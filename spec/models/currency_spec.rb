@@ -25,12 +25,14 @@ describe Currency do
 
   context "with :singular_name that has invalid format" do
     before do 
-      @currency = Currency.prepare :singular_name => '333,333'
+      @currency1 = Currency.prepare :singular_name => '333,333'
+      @currency2 = Currency.prepare :singular_name => '333'
+      @currency3 = Currency.prepare :singular_name => '...'
     end
 
     it "should not be valid" do
-      @currency.should_not be_valid
-      @currency.errors.on(:singular_name).should_not be_empty
+      [@currency1,@currency2,@currency3].each { |c| c.should_not be_valid }
+      [@currency1,@currency2,@currency3].each { |c| c.errors.on(:singular_name).should_not be_empty }
     end
   end
 
