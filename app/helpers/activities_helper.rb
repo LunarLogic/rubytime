@@ -37,10 +37,10 @@ module Merb
           html << link_to(image_tag("/images/icons/magnifier.png", :title => "Show details", :alt => "Details"), day_url(criteria),
             :class => "show_day")
         elsif !vacation_for_today
-          html << link_to(image_tag("/images/icons/calendar-day-off.png", :title => "Day off", :alt => "Day Off"), '#',
+          html << link_to(image_tag("/images/icons/working_day.png", :title => "Mark as day off", :alt => "Mark as day off"), '#',
             :class => "day_off", :id => "vacation-#{date}")
         elsif vacation_for_today
-          html << link_to(image_tag("/images/icons/working_day.png", :title => "Change to working day", :alt => 'Change to working day'), '#',
+          html << link_to(image_tag("/images/icons/calendar-day-off.png", :title => "Mark as working day", :alt => 'Mark as working day'), '#',
             :class => "working_day", :id => "vacation-#{date}")
         end
         if owner_type == "user" && current_user.can_add_activity? && owner.active?
