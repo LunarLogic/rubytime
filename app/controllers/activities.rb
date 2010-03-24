@@ -77,7 +77,11 @@ class Activities < Application
     if @activity.update(params[:activity])
       display(@activity)
     else
-      render :edit, :status => 400, :layout => false
+      if content_type == :json
+        display({:errors => @activity.errors.full_messages}, {:status => 400})
+      else
+        render :new, :status => 400, :layout => false
+      end
     end
   end
   

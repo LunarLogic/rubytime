@@ -309,10 +309,8 @@ describe Activity do
           @activity.stub!(:hourly_rate => nil)
         end
 
-        it "should set price to nil and save that" do
-          @activity.freeze_price!
-          @activity.reload
-          @activity.price.should be_nil
+        it "should raise an Exception" do
+          block_should(raise_error(Exception)) { @activity.freeze_price! }
         end
       end
     end
@@ -450,10 +448,9 @@ describe Activity do
   describe "existing record" do
     before { @activity = Activity.generate }
 
-    it "should be valid even when there is no corresponding hourly rate" do
+    it "should be invalid when there is no corresponding hourly rate" do
       @activity.stub! :hourly_rate => nil
-      @activity.should be_valid
-      @activity.errors.on(:hourly_rate).should be_nil
+      @activity.should_not be_valid
     end
   end
 

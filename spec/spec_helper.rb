@@ -49,6 +49,7 @@ DataMapper::Model.append_extensions(Rubytime::Test::Model)
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 Merb::Mailer.delivery_method = :test_send
 
+require Merb.root / 'spec/factory_patch'
 require Merb.root / 'spec/rubytime_factories'
 require Merb.root / "spec/rubytime_specs_helper"
 require Merb.root / "spec/rubytime_controller_helper"
