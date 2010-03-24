@@ -87,7 +87,7 @@ module Merb
       ActivityCustomProperty.all.each do |activity_custom_property|
         html << %(<p>)
         html << %(Total #{activity_custom_property.name}: )
-        html << %(#{Activity.custom_property_values_sum(activities_from(activities, client, project, role), activity_custom_property)})
+        html << %(#{format_number(Activity.custom_property_values_sum(activities_from(activities, client, project, role), activity_custom_property))})
         html << %( #{activity_custom_property.unit})
         html << %(</p>)
       end
@@ -133,7 +133,7 @@ module Merb
         html << %(<td class="right"><strong>Total:</strong></td>)
         html << %(<td class="right"><strong>#{total_from(activities)}</strong></td>)
         options[:custom_properties_to_show_in_columns].each do |custom_property|
-          html << %(<td class="right"><strong>#{Activity.custom_property_values_sum(activities, custom_property)}</strong></td>)
+          html << %(<td class="right"><strong>#{format_number(Activity.custom_property_values_sum(activities, custom_property))}</strong></td>)
         end
         html << %(<td></td>)
         html << %(</tr>)
@@ -151,7 +151,7 @@ module Merb
       row << %(<td class="right">#{activity.hours}</td>)
       
       options[:custom_properties_to_show_in_columns].each do |custom_property|
-        row << %(<td class="right">#{activity.custom_properties[custom_property.id]}</td>)
+        row << %(<td class="right">#{format_number(activity.custom_properties[custom_property.id])}</td>)
       end
 
       # icons
@@ -167,7 +167,7 @@ module Merb
       row << %(<p><strong>#{h(activity.breadcrumb_name)}</strong></p>) if activity.breadcrumb_name
       options[:custom_properties_to_show_in_expanded_view].each do |custom_property|
         if activity.custom_properties[custom_property.id]
-          row << %(<p><strong>#{custom_property.name}</strong>: #{activity.custom_properties[custom_property.id]} #{custom_property.unit}</p>)
+          row << %(<p><strong>#{custom_property.name}</strong>: #{format_number(activity.custom_properties[custom_property.id])} #{custom_property.unit}</p>)
         end
       end
       row << %(<p>#{h(activity.comments).gsub(/\n/, "<br/>")}</p></td></tr>)
