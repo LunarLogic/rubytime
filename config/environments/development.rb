@@ -13,5 +13,3 @@ Merb::Config.use { |c|
   # Or redirect logging into a file:
   # c[:log_file]  = Merb.root / "log" / "development.log"
 }
-
-$GIT_REVISION = `git --git-dir #{Merb.root}/.git show HEAD | head -n1 | awk '{print $2}'`.strip

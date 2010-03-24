@@ -20,8 +20,6 @@ var Application = {
     Application.initTables();
     Application.initFlash();
     Application.initDeleteLinks();
-    Application.initAddVacation();
-    Application.initRemoveVacation();
     $(document).bind(EVENTS.activity_added, function() {
       Application.notice('Activity added successfully.');
     });
@@ -93,45 +91,6 @@ var Application = {
     });
   },
 
-  initAddVacation: function() {
-    $(document).bind(EVENTS.vacation_added, function(e, memory) {
-      var params = "";
-      if (memory && memory.user_id) {
-        params += "user_id=" + memory.user_id;
-      }
-      if (memory && memory.date) {
-        params += "&date=" + memory.date;
-      }
-      // wyswietlic w error messages
-      $.ajax({
-        type: "POST",
-        url: "/free_days",
-        data: params
-      });
-      return false;
-    });
-  
-  },
-
-  initRemoveVacation: function() {
-    $(document).bind(EVENTS.vacation_removed, function(e, memory) {
-      var params = "";
-      if (memory && memory.user_id) {
-        params += "user_id=" + memory.user_id;
-      }
-      if (memory && memory.date) {
-        params += "&date=" + memory.date;
-      }
-      // wyswietlic w error messages
-      $.ajax({
-        type: "DELETE",
-        url: "/free_days/delete",
-        data: params
-      });
-      return false;
-    });
-  },
-  
   initTables: function() {
     $("table").zebra();
     $("table.list tr").mouseover(function() {
@@ -143,7 +102,10 @@ var Application = {
 
   initFlash: function() {
     $("#flash").click(Application._closeFlash);
-    setTimeout(Application._closeFlash, 5000);
+    if (Application._flashTimeout) {
+      clearTimeout(Application._flashTimeout);
+    }
+    Application._flashTimeout = setTimeout(Application._closeFlash, 5000);
   },
   
   initDeleteLinks: function() {
@@ -269,6 +231,7 @@ var Application = {
     $("#flash").slideUp(function() {
       $(this).removeClass("notice").removeClass("error").hide();
     });
+    Application._flashTimeout = null;
   },
 
   notice: function(message) {

@@ -325,25 +325,36 @@ var Activities = {
     $(".day_off").click(function() {
       var date = $(this).attr('id').match(/\d{4}-\d{2}-\d{2}/)[0];
       var user_id = Activities._calendarContainer().attr('id').match(/\d+/)[0];
-      var memo = {
-        date: date,
-        user_id: user_id
-      };
-      $(document).trigger(EVENTS.vacation_added, memo);
+      $.ajax({
+        type: "POST",
+        url: "/free_days",
+        data: {
+          date: date,
+          user_id: user_id
+        },
+        success: function() {
+          $(document).trigger(EVENTS.vacation_added);
+        }
+      });
       return false;
     });
 
     $(".working_day").click(function() {
       var date = $(this).attr('id').match(/\d{4}-\d{2}-\d{2}/)[0];
       var user_id = Activities._calendarContainer().attr('id').match(/\d+/)[0];
-      var memo = {
-        date: date,
-        user_id: user_id
-      };
-      $(document).trigger(EVENTS.vacation_removed, memo);
+      $.ajax({
+        type: "DELETE",
+        url: "/free_days/delete",
+        data: {
+          date: date,
+          user_id: user_id
+        },
+        success: function() {
+          $(document).trigger(EVENTS.vacation_removed);
+        }
+      });
       return false;
     });
-
 
     $("td.day").mouseover(function() {
       $(this).find(".activity_icons").show();
