@@ -35,6 +35,27 @@ describe FreeDays do
       controller = as(employee).dispatch_to(FreeDays, :create, :date => "333333333333", :user_id => employee.id)
       controller.status.should == 400
     end
+
+    it "should add free day for current user by default" do
+      employee = Employee.generate
+      response = as(employee).dispatch_to(FreeDays, :create, :date => '2009-05-01')
+      FreeDay.last.date.should == Date.parse('2009-05-01')
+      FreeDay.last.user.should == employee
+    end
+
+    it "should let admin add free days for other users" do
+      employee = Employee.generate
+      response = as(:admin).dispatch_to(FreeDays, :create, :date => '2009-05-01', :user_id => employee.id)
+      FreeDay.last.user.should == employee
+    end
+
+    it "should not let users add free days for other users" do
+      employee1 = Employee.generate
+      employee2 = Employee.generate
+      response = as(employee1).dispatch_to(FreeDays, :create, :date => '2009-05-01', :user_id => employee2.id)
+      FreeDay.last.user.should == employee1
+    end
+
   end
 
   describe "#delete" do
@@ -66,5 +87,32 @@ describe FreeDays do
       controller5 = as(employee).dispatch_to(FreeDays, :delete, :date => "2009-05-01", :user_id => employee.id)
       controller5.should be_successful
     end
+
+    describe "permissions" do
+      before :each do
+        @employee = Employee.generate
+        FreeDay.generate :date => '2009-05-01', :user => @employee
+      end
+
+      it "should remove free day for current user by default" do
+        block_should(change(@employee.free_days, :count).by(-1)) do
+          response = as(@employee).dispatch_to(FreeDays, :delete, :date => '2009-05-01')
+        end
+      end
+
+      it "should let admin remove free days for other users" do
+        block_should(change(@employee.free_days, :count).by(-1)) do
+          response = as(:admin).dispatch_to(FreeDays, :delete, :date => '2009-05-01', :user_id => @employee.id)
+        end
+      end
+
+      it "should not let users remove free days for other users" do
+        block_should_not(change(@employee.free_days, :count)) do
+          response = as(:employee).dispatch_to(FreeDays, :delete, :date => '2009-05-01', :user_id => @employee.id)
+        end
+      end
+    end
+
   end
+
 end
