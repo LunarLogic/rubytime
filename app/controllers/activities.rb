@@ -194,7 +194,7 @@ protected
   
   def convert_to_csv(activities)
     report = StringIO.new
-    CSV::Writer.generate(report, ',') do |csv|
+    CSV::Writer.generate(report, ';') do |csv|
       csv << %w(Client Project Role User Date Hours) + ActivityCustomProperty.all.map { |p| p.name_with_unit } + %w(Type SubType Comments)
       activities.each do |activity|
         csv << [activity.project.client.name, activity.project.name, activity.user.role.name, activity.user.name, 
