@@ -34,7 +34,7 @@ Merb::Router.prepare do
 
   match("/invoices/issued").to(:controller => "invoices", :action => "index", :filter => "issued").name(:issued_invoices)
   match("/invoices/pending").to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
-  
+  match('/signin').to(:controller => 'exceptions', :action => 'unauthenticated').name(:signin)
   resources :users, :collection => { "with_roles" => :get, "request_password" => :get,
       "reset_password" => :get, "authenticate" => :get, "with_activities" => :get } do
     resource :calendar

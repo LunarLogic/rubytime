@@ -3,7 +3,8 @@ class Activities < Application
   RECENT_ACTIVITIES_NUM = 3
 
   provides :json
-
+  
+  before :ensure_authenticated,       :exclude => :index
   before :ensure_not_client_user,     :only => [:new, :create]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,                 :only => [:new, :edit, :update, :create]
@@ -14,10 +15,11 @@ class Activities < Application
   before :check_deletable_by,         :only => [:destroy]
   before :check_if_valid_project,     :only => [:create]
 
-  protect_fields_for :activity, :in => [:create, :update],
-    :always => [:price_value, :price_currency_id, :invoice_id]
+  protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
+    redirect url(:signin) and return unless current_user
+    
     provides :csv
     params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)

@@ -3,7 +3,7 @@
 
 <h1>Welcome to Rubytime, please sign in:</h1>
 
-<%= error_messages_for session.authentication %>
+<%= error_messages_for session.authentication, :header => '' %>
 
 <form action="<%= slice_url(:merb_auth_slice_password, :perform_login) %>" method="post" accept-charset="utf-8">
   <input type="hidden" name="_method" value="PUT" />

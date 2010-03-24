@@ -12,14 +12,20 @@ begin
   # Plugins and the default strategies
   Merb::Authentication.user_class = User 
   
-  
   # Mixin the salted user mixin
   require 'merb-auth-more/mixins/salted_user'
   Merb::Authentication.user_class.class_eval{ include Merb::Authentication::Mixins::SaltedUser }
-    
+  
   # Setup the session serialization
   class Merb::Authentication
-
+    def authenticated?
+      if !!session[:user]
+        user.active || auth_error('Your account is not active')
+      else
+        auth_error('You need to login to perform this action')
+      end
+    end
+    
     def fetch_user(session_user_id)
       Merb::Authentication.user_class.get(session_user_id)
     end
@@ -27,8 +33,11 @@ begin
     def store_user(user)
       user.nil? ? user : user.id
     end
+    
+    def auth_error(message)
+      errors.add(nil, message) && false
+    end
   end
-  
 rescue
   Merb.logger.error <<-TEXT
   
@@ -41,4 +50,3 @@ rescue
 
     TEXT
 end
-
