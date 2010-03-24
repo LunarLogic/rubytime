@@ -110,7 +110,7 @@ class Users < Application
     token = params[:token] or raise BadRequest
     user = User.first(:password_reset_token => token) or raise NotFound
     if user.password_reset_token_exp < DateTime.now
-      redirect url(:password_reset), :message => { :notice => "Password reset token has expired" }
+      redirect resource(:users, :request_password), :message => { :notice => "Password reset token has expired" }
     else
       session.user = user
       user.clear_password_reset_token!

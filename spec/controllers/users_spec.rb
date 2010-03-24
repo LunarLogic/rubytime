@@ -258,13 +258,13 @@ describe Users do
 
     it "should redirect to settings page" do
       response = dispatch_to(Users, :reset_password, :token => @user.password_reset_token)
-      response.should redirect_to(url(:settings, @user.id))
+      response.should redirect_to(url(:settings_user, @user.id))
     end
 
     it 'should redirect to password_reset if a token has expired' do
       @user.update :password_reset_token_exp => (DateTime.now - 1.hour)
       response = dispatch_to(Users, :reset_password, :token => @user.password_reset_token)
-      response.should redirect_to(url(:password_reset))
+      response.should redirect_to(resource(:users, :request_password))
     end
   end
 
