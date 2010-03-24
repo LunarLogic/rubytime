@@ -22,28 +22,41 @@
 Merb.logger.info("Compiling routes...")
 
 Merb::Router.prepare do
-  match("/password_reset").to(:controller => "users", :action => "password_reset").name(:password_reset)
-  match("/users/:user_id/calendar").to(:controller => "activities", :action => "calendar")
-  match("/projects/:project_id/calendar").to(:controller => "activities", :action => "calendar")
-  match("/activities/day").to(:controller => "activities", :action => "day").name(:activities_for_day)
-  match("/free_days/:access_key(.:format)", :method => 'GET').to(:controller => "free_days", :action => "index").name(:free_days_index)
 
-  match("/users/:id/settings").to(:controller => "users", :action => "settings").name(:user_settings)
-  match("/users/request_password").to(:controller => "users", :action => "request_password").name(:request_password)
-  match("/users/reset_password").to(:controller => "users", :action => "reset_password").name(:reset_password)
+  match("/users/:user_id/calendar").
+    to(:controller => "activities", :action => "calendar")
+  match("/projects/:project_id/calendar").
+    to(:controller => "activities", :action => "calendar")
 
-  match("/invoices/issued").to(:controller => "invoices", :action => "index", :filter => "issued").name(:issued_invoices)
-  match("/invoices/pending").to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
-  match('/signin').to(:controller => 'exceptions', :action => 'unauthenticated').name(:signin)
-  resources :users, :collection => { "with_roles" => :get, "request_password" => :get,
-      "reset_password" => :get, "authenticate" => :get, "with_activities" => :get } do
+  match("/free_days/:access_key(.:format)", :method => 'GET').
+    to(:controller => "free_days", :action => "index").name(:free_days_index)
+
+  match("/invoices/issued").
+    to(:controller => "invoices", :action => "index", :filter => "issued").name(:issued_invoices)
+  match("/invoices/pending").
+    to(:controller => "invoices", :action => "index", :filter => "pending").name(:pending_invoices)
+
+  match('/signin').
+    to(:controller => 'exceptions', :action => 'unauthenticated').name(:signin)
+
+  resources :users,
+    :member => {
+      "settings" => :get
+    },
+    :collection => {
+      "with_roles" => :get,
+      "request_password" => :get,
+      "reset_password" => :get,
+      "authenticate" => :get,
+      "with_activities" => :get
+    } do
     resource :calendar
     resources :activities
   end
   
   resources :sessions
   resources :currencies
-  resources :activities
+  resources :activities, :collection => { "day" => :get }
   resources :clients
   resources :projects, :collection => { "for_clients" => :get } do
     resource :calendar
