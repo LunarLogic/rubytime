@@ -19,4 +19,8 @@ class Settings < Application
     end
   end
 
+  def number_of_columns
+    1
+  end
+
 end # Settings

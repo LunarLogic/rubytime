@@ -95,9 +95,11 @@ class Users < Application
       user = User.first(:email => params[:email])
       if user
         user.generate_password_reset_token
-        redirect url(:login), :message => { :notice => "Email with password reset link has been sent to #{params[:email]}" }
+        redirect url(:login),
+          :message => { :notice => "Email with password reset link has been sent to #{params[:email]}" }
       else
-        redirect url(:request_password), :message => { :error => "Couldn't find user with email #{params[:email]}" }
+        redirect resource(:users, :request_password),
+          :message => { :error => "Couldn't find user with email #{params[:email]}" }
       end
     else
       render
@@ -112,7 +114,7 @@ class Users < Application
     else
       session.user = user
       user.clear_password_reset_token!
-      redirect url(:settings, user.id), :message => { :notice => "Please set your password" }
+      redirect url(:settings_user, user.id), :message => { :notice => "Please set your password" }
     end
   end
   

@@ -104,8 +104,8 @@ var Application = {
       }
       // wyswietlic w error messages
       $.ajax({
-        type: "GET",
-        url: "/free_days/new",
+        type: "POST",
+        url: "/free_days",
         data: params
       });
       return false;
@@ -124,7 +124,7 @@ var Application = {
       }
       // wyswietlic w error messages
       $.ajax({
-        type: "GET",
+        type: "DELETE",
         url: "/free_days/delete",
         data: params
       });

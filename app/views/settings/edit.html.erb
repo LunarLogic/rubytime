@@ -17,7 +17,7 @@
 <h1>Security</h1>  
   
 <h3>Free days iCal feed:</h3>
-<p><%= Rubytime::CONFIG[:site_url] + url(:free_days_index, :access_key => @setting.free_days_access_key, :format => :ics) %></p>
+<p><%= site_url + url(:free_days_index, :access_key => @setting.free_days_access_key, :format => :ics) %></p>
 
 <%= form_for(@setting, :action => resource(:settings), :id => "settings_form") do %>
   <fieldset>

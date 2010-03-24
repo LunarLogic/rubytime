@@ -7,6 +7,8 @@ config/rcov_stats.yml
 # regenerable
 coverage/*
 spec/controllers/log/*
+public/javascripts/base.js
+public/stylesheets/base.css
 
 # logs
 log/*
