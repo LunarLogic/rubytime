@@ -13,8 +13,19 @@ describe Currency do
 
   context "with :singular_name that already exists" do
     before do 
-      @original_currency = Currency.generate :singular_name => 'this singular name is now taken'
+      @original_currency = Currency.generate
       @currency = Currency.prepare :singular_name => @original_currency.singular_name
+    end
+
+    it "should not be valid" do
+      @currency.should_not be_valid
+      @currency.errors.on(:singular_name).should_not be_empty
+    end
+  end
+
+  context "with :singular_name that has invalid format" do
+    before do 
+      @currency = Currency.prepare :singular_name => '333,333'
     end
 
     it "should not be valid" do
@@ -34,8 +45,19 @@ describe Currency do
 
   context "with :plural_name that already exists" do
     before do 
-      @original_currency = Currency.generate(:plural_name => 'this plural name is now taken')
+      @original_currency = Currency.generate
       @currency = Currency.prepare(:plural_name => @original_currency.plural_name)
+    end
+
+    it "should not be valid" do
+      @currency.should_not be_valid
+      @currency.errors.on(:plural_name).should_not be_empty
+    end
+  end
+
+  context "with :plural_name that has invalid format" do
+    before do 
+      @currency = Currency.prepare :plural_name => '333,333'
     end
 
     it "should not be valid" do
