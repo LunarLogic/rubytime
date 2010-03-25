@@ -79,7 +79,7 @@ Factory.define(:hourly_rate_log, :class => HourlyRateLog) do |hrl|
 end
 
 Factory.define(:currency, :class => Currency) do |c|
-  c.custom_sequence(:singular_name, 'aaaa') { |n| "currency_#{n}" }
-  c.custom_sequence(:plural_name, 'aaaa') { |n| "currency_#{n}s" }
+  c.custom_sequence(:singular_name, 'aaaa') { |n| "currency #{n}" }
+  c.custom_sequence(:plural_name, 'aaaa') { |n| "currency #{n}s" }
   c.prefix "P"
 end

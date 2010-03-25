@@ -23,16 +23,27 @@ describe Currency do
     end
   end
 
-  context "with :singular_name that has invalid format" do
+  context "with :singular_name" do
     before do 
-      @currency1 = Currency.prepare :singular_name => '333,333'
-      @currency2 = Currency.prepare :singular_name => '333'
-      @currency3 = Currency.prepare :singular_name => '...'
+      @valid_currencies = ["Zaïre","Złoty","Nuevo Peso"]
+      @invalid_currencies = ["0", "333,333", "_", "."]
+    end
+
+    it "should be valid" do
+      @valid_currencies.each do |c|
+        @currency = Currency.prepare(:singular_name => c)
+        @currency.should be_valid
+        @currency.errors.should be_empty
+      end
     end
 
     it "should not be valid" do
-      [@currency1,@currency2,@currency3].each { |c| c.should_not be_valid }
-      [@currency1,@currency2,@currency3].each { |c| c.errors.on(:singular_name).should_not be_empty }
+      @invalid_currencies.each do |c|
+        @currency = Currency.prepare(:singular_name => c)
+                p @currency
+        @currency.should_not be_valid
+        @currency.errors.on(:singular_name).should_not be_empty
+      end
     end
   end
 
@@ -57,14 +68,26 @@ describe Currency do
     end
   end
 
-  context "with :plural_name that has invalid format" do
+  context "with :plural_name" do
     before do 
-      @currency = Currency.prepare :plural_name => '333,333'
+      @valid_currencies = ["Zaïre","Złoty","Nuevo Peso"]
+      @invalid_currencies = ["0", "333,333", "_", "."]
+    end
+
+    it "should be valid" do
+      @valid_currencies.each do |c|
+        @currency = Currency.prepare(:plural_name => c)
+        @currency.should be_valid
+        @currency.errors.should be_empty
+      end
     end
 
     it "should not be valid" do
-      @currency.should_not be_valid
-      @currency.errors.on(:plural_name).should_not be_empty
+      @invalid_currencies.each do |c|
+        @currency = Currency.prepare(:plural_name => c)
+        @currency.should_not be_valid
+        @currency.errors.on(:plural_name).should_not be_empty
+      end
     end
   end
 
