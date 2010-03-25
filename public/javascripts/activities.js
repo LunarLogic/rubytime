@@ -201,7 +201,7 @@ var Activities = {
       for (var i = 0; i < json.length; i++) {
         options += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
       }
-      $("p." + group + ":not(:first)").remove();
+      $("p." + group + "select:not(:first)").remove();
       $("p." + group + " select").html(options);
       Activities._updateIcons(group);
     });
