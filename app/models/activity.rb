@@ -142,7 +142,7 @@ class Activity
     self.user == user || user.is_admin?
   end
 
-  def notify_project_managers_about_saving(kind_of_change)
+  def notify_project_managers(kind_of_change)
     Employee.managers.each do |project_manager|
       m = UserMailer.new(:activity => self, :kind_of_change => kind_of_change, :project_manager => project_manager)
       m.dispatch_and_deliver(:timesheet_changes_notifier,
@@ -152,9 +152,8 @@ class Activity
     end
   end
 
-  # FIXME: wtf, double underscores?
-  def notify_project_managers_about_saving__if_enabled(kind_of_change)
-    notify_project_managers_about_saving(kind_of_change) if Setting.enable_notifications
+  def notify_project_managers_if_enabled(kind_of_change)
+    notify_project_managers(kind_of_change) if Setting.enable_notifications
   end
   
   protected

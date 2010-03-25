@@ -164,7 +164,7 @@ describe Activity do
     activity.should_not be_deletable_by(other)
   end
 
-  describe "#notify_project_managers_about_saving" do
+  describe "#notify_project_managers" do
     it "should send emails to project managers" do
       @activity = Activity.generate
       manager_role = Role.first_or_generate :name => 'Project Manager'
@@ -172,7 +172,7 @@ describe Activity do
       managers = Employee.managers.all
 
       block_should change(Merb::Mailer.deliveries, :size).by(managers.length) do
-        @activity.notify_project_managers_about_saving("updated")
+        @activity.notify_project_managers(:updated)
       end
 
       included_emails = Merb::Mailer.deliveries.last(managers.length).map(&:to).flatten
@@ -181,7 +181,7 @@ describe Activity do
     end
   end
 
-  describe "#notify_project_managers_about_saving__if_enabled method" do
+  describe "#notify_project_managers_if_enabled method" do
     before do
       @activity = Activity.generate
       @kind_of_change = "updated"
@@ -189,17 +189,17 @@ describe Activity do
 
     context "with notifications enabled" do
       before { Setting.get.update :enable_notifications => true }
-      it "should call :notify_project_managers_about_saving" do
-        @activity.should_receive(:notify_project_managers_about_saving).with(@kind_of_change)
-        @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)
+      it "should call :notify_project_managers" do
+        @activity.should_receive(:notify_project_managers).with(@kind_of_change)
+        @activity.notify_project_managers_if_enabled(@kind_of_change)
       end
     end
 
     context "with notifications disabled" do
       before { Setting.get.update :enable_notifications => false }
-      it "should not call :notify_project_managers_about_saving" do
-        @activity.should_not_receive(:notify_project_managers_about_saving).with(@kind_of_change)
-        @activity.notify_project_managers_about_saving__if_enabled(@kind_of_change)
+      it "should not call :notify_project_managers" do
+        @activity.should_not_receive(:notify_project_managers).with(@kind_of_change)
+        @activity.notify_project_managers_if_enabled(@kind_of_change)
       end
     end
   end
@@ -210,8 +210,8 @@ describe Activity do
     context "if activity date is more than a day ago" do
       before { @activity.date = Date.today - 5 }
 
-      it "should call :notify_project_managers_about_saving__if_enabled with 'created' argument" do
-        @activity.should_receive(:notify_project_managers_about_saving__if_enabled).with('created')
+      it "should call :notify_project_managers_if_enabled with 'created' argument" do
+        @activity.should_receive(:notify_project_managers_if_enabled).with(:created)
         @activity.save
       end
     end
@@ -219,8 +219,8 @@ describe Activity do
     context "if activity date is less than a day ago" do
       before { @activity.date = Date.today }
 
-      it "should not call :notify_project_managers_about_saving__if_enabled" do
-        @activity.should_not_receive(:notify_project_managers_about_saving__if_enabled)
+      it "should not call :notify_project_managers_if_enabled" do
+        @activity.should_not_receive(:notify_project_managers_if_enabled)
         @activity.save
       end
     end
@@ -232,8 +232,8 @@ describe Activity do
     context "if activity date is more than a day ago" do
       before { @activity.date = Date.today - 5 }
 
-      it "should call :notify_project_managers_about_saving__if_enabled with 'updated' argument" do
-        @activity.should_receive(:notify_project_managers_about_saving__if_enabled).with('updated')
+      it "should call :notify_project_managers_if_enabled with 'updated' argument" do
+        @activity.should_receive(:notify_project_managers_if_enabled).with(:updated)
         @activity.save
       end
     end
@@ -241,8 +241,8 @@ describe Activity do
     context "if activity date is less than a day ago" do
       before { @activity.date = Date.today }
 
-      it "should not call :notify_project_managers_about_saving__if_enabled" do
-        @activity.should_not_receive(:notify_project_managers_about_saving__if_enabled)
+      it "should not call :notify_project_managers_if_enabled" do
+        @activity.should_not_receive(:notify_project_managers_if_enabled)
         @activity.save
       end
     end
