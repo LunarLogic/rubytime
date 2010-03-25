@@ -17,6 +17,20 @@ class Currencies < Application
     end
   end
 
+  def edit
+    @currency = Currency.get(params[:id]) or raise NotFound
+    render
+  end
+
+  def update
+    @currency = Currency.get(params[:id]) or raise NotFound
+    if @currency.update(params[:currency]) || !@currency.dirty?
+      redirect resource(:currencies)
+    else
+      render :edit
+    end
+  end
+
   def destroy    
     if @currency.destroy
       render_success
@@ -24,8 +38,10 @@ class Currencies < Application
       render_failure "Currency is in use and cannot be deleted."
     end
   end
-  
-  protected
+
+
+  private
+
   def load_currencies
     @currencies = Currency.all
   end

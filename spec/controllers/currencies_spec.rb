@@ -69,6 +69,25 @@ describe Currencies do
     end
   end
 
+  describe "#edit" do
+    it "should show currency edit form" do
+      currency = Currency.generate
+      as(:admin).dispatch_to(Currencies, :edit, :id => currency.id).should be_successful
+    end
+  end
+
+  describe "#update" do
+    it "should update the currency" do
+      currency = Currency.generate :plural_name => 'Gold coins'
+      response = as(:admin).dispatch_to(Currencies, :update, :id => currency.id, :currency => {
+        :plural_name => 'Silver coins'
+      })
+
+      response.should redirect_to(resource(:currencies))
+      Currency.get(currency.id).plural_name.should == 'Silver coins'
+    end
+  end
+
   describe "#destroy" do
 
     it "should look for the record of given id" do

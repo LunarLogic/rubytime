@@ -1,0 +1,20 @@
+<%= error_messages_for(@currency) %>
+<%= form_for @currency, :action => resource(@currency.id ? @currency : :currencies), :id => "currency_form" do %>
+  <fieldset>
+    <p>
+      <%= text_field :singular_name, :label => "Singular name" %>
+    </p>
+    <p>
+      <%= text_field :plural_name, :label => "Plural name" %>
+    </p>
+    <p>
+      <%= text_field :prefix, :label => "Prefix" %>
+    </p>
+    <p>
+      <%= text_field :suffix, :label => "Suffix" %>
+    </p>
+    <p class="buttons">
+      <%= submit(submit_name, :class => "button") %>
+    </p>
+  </fieldset>
+<% end =%>

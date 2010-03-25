@@ -11,6 +11,7 @@
     <th>Prefix</th>
     <th>Suffix</th>
     <th>Example</th>
+    <th class="icons"></th>
   </tr>
   <% @currencies.each do |currency| %>
     <tr>
@@ -20,6 +21,7 @@
       <td><%= currency.suffix %></td>
       <td><%= currency.render(12345.67) %></td>
       <td class="icons">
+        <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "Edit"), resource(currency, :edit) %>
         <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(currency), :class => "delete_row" %>
       </td>
     </tr>
