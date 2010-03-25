@@ -194,7 +194,7 @@ module Merb
     end
     
     def decimal_separator
-      current_user ? current_user.decimal_separator : Rubytime::DATE_FORMATS.first
+      current_user ? current_user.decimal_separator : Rubytime::DECIMAL_SEPARATORS.first
     end
     
     def format_number(number, options = {})
