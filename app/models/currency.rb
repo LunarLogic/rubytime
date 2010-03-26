@@ -26,7 +26,7 @@ class Currency
       if self.send(attr)=~ /^[\w ]*$/ && self.send(attr) !~ /[\d_]/
         true
       else
-        [false, "#{attr.to_s.capitalize} has an invalid format."]
+        [false, "#{attr.to_s.gsub(/_/, ' ').capitalize} has an invalid format."]
       end 
     end
   end
