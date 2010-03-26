@@ -218,6 +218,9 @@ div.error h2 {
   font-weight:900;
   color:#880000;
 }
+div.error li {
+  margin-bottom: 5px;
+}
 #activities_calendar #primary {
   width:100%;
 }
