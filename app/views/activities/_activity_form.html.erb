@@ -1,3 +1,5 @@
+<div id="errors" style="display:none"></div>
+
 <%= form_for @activity, :action => @activity.new? ? url(:activities) : resource(@activity), :class => "activity_form" do %>
   <fieldset>
     <% if @activity.new? %><legend>New activity</legend><% end %>

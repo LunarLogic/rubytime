@@ -183,6 +183,10 @@ var Application = {
       }
 
       var submit = container.find(".activity_form input[type=submit]");
+      var errorsContainer = container.find('#errors');
+      
+      errorsContainer.hide();
+      
       
       $.ajax({
         url: form.url(),
@@ -200,17 +204,11 @@ var Application = {
           var json = $.parseJSON(xhr.responseText);
           var errors = json.errors;
           var html = $.errorsHtml(errors);
-          var errorsContainer = form.prev().first();
-          var errorElementId = 'errors';
-          
-          if (errorsContainer.attr('id') != errorElementId) {
-            errorsContainer = $('<div id="' + errorElementId + '">');
-            form.before(errorsContainer);
-          }
           
           html.children().last().addClass('last');
           
           errorsContainer.html(html);
+          errorsContainer.show();
           
           submit.attr("disabled", null);
         }
