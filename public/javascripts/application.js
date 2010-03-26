@@ -8,7 +8,7 @@ var EVENTS = {
 };
 
 function hoursFormat(value, element, params) {
-  return this.optional(element) || (/^\d+([\.,]\d+|:[0-5]\d)?$/).test(value);
+  return this.optional(element) || (/^\d+([\.,]\d+|:[0-5]\d|[hm]|[\.,]\d+h)?$/).test(value);
 }
 
 var Application = {

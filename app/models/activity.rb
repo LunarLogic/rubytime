@@ -1,6 +1,6 @@
 class Activity
   # TODO: move to a custom DM type
-  HOURS_REGEX = /^\d{1,2}([\.,]\d{1}|:[0-5]\d)?$/
+  HOURS_REGEX = /^\d{1,2}([\.,]\d{1,2}|:[0-5]\d|[hm]|[\.,]\d{1,2}h)?$/
 
   include DataMapper::Resource
   
@@ -70,6 +70,10 @@ class Activity
       if time.index(':')
         h, m = time.split(/:/)
         self.minutes = h.to_i * 60 + m.to_i
+      elsif time.index('h')
+        self.minutes = (time.gsub(/,/, '.').to_f * 60).to_i
+      elsif time.index('m')
+        self.minutes = time.to_i
       else
         self.minutes = time.gsub(/,/, '.').to_f * 60
       end
