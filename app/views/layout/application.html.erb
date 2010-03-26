@@ -21,7 +21,7 @@
             <img src="/images/logo.png" alt="Rubytime" title="Rubytime, a simple time tracking application"/>
           </a>
         </h1>
-        <% if session.authenticated? -%>
+        <% if session.authenticated? && params[:controller] != 'exceptions' -%>
         <dl id="userinfo">
           <%= partial 'layout/session_info' %>
         </dl>
