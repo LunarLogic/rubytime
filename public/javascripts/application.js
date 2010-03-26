@@ -8,7 +8,7 @@ var EVENTS = {
 };
 
 function hoursFormat(value, element, params) {
-  return this.optional(element) || (/^\d+([\.,]\d+|:[0-5]\d|[hm]|[\.,]\d+h)?$/).test(value);
+  return this.optional(element) || (/^(\d+([\.,]\d+h?|:[0-5]\d|[hm])?|[\.,]\d{1,2}h?)$/).test(value);
 }
 
 var Application = {
@@ -49,7 +49,7 @@ var Application = {
   },
   
   setupValidator: function() {
-    $.validator.addMethod('hours', hoursFormat, "Please enter hours in format like 3:45 or 2,5.");
+    $.validator.addMethod('hours', hoursFormat, "Please enter hours in a correct format.");
   },
 
   initDatepickers: function(selector) {

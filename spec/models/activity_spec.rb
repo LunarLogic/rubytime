@@ -55,7 +55,9 @@ describe Activity do
         '0,5h'   => 30,
         '7.5h'   => 7.5 * 60,
         '1.25h'  => 75,
-        '40m'   => 40
+        '40m'   => 40,
+        '.5h'   => 0.5 * 60,
+        '.75'   => 0.75 * 60
       }
 
       tests.each do |entry, result|
