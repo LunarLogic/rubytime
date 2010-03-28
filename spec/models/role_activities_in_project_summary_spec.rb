@@ -24,13 +24,14 @@ describe RoleActivitiesInProjectSummary do
 
   context "with some activities" do
     before do
-      @user = mock('user', :role => mock('role'))
+      @role = mock('role')
+      @user = mock('user', :role => @role)
       @summary = RoleActivitiesInProjectSummary.new(@user.role, [
-        mock('activity', :user => @user, :duration => 1.hour,              :price => Money.new(20, @euro)),
-        mock('activity', :user => @user, :duration => 1.hour + 20.minutes, :price => nil),
-        mock('activity', :user => @user, :duration =>          15.minutes, :price => Money.new( 7, @dollar)),
-        mock('activity', :user => @user, :duration =>          45.minutes, :price => nil),
-        mock('activity', :user => @user, :duration =>           5.minutes, :price => Money.new(11, @euro))
+        mock('activity', :role_for_date => @role, :duration => 1.hour,              :price => Money.new(20, @euro)),
+        mock('activity', :role_for_date => @role, :duration => 1.hour + 20.minutes, :price => nil),
+        mock('activity', :role_for_date => @role, :duration =>          15.minutes, :price => Money.new( 7, @dollar)),
+        mock('activity', :role_for_date => @role, :duration =>          45.minutes, :price => nil),
+        mock('activity', :role_for_date => @role, :duration =>           5.minutes, :price => Money.new(11, @euro))
       ])
     end
 
@@ -45,12 +46,12 @@ describe RoleActivitiesInProjectSummary do
 
   describe "#<<" do
     before do
-      @user = mock('user', :role => mock('role'))
-      @summary = RoleActivitiesInProjectSummary.new(@user.role, [])
+      @role = mock('role')
+      @summary = RoleActivitiesInProjectSummary.new(@role, [])
     end
 
     context "if called with activity of proper role" do
-      before { @summary << mock('activity', :user => @user, :duration => 1.hour, :price => nil) }
+      before { @summary << mock('activity', :role_for_date => @role, :duration => 1.hour, :price => nil) }
       it "should add activity" do
         @summary.non_billable_time.should == 1.hour
       end
@@ -60,7 +61,7 @@ describe RoleActivitiesInProjectSummary do
       it "should add activity" do
         block_should(raise_error(ArgumentError)) do
           @summary << mock('activity',
-            :user => mock('another user', :role => mock('another role')),
+            :role_for_date => mock('another role'),
             :duration => 1.hour,
             :price => nil
           )
