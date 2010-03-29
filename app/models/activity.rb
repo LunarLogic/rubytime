@@ -1,6 +1,6 @@
 class Activity
   # TODO: move to a custom DM type
-  HOURS_REGEX = /^\d{1,2}([\.,]\d{1}|:[0-5]\d)?$/
+  HOURS_REGEX = /^(\d{1,2}([\.,]\d{1,2}h?|:[0-5]\d|[hm])?|[\.,]\d{1,2}h?)$/
 
   include DataMapper::Resource
   
@@ -23,6 +23,12 @@ class Activity
   belongs_to :user, :child_key => [:user_id]
   belongs_to :invoice
   belongs_to :price_currency, :model => Currency, :child_key => [:price_currency_id]
+
+  #Returns the right user version for activity date
+  def role_for_date
+    user_or_version = user.version(self.date)
+    user_or_version && user_or_version.role || user.role
+  end
   
   # Returns n recent activities
   def self.recent(n_)
@@ -70,6 +76,10 @@ class Activity
       if time.index(':')
         h, m = time.split(/:/)
         self.minutes = h.to_i * 60 + m.to_i
+      elsif time.index('h')
+        self.minutes = (time.gsub(/,/, '.').to_f * 60).to_i
+      elsif time.index('m')
+        self.minutes = time.to_i
       else
         self.minutes = time.gsub(/,/, '.').to_f * 60
       end

@@ -48,7 +48,16 @@ describe Activity do
         ' 8.5' => 8.5 * 60,
         ' 8.9' => 8.9 * 60,
         '9,5'  => 9 * 60 + 30,
-        24     => 24 * 60
+        '9.25'  => 9 * 60 + 15,
+        24     => 24 * 60,
+        '5h'   => 5 * 60,
+        '0.5h'   => 30,
+        '0,5h'   => 30,
+        '7.5h'   => 7.5 * 60,
+        '1.25h'  => 75,
+        '40m'   => 40,
+        '.5h'   => 0.5 * 60,
+        '.75'   => 0.75 * 60
       }
 
       tests.each do |entry, result|
@@ -58,7 +67,7 @@ describe Activity do
     end
 
     it "should set an error if incorrect hours value is set" do
-      tests = [25, '24:01', '1:80', 'jola']
+      tests = [25, '24:01', '1:80', 'jola', '5h30', '5:30h', '1.5m', '1000m']
       tests.each do |entry|
         a = Activity.new :hours => entry
         a.should_not be_valid

@@ -293,7 +293,7 @@ describe Employee do
     it "should return nested tables dates -> projects -> activities" do
       @proj1 = Project.generate :name => 'BBB'
       @proj2 = Project.generate :name => 'AAA'
-
+      
       @activity1 = Activity.generate :user => @user, :project => @proj1, :date => date('2009-08-10')
       @activity2 = Activity.generate :user => @user, :project => @proj2, :date => date('2009-08-12')
       @activity3 = Activity.generate :user => @user, :project => @proj1, :date => date('2009-08-12')
@@ -353,6 +353,26 @@ describe Employee do
         before { @employee.role = Role.new(:can_manage_financial_data => false) }
         it { @employee.can_manage_financial_data?.should == false }
       end
+    end
+  end
+
+  describe "saving user versions" do
+
+    it "should save user version on update" do
+       @employee = Employee.generate
+       block_should(change(UserVersion, :count).by(1)) do
+         @employee.update(:name => 'new name')
+       end
+    end
+
+    it "should return current user object if no versions exist and date > created_at" do
+      @employee = Employee.generate
+      @employee.version(DateTime.now).should == @employee
+    end
+
+    it "should return nil if specified date > created_at" do
+      @employee = Employee.generate
+      @employee.version(DateTime.now - 10).should be_nil
     end
   end
 
