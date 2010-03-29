@@ -11,7 +11,6 @@ class User
   property :role_id,                       Integer, :index => true
   property :client_id,                     Integer, :index => true
   property :created_at,                    DateTime
-  property :modified_at,                   DateTime #not updated_at on purpose
   property :password_reset_token,          String
   property :password_reset_token_exp,      DateTime
   property :date_format,                   Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :required => true
@@ -47,7 +46,7 @@ class User
   
   has n, :activities, :order => [:created_at.desc]
   has n, :projects, :through => :activities
-  has n, :versions, :model => UserVersion, :child_key => :id
+
   has n, :free_days
   
   def self.active
@@ -186,18 +185,6 @@ class User
     end
     became.type = klass
     became
-  end
-
-  def pending_version_attributes
-    @pending_version_attributes ||= {}
-  end
-
-  def version(date)
-    #this conversion allows to return version as of this day
-    date_as_dt =  DateTime.new(date.year, date.month, date.day, 23, 59, 59)
-    return nil if date_as_dt < created_at
-    return self if modified_at <= date_as_dt
-    versions.first(:modified_at.lte => date_as_dt, :order => :version_id.desc) || self
   end
 
 end
