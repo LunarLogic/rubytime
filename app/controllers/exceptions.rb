@@ -23,10 +23,10 @@ class Exceptions < Merb::Controller
   end
   
   def unauthenticated
-    if content_type == :html
-      render :template => "../../slices/merb-auth-slice-password/app/views/exceptions/unauthenticated"
+    if request.ajax?
+      "Permission denied"
     else
-      return ""
+      render :template => "../../slices/merb-auth-slice-password/app/views/exceptions/unauthenticated"
     end
   end
   

@@ -18,7 +18,7 @@ class Activities < Application
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
-    return redirect url(:signin) unless current_user
+    return redirect(url(:signin)) unless session.authenticated?
     
     provides :csv
     params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
