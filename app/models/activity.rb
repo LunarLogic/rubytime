@@ -215,7 +215,17 @@ class Activity
       activity_custom_property = ActivityCustomProperty.get(custom_property_id)
       
       activity_custom_property_value = 
-        activity_custom_property_values.first(:activity_custom_property_id => activity_custom_property.id) ||
+        # TODO: the problematic sentence shown below produces wrong SQL while updating the activity custom property values from controller.
+        # It receives activity_custom_property_values of all of user's activites instead of 'self' one. Why is that?
+        #
+        # The problematic code:
+        # activity_custom_property_values.first(:activity_custom_property_id => activity_custom_property.id) ||
+        #
+        # The code that works:
+        # ActivityCustomPropertyValue.first(:activity_custom_property_id => activity_custom_property.id, :activity_id => self.id) ||
+        #
+        # Thank you for your attention ;-)
+        ActivityCustomPropertyValue.first(:activity_custom_property_id => activity_custom_property.id, :activity_id => self.id) ||
         ActivityCustomPropertyValue.new(:activity_custom_property => activity_custom_property, :activity => self)
       
       activity_custom_property_value.value = custom_property_value
