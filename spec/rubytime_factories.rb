@@ -69,7 +69,7 @@ Factory.define(:hourly_rate, :class => HourlyRate) do |hr|
   hr.takes_effect_at { Date.today }
   hr.value { 1000 }
   hr.currency { Currency.pick_or_generate }
-  hr.operation_author { Employee.first }
+  hr.operation_author { Employee.first_or_generate }
 end
 
 Factory.define(:hourly_rate_log, :class => HourlyRateLog) do |hrl|

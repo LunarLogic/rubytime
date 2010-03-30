@@ -119,20 +119,45 @@ describe HourlyRate do
     HourlyRate.all.should == [hr3, hr1, hr2]
   end
 
-  it "should return HourlyRate object for specified activity" do 
-    HourlyRate.all.destroy!
+  describe "#find_for_activity" do
+    it "should return HourlyRate object for specified activity" do
+      HourlyRate.all.destroy!
 
-    hr1 = HourlyRate.generate :takes_effect_at => date("2009-09-01")
-    hr2 = HourlyRate.generate :takes_effect_at => date("2009-08-01"), :project => hr1.project, :role => hr1.role
+      hr1 = HourlyRate.generate :takes_effect_at => date("2009-09-01")
+      hr2 = HourlyRate.generate :takes_effect_at => date("2009-08-01"), :project => hr1.project, :role => hr1.role
 
-    [hr1.role_id, hr1.project_id].should == [hr2.role_id, hr2.project_id]
+      [hr1.role_id, hr1.project_id].should == [hr2.role_id, hr2.project_id]
 
-    user = Employee.generate :role => hr1.role
+      user = Employee.generate :role => hr1.role
 
-    activity = Activity.new :project => hr1.project, :user => user, :date => date("2009-08-02")
-    hr = HourlyRate.find_for_activity(activity)
-    hr.should be_a_kind_of(HourlyRate)
-    hr.should == hr2
+      activity = Activity.new :project => hr1.project, :user => user, :date => date("2009-08-02")
+      hr = HourlyRate.find_for_activity(activity)
+      hr.should be_a_kind_of(HourlyRate)
+      hr.should == hr2
+    end
+
+    it "should find a correct rate even if user changed his role in the meantime" do
+      HourlyRate.all.destroy!
+
+      project = Project.generate
+      managers = Role.generate
+      devs = Role.generate
+
+      user = time_travel_to(10.days.ago) { Employee.generate :role => devs }
+      time_travel_to(3.days.ago) { user.update :role => managers }
+
+      rate1 = HourlyRate.generate :takes_effect_at => Date.today - 5, :project => project, :role => devs
+      rate2 = HourlyRate.generate :takes_effect_at => Date.today - 4, :project => project, :role => managers
+
+      activity = Activity.generate :project => project, :user => user, :date => Date.today - 2
+      activity.hourly_rate.should == rate2
+
+      activity = Activity.generate :project => project, :user => user, :date => Date.today - 4
+      activity.hourly_rate.should == rate1
+
+      activity = Activity.prepare :project => project, :user => user, :date => Date.today - 6
+      activity.should_not be_valid
+    end
   end
 
   describe "#to_money" do
@@ -217,8 +242,8 @@ describe HourlyRate do
 
       @project = Project.generate
       @devs = Role.generate
-      @user1 = Employee.generate :role => @devs
-      @user2 = Employee.generate :role => @devs
+      @user1 = time_travel_to(date("2009-09-01")) { Employee.generate :role => @devs }
+      @user2 = time_travel_to(date("2009-09-01")) { Employee.generate :role => @devs }
 
       @activityA = Activity.generate :project => @project, :user => @user1, :date => date("2009-09-01")
       @activityB = Activity.generate :project => @project, :user => @user1, :date => date("2009-09-02")
@@ -238,12 +263,12 @@ describe HourlyRate do
       end
     end
 
-    context "if successor hourly rate doesn't exists" do
+    context "if successor hourly rate doesn't exist" do
       before do
         @rate = HourlyRate.generate :project => @project, :role => @devs, :takes_effect_at => date("2009-09-02")
       end
       
-      it "should return nil" do
+      it "should return activities that hourly rate relates to" do
         @rate.activities.should == [@activityB, @activityC, @activityD, @activityE]
       end
     end
@@ -278,6 +303,19 @@ describe HourlyRate do
 
       it "should return activities that hourly rate relates to" do
         @rateB.activities.should == [@activityB, @activityC]
+      end
+    end
+
+    context "if user changes role in the meantime" do
+      it "should correctly determine activities' roles" do
+        testers = Role.generate
+        time_travel_to(date("2009-09-02")) { @user1.update :role => testers }
+
+        rate1 = HourlyRate.generate :project => @project, :role => @devs, :takes_effect_at => date("2009-09-01")
+        rate2 = HourlyRate.generate :project => @project, :role => testers, :takes_effect_at => date("2009-09-01")
+
+        rate1.activities.should == [@activityA, @activityC, @activityE]
+        rate2.activities.should == [@activityB, @activityD]
       end
     end
 

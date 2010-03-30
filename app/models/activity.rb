@@ -24,10 +24,9 @@ class Activity
   belongs_to :invoice
   belongs_to :price_currency, :model => Currency, :child_key => [:price_currency_id]
 
-  #Returns the right user version for activity date
+  # Returns the right user version for activity date
   def role_for_date
-    user_or_version = user.version(self.date)
-    user_or_version && user_or_version.role || user.role
+    user.version(self.date).role
   end
   
   # Returns n recent activities
@@ -166,7 +165,8 @@ class Activity
     notify_project_managers(kind_of_change) if Setting.enable_notifications
   end
   
-  protected
+
+  private
   
   # Checks if hours for this activity are under 24 hours
   def validate_hours
@@ -183,4 +183,5 @@ class Activity
 
     true
   end
+
 end

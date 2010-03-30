@@ -11,12 +11,13 @@ class User
   property :role_id,                       Integer, :index => true
   property :client_id,                     Integer, :index => true
   property :created_at,                    DateTime
-  property :modified_at,                   DateTime #not updated_at on purpose
+  property :modified_at,                   DateTime  # not updated_at on purpose
   property :password_reset_token,          String
   property :password_reset_token_exp,      DateTime
-  property :date_format,                   Enum[*::Rubytime::DATE_FORMAT_NAMES], :default => :european, :required => true
-  property :recent_days_on_list,           Enum[*::Rubytime::RECENT_DAYS_ON_LIST], :default => ::Rubytime::RECENT_DAYS_ON_LIST.first,
-    :required => true
+  property :date_format,                   Enum[*::Rubytime::DATE_FORMAT_NAMES],
+                                             :default => :european, :required => true
+  property :recent_days_on_list,           Enum[*::Rubytime::RECENT_DAYS_ON_LIST],
+                                             :default => ::Rubytime::RECENT_DAYS_ON_LIST.first, :required => true
   property :remember_me_token_expiration,  DateTime
   property :remember_me_token,             String
   property :remind_by_email,               Boolean, :required => true, :default => false
@@ -188,16 +189,27 @@ class User
     became
   end
 
-  def pending_version_attributes
-    @pending_version_attributes ||= {}
+  def version(date)
+    # find a role that the user had at the end of that day
+    midnight = Time.parse("#{date.year}-#{date.month}-#{date.day}") + 1.day
+    matching_version = versions.first(:modified_at.lt => midnight, :order => :version_id.desc)
+    matching_version || versions.first || save_first_version
   end
 
-  def version(date)
-    #this conversion allows to return version as of this day
-    date_as_dt =  DateTime.new(date.year, date.month, date.day, 23, 59, 59)
-    return nil if date_as_dt < created_at
-    return self if modified_at <= date_as_dt
-    versions.first(:modified_at.lte => date_as_dt, :order => :version_id.desc) || self
+  def versioned_attributes
+    attributes.reject { |k, v| !UserVersion.properties.named?(k) }
+  end
+
+  def save_new_version
+    UserVersion.create(versioned_attributes)
+  end
+
+  def save_first_version
+    # this won't be called for new users, but will be called once for users created before this code was added
+    version_attributes = versioned_attributes
+    version_attributes[:modified_at] = self.created_at
+    original_attributes.each { |property, value| version_attributes[property.name] = value }
+    UserVersion.create(version_attributes)
   end
 
 end

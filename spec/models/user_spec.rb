@@ -358,22 +358,104 @@ describe Employee do
 
   describe "saving user versions" do
 
+    before :each do
+      @employee = Employee.generate
+    end
+
+    it "should save user version on demand" do
+      @employee.login = 'asdasd'
+      version = @employee.save_new_version
+      version.login.should == 'asdasd'
+      version.id.should == @employee.id
+      version.modified_at.should > DateTime.now - 60
+      version.modified_at.should <= DateTime.now
+    end
+
+    it "should create a first version for the user" do
+      @employee.versions.destroy!
+      version = @employee.save_first_version
+      version.id.should == @employee.id
+      version.modified_at.should == @employee.created_at
+    end
+
+    it "should save user version on create" do
+      @employee.versions.should have(1).record
+    end
+
     it "should save user version on update" do
-       @employee = Employee.generate
-       block_should(change(UserVersion, :count).by(1)) do
-         @employee.update(:name => 'new name')
-       end
+      block_should(change(UserVersion, :count).by(1)) do
+        @employee.update(:name => 'new name')
+      end
+      @employee.reload
+      @employee.versions[0].name.should_not == 'new name'
+      @employee.versions[1].name.should == 'new name'
+      @employee.versions[1].modified_at.should > DateTime.now - 60
+      @employee.versions[1].modified_at.should <= DateTime.now
     end
 
-    it "should return current user object if no versions exist and date > created_at" do
-      @employee = Employee.generate
-      @employee.version(DateTime.now).should == @employee
+    it "should create a first version if it doesn't exist before saving a new one on update" do
+      @employee.versions.destroy!
+      @employee.versions.should have(0).records
+      @employee.update :name => 'new name'
+      @employee.reload
+      @employee.versions.should have(2).records
+      @employee.versions[0].name.should_not == 'new name'
+      @employee.versions[1].name.should == 'new name'
     end
 
-    it "should return nil if specified date > created_at" do
-      @employee = Employee.generate
-      @employee.version(DateTime.now - 10).should be_nil
+    it "should delete user's version after his account is deleted" do
+      @employee.update :name => 'asdasd'
+      block_should(change(UserVersion, :count).by(-2)) do
+        @employee.destroy
+      end
     end
+  end
+
+  describe "finding user versions" do
+
+    before :each do
+      @employee = Employee.generate
+    end
+
+    it "should return a correct version for the given day" do
+      time_travel_to(2.days.from_now) { @employee.update :name => 'name1' }
+      time_travel_to(5.days.from_now) { @employee.update :name => 'name2' }
+      time_travel_to(10.days.from_now) { @employee.update :name => 'name3' }
+      @employee.reload
+      @employee.version(7.days.from_now).name.should == 'name2'
+    end
+
+    it "should return the last version on that day" do
+      now = Time.now
+      night = now - now.hour.hours
+      time_travel_to(night + 2.days + 14.hours) { @employee.update :name => 'name1' }
+      time_travel_to(night + 2.days + 22.hours) { @employee.update :name => 'name2' }
+      time_travel_to(night + 3.days) { @employee.update :name => 'name3' }
+      @employee.reload
+      @employee.version(2.days.from_now).name.should == 'name2'
+    end
+
+    it "should return first user version if no version matches" do
+      original_name = @employee.name
+      time_travel_to(2.days.from_now) { @employee.update :name => 'name1' }
+      time_travel_to(5.days.from_now) { @employee.update :name => 'name2' }
+      @employee.reload
+      @employee.version(10.days.ago).name.should == original_name
+    end
+
+    it "should create a first version if no version is found at all" do
+      @employee.update :name => 'Johnny'
+      @employee.versions.destroy!
+      @employee.reload
+      time_travel_to(2.days.from_now) do
+        version = @employee.version(Date.today)
+        version.should_not be_nil
+        version.id.should == @employee.id
+        version.name.should == 'Johnny'
+        version.modified_at.should == @employee.created_at
+      end
+    end
+
   end
 
 end

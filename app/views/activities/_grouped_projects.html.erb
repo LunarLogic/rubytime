@@ -6,7 +6,7 @@
       <%= image_tag("icons/project.png", :alt => 'project') %>
       <strong>Project: <%= project.name %></strong>
       <% if current_user.is_employee? && !current_user.is_admin? %>
-        <% activities = activities_from(@activities, client, project, current_user.role) %>
+        <% activities = activities_from(@activities, client, project) %>
         <%= full_activities_table(activities) %>
       <% else %>
         <%= partial("activities/roles_summary_by_project", :roles => unique_roles_from(@activities, client, project), :client => client, :project => project) %>

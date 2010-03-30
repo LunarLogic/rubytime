@@ -35,12 +35,13 @@ class HourlyRate
   def activities
     conditions = {
       :project_id => project_id,
-      'user.role_id' => role_id,
-      :date.gte => takes_effect_at
+      :date.gte => takes_effect_at,
+      :order => [:date.asc, :project_id.asc, :id.asc]
     }
     conditions[:date.lte] = succ.takes_effect_at - 1 if succ
-    
-    Activity.all(conditions.merge :order => [:date.asc, :project_id.asc, :id.asc])
+
+    list = Activity.all(conditions)
+    list.find_all { |a| a.role_for_date.id == self.role_id }
   end
 
   def self.find_for(params)
@@ -55,7 +56,7 @@ class HourlyRate
   def self.find_for_activity(activity)
     return nil if activity.user.nil?
     find_for( 
-      :role_id => activity.user.role.id,
+      :role_id => activity.role_for_date.id,
       :project_id => activity.project_id,
       :date => activity.date
     )
