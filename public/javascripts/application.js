@@ -50,6 +50,7 @@ var Application = {
   
   setupAjax: function() {
     $.ajaxSetup({
+      cache: false, 
       error: function(xhr) {
         Application.errorFromXhr(xhr);
       }
