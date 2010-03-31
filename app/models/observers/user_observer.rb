@@ -10,10 +10,11 @@ class UserObserver
     # for sake of simplicity we want this property to be called the same in User and UserVersion
     # if it was called updated_at, it would be overwritten when saving the UserVersion object
     self.modified_at = DateTime.now
+    @role_changed = self.attribute_dirty?(:role_id)
   end
 
   after :save do
-    save_new_version
+    save_new_version if self.versions.count == 0 || @role_changed
   end
 
   after :create do

@@ -360,6 +360,7 @@ describe Employee do
 
     before :each do
       @employee = Employee.generate
+      @master = Role.generate :name => 'Jedi Master'
     end
 
     it "should save user version on demand" do
@@ -382,29 +383,35 @@ describe Employee do
       @employee.versions.should have(1).record
     end
 
-    it "should save user version on update" do
+    it "should save user version on update, if role is changed" do
       block_should(change(UserVersion, :count).by(1)) do
-        @employee.update(:name => 'new name')
+        @employee.update(:role => @master)
       end
       @employee.reload
-      @employee.versions[0].name.should_not == 'new name'
-      @employee.versions[1].name.should == 'new name'
+      @employee.versions[0].role.should_not == @master
+      @employee.versions[1].role.should == @master
       @employee.versions[1].modified_at.should > DateTime.now - 60
       @employee.versions[1].modified_at.should <= DateTime.now
+    end
+
+    it "should not save user version on update, if role is not changed" do
+      block_should_not(change(UserVersion, :count)) do
+        @employee.update(:name => 'new name')
+      end
     end
 
     it "should create a first version if it doesn't exist before saving a new one on update" do
       @employee.versions.destroy!
       @employee.versions.should have(0).records
-      @employee.update :name => 'new name'
+      @employee.update :role => @master
       @employee.reload
       @employee.versions.should have(2).records
-      @employee.versions[0].name.should_not == 'new name'
-      @employee.versions[1].name.should == 'new name'
+      @employee.versions[0].role.should_not == @master
+      @employee.versions[1].role.should == @master
     end
 
     it "should delete user's version after his account is deleted" do
-      @employee.update :name => 'asdasd'
+      @employee.update :role => @master
       block_should(change(UserVersion, :count).by(-2)) do
         @employee.destroy
       end
@@ -415,32 +422,35 @@ describe Employee do
 
     before :each do
       @employee = Employee.generate
+      @captain = Role.generate :name => 'Captain'
+      @major   = Role.generate :name => 'Major'
+      @general = Role.generate :name => 'General'
     end
 
     it "should return a correct version for the given day" do
-      time_travel_to(2.days.from_now) { @employee.update :name => 'name1' }
-      time_travel_to(5.days.from_now) { @employee.update :name => 'name2' }
-      time_travel_to(10.days.from_now) { @employee.update :name => 'name3' }
+      time_travel_to(2.days.from_now) { @employee.update :role => @captain }
+      time_travel_to(5.days.from_now) { @employee.update :role => @major }
+      time_travel_to(10.days.from_now) { @employee.update :role => @general }
       @employee.reload
-      @employee.version(7.days.from_now).name.should == 'name2'
+      @employee.version(7.days.from_now).role.should == @major
     end
 
     it "should return the last version on that day" do
       now = Time.now
       night = now - now.hour.hours
-      time_travel_to(night + 2.days + 14.hours) { @employee.update :name => 'name1' }
-      time_travel_to(night + 2.days + 22.hours) { @employee.update :name => 'name2' }
-      time_travel_to(night + 3.days) { @employee.update :name => 'name3' }
+      time_travel_to(night + 2.days + 14.hours) { @employee.update :role => @captain }
+      time_travel_to(night + 2.days + 22.hours) { @employee.update :role => @major }
+      time_travel_to(night + 3.days) { @employee.update :role => @general }
       @employee.reload
-      @employee.version(2.days.from_now).name.should == 'name2'
+      @employee.version(2.days.from_now).role.should == @major
     end
 
     it "should return first user version if no version matches" do
-      original_name = @employee.name
-      time_travel_to(2.days.from_now) { @employee.update :name => 'name1' }
-      time_travel_to(5.days.from_now) { @employee.update :name => 'name2' }
+      original_role = @employee.role
+      time_travel_to(2.days.from_now) { @employee.update :name => @captain }
+      time_travel_to(5.days.from_now) { @employee.update :name => @major }
       @employee.reload
-      @employee.version(10.days.ago).name.should == original_name
+      @employee.version(10.days.ago).role.should == original_role
     end
 
     it "should create a first version if no version is found at all" do
