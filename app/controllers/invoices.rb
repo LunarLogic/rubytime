@@ -5,7 +5,7 @@ class Invoices < Application
   before :load_clients, :only => [:index, :create, :edit]
 
   def index
-    raise Forbidden if current_user.is_employee? && !current_user.is_admin?
+    raise Forbidden unless current_user.is_client_user? || current_user.is_admin?
     @invoice = Invoice.new
     render
   end
