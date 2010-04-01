@@ -11,7 +11,7 @@ describe Activity do
     before { @activity = Activity.new(:comments => "") }
     
     context "when activity_type assigned" do
-      before { @activity.activity_type = ActivityType.gen }
+      before { @activity.activity_type = ActivityType.generate }
       it { @activity.should_not have_errors_on(:comments) }
     end
     
@@ -25,7 +25,7 @@ describe Activity do
     before { @activity = Activity.new(:comments => "Some comments") }
     
     context "when activity_type assigned" do
-      before { @activity.activity_type = ActivityType.gen }
+      before { @activity.activity_type = ActivityType.generate }
       it { @activity.should_not have_errors_on(:comments) }
     end
     
@@ -44,20 +44,20 @@ describe Activity do
     end
     
     context "with activity_type" do
-      before { @activity.activity_type = ActivityType.gen }
+      before { @activity.activity_type = ActivityType.generate }
       it { @activity.should have_errors_on(:activity_type_id) }
     end
   end
   
   context "with project assigned" do
     before do
-      @project = Project.gen(:client => Client.gen)
-      @activity = Activity.gen(:project => @project)
+      @project = Project.generate
+      @activity = Activity.generate(:project => @project)
     end
 
     context "when project has activity_types assigned" do
       before do
-        @activity_type = ActivityType.gen
+        @activity_type = ActivityType.generate
         @project.activity_type_projects.create(:activity_type => @activity_type)
       end
       
@@ -72,7 +72,7 @@ describe Activity do
       end
       
       context "with activity_type that is not assigned to the project" do
-        before { @activity.activity_type = ActivityType.gen }
+        before { @activity.activity_type = ActivityType.generate }
         it { @activity.should have_errors_on(:activity_type_id) }
       end
     end
@@ -86,7 +86,7 @@ describe Activity do
       end
       
       context "with activity_type assigned" do
-        before { @activity.activity_type = ActivityType.gen }
+        before { @activity.activity_type = ActivityType.generate }
         it { @activity.should have_errors_on(:activity_type_id) }
       end
     end
@@ -549,7 +549,7 @@ describe Activity do
     end
   end
 
-  it "should check if activity exist for date" do
+  it "should check if activity exists for date" do
     user = Employee.generate
     Activity.prepare(:user => user, :date => date("2008-11-23")).save.should be_true
     Activity.is_activity_day(user, date("2008-11-23")).should be_true

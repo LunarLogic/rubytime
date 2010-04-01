@@ -72,9 +72,9 @@ describe Project do
 
   describe "#activity_type_ids" do
     it "should return ids of assigned activity types" do
-      project = Project.generate!(:client => Client.generate!)
-      activity_type_1 = ActivityType.generate!
-      activity_type_2 = ActivityType.generate!
+      project = Project.generate
+      activity_type_1 = ActivityType.generate
+      activity_type_2 = ActivityType.generate
 
       project.activity_types << activity_type_1
       project.activity_types << activity_type_2
@@ -88,10 +88,10 @@ describe Project do
 
   describe "#activity_type_ids=" do
     it "should assign proper activity types" do
-      project = Project.generate!(:client => Client.generate!)
-      activity_type_1 = ActivityType.generate!
-      activity_type_2 = ActivityType.generate!
-      activity_type_3 = ActivityType.generate!
+      project = Project.generate
+      activity_type_1 = ActivityType.generate
+      activity_type_2 = ActivityType.generate
+      activity_type_3 = ActivityType.generate
 
       project.activity_types << activity_type_1
       project.activity_types << activity_type_2

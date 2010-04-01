@@ -1,9 +1,9 @@
-require File.join( File.dirname(__FILE__), '..', "spec_helper" )
+require 'spec_helper'
 
 describe ActivityCustomProperty do
   
   describe "#destroy_allowed?" do
-    before { @activity_custom_property = ActivityCustomProperty.gen }
+    before { @activity_custom_property = ActivityCustomProperty.generate }
     
     context "when doesn't have any activity_custom_property_values assigned" do
       before { @activity_custom_property.activity_custom_property_values.count.should == 0 }
@@ -13,7 +13,7 @@ describe ActivityCustomProperty do
     
     context "when have activity_custom_property_values assigned" do
       before do
-        @activity_custom_property.activity_custom_property_values << ActivityCustomPropertyValue.generate!
+        @activity_custom_property.activity_custom_property_values << ActivityCustomPropertyValue.generate
         @activity_custom_property.save
       end
       
@@ -22,7 +22,7 @@ describe ActivityCustomProperty do
   end
   
   describe "#destroy" do
-    before { @activity_custom_property = ActivityCustomProperty.gen }
+    before { @activity_custom_property = ActivityCustomProperty.generate }
     
     context "when destroy allowed" do
       before { @activity_custom_property.stub!(:destroy_allowed? => true) }

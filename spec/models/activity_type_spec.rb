@@ -1,4 +1,4 @@
-require File.join( File.dirname(__FILE__), '..', "spec_helper" )
+require 'spec_helper'
 
 describe ActivityType do
   
@@ -17,7 +17,7 @@ describe ActivityType do
   end
 
   describe "#destroy_allowed?" do
-    before { @activity_type = ActivityType.generate! }
+    before { @activity_type = ActivityType.generate }
     
     context "when not assigned to any projects" do
       it { @activity_type.destroy_allowed?.should be_true }
@@ -25,7 +25,7 @@ describe ActivityType do
     
     context "when assigned to projects" do
       before do
-        @activity_type.projects << Project.generate!(:client => Client.generate!)
+        @activity_type.projects << Project.generate
         @activity_type.save
       end
       
@@ -34,7 +34,7 @@ describe ActivityType do
     
     context "when assigned to activities" do
       before do
-        @activity_type.activities << Activity.generate!(:project => Project.generate!(:client => Client.generate!))
+        @activity_type.activities << Activity.generate
         @activity_type.save
       end
       
@@ -43,8 +43,8 @@ describe ActivityType do
     
     context "when has children that are not allowed to destroy" do
       before do
-        child_activity_type = ActivityType.generate!
-        child_activity_type.projects << Project.generate!(:client => Client.generate!)
+        child_activity_type = ActivityType.generate
+        child_activity_type.projects << Project.generate
         child_activity_type.save
         
         @activity_type.children << child_activity_type
@@ -56,7 +56,7 @@ describe ActivityType do
   end
   
   describe "#destroy" do
-    before { @activity_type = ActivityType.generate! }
+    before { @activity_type = ActivityType.generate }
     
     context "when destroy allowed" do
       before { @activity_type.stub!(:destroy_allowed? => true) }

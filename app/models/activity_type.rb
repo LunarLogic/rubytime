@@ -2,7 +2,7 @@ class ActivityType
   include DataMapper::Resource
   
   property :id, Serial
-  property :name,  String, :nullable => false, :index => true
+  property :name,  String, :required => true, :index => true
   property :parent_id, Integer
   property :position, Integer
   property :updated_at,  DateTime

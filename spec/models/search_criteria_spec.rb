@@ -73,24 +73,44 @@ describe SearchCriteria do
       list3.should include(@activity_banana_inactive_2)
     end
 
-    it "should return 'graphic_design' activities for specific project" do
-      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id], :activity_type_id => [fx(:graphic_design).id] }, fx(:admin))
-      sc.should have(6).found_activities
+    it "should return all activities matching an activity type in a project" do
+      project = Project.generate
+      type1, type2 = (0..1).map { ActivityType.generate }
+      activity1, activity2 = [type1, type2].map { |t| Activity.generate :project => project, :activity_type => t }
+      project.activity_types = [type1, type2]
+
+      list = search_all({ :activity_type_id => type2.id })
+      list.should == [activity2]
     end
 
-    it "should return 'design' activities for specific project" do
-      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id], :activity_type_id => [fx(:design).id] }, fx(:admin))
-      sc.should have(6).found_activities
+    it "should return all activities matching an activity type in two projects" do
+      project1, project2 = (0..1).map { Project.generate }
+      type1, type2 = (0..1).map { ActivityType.generate }
+      project1.activity_types = [type1, type2]
+      project2.activity_types = [type1, type2]
+      activity11, activity12 = [type1, type2].map { |t| Activity.generate :project => project1, :activity_type => t }
+      activity21, activity22 = [type1, type2].map { |t| Activity.generate :project => project2, :activity_type => t }
+
+      list = search_all({ :activity_type_id => type1.id })
+      list.sort.should == [activity11, activity21]
+
+      list = search_all({ :activity_type_id => type1.id, :project_id => project2.id })
+      list.sort.should == [activity21]
     end
 
-    it "should return 'graphic_design' activities for two specific projects" do
-      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id, fx(:apples_first_project).id], :activity_type_id => [fx(:graphic_design).id] }, fx(:admin))
-      sc.should have(6).found_activities
-    end
+    it "should return all activities matching two activity types" do
+      proj1, proj2 = (0..1).map { Project.generate }
+      type1, type2, type3 = (0..2).map { ActivityType.generate }
+      proj1.activity_types = [type1, type2, type3]
+      proj2.activity_types = [type1, type2, type3]
+      act11, act12, act13 = [type1, type2, type3].map { |t| Activity.generate :project => proj1, :activity_type => t }
+      act21, act22, act23 = [type1, type2, type3].map { |t| Activity.generate :project => proj2, :activity_type => t }
 
-    it "should return 'coding' and 'graphic_design' activities for two specific projects" do
-      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id, fx(:apples_first_project).id], :activity_type_id => [fx(:coding).id, fx(:graphic_design).id] }, fx(:admin))
-      sc.should have(12).found_activities
+      list = search_all({ :activity_type_id => [type1.id, type3.id] })
+      list.sort.should == [act11, act13, act21, act23]
+
+      list = search_all({ :activity_type_id => [type2.id, type3.id], :project_id => project1.id })
+      list.sort.should == [act12, act13]
     end
 
     it "should return all activities for specific client" do

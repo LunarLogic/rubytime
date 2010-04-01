@@ -22,7 +22,7 @@ class User
   property :remember_me_token,             String
   property :remind_by_email,               Boolean, :required => true, :default => false
   property :activities_count,              Integer, :default => 0
-  property :decimal_separator,             Enum[*::Rubytime::DECIMAL_SEPARATORS], :nullable => false, :default => ::Rubytime::DECIMAL_SEPARATORS.first
+  property :decimal_separator,             Enum[*::Rubytime::DECIMAL_SEPARATORS], :required => true, :default => ::Rubytime::DECIMAL_SEPARATORS.first
 
   validates_length :name, :min => 3
 

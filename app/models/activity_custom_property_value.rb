@@ -2,8 +2,8 @@ class ActivityCustomPropertyValue
   include DataMapper::Resource
   
   property :id, Serial
-  property :activity_custom_property_id, Integer, :nullable => false
-  property :activity_id, Integer, :nullable => false, :index => true
+  property :activity_custom_property_id, Integer, :required => true
+  property :activity_id, Integer, :required => true, :index => true
   property :numeric_value, BigDecimal, :scale => 2, :precision => 10
   property :updated_at,  DateTime
   property :created_at,  DateTime

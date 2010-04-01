@@ -2,10 +2,10 @@ class ActivityCustomProperty
   include DataMapper::Resource
   
   property :id, Serial
-  property :name, String, :nullable => false, :index => true
-  property :unit, String, :nullable => true
-  property :required, Boolean, :nullable => false, :default => false
-  property :show_as_column_in_tables, Boolean, :nullable => false, :default => false
+  property :name, String, :required => true, :index => true
+  property :unit, String, :required => false
+  property :required, Boolean, :required => true, :default => false
+  property :show_as_column_in_tables, Boolean, :required => true, :default => false
   property :updated_at,  DateTime
   property :created_at,  DateTime
   

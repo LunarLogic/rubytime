@@ -41,11 +41,11 @@ gem "chronic", ">=0.2.3"
 gem "html5", ">=0.10.0"
 gem "icalendar", "~>1.1.0"
 gem 'rack_revision_info'
-gem "metric_fu", "1.1.5"
 
 group :development do
   gem 'vlad', '2.0.0', :require => []
   gem 'vlad-git', '2.0.0', :require => []
+  gem "metric_fu", "1.1.5"
 end
 
 group :development, :test do
