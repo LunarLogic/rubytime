@@ -1,9 +1,9 @@
 source "http://gemcutter.org"
 source "http://gems.github.com"
 
+gem "do_mysql"
+
 dm_gems_version = "0.10.2"
-gem "data_objects", dm_gems_version
-gem "do_mysql", dm_gems_version
 
 gem "dm-core", dm_gems_version
 gem "dm-aggregates", dm_gems_version
@@ -16,7 +16,6 @@ gem "dm-serializer", dm_gems_version
 # gem "dm-constraints", dm_gems_version
 gem "dm-is-tree", dm_gems_version
 gem "dm-is-list", dm_gems_version
-gem "extlib", dm_gems_version
 
 merb_gems_version = "1.1.0.pre"
 

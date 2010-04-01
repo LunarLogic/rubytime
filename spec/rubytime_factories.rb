@@ -58,6 +58,12 @@ Factory.define(:activity_custom_property) do |acp|
   acp.show_as_column_in_tables true
 end 
 
+Factory.define(:activity_custom_property_value) do |acpv|
+  acpv.association :activity
+  acpv.association :activity_custom_property
+  acpv.numeric_value 1.0
+end
+
 Factory.define(:invoice, :class => Invoice) do |i|
   i.sequence(:name) { |n| "Invoice ##{n}" }
   i.client { |a| a.association(:client) }

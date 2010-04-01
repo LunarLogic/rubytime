@@ -489,6 +489,11 @@ describe Activity do
       activity = Activity.prepare
       activity.hourly_rate.should == hr
     end
+
+    it "should return nil if date is not set" do
+      activity = Activity.prepare :date => nil
+      activity.hourly_rate.should be_nil
+    end
   end
 
   describe "#duration=" do
@@ -547,12 +552,6 @@ describe Activity do
       @activity.stub! :hourly_rate => nil
       @activity.should_not be_valid
     end
-  end
-
-  it "should check if activity exists for date" do
-    user = Employee.generate
-    Activity.prepare(:user => user, :date => date("2008-11-23")).save.should be_true
-    Activity.is_activity_day(user, date("2008-11-23")).should be_true
   end
 
   describe "main- and sub- activity_type_id setters" do
@@ -689,7 +688,7 @@ describe Activity do
       before do 
         @activity_type = ActivityType.generate
         @activity_type.stub!(:breadcrumb_name => 'The breadcrumb name')
-        @activity = Activity.generate :activity_type => @activity_type
+        @activity = Activity.prepare :activity_type => @activity_type
       end
       it "should return the name" do
         @activity.breadcrumb_name.should == 'The breadcrumb name'
@@ -703,7 +702,7 @@ describe Activity do
       @custom_property_BBB = ActivityCustomProperty.generate :name => "BBB"
       @custom_property_CCC = ActivityCustomProperty.generate :name => "CCC"
       
-      @activity = Activity.gen
+      @activity = Activity.generate
     end
     
     it "should assign only properties with not-blank values" do
@@ -715,13 +714,15 @@ describe Activity do
       before do
         @activity.activity_custom_property_values.create(:activity_custom_property => @custom_property_AAA, :value => 12)
         @activity.activity_custom_property_values.create(:activity_custom_property => @custom_property_CCC, :value => 45)
-        
+
         @activity.custom_properties = { 
           @custom_property_AAA.id.to_s => "15", 
           @custom_property_BBB.id.to_s => "125", 
-          @custom_property_CCC.id.to_s => "" }
-          
+          @custom_property_CCC.id.to_s => ""
+        }
+
         @activity.save
+        @activity.reload
       end
       
       it "should update custom value for changed value" do
@@ -766,7 +767,7 @@ describe Activity do
     before do
       @custom_property = ActivityCustomProperty.generate(:name => "AAA", :required => true)
       
-      @activity = Activity.generate
+      @activity = Activity.prepare
       @activity.activity_custom_property_values.count.should == 0
     end
     

@@ -51,17 +51,6 @@ describe Projects do
       found_projects.find { |p| p == project }.has_activities.should be_true
       found_projects.find_all { |p| p != project }.each { |p| p.has_activities.should be_false }
     end
-
-    it "should set has_activities flag for projects with activities, if requested via JSON" do
-      project = fx(:apples_first_project)
-      user = fx(:koza)
-      Project.should_receive(:with_activities_for).with(user).and_return([project])
-      response = as(user).dispatch_to(Projects, :index, :format => 'json')
-      found_projects = response.instance_variable_get("@projects")
-      found_projects.should include(project)
-      found_projects.find { |p| p == project }.has_activities.should be_true
-      found_projects.find_all { |p| p != project }.each { |p| p.has_activities.should be_false }
-    end
   end
 
   describe "#show" do

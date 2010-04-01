@@ -13,7 +13,8 @@ describe ActivityCustomProperty do
     
     context "when have activity_custom_property_values assigned" do
       before do
-        @activity_custom_property.activity_custom_property_values << ActivityCustomPropertyValue.generate
+        @value = ActivityCustomPropertyValue.generate :activity_custom_property => @activity_custom_property
+        @activity_custom_property.activity_custom_property_values << @value
         @activity_custom_property.save
       end
       
