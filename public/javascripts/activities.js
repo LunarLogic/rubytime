@@ -206,7 +206,9 @@ var Activities = {
       $("p." + group + " select").html(options);
       Activities._updateIcons(group);
       
-      if (feedback) feedback(json);
+      if (feedback) {
+        feedback(json);
+      }
     });
   },
 

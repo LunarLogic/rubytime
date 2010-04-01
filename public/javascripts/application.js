@@ -15,7 +15,7 @@ function selectOptions(collection, idAttr, labelAttr) {
   return $.map(collection, function(item) { 
     return '<option value="' + item[idAttr] + '">' + item[labelAttr] + '</option>' 
   }).join('');
-};
+}
 
 var Application = {
   init: function() {
@@ -169,7 +169,9 @@ var Application = {
           hours: true
         },
         "activity[comments]": {
-          required: function() { return container.find(".activity_form select[name='activity[main_activity_type_id]']").attr('disabled') }
+          required: function() {
+            return container.find(".activity_form select[name='activity[main_activity_type_id]']").attr('disabled');
+          }
         }
       }
     });
@@ -182,11 +184,11 @@ var Application = {
         element.attr('disabled', 'disabled').parent('p').hide();
       } else {
         element.removeAttr('disabled').parent('p').show();
-      };
+      }
       
       element.val(originalValue);
       element.change();
-    }
+    };
     
     container.find(".activity_form select#activity_project_id").change(function() {
       var projectId = container.find(".activity_form select#activity_project_id").val();
