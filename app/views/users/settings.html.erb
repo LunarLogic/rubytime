@@ -28,6 +28,10 @@
         <span>Date format</span>
         <%= radio_options(@user, :date_format, Rubytime::DATE_FORMAT_NAMES) { |v| date_format_desc(v) } %>
       </p>
+      <p class="options">
+        <span>Decimal separator</span>
+        <%= radio_options(@user, :decimal_separator, Rubytime::DECIMAL_SEPARATORS) { |v| v } %>
+      </p>
       <% if @user.is_employee? %>
       <p class="options">
         <span>Email reminder</span>

@@ -6,10 +6,6 @@ h2. Changes
 
  * See CHANGELOG.txt 
 
-h2. Status
-
-**Currently, the master version is very unstable** - we've added lots of new features, but this has also introduced lots of new bugs, which we didn't have time to fix yet. If you're looking for a stable version, try "the 3.1.1 branch":http://github.com/LunarLogicPolska/rubytime/tree/3.1.1.
-
 h2. Setup
 
 h3. Prerequisites
@@ -24,7 +20,7 @@ bc. git clone git://github.com/LunarLogicPolska/rubytime.git
 
 h3. Install gems
 
-bc. gem bundle
+bc. bundle install
 
 Note: on 64 bit architectures, you may have to set ARCHFLAGS='-arch x86_64' in your shell environment, otherwise some compiled gems (do_mysql) may not work.
 

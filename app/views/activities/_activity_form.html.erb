@@ -16,11 +16,24 @@
         "Recent projects" => @recent_projects.map { |p| [p.id, p.name] }, 
         "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
     </p>
+    <p<%= @activity.available_main_activity_types.any? ? '' : ' style="display: none"' %>>
+      <%= select :main_activity_type_id, :label => "Type", :collection => @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s, :disabled => @activity.available_main_activity_types.empty? %>
+    </p>
+    <p<%= @activity.available_sub_activity_types.any? ? '' : ' style="display: none"' %>>
+      <%= select :sub_activity_type_id, :label => "Sub-type", :collection => @activity.available_sub_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.sub_activity_type_id.to_s, :disabled => @activity.available_sub_activity_types.empty? %>
+    </p>
     <p>
       <%= text_field :hours, :label => "Time spent" %>
       <span class="description">e.g. 7:30, 7.5, or 7.5h for seven hours and thirty minutes;
         0.5, .5h or 30m for half an hour</span>
     </p>
+    <% @activity_custom_properties.each do |activity_custom_property| %>
+      <p class="custom-property">
+        <%= label activity_custom_property.name, :for => "activity[custom_properties][#{activity_custom_property.id}]" %>
+        <%= tag :input, nil, :name => "activity[custom_properties][#{activity_custom_property.id}]", :value => @activity.custom_properties[activity_custom_property.id], :class => (activity_custom_property.required ? 'required' : nil) %>
+        <span><%= activity_custom_property.unit %></span>
+      </p>
+    <% end %>
     <p>
       <%= text_area :comments, :label => "Comments" %>
     </p>

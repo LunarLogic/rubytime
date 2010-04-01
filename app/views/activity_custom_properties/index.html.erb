@@ -1,0 +1,33 @@
+<% throw_content :secondary, partial(:new_activity_custom_property, :with => @new_activity_custom_property, :as => :activity_custom_property) if current_user.is_admin? %>
+
+<h1>List of custom activity properties</h1>
+
+<% if @activity_custom_properties.empty? %>
+  The list is empty.
+<% else %>
+  <table id="activity_type_custom_properites" class="list wide">
+  <tr>
+    <th>Name</th>
+    <th>Unit</th>
+    <th>Required</th>
+    <th>Show as column</th>
+    <th class="icons"></th>
+  </tr>
+  <% @activity_custom_properties.each do |custom_property| %>
+    <tr>
+      <td><%= custom_property.name %></td>
+      <td><%= custom_property.unit %></td>
+      <td><%= custom_property.required ? 'Yes' : 'No' %></td>
+      <td><%= custom_property.show_as_column_in_tables ? 'Yes' : 'No' %></td>
+      <td class="icons">
+        <% if current_user.is_admin? %>
+          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(custom_property, :edit) %>
+          <% if custom_property.destroy_allowed? %>
+            <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), resource(custom_property), :class => "delete_row" %>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>

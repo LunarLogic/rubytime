@@ -210,8 +210,14 @@ describe Users do
     end
 
     it "should list all users with activities in any of the client's projects for ClientUser" do
+<<<<<<< HEAD
       client_user = ClientUser.generate
       Employee.should_receive(:with_activities_for_client).with(client_user.client)
+=======
+      client = fx(:orange)
+      client_user = client.client_users.first
+      Employee.should_receive(:with_activities_for_client).with(client)
+>>>>>>> origin/3.2
       as(client_user).dispatch_to(Users, :with_activities)
     end
 
@@ -224,15 +230,26 @@ describe Users do
 
   describe "#authenticate" do
     it "should return user data as json, if login data is correct" do
+<<<<<<< HEAD
       employee = Employee.generate
       response = as(employee).dispatch_to(Users, :authenticate)
       response.should be_successful
       JSON::parse(response.body)["login"].should == employee.login
+=======
+      employee = fx(:apple_user1)
+      response = as(employee).dispatch_to(Users, :authenticate)
+      response.should be_successful
+      response.body.should =~ /"login": "#{employee.login}"/
+>>>>>>> origin/3.2
     end
 
     it "should include user_type field" do
       response = as(:employee).dispatch_to(Users, :authenticate)
+<<<<<<< HEAD
       JSON::parse(response.body)["user_type"].should == "employee"
+=======
+      response.body.should =~ /"user_type": "employee"/
+>>>>>>> origin/3.2
     end
 
     it "should block unauthenticated users" do

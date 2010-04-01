@@ -16,6 +16,11 @@ log/*
 # other
 nbproject
 .idea/*
+<<<<<<< HEAD
 
 # gems
 .bundle
+=======
+bin
+gems
+>>>>>>> origin/3.2

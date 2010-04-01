@@ -1,0 +1,17 @@
+<% if @activity_type.parent %>
+  <h1>Edit <%= @activity_type.parent.name %> -> <%= @activity_type.original_values[:name] || @activity_type.name %> sub-activity type</h1>
+<% else %>
+  <h1>Edit <%= @activity_type.original_values[:name] || @activity_type.name %> activity type</h1>
+<% end %>
+
+<%= error_messages_for(@activity_type) %>
+<%= form_for @activity_type, :action => resource(@activity_type), :id => "activity_type_form" do %>
+  <fieldset>
+    <p>
+      <%= text_field :name, :label => "Name" %>
+    </p>
+    <p class="buttons">
+      <%= submit 'Update', :class => "button" %>
+    </p>
+  </fieldset>
+<% end =%>

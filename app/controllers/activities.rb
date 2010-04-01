@@ -9,12 +9,13 @@ class Activities < Application
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,                 :only => [:new, :edit, :update, :create]
   before :load_activity,              :only => [:edit, :update, :destroy]
+  before :load_activity_custom_properties, :only => [:new, :create, :edit, :update]
   before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability,      :only => [:day]
   before :check_deletable_by,         :only => [:destroy]
   before :check_if_valid_project,     :only => [:create]
-
+  
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
@@ -45,7 +46,13 @@ class Activities < Application
   def new
     preselected_user = current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])
     preselected_user ||= current_user
-    @activity = Activity.new(:date => params[:date] || Date.today, :user => preselected_user)
+    @activity = Activity.new(
+      :date => params[:date] || Date.today,
+      :user => preselected_user,
+      :project => (@recent_projects + @other_projects).first
+    )
+    @activity.main_activity_type = @activity.available_main_activity_types.first
+    @activity.sub_activity_type = @activity.available_sub_activity_types.first
     render :layout => false
   end
 
@@ -142,8 +149,9 @@ class Activities < Application
     @day = Date.parse(params[:search_criteria][:date_from]).formatted(current_user.date_format)
     render :layout => false
   end
-  
-protected
+
+
+  protected
 
   def check_day_viewability
     user_id = params[:search_criteria][:user_id]
@@ -199,13 +207,21 @@ protected
     @users = Employee.active.all(:order => [:name.asc]) if current_user.is_admin?
   end
   
+  def load_activity_custom_properties
+    @activity_custom_properties = ActivityCustomProperty.all
+  end
+  
   def convert_to_csv(activities)
     report = StringIO.new
-    CSV::Writer.generate(report, ',') do |csv|
-      csv << %w(Client Project Role User Date Hours Comments)
+    CSV::Writer.generate(report, ';') do |csv|
+      csv << %w(Client Project Role User Date Hours) + ActivityCustomProperty.all.map { |p| p.name_with_unit } + %w(Type SubType Comments)
       activities.each do |activity|
-        csv << [activity.project.client.name, activity.project.name, activity.role_for_date.name, activity.user.name,
-                activity.date, format("%.2f", activity.minutes / 60.0), activity.comments.strip]
+        csv << [activity.project.client.name, activity.project.name, activity.role_for_date.name, activity.user.name, 
+                activity.date, format_number(activity.minutes / 60.0, :precision => 2)] +
+                ActivityCustomProperty.all.map { |p| format_number(activity.custom_properties[p.id]) } +
+               [(activity.main_activity_type ? activity.main_activity_type.name : nil),
+                (activity.sub_activity_type ? activity.sub_activity_type.name : nil),
+                activity.comments.strip]
       end
     end
     report.rewind

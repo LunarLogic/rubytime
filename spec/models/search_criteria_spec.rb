@@ -73,6 +73,26 @@ describe SearchCriteria do
       list3.should include(@activity_banana_inactive_2)
     end
 
+    it "should return 'graphic_design' activities for specific project" do
+      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id], :activity_type_id => [fx(:graphic_design).id] }, fx(:admin))
+      sc.should have(6).found_activities
+    end
+
+    it "should return 'design' activities for specific project" do
+      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id], :activity_type_id => [fx(:design).id] }, fx(:admin))
+      sc.should have(6).found_activities
+    end
+
+    it "should return 'graphic_design' activities for two specific projects" do
+      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id, fx(:apples_first_project).id], :activity_type_id => [fx(:graphic_design).id] }, fx(:admin))
+      sc.should have(6).found_activities
+    end
+
+    it "should return 'coding' and 'graphic_design' activities for two specific projects" do
+      sc = SearchCriteria.new({ :project_id => [fx(:oranges_second_project).id, fx(:apples_first_project).id], :activity_type_id => [fx(:coding).id, fx(:graphic_design).id] }, fx(:admin))
+      sc.should have(12).found_activities
+    end
+
     it "should return all activities for specific client" do
       list = search_all({ :client_id => [@banana.id] })
       list.should include(@activity_banana_a1)

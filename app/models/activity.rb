@@ -5,10 +5,11 @@ class Activity
   include DataMapper::Resource
   
   property :id,          Serial
-  property :comments,    Text, :required => true
+  property :comments,    Text
   property :date,        Date, :required => true, :index => true
   property :minutes,     Integer, :required => true, :auto_validation => false
   property :project_id,  Integer, :required => true, :index => true
+  property :activity_type_id, Integer, :index => true
   property :user_id,     Integer, :required => true, :index => true
   property :invoice_id,  Integer, :index => true
   property :price_value, BigDecimal, :scale => 2, :precision => 10
@@ -16,10 +17,17 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
+  validates_present :comments, :if => proc { |a| a.activity_type.nil? }
   validates_with_method :hours, :method => :validate_hours
+  validates_absent  :activity_type_id, :unless => proc { |a| a.activity_type_required? }
+  validates_present :activity_type_id,     :if => proc { |a| a.activity_type_required? }
+  validates_with_method :activity_type_id, :method => :activity_type_must_be_assigned_to_project, :if => proc { |a| a.activity_type_required? and a.activity_type }
+  validates_with_method :activity_custom_property_values, :method => :required_custom_properties_are_present
+  validates_with_method :activity_custom_property_values, :method => :custom_properties_are_valid
   validates_present :hourly_rate, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
+  belongs_to :activity_type
   belongs_to :user, :child_key => [:user_id]
   belongs_to :invoice
   belongs_to :price_currency, :model => Currency, :child_key => [:price_currency_id]
@@ -29,6 +37,53 @@ class Activity
     user.version(self.date).role
   end
   
+  has n, :activity_custom_property_values
+  
+  def available_main_activity_types
+    return [] if project.nil?
+    project.activity_types.all(:parent_id => nil)
+  end
+  
+  def available_sub_activity_types
+    return [] if main_activity_type.nil? or project.nil?
+    project.activity_types.all(:parent_id => main_activity_type.id)
+  end
+  
+  def main_activity_type_id
+    return nil unless activity_type
+    activity_type.parent ? activity_type.parent.id : activity_type.id
+  end
+  
+  def main_activity_type
+    ActivityType.get(main_activity_type_id)
+  end
+  
+  def main_activity_type_id=(main_activity_type_id)
+    main_activity_type = ActivityType.get(main_activity_type_id)
+    self.activity_type = main_activity_type unless sub_activity_type_id and ActivityType.get(sub_activity_type_id).parent == main_activity_type
+  end
+  
+  def main_activity_type=(main_activity_type)
+    self.main_activity_type_id = main_activity_type.id
+  end
+  
+  def sub_activity_type_id
+    return nil unless activity_type
+    activity_type.parent ? activity_type.id : nil
+  end
+  
+  def sub_activity_type
+    ActivityType.get(sub_activity_type_id)
+  end
+  
+  def sub_activity_type_id=(sub_activity_type_id)
+    self.activity_type = ActivityType.get(sub_activity_type_id) unless sub_activity_type_id.nil?
+  end
+  
+  def sub_activity_type=(sub_activity_type)
+    self.sub_activity_type_id = sub_activity_type.id
+  end
+
   # Returns n recent activities
   def self.recent(n_)
     all(:order => [:date.desc], :limit => n_)
@@ -165,7 +220,44 @@ class Activity
     notify_project_managers(kind_of_change) if Setting.enable_notifications
   end
   
-
+  def breadcrumb_name
+    return nil if activity_type.nil?
+    activity_type.breadcrumb_name
+  end
+  
+  def activity_type_required?
+    project and project.activity_types.count > 0
+  end
+  
+  def custom_properties=(custom_properties)
+    @custom_properties = {}
+    custom_properties.each_pair do |custom_property_id, value|
+      @custom_properties[custom_property_id.to_i] = ActivityCustomPropertyValue.new(:value => value).value unless value.blank?
+    end
+    @custom_properties
+  end
+  
+  def custom_properties
+    @custom_properties ||= activity_custom_property_values.inject({}) do |agg, property| 
+      agg[property.activity_custom_property.id] = property.value
+      agg
+    end
+  end
+  
+  after :save do
+    activity_custom_property_values.all(:activity_custom_property_id.not => custom_properties.keys).each { |pv| pv.destroy }
+    
+    records_from_custom_properties.each { |activity_custom_property_value| activity_custom_property_value.save }
+  end
+  
+  before :destroy do
+    activity_custom_property_values.each { |pv| pv.destroy }
+  end
+  
+  def self.custom_property_values_sum(activities, custom_property)
+    activities.inject(0) { |sum, activity| sum + (activity.custom_properties[custom_property.id] || 0) }
+  end
+  
   private
   
   # Checks if hours for this activity are under 24 hours
@@ -182,6 +274,43 @@ class Activity
     end
 
     true
+  end
+  
+  def activity_type_must_be_assigned_to_project
+    project.activity_types.get(activity_type_id) ? true : [false, "Activity type must be one of those assigned to the project"]
+  end
+  
+  def required_custom_properties_are_present
+    required_custom_properties = ActivityCustomProperty.all(:required => true)
+    if required_custom_properties.map { |acp| acp.id }.none? { |id| custom_properties[id].blank? }
+      true
+    else
+      [false, "The following custom properties are required: " + required_custom_properties.map { |acp| acp.name }.join(', ')]
+    end
+  end
+  
+  def records_from_custom_properties
+    records = []
+    custom_properties.each_pair do |custom_property_id, custom_property_value|
+      activity_custom_property = ActivityCustomProperty.get(custom_property_id)
+      
+      activity_custom_property_value = 
+        activity_custom_property_values.first(:activity_custom_property_id => activity_custom_property.id) ||
+        ActivityCustomPropertyValue.new(:activity_custom_property => activity_custom_property, :activity => self)
+      
+      activity_custom_property_value.value = custom_property_value
+      records << activity_custom_property_value
+    end
+    records
+  end
+  
+  def custom_properties_are_valid
+    invalid_custom_property_values = records_from_custom_properties.select { |value| value.incorrect_value? }
+    if invalid_custom_property_values.empty?
+      true
+    else
+      [false, "The following custom properties are invalid: " + invalid_custom_property_values.map { |v| v.activity_custom_property.name }.join(', ')]
+    end
   end
 
 end

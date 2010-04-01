@@ -3,13 +3,14 @@ var Activities = {
     // table listing
     if (!$("#activities_filter").blank()) {
       Activities._addOnFilterSubmit();
-      $(".client_combo, .user_combo, .role_combo, .project_combo").change(function() {
+      $(".client_combo, .user_combo, .role_combo, .project_combo, .activity_type_combo").change(function() {
         Activities.onSelectChanged($(this));
       });
       $(".add_criterium").click(Activities.addCriterium);
       $(".remove_criterium").click(Activities.removeCriterium);
       Activities._updateIcons('client');
       Activities._updateIcons('project');
+      Activities._updateIcons('activity_type');
       Activities._updateIcons('role');
       Activities._updateIcons('user');
       Activities._initActivitiesList();
@@ -194,21 +195,34 @@ var Activities = {
         return 'invoice['+f.name.replace('[]', '')+'][]='+f.value })).join('&');
   },
   
-  _reloadSelects: function(url, group) {
+  _reloadSelects: function(url, group, feedback) {
     url += "?"+$("#activities_filter form").serialize();
     $.getJSON(url, function(json) {
       var options = '<option value="">All</option>';
-      for (var i = 0; i < json.length; i++) {
-        options += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+      for (var i = 0; i < json.options.length; i++) {
+        options += '<option value="' + json.options[i].id + '">' + json.options[i].name + '</option>';
       }
       $("p." + group + " select:not(:first)").remove();
       $("p." + group + " select").html(options);
       Activities._updateIcons(group);
+      
+      if (feedback) feedback(json);
     });
   },
 
   _reloadProjects: function() {
-    Activities._reloadSelects('/projects/for_clients', 'project');
+    Activities._reloadSelects('/projects/for_clients', 'project', function() {
+      Activities._reloadActivityTypes();
+    });
+  },
+  
+  _reloadActivityTypes: function() {
+    Activities._reloadSelects('/activity_types/for_projects', 'activity_type', function(json) {
+      json.options.length > 0 ? $("p.activity_type").show() : $("p.activity_type").hide();
+      
+      var element = $("#activities_filter form input.include_activities_without_types").parent();
+      json.projects_with_activities_without_types_selected ? element.show() : element.hide();
+    });
   },
   
   _reloadUsers: function() {
@@ -218,6 +232,8 @@ var Activities = {
   _reloadOtherCriteria: function(group) {
     if (group == "client") {
       Activities._reloadProjects();
+    } else if (group == "project") {
+      Activities._reloadActivityTypes();
     } else if (group == "role") {
       Activities._reloadUsers();
     }
