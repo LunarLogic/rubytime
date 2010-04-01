@@ -1,5 +1,8 @@
 module Merb
   module ApplicationHelper
+
+    MANAGE_PAGES = %w(users clients projects roles activity_types activity_custom_properties currencies settings)
+
     def format_minutes(minutes)
       return "0" unless minutes
       format("%d:%.2d", minutes / 60, minutes % 60)
@@ -27,7 +30,7 @@ module Merb
       end
       
       if current_user.is_admin?
-        selected = ['users', 'roles', 'projects', 'clients', 'activity_types', 'activity_custom_properties', 'currencies', 'settings'].include?(controller_name)
+        selected = MANAGE_PAGES.include?(controller_name)
         main_menu << { :title => "Manage", :path => resource(:users), :selected => selected }
       end
       
@@ -37,7 +40,7 @@ module Merb
     def sub_menu_items
       sub_menu = []
       case controller_name
-      when 'users', 'roles', 'projects', 'clients', 'activity_types', 'activity_custom_properties', 'currencies', 'settings'
+      when *MANAGE_PAGES
         if current_user.is_admin?
           sub_menu << { :title => "Users", :path => url(:users), :selected => controller_name == 'users' }
           sub_menu << { :title => "Clients", :path => url(:clients), :selected => controller_name == 'clients' }
