@@ -258,7 +258,6 @@ describe Activity do
     activity.should be_deletable_by(admin)
     activity.should_not be_deletable_by(other)
   end
-<<<<<<< HEAD
 
   describe "#notify_project_managers" do
     it "should send emails to project managers" do
@@ -275,13 +274,6 @@ describe Activity do
       expected_emails = managers.map(&:email)
       included_emails.sort.should == expected_emails.sort
     end
-=======
-  
-  it "should return formatted hours for saved activity" do
-    a = Activity.gen(:project => fx(:oranges_first_project), :user => fx(:jola), :minutes => 7.5 * 60, :activity_type => fx(:oranges_first_project).activity_types.first)
-    a = Activity.get(a.id)
-    a.hours.should == "7:30"
->>>>>>> origin/3.2
   end
 
   describe "#notify_project_managers_if_enabled method" do
