@@ -10,7 +10,8 @@ class ActivityType
   
   is :tree, :order => :position
   is :list, :scope => [:parent_id]
-  has n, :projects, :through => Resource
+  has n, :project_activity_types
+  has n, :projects, :through => :project_activity_types
   has n, :activities
   
   validates_is_unique :name, :scope => :parent_id

@@ -58,7 +58,7 @@ describe Activity do
     context "when project has activity_types assigned" do
       before do
         @activity_type = ActivityType.generate
-        @project.activity_type_projects.create(:activity_type => @activity_type)
+        @project.project_activity_types.create(:activity_type => @activity_type)
       end
       
       context "with nil activity_type" do

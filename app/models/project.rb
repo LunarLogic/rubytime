@@ -10,7 +10,8 @@ class Project
 
   attr_accessor :has_activities
   belongs_to :client
-  has n, :activity_types, :through => Resource
+  has n, :project_activity_types
+  has n, :activity_types, :through => :project_activity_types
   has n, :activities
   has n, :users, :through => :activities
   has n, :hourly_rates
@@ -57,8 +58,10 @@ class Project
   end
   
   def activity_type_ids=(activity_type_ids)
-    activity_type_projects.all.destroy!
-    (activity_type_ids + used_activity_type_ids).uniq.each { |activity_type_id| activity_type_projects.create(:activity_type_id => activity_type_id) }
+    project_activity_types.all.destroy!
+    (activity_type_ids + used_activity_type_ids).uniq.each do |activity_type_id|
+      project_activity_types.create(:activity_type_id => activity_type_id)
+    end
   end
   
   def used_activity_types

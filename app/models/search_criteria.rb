@@ -73,7 +73,7 @@ class SearchCriteria
   
   def all_raw_activity_types(conditions={})
     return @all_raw_activity_types if @all_raw_activity_types
-    conditions.merge!('activity_type_projects.project_id' => get_ids(self.found_projects)) unless self.found_projects.empty?
+    conditions.merge!('project_activity_types.project_id' => get_ids(self.found_projects)) unless self.found_projects.empty?
     @all_raw_activity_types = ActivityType.all(conditions)
   end
   
@@ -147,12 +147,23 @@ class SearchCriteria
     conditions = {}
     conditions.merge!(:user_id => get_ids(self.found_users)) 
     conditions.merge!(:project_id => get_ids(self.found_projects)) 
-    
-    conditions.merge!(:conditions => [
-      "(activity_type_id IN ?" + (include_activities_without_types ? " OR activity_type_id IS NULL" : "") + ")", 
-      get_ids(self.found_raw_activity_types_and_their_children)
-    ])
-    
+
+    activity_type_ids = get_ids(self.found_raw_activity_types_and_their_children)
+    if include_activities_without_types
+      if activity_type_ids.empty?
+        extra_conditions = ["activity_type_id IS NULL"]
+      else
+        extra_conditions = ["activity_type_id IN ? OR activity_type_id IS NULL", activity_type_ids]
+      end
+    else
+      if activity_type_ids.empty?
+        return []
+      else
+        extra_conditions = ["(activity_type_id IN ?)", activity_type_ids]
+      end
+    end
+    conditions.merge!(:conditions => extra_conditions)
+
     conditions.merge!(:date.gte => @date_from) unless @date_from.nil? 
     conditions.merge!(:date.lte => @date_to) unless @date_to.nil?
     conditions.merge!(:limit => @limit.to_i) if @limit

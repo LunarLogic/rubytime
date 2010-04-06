@@ -234,6 +234,7 @@ class Activity
     custom_properties.each_pair do |custom_property_id, value|
       @custom_properties[custom_property_id.to_i] = ActivityCustomPropertyValue.new(:value => value).value unless value.blank?
     end
+    @custom_properties_modified = true
     @custom_properties
   end
   
@@ -245,9 +246,12 @@ class Activity
   end
   
   after :save do
-    activity_custom_property_values.all(:activity_custom_property_id.not => custom_properties.keys).each { |pv| pv.destroy }
-    
-    records_from_custom_properties.each { |activity_custom_property_value| activity_custom_property_value.save }
+    if @custom_properties_modified
+      @custom_properties_modified = false
+      unassigned = activity_custom_property_values.all(:activity_custom_property_id.not => custom_properties.keys)
+      unassigned.each(&:destroy)
+      records_from_custom_properties.each(&:save)
+    end
   end
   
   before :destroy do
