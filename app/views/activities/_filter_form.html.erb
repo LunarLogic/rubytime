@@ -7,6 +7,13 @@
   
   <%= partial(:criteria_group, :with => :project, :as => :group) %>
   
+  <%= partial(:criteria_group, :with => :activity_type, :as => :group) %>
+  
+  <p<%= @search_criteria.found_projects_with_activities_without_types? ? '' : ' style="display: none"'%>>
+    <%= label "Include activities without types", :for => :include_activities_without_types %>
+    <%= check_box :include_activities_without_types, :class => 'include_activities_without_types' %>
+  </p>
+  
   <% if current_user.can_see_users? %>
     <%= partial(:criteria_group, :with => :role, :as => :group) %>
     <%= partial(:criteria_group, :with => :user, :as => :group) %>

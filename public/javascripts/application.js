@@ -11,6 +11,12 @@ function hoursFormat(value, element, params) {
   return this.optional(element) || (/^(\d+([\.,]\d+h?|:[0-5]\d|[hm])?|[\.,]\d{1,2}h?)$/).test(value);
 }
 
+function selectOptions(collection, idAttr, labelAttr) {
+  return $.map(collection, function(item) { 
+    return '<option value="' + item[idAttr] + '">' + item[labelAttr] + '</option>' 
+  }).join('');
+}
+
 var Application = {
   init: function() {
     Application.setupAjax();
@@ -163,8 +169,53 @@ var Application = {
           hours: true
         },
         "activity[comments]": {
-          required: true
+          required: function() {
+            return container.find(".activity_form select[name='activity[main_activity_type_id]']").attr('disabled');
+          }
         }
+      }
+    });
+    
+    var refreshSelectElement = function(element, html) {
+      var originalValue = element.val();
+      element.html(html);
+      
+      if (element.html() == "") {
+        element.attr('disabled', 'disabled').parent('p').hide();
+      } else {
+        element.removeAttr('disabled').parent('p').show();
+      }
+      
+      element.val(originalValue);
+      element.change();
+    };
+    
+    container.find(".activity_form select#activity_project_id").change(function() {
+      var projectId = container.find(".activity_form select#activity_project_id").val();
+      var targetSelect = container.find(".activity_form select#activity_main_activity_type_id");
+      var url = '/activity_types/available?project_id=' + projectId;
+      
+      if ($(this).val()) {
+        $.getJSON(url, function(activityTypesJSON) { 
+          refreshSelectElement(targetSelect, selectOptions(activityTypesJSON, 'id', 'name'));
+        });
+      } else {
+        refreshSelectElement(targetSelect, '');
+      }
+    });
+    
+    container.find(".activity_form select#activity_main_activity_type_id").change(function() {
+      var projectId = container.find(".activity_form select#activity_project_id").val();
+      var mainActivityTypeId = container.find(".activity_form select#activity_main_activity_type_id").val();
+      var targetSelect = container.find(".activity_form select#activity_sub_activity_type_id");
+      var url = '/activity_types/available?project_id=' + projectId + '&activity_type_id=' + mainActivityTypeId;
+      
+      if (projectId && mainActivityTypeId) {
+        $.getJSON(url, function(activityTypesJSON) { 
+          refreshSelectElement(targetSelect, selectOptions(activityTypesJSON, 'id', 'name'));
+        });
+      } else {
+        refreshSelectElement(targetSelect, '');
       }
     });
 

@@ -3,7 +3,7 @@
 @import '/stylesheets/tables.css';
 @import '/stylesheets/forms.css';
 @import '/stylesheets/thickbox.css';
-@import '/stylesheets/datepicker/ui.datepicker.css';
+@import '/stylesheets/jquery-ui-1.8.custom.css';
 @import '/stylesheets/hourly_rates.css';
 
 body {

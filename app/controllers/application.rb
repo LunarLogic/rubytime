@@ -34,6 +34,10 @@ class Application < Merb::Controller
     raise Forbidden unless current_user.can_manage_financial_data?
   end
   
+  def ensure_not_client_user
+    raise Forbidden if current_user.is_client_user?
+  end
+  
   def render_success(content = "", status = 200)
     render content, :layout => false, :status => status 
   end

@@ -14,14 +14,19 @@ class User
   property :modified_at,                   DateTime  # not updated_at on purpose
   property :password_reset_token,          String
   property :password_reset_token_exp,      DateTime
-  property :date_format,                   Enum[*::Rubytime::DATE_FORMAT_NAMES],
-                                             :default => :european, :required => true
-  property :recent_days_on_list,           Enum[*::Rubytime::RECENT_DAYS_ON_LIST],
-                                             :default => ::Rubytime::RECENT_DAYS_ON_LIST.first, :required => true
+  property :date_format,                   Enum[*Rubytime::DATE_FORMAT_NAMES],
+                                             :required => true,
+                                             :default => :european
+  property :recent_days_on_list,           Enum[*Rubytime::RECENT_DAYS_ON_LIST],
+                                             :required => true,
+                                             :default => Rubytime::RECENT_DAYS_ON_LIST.first
   property :remember_me_token_expiration,  DateTime
   property :remember_me_token,             String
   property :remind_by_email,               Boolean, :required => true, :default => false
   property :activities_count,              Integer, :default => 0
+  property :decimal_separator,             Enum[*Rubytime::DECIMAL_SEPARATORS],
+                                             :required => true,
+                                             :default => Rubytime::DECIMAL_SEPARATORS.first
 
   validates_length :name, :min => 3
 

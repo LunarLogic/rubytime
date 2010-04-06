@@ -6,6 +6,92 @@ describe Activity do
       Activity.prepare.save.should be_true
     end
   end
+  
+  context "with empty :comments property" do
+    before { @activity = Activity.new(:comments => "") }
+    
+    context "when activity_type assigned" do
+      before { @activity.activity_type = ActivityType.generate }
+      it { @activity.should_not have_errors_on(:comments) }
+    end
+    
+    context "when activity_type not assigned" do
+      before { @activity.activity_type = nil }
+      it { @activity.should have_errors_on(:comments) }
+    end
+  end
+  
+  context "with not empty :comments property" do
+    before { @activity = Activity.new(:comments => "Some comments") }
+    
+    context "when activity_type assigned" do
+      before { @activity.activity_type = ActivityType.generate }
+      it { @activity.should_not have_errors_on(:comments) }
+    end
+    
+    context "when activity_type not assigned" do
+      before { @activity.activity_type = nil }
+      it { @activity.should_not have_errors_on(:comments) }
+    end
+  end
+  
+  context "with no project assigned" do
+    before { @activity = Activity.new(:project => nil) }
+    
+    context "with nil activity_type" do
+      before { @activity.activity_type = nil }
+      it { @activity.should_not have_errors_on(:activity_type_id) }
+    end
+    
+    context "with activity_type" do
+      before { @activity.activity_type = ActivityType.generate }
+      it { @activity.should have_errors_on(:activity_type_id) }
+    end
+  end
+  
+  context "with project assigned" do
+    before do
+      @project = Project.generate
+      @activity = Activity.generate(:project => @project)
+    end
+
+    context "when project has activity_types assigned" do
+      before do
+        @activity_type = ActivityType.generate
+        @project.project_activity_types.create(:activity_type => @activity_type)
+      end
+      
+      context "with nil activity_type" do
+        before { @activity.activity_type = nil }
+        it { @activity.should have_errors_on(:activity_type_id) }
+      end
+
+      context "with activity_type that is also assigned to the project" do
+        before { @activity.activity_type = @activity_type }
+        it { @activity.should_not have_errors_on(:activity_type_id) }
+      end
+      
+      context "with activity_type that is not assigned to the project" do
+        before { @activity.activity_type = ActivityType.generate }
+        it { @activity.should have_errors_on(:activity_type_id) }
+      end
+    end
+    
+    context "when project has no activity_types assigned" do
+      before { @project.activity_types.count.should == 0 }
+      
+      context "with nil activity_type" do
+        before { @activity.activity_type = nil }
+        it { @activity.should_not have_errors_on(:activity_type_id) }
+      end
+      
+      context "with activity_type assigned" do
+        before { @activity.activity_type = ActivityType.generate }
+        it { @activity.should have_errors_on(:activity_type_id) }
+      end
+    end
+    
+  end
 
   context "marking as locked" do
     it "should not be locked when does not belong to invoice" do
@@ -403,6 +489,11 @@ describe Activity do
       activity = Activity.prepare
       activity.hourly_rate.should == hr
     end
+
+    it "should return nil if date is not set" do
+      activity = Activity.prepare :date => nil
+      activity.hourly_rate.should be_nil
+    end
   end
 
   describe "#duration=" do
@@ -460,6 +551,244 @@ describe Activity do
     it "should be invalid when there is no corresponding hourly rate" do
       @activity.stub! :hourly_rate => nil
       @activity.should_not be_valid
+    end
+  end
+
+  describe "main- and sub- activity_type_id setters" do
+    before do
+      @activity_type_A  = ActivityType.generate
+      @activity_type_B  = ActivityType.generate
+      @activity_type_B1 = ActivityType.generate :parent => @activity_type_B
+      @activity_type_B2 = ActivityType.generate :parent => @activity_type_B
+      
+      @activity = Activity.generate
+    end
+    
+    context "when setting to nil" do
+      before do
+        @activity.main_activity_type_id = nil
+        @activity.sub_activity_type_id = nil
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should be_nil
+      end
+    end
+    
+    context "when setting to nil (reverse order)" do
+      before do
+        @activity.sub_activity_type_id = nil
+        @activity.main_activity_type_id = nil
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should be_nil
+      end
+    end
+
+    context "when setting only main- activity_type_id" do
+      before do
+        @activity.main_activity_type_id = @activity_type_A.id
+        @activity.sub_activity_type_id = nil
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_A
+      end
+    end
+    
+    context "when setting only main- activity_type_id (reverse order)" do
+      before do
+        @activity.sub_activity_type_id = nil
+        @activity.main_activity_type_id = @activity_type_A.id
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_A
+      end
+    end
+    
+    context "when setting both main- and sub- activity_type_id" do
+      before do
+        @activity.main_activity_type_id = @activity_type_B.id
+        @activity.sub_activity_type_id = @activity_type_B1.id
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_B1
+      end
+    end
+    
+    context "when setting both main- and sub- activity_type_id (reverse order)" do
+      before do
+        @activity.sub_activity_type_id = @activity_type_B1.id
+        @activity.main_activity_type_id = @activity_type_B.id
+      end
+      
+      it "should set proper activity_type" do
+        @activity.activity_type.should == @activity_type_B1
+      end
+    end
+  end
+  
+  describe "main- and sub- activity_type_id getters" do
+    before do
+      @activity_type_A  = ActivityType.generate
+      @activity_type_B  = ActivityType.generate
+      @activity_type_B1 = ActivityType.generate :parent => @activity_type_B
+      @activity_type_B2 = ActivityType.generate :parent => @activity_type_B
+      
+      @activity = Activity.generate
+    end
+    
+    context "when activity_type is nil" do
+      before do
+        @activity.activity_type = nil
+      end
+      
+      it "should get proper values" do
+        @activity.main_activity_type_id.should be_nil
+        @activity.sub_activity_type_id.should be_nil
+      end
+    end
+    
+    context "when activity_type is one of root activity types" do
+      before do
+        @activity.activity_type = @activity_type_A
+      end
+      
+      it "should get proper values" do
+        @activity.main_activity_type_id.should == @activity_type_A.id
+        @activity.sub_activity_type_id.should be_nil
+      end
+    end
+
+    context "when activity_type is one of sub activity types" do
+      before do
+        @activity.activity_type = @activity_type_B2
+      end
+      
+      it "should get proper values" do
+        @activity.main_activity_type_id.should == @activity_type_B.id
+        @activity.sub_activity_type_id.should  == @activity_type_B2.id
+      end
+    end
+
+  end
+  
+  describe "#breadcrumb_name" do
+    context "when no activity type assigned" do
+      before { @activity = Activity.generate :activity_type => nil }
+      it "should return nil" do
+        @activity.breadcrumb_name.should be_nil
+      end
+    end
+    
+    context "when an activity type assigned" do
+      before do 
+        @activity_type = ActivityType.generate
+        @activity_type.stub!(:breadcrumb_name => 'The breadcrumb name')
+        @activity = Activity.prepare :activity_type => @activity_type
+      end
+      it "should return the name" do
+        @activity.breadcrumb_name.should == 'The breadcrumb name'
+      end
+    end
+  end
+  
+  describe "#custom_properties= and #custom_properties" do
+    before do
+      @custom_property_AAA = ActivityCustomProperty.generate :name => "AAA"
+      @custom_property_BBB = ActivityCustomProperty.generate :name => "BBB"
+      @custom_property_CCC = ActivityCustomProperty.generate :name => "CCC"
+      
+      @activity = Activity.generate
+    end
+    
+    it "should assign only properties with not-blank values" do
+      @activity.custom_properties = { @custom_property_BBB.id.to_s => "125", @custom_property_CCC.id.to_s => "" }
+      @activity.custom_properties.should == { @custom_property_BBB.id => 125 }
+    end
+    
+    describe "with save operation following" do
+      before do
+        @activity.activity_custom_property_values.create(:activity_custom_property => @custom_property_AAA, :value => 12)
+        @activity.activity_custom_property_values.create(:activity_custom_property => @custom_property_CCC, :value => 45)
+
+        @activity.custom_properties = { 
+          @custom_property_AAA.id.to_s => "15", 
+          @custom_property_BBB.id.to_s => "125", 
+          @custom_property_CCC.id.to_s => ""
+        }
+
+        @activity.save
+        @activity.reload
+      end
+      
+      it "should update custom value for changed value" do
+        @activity.activity_custom_property_values.first(:activity_custom_property_id => @custom_property_AAA.id).should_not be_nil
+        @activity.custom_properties[@custom_property_AAA.id].should == 15
+      end
+      
+      it "should create new custom value for new value" do
+        @activity.activity_custom_property_values.first(:activity_custom_property_id => @custom_property_BBB.id).should_not be_nil
+        @activity.custom_properties[@custom_property_BBB.id].should == 125
+      end
+      
+      it "should remove custom value for blank value" do
+        @activity.activity_custom_property_values.first(:activity_custom_property_id => @custom_property_CCC.id).should be_nil
+        @activity.custom_properties[@custom_property_CCC.id].should == nil
+      end
+    end
+    
+  end
+  
+  describe "#destroy" do
+    before do
+      @activity = Activity.generate
+      @activity.activity_custom_property_values.create(
+        :activity_custom_property => ActivityCustomProperty.generate,
+        :value => 12
+      )
+      @activity.activity_custom_property_values.create(
+        :activity_custom_property => ActivityCustomProperty.generate,
+        :value => 45
+      )
+    end
+    
+    it "should destroy assigned custom property values" do
+      @activity.activity_custom_property_values.count.should > 0
+      @activity.destroy
+      @activity.activity_custom_property_values.count.should == 0
+    end
+  end
+  
+  context "without required custom property" do
+    before do
+      @custom_property = ActivityCustomProperty.generate(:name => "AAA", :required => true)
+      
+      @activity = Activity.prepare
+      @activity.activity_custom_property_values.count.should == 0
+    end
+    
+    it { @activity.should have_errors_on(:activity_custom_property_values) }
+  end
+  
+  describe ".custom_property_values_sum" do
+    before do
+      @custom_property_AAA = ActivityCustomProperty.generate(:name => "AAA")
+      @custom_property_BBB = ActivityCustomProperty.generate(:name => "BBB")
+      
+      @activities = [
+        Activity.generate(:custom_properties => { @custom_property_AAA.id => 10.05 }),
+        Activity.generate(:custom_properties => { @custom_property_AAA.id =>  5.03, @custom_property_BBB.id => 120 }),
+        Activity.generate(:custom_properties => { @custom_property_AAA.id =>  1.00, @custom_property_BBB.id =>  17 })
+      ]
+    end
+    
+    it "should return the sum of given custom property values" do
+      Activity.custom_property_values_sum(@activities, @custom_property_AAA).to_s.should == 16.08.to_s
+      Activity.custom_property_values_sum(@activities, @custom_property_BBB).should == 137
     end
   end
 

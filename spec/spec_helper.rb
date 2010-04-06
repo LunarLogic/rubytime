@@ -51,6 +51,7 @@ Merb::Mailer.delivery_method = :test_send
 
 require Merb.root / 'spec/factory_patch'
 require Merb.root / 'spec/rubytime_factories'
+require Merb.root / "spec/matchers"
 require Merb.root / "spec/rubytime_specs_helper"
 require Merb.root / "spec/rubytime_controller_helper"
 require Merb.root / "spec/model_extensions"

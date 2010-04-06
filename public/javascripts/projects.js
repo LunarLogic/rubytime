@@ -9,6 +9,15 @@ $(function() {
     }
   }
   });
+
+  $('#project_form .activity_types a.toggler').click(function() { 
+    $(this).parents('.activity_types').children('ul').toggle('fast') 
+  });
+  
+  $('#project_form .activity_types input[type=checkbox]').click(function() { 
+    $(this).filter(':checked').siblings('ul').show().find('li input[type=checkbox]').attr("checked", "checked");
+    $(this).filter(':not(:checked)').siblings('ul').hide().find('li input[type=checkbox]').removeAttr("checked");
+  });
 });
 
 HourlyRates = function(node_or_selector, data_url, show_forms_for_empty_lists) {

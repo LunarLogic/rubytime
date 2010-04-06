@@ -10,6 +10,8 @@ class Project
 
   attr_accessor :has_activities
   belongs_to :client
+  has n, :project_activity_types
+  has n, :activity_types, :through => :project_activity_types
   has n, :activities
   has n, :users, :through => :activities
   has n, :hourly_rates
@@ -40,14 +42,34 @@ class Project
     all('activities.user_id' => user.id, :unique => true)
   end
 
+
   # instance methods
 
   def calendar_viewable?(user)
     user.client == self.client || user.is_admin?
   end
-  
+
   def hourly_rates_grouped_by_roles
     Role.all.inject({}) { |hash, role| hash[role] = []; hash }.update(hourly_rates.group_by { |hr| hr.role })
+  end
+
+  def activity_type_ids
+    activity_types.map { |at| at.id }
+  end
+  
+  def activity_type_ids=(activity_type_ids)
+    project_activity_types.all.destroy!
+    (activity_type_ids + used_activity_type_ids).uniq.each do |activity_type_id|
+      project_activity_types.create(:activity_type_id => activity_type_id)
+    end
+  end
+  
+  def used_activity_types
+    ActivityType.all("activities.project_id" => id).map { |at| at.ancestors + [at] }.flatten
+  end
+  
+  def used_activity_type_ids
+    used_activity_types.map { |at| at.id }
   end
 
 end

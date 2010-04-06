@@ -70,6 +70,42 @@ describe Project do
     end
   end
 
+  describe "#activity_type_ids" do
+    it "should return ids of assigned activity types" do
+      project = Project.generate
+      activity_type_1 = ActivityType.generate
+      activity_type_2 = ActivityType.generate
+
+      project.activity_types << activity_type_1
+      project.activity_types << activity_type_2
+      project.save
+
+      project.activity_type_ids.count.should == 2
+      project.activity_type_ids.should include(activity_type_1.id)
+      project.activity_type_ids.should include(activity_type_2.id)
+    end
+  end
+
+  describe "#activity_type_ids=" do
+    it "should assign proper activity types" do
+      project = Project.generate
+      activity_type_1 = ActivityType.generate
+      activity_type_2 = ActivityType.generate
+      activity_type_3 = ActivityType.generate
+
+      project.activity_types << activity_type_1
+      project.activity_types << activity_type_2
+      project.save
+
+      project.activity_type_ids = [activity_type_1.id, activity_type_3.id]
+
+      project.activity_types.reload
+      project.activity_types.count.should == 2
+      project.activity_types.should include(activity_type_1)
+      project.activity_types.should include(activity_type_3)
+    end
+  end
+
   describe "calendar_viewable?" do
     before :each do
       @client = Client.generate

@@ -73,6 +73,49 @@ describe SearchCriteria do
       list3.should include(@activity_banana_inactive_2)
     end
 
+    it "should return all activities matching an activity type in a project" do
+      project = Project.generate
+      type1, type2 = (0..1).map { ActivityType.generate }
+      project.update :activity_types => [type1, type2]
+      activity1, activity2 = [type1, type2].map { |t| Activity.generate :project => project, :activity_type => t }
+
+      list = search_all({ :activity_type_id => [type2.id] }, { :include_activities_without_types => false })
+      list.should == [activity2]
+    end
+
+    it "should return all activities matching an activity type in two projects" do
+      project1, project2 = (0..1).map { Project.generate }
+      type1, type2 = (0..1).map { ActivityType.generate }
+      project1.update :activity_types => [type1, type2]
+      project2.update :activity_types => [type1, type2]
+      activity11, activity12 = [type1, type2].map { |t| Activity.generate :project => project1, :activity_type => t }
+      activity21, activity22 = [type1, type2].map { |t| Activity.generate :project => project2, :activity_type => t }
+
+      list = search_all({ :activity_type_id => [type1.id] }, { :include_activities_without_types => false })
+      list.sort.should == [activity11, activity21]
+
+      list = search_all({ :activity_type_id => [type1.id], :project_id => [project2.id] },
+        { :include_activities_without_types => false })
+      list.sort.should == [activity21]
+    end
+
+    it "should return all activities matching two activity types" do
+      proj1, proj2 = (0..1).map { Project.generate }
+      type1, type2, type3 = (0..2).map { ActivityType.generate }
+      proj1.update :activity_types => [type1, type2, type3]
+      proj2.update :activity_types => [type1, type2, type3]
+      act11, act12, act13 = [type1, type2, type3].map { |t| Activity.generate :project => proj1, :activity_type => t }
+      act21, act22, act23 = [type1, type2, type3].map { |t| Activity.generate :project => proj2, :activity_type => t }
+
+      list = search_all({ :activity_type_id => [type1.id, type3.id] },
+        { :include_activities_without_types => false })
+      list.sort.should == [act11, act13, act21, act23]
+
+      list = search_all({ :activity_type_id => [type2.id, type3.id], :project_id => [proj1.id] },
+        { :include_activities_without_types => false })
+      list.sort.should == [act12, act13]
+    end
+
     it "should return all activities for specific client" do
       list = search_all({ :client_id => [@banana.id] })
       list.should include(@activity_banana_a1)
