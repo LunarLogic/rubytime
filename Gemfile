@@ -49,7 +49,7 @@ end
 
 group :development, :test do
   gem "rand"
-  gem "dm-factory_girl", "1.2.3", :require => "factory_girl", :git => "git://github.com/sickill/factory_girl.git"
+  gem "dm-factory_girl", "1.2.3", :require => "factory_girl", :git => "git://github.com/psionides/factory_girl_dm.git"
   gem "rspec", :require => "spec"
   gem "rcov"
   gem "rcov_stats"
