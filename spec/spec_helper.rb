@@ -60,7 +60,6 @@ require Merb.root / "spec/mail_controller_specs_helper"
 DataMapper.auto_migrate!
 
 Spec::Runner.configure do |config|
-  config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
   config.include(Merb::Test::ControllerHelper)
   config.include(Rubytime::Test::ControllerHelper)
