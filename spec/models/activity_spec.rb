@@ -554,14 +554,35 @@ describe Activity do
     end
   end
 
+  describe "main- and sub- activity_type setters" do
+
+    it "should set property to nil when nil is passed" do
+      typeA = ActivityType.generate
+      activity = Activity.generate
+
+      type4 = ActivityType.generate :id => nil.object_id  # for testing if id isn't set to nil.id
+      type4.id.should == 4
+
+      activity.main_activity_type = typeA
+      activity.main_activity_type_id.should == typeA.id
+
+      activity.main_activity_type = nil
+      activity.main_activity_type_id.should == nil
+    end
+
+  end
+
   describe "main- and sub- activity_type_id setters" do
     before do
       @activity_type_A  = ActivityType.generate
       @activity_type_B  = ActivityType.generate
+      @activity_type_C  = ActivityType.generate
       @activity_type_B1 = ActivityType.generate :parent => @activity_type_B
       @activity_type_B2 = ActivityType.generate :parent => @activity_type_B
+      @activity_type_C1 = ActivityType.generate :parent => @activity_type_C
       
       @activity = Activity.generate
+      @activity.activity_type = @activity_type_C
     end
     
     context "when setting to nil" do

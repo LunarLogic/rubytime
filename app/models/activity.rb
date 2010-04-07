@@ -64,7 +64,7 @@ class Activity
   end
   
   def main_activity_type=(main_activity_type)
-    self.main_activity_type_id = main_activity_type.id
+    self.main_activity_type_id = main_activity_type && main_activity_type.id
   end
   
   def sub_activity_type_id
@@ -81,7 +81,7 @@ class Activity
   end
   
   def sub_activity_type=(sub_activity_type)
-    self.sub_activity_type_id = sub_activity_type.id
+    self.sub_activity_type_id = sub_activity_type && sub_activity_type.id
   end
 
   # Returns n recent activities
