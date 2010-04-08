@@ -36,6 +36,9 @@ gem "mongrel", "1.1.5"
 gem "icalendar", "~>1.1.0"
 gem 'rack_revision_info'
 gem 'nokogiri', '1.4.1'  # for rack_revision_info
+# TODO: revision info doesn't work on the production now (which was the whole point) because Vlad deletes .git
+# directory from deployed code so there's no way to check current revision... this should be fixed when we switch
+# to Capistrano
 
 group :development do
   gem 'vlad', '2.0.0', :require => []

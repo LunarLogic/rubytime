@@ -2,8 +2,6 @@ TODO before 3.3 release:
 
 * test it again, fix any new bugs
 
-* when there are no more critical bugs -> release 3.3
-
 * update iRubyTime and Plasmoid (?)
 
 =====
@@ -11,6 +9,10 @@ TODO before 3.3 release:
 After 3.3 (in any order):
 
 * convert CSS to LESS
+
+* refactor existing code
+  - specs are in rather good shape now, but helpers, javascripts and some controllers definitely need some work too
+  - also, look for things marked #TODO :)
 
 * migrate to Rails 3
 
