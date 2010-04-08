@@ -262,6 +262,31 @@ describe Activities do
     it "should not crash when :activity hash isn't set" do
       block_should_not(raise_error) { as(@activity.user).dispatch_to(Activities, :update, :id => @activity.id) }
     end
+
+    it "should always edit correct activity's custom properties" do
+      # see commit 00844245983d7ec013e1b04f4e54e8f16af4dfd2 for explanation
+      employee = Employee.generate
+      project = Project.generate
+      property = ActivityCustomProperty.generate
+      activity1, activity2 = (0..1).map { Activity.generate :project => project, :user => employee }
+
+      activity1.update :custom_properties => { property.id => 5 }
+      activity2.update :custom_properties => { property.id => 7 }
+
+      as(employee).dispatch_to(Activities, :update, :id => activity1.id, :activity => {
+        :custom_properties => { property.id => 20 }
+      })
+
+      Activity.get(activity1.id).custom_properties[property.id].should == 20
+      Activity.get(activity2.id).custom_properties[property.id].should == 7
+
+      as(employee).dispatch_to(Activities, :update, :id => activity2.id, :activity => {
+        :custom_properties => { property.id => 45 }
+      })
+
+      Activity.get(activity1.id).custom_properties[property.id].should == 20
+      Activity.get(activity2.id).custom_properties[property.id].should == 45
+    end
   end
 
   describe "#destroy" do
