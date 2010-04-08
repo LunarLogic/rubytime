@@ -41,14 +41,19 @@ class ActivityTypes < Application
   end
 
   def update
+    new_position = params[:activity_type].delete(:position)
     @activity_type = ActivityType.get(params[:id]) or raise NotFound
     if @activity_type.update(params[:activity_type])
-       if @activity_type.parent
-         redirect resource(@activity_type.parent), :message => {:notice => "Sub-activity type was successfully updated"}
-       else
-         redirect resource(:activity_types), :message => {:notice => "Activity type was successfully updated"}
-       end
+      @activity_type.move(:to => new_position) unless new_position == @activity_type.position
+      if request.xhr?
+        render_success
+      elsif @activity_type.parent
+        redirect resource(@activity_type.parent), :message => {:notice => "Sub-activity type was successfully updated"}
+      else
+        redirect resource(:activity_types), :message => {:notice => "Activity type was successfully updated"}
+      end
     else
+      @old_name = @activity_type.original_attributes[ActivityType.properties[:name]]
       display @activity_type, :edit
     end
   end

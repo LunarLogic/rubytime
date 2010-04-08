@@ -1,7 +1,7 @@
 <% if @activity_type.parent %>
-  <h1>Edit <%= @activity_type.parent.name %> -> <%= @activity_type.original_values[:name] || @activity_type.name %> sub-activity type</h1>
+  <h1>Edit <%= @activity_type.parent.name %> -> <%= @old_name || @activity_type.name %> sub-activity type</h1>
 <% else %>
-  <h1>Edit <%= @activity_type.original_values[:name] || @activity_type.name %> activity type</h1>
+  <h1>Edit <%= @old_name || @activity_type.name %> activity type</h1>
 <% end %>
 
 <%= error_messages_for(@activity_type) %>
