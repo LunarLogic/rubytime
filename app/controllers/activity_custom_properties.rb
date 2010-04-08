@@ -25,7 +25,7 @@ class ActivityCustomProperties < Application
   end
   
   def update
-    if @activity_custom_property.update_attributes(params[:activity_custom_property])
+    if @activity_custom_property.update(params[:activity_custom_property])
       redirect resource(:activity_custom_properties), 
         :message => {:notice => "Custom property was successfully created"}
     else

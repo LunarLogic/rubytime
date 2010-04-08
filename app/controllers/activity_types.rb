@@ -42,7 +42,7 @@ class ActivityTypes < Application
 
   def update
     @activity_type = ActivityType.get(params[:id]) or raise NotFound
-    if @activity_type.update_attributes(params[:activity_type])
+    if @activity_type.update(params[:activity_type])
        if @activity_type.parent
          redirect resource(@activity_type.parent), :message => {:notice => "Sub-activity type was successfully updated"}
        else
