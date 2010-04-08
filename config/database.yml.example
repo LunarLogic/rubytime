@@ -1,12 +1,10 @@
 ---
 development: &defaults
-  # These are the settings for repository :default
   adapter:  mysql
   database: rubytime3_dev
   username: root
   password: 
   host: localhost
-  socket: /opt/local/var/run/mysql5/mysqld.sock
   encoding: UTF-8
 
 test:
@@ -23,8 +21,6 @@ production:
       username: root
       password: 
       host: localhost
-      socket: /opt/local/var/run/mysql5/mysqld.sock
 
 rake:
   <<:       *defaults
-  database: rubytime3_dev

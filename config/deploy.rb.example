@@ -1,18 +1,18 @@
-set :application, "rubytime-demo"
-set :deploy_to, "/home/someuser/rubytime-demo"
 set :repository, 'git://github.com/LunarLogicPolska/rubytime.git'
-set :revision, "origin/master"
-set :user, "someuser"
-set :domain, "someuser@somehost.com"
 set :use_sudo, false
-set :merb_env, 'staging'
+set :revision, ENV['TAG'] || "origin/master"
+set :merb_env, 'production'
+
+task :staging do
+  set :application, "rubytime"
+  set :domain, "user@staging.server.com"
+  set :deploy_to, "/var/www/#{application}"
+end
 
 task :production do
   set :application, "rubytime"
-  set :merb_env, 'production'
-  set :deploy_to, "/home/someuser/rubytime3"
-  set :user, "someuser"
-  set :domain, "someuser@somehost.com"
+  set :domain, "user@server.com"
+  set :deploy_to, "/var/www/#{application}"
 end
 
 namespace :vlad do
@@ -21,17 +21,58 @@ namespace :vlad do
     run "ln -s #{shared_path}/config/local_config.rb #{current_path}/config/local_config.rb"
   end
 
+  remote_task :install_gems, :roles => [:app] do
+    # FIXME: bundler's support for --without seems to be a bit broken at the moment
+    # run "cd #{current_path}; bundle install --without test development"
+    run "cd #{current_path}; bundle install"
+  end
+
+  remote_task :start_web, :roles => [:web] do
+    run "if [ -f #{shared_path}/system/maintenance.html ]; then rm -f #{shared_path}/system/maintenance.html; fi"
+  end
+
+  remote_task :stop_web, :roles => [:web] do
+    run "cp -f #{shared_path}/config/maintenance.html #{shared_path}/system/"
+  end
+
+  remote_task :restart_app, :roles => [:app] do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+
+  remote_task :start do
+    Rake::Task['vlad:restart_app'].invoke
+    Rake::Task['vlad:start_web'].invoke
+  end
+
+  remote_task :stop do
+    Rake::Task['vlad:stop_web'].invoke
+  end
+
   remote_task :build_asset_bundles do
     run "juicer merge #{current_path}/public/stylesheets/master.css -d #{current_path}/public"
   end
-  
+
   namespace :db do
     remote_task :autoupgrade, :roles => [:app] do
-      run "cd #{current_path}; #{rake_cmd} MERB_ENV=#{merb_env} bin/rake db:autoupgrade"
+      run "cd #{current_path}; MERB_ENV=#{merb_env} bundle exec rake db:autoupgrade"
     end
   end
 
-  task :deploy => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'vlad:start_app']
-  task :deploy_with_migrations => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'db:migrate', 'vlad:start_app']
-  task :deploy_with_autoupgrade => [ 'vlad:update', 'vlad:symlink_configs', 'vlad:build_asset_bundles', 'vlad:db:autoupgrade', 'vlad:start_app']
+  namespace :db do
+    remote_task :reset, :roles => [:app] do
+      run "cd #{current_path}; MERB_ENV=#{merb_env} bundle exec rake db:automigrate"
+    end
+  end
+
+  remote_task :tail, :roles => [:app] do
+    run "tail -n1000 -f #{current_path}/log/#{merb_env}.log"
+  end
+
+  PREPARING_TASKS = [
+    'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:install_gems', 'vlad:build_asset_bundles'
+  ]
+
+  task :deploy => PREPARING_TASKS + ['vlad:start']
+  task :deploy_with_autoupgrade => PREPARING_TASKS + ['vlad:db:autoupgrade', 'vlad:start']
+  task :deploy_with_db_reset => PREPARING_TASKS + ['vlad:db:reset', 'vlad:start']
 end
