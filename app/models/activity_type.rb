@@ -23,7 +23,11 @@ class ActivityType
   before :destroy do
     children.each { |at| at.destroy }
   end
-  
+
+  def parent_id=(id)
+    self.attribute_set :parent_id, (id.blank?) ? nil : id
+  end
+
   def destroy_allowed?
     projects.empty? and activities.empty? and children.all? { |at| at.destroy_allowed? }
   end

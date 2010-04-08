@@ -1,7 +1,16 @@
 require 'spec_helper'
 
 describe ActivityType do
-  
+
+  it "should nullify parent_id if it's an empty string" do
+    type1 = ActivityType.generate
+    type2 = ActivityType.prepare :parent_id => type1.id
+    type2.parent_id.should == type1.id
+
+    type2.parent_id = ''
+    type2.parent_id.should be_nil
+  end
+
   describe "#breadcrumb_name" do
     before do
       @activity_type_AAA = ActivityType.new :name => 'AAA'
