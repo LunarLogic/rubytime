@@ -166,7 +166,7 @@ module Merb
     end
 
     def day_url(criteria)
-      CGI.escapeHTML(resource(:activities, :day, :search_criteria => criteria)+"&width=400&height=500")
+      CGI.escapeHTML(resource(:activities, :day, :search_criteria => criteria)+"&width=600&height=500")
     end
 
     def prev_day_url

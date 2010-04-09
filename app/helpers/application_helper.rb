@@ -170,7 +170,7 @@ module Merb
       # icons
       row << %(<td class="icons">)
       row << link_to(image_tag("icons/magnifier.png", :alt => "I", :title => "Toggle details"), "#", :class => "toggle_comments_link") if options[:show_details_link]
-      row << link_to(image_tag("icons/pencil.png", :alt => "E", :title => "Edit"), resource(activity, :edit)+"?height=350&amp;width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
+      row << link_to(image_tag("icons/pencil.png", :alt => "E", :title => "Edit"), resource(activity, :edit)+"?height=400&amp;width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
       row << link_to(image_tag("icons/cross.png", :alt => "R", :title => "Remove"), resource(activity), :class => "remove_activity_link") if options[:show_delete_link] && activity.deletable_by?(current_user) && !activity.locked?
       row << link_to(image_tag("icons/notebook_minus.png", :alt => "-", :title => "Remove activity from this invoice"), resource(activity), :class => "remove_from_invoice_link") if options[:show_exclude_from_invoice_link] && !activity.locked?
       row << %(</td>)
