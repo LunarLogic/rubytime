@@ -22,9 +22,7 @@ namespace :vlad do
   end
 
   remote_task :install_gems, :roles => [:app] do
-    # FIXME: bundler's support for --without seems to be a bit broken at the moment
-    # run "cd #{current_path}; bundle install --without test development"
-    run "cd #{current_path}; bundle install"
+    run "cd #{current_path}; bundle install --without test development"
   end
 
   remote_task :start_web, :roles => [:web] do
