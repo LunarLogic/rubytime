@@ -277,7 +277,7 @@ var Application = {
   },
   
   _closeFlash: function() {
-    $("#flash").slideUp(function() {
+    $("#flash").fadeOut(function() {
       $(this).removeClass("notice").removeClass("error").hide();
     });
     Application._flashTimeout = null;
