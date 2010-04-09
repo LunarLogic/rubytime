@@ -58,8 +58,8 @@ class Activities < Application
 
   def create
     @activity = Activity.new(params[:activity])
-    @activity.user = current_user unless current_user.is_admin?
-    
+    @activity.user = current_user unless current_user.is_admin? && @activity.user
+
     if @activity.save
       self.content_type = :json
       display @activity, :status => 201

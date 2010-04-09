@@ -88,8 +88,10 @@ describe Activities do
 
     before :each do
       @user = Employee.generate
+      @admin = Employee.generate(:admin)
       @project = Project.generate
       ensure_rate_exists :project => @project, :role => @user.role, :takes_effect_at => Date.today
+      ensure_rate_exists :project => @project, :role => @admin.role, :takes_effect_at => Date.today
       @fields = {
         :date => Date.today,
         :hours => "7",
@@ -127,15 +129,29 @@ describe Activities do
     end
 
     it "should add activity for other user if current user is admin" do
-      admin = Employee.generate(:admin)
-
-      block_should(change(@user.activities, :count).by(1)).and_not(change(admin.activities, :count)) do
-        as(admin).dispatch_to(Activities, :create, :activity => @fields.merge(
+      block_should(change(@user.activities, :count).by(1)).and_not(change(@admin.activities, :count)) do
+        as(@admin).dispatch_to(Activities, :create, :activity => @fields.merge(
           :project_id => @project.id,
           :user_id => @user.id
         )).status.should == 201
       end
       Activity.last.user.should == @user
+    end
+
+    it "should set user field to current user if not set" do
+      block_should(change(@user.activities, :count).by(1)) do
+        response = as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(:project_id => @project.id))
+        response.status.should == 201
+      end
+      Activity.last.user.should == @user
+    end
+
+    it "should set user field to current user if not set, even for admin" do
+      block_should(change(@admin.activities, :count).by(1)) do
+        response = as(@admin).dispatch_to(Activities, :create, :activity => @fields.merge(:project_id => @project.id))
+        response.status.should == 201
+      end
+      Activity.last.user.should == @admin
     end
 
     it "should not add activity for client user" do
