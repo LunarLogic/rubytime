@@ -115,7 +115,7 @@ class SearchCriteria
   end
   
   def found_projects_with_activities_without_types?
-    found_projects.activities.all(:activity_type_id => nil).count > 0
+    Activity.count(:activity_type_id => nil, :project => found_projects) > 0
   end
   
   def found_raw_activity_types_and_their_children
