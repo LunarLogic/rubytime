@@ -193,6 +193,10 @@ label.error {
 }
 #ui-datepicker-div {
   font-size: 13px;
+  box-shadow: 1px 1px 3px #888;
+  -moz-box-shadow: 1px 1px 3px #888;
+  -webkit-box-shadow: 1px 1px 3px #888;
+  border-color: #bbb;
 }
 span.recent_days label, span.date_formats label {
   width: auto;
