@@ -1,12 +1,4 @@
-TODO before 3.3 release:
-
-* test it again, fix any new bugs
-
-* update iRubyTime and Plasmoid (?)
-
-=====
-
-After 3.3 (in any order):
+Things to do (in any order):
 
 * convert CSS to LESS
 
