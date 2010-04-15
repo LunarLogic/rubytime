@@ -19,4 +19,10 @@ class Purse
   def to_s
     currencies.map { |currency| self[currency].to_s }.join(' and ')
   end
+
+  def merge(other)
+    other.currencies.each { |currency| self << other[currency] }
+    self
+  end
+
 end

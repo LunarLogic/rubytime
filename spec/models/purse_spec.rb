@@ -36,6 +36,33 @@ describe Purse do
     @purse[@dollar].should == Money.new(9.98, @dollar)
   end
 
+  it "should merge two purses together" do
+    zl = Currency.first_or_generate(:singular_name => 'zloty')
+    pound = Currency.first_or_generate(:singular_name => 'pound')
+
+    @purse << Money.new(15, @euro)
+    @purse << Money.new(3, zl)
+    @purse << Money.new(14, pound)
+
+    other = Purse.new
+    other << Money.new(5, @euro)
+    other << Money.new(10, @dollar)
+    other << Money.new(20, zl)
+
+    @purse.merge(other)
+    @purse.currencies.should == [@dollar, @euro, pound, zl]
+    @purse[@dollar].should == Money.new(10, @dollar)
+    @purse[@euro].should == Money.new(20, @euro)
+    @purse[pound].should == Money.new(14, pound)
+    @purse[zl].should == Money.new(23, zl)
+
+    # other should remain unchanged
+    other.currencies.should == [@dollar, @euro, zl]
+    other[@euro].should == Money.new(5, @euro)
+    other[@dollar].should == Money.new(10, @dollar)
+    other[zl].should == Money.new(20, zl)
+  end
+
   describe "#to_s" do
     it "should return content as string" do
       @purse << Money.new(2.50, @euro)

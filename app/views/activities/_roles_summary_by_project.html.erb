@@ -4,12 +4,25 @@
     <th>Hours</th>
     <th>Price</th>
   </tr>
-  
-  <% roles.map{|role| RoleActivitiesInProjectSummary.new(role, activities_from(@activities, client, project, role))}.each do |summary| %>
+
+  <%# TODO: I know this is evil but this isn't the best moment for refactoring... %>
+  <% data = roles.map { |role| RoleActivitiesInProjectSummary.new(role,
+       activities_from(@activities, client, project, role)) } %>
+
+  <% data.each do |summary| %>
     <tr>
       <td><%= summary.role.name %></td>
       <td><%= summary.billable_time %></td>
       <td><%= summary.price %></td>
     </tr>
   <% end %>
+
+  <% if data.length > 1 %>
+    <tr>
+      <td><strong>Total:</strong></td>
+      <td><strong><%= data.inject(0.0) { |sum, r| sum + r.billable_time } %></strong></td>
+      <td><strong><%= data.inject(Purse.new) { |sum, r| sum.merge(r.price) } %></strong></td>
+    </tr>
+  <% end %>
+
 </table>
