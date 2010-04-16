@@ -1,0 +1,319 @@
+--- 
+dependencies: 
+  jslint_on_rails: 
+    group: 
+    - :development
+    - :test
+    version: ">= 0"
+  merb-auth-core: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  dm-is-tree: 
+    group: 
+    - :default
+    version: = 0.10.2
+  ruby-debug: 
+    group: 
+    - :development
+    - :test
+    version: ">= 0"
+  rack_revision_info: 
+    group: 
+    - :default
+    version: ">= 0"
+  mongrel: 
+    group: 
+    - :default
+    version: = 1.1.5
+  merb-auth-more: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  vlad-git: 
+    group: 
+    - :development
+    version: = 2.0.0
+    require: []
+
+  dm-factory_girl: 
+    group: 
+    - :development
+    - :test
+    version: = 1.2.3
+    require: 
+    - factory_girl
+  rcov_stats: 
+    group: 
+    - :development
+    - :test
+    version: ">= 0"
+  merb-auth-slice-password: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  dm-validations: 
+    group: 
+    - :default
+    version: = 0.10.2
+  dm-serializer: 
+    group: 
+    - :default
+    version: = 0.10.2
+  merb-helpers: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  dm-types: 
+    group: 
+    - :default
+    version: = 0.10.2
+  rspec: 
+    group: 
+    - :development
+    - :test
+    version: = 1.3.0
+    require: 
+    - spec
+  merb-core: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  dm-observer: 
+    group: 
+    - :default
+    version: = 0.10.2
+  dm-aggregates: 
+    group: 
+    - :default
+    version: = 0.10.2
+  vlad: 
+    group: 
+    - :development
+    version: = 2.0.0
+    require: []
+
+  dm-timestamps: 
+    group: 
+    - :default
+    version: = 0.10.2
+  dm-core: 
+    group: 
+    - :default
+    version: = 0.10.2
+  merb_datamapper: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  rcov: 
+    group: 
+    - :development
+    - :test
+    version: ">= 0"
+  do_mysql: 
+    group: 
+    - :default
+    version: ">= 0"
+  merb_dm_xss_terminate: 
+    group: 
+    - :default
+    version: ">= 0"
+  icalendar: 
+    group: 
+    - :default
+    version: ~> 1.1.0
+  delorean: 
+    group: 
+    - :development
+    - :test
+    version: ">= 0"
+  metric_fu: 
+    group: 
+    - :development
+    version: = 1.2.0
+  merb-slices: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  ci_reporter: 
+    group: 
+    - :development
+    - :test
+    version: ">= 0"
+  merb-mailer: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  dm-migrations: 
+    group: 
+    - :default
+    version: = 0.10.2
+  dm-is-list: 
+    group: 
+    - :default
+    version: = 0.10.2
+  merb-assets: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  nokogiri: 
+    group: 
+    - :default
+    version: = 1.4.1
+specs: 
+- rake: 
+    version: 0.8.7
+- abstract: 
+    version: 1.0.0
+- addressable: 
+    version: 2.1.1
+- bcrypt-ruby: 
+    version: 2.1.2
+- builder: 
+    version: 2.1.2
+- bundler: 
+    version: 0.9.20
+- cgi_multipart_eof_fix: 
+    version: 2.5.0
+- chardet: 
+    version: 0.9.0
+- json_pure: 
+    version: 1.2.4
+- rubyforge: 
+    version: 2.0.4
+- hoe: 
+    version: 2.6.0
+- chronic: 
+    version: 0.2.3
+- ci_reporter: 
+    version: 1.6.2
+- columnize: 
+    version: 0.3.1
+- daemons: 
+    version: 1.0.10
+- data_objects: 
+    version: 0.10.1
+- delorean: 
+    version: 0.1.1
+- extlib: 
+    version: 0.9.14
+- dm-core: 
+    version: 0.10.2
+- dm-adjust: 
+    version: 0.10.2
+- dm-aggregates: 
+    version: 0.10.2
+- dm-factory_girl: 
+    version: 1.2.3
+    source: 0
+- dm-is-list: 
+    version: 0.10.2
+- dm-is-tree: 
+    version: 0.10.2
+- dm-migrations: 
+    version: 0.10.2
+- dm-observer: 
+    version: 0.10.2
+- fastercsv: 
+    version: 1.5.3
+- dm-serializer: 
+    version: 0.10.2
+- dm-timestamps: 
+    version: 0.10.2
+- stringex: 
+    version: 1.1.0
+- uuidtools: 
+    version: 2.1.1
+- dm-types: 
+    version: 0.10.2
+- dm-validations: 
+    version: 0.10.2
+- do_mysql: 
+    version: 0.10.1
+- erubis: 
+    version: 2.6.5
+- fastthread: 
+    version: 1.0.7
+- sexp_processor: 
+    version: 3.0.4
+- ruby_parser: 
+    version: 2.0.4
+- flay: 
+    version: 1.4.0
+- flog: 
+    version: 2.2.0
+- gem_plugin: 
+    version: 0.2.3
+- html5: 
+    version: 0.10.0
+- icalendar: 
+    version: 1.1.3
+- jslint_on_rails: 
+    version: 1.0.2
+- linecache: 
+    version: "0.43"
+- mime-types: 
+    version: "1.16"
+- mailfactory: 
+    version: 1.4.0
+- rack: 
+    version: 1.1.0
+- rspec: 
+    version: 1.3.0
+- merb-core: 
+    version: 1.1.0.pre
+- merb-assets: 
+    version: 1.1.0.pre
+- merb-auth-core: 
+    version: 1.1.0.pre
+- merb-auth-more: 
+    version: 1.1.0.pre
+- merb-slices: 
+    version: 1.1.0.pre
+- merb-auth-slice-password: 
+    version: 1.1.0.pre
+- merb-helpers: 
+    version: 1.1.0.pre
+- merb-mailer: 
+    version: 1.1.0.pre
+- merb_datamapper: 
+    version: 1.1.0.pre
+- merb_dm_xss_terminate: 
+    version: 0.6.1
+    source: 2
+- rcov: 
+    version: 0.9.8
+- metric_fu: 
+    version: 1.2.0
+- mongrel: 
+    version: 1.1.5
+- nokogiri: 
+    version: 1.4.1
+- open4: 
+    version: 0.9.6
+- rack_revision_info: 
+    version: 0.3.5
+- rcov_stats: 
+    version: 1.1.6
+- ruby-debug-base: 
+    version: 0.10.3
+- ruby-debug: 
+    version: 0.10.3
+- vlad: 
+    version: 2.0.0
+- vlad-git: 
+    version: 2.0.0
+hash: 1680a4c708b7e9bbffe51e66cd67b073578dbdb0
+sources: 
+- Git: 
+    name: dm-factory_girl
+    uri: git://github.com/psionides/factory_girl_dm.git
+    version: 1.2.3
+    git: git://github.com/psionides/factory_girl_dm.git
+    require: factory_girl
+    ref: 0dc9accd63c20e48e336f3f237f90f7cbe1079e8
+- Rubygems: 
+    uri: http://rubygems.org
+- Git: 
+    uri: git://github.com/schwabsauce/merb_dm_xss_terminate.git
+    ref: 5ee5f92b61af29f5c79b89d677f27811800a639d
