@@ -14,9 +14,9 @@ You need to have Ruby version 1.8.6 or 1.8.7 and RubyGems 1.3.6+ installed on yo
 
 h3. Get the source
 
-Next get the source code from RubyTime git repository:
+Next get the source code from RubyTime git repository ('stable' branch is recommended):
 
-bc. git clone git://github.com/LunarLogicPolska/rubytime.git
+bc. git clone git://github.com/LunarLogicPolska/rubytime.git -b stable
 
 h3. Install gems
 

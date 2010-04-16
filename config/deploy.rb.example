@@ -1,6 +1,6 @@
 set :repository, 'git://github.com/LunarLogicPolska/rubytime.git'
 set :use_sudo, false
-set :revision, ENV['TAG'] || "origin/master"
+set :revision, ENV['TAG'] || "origin/stable"
 set :merb_env, 'production'
 
 task :staging do

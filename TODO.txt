@@ -10,6 +10,6 @@ Things to do (in any order):
 
 * for deployment, switch from Vlad to Capistrano
 
-* prepare some basic documentation to help new developers
-
 * fix minor bugs, implement new features
+
+* use 'whenever' for configuring scheduled tasks (timesheet reports etc.)
