@@ -28,7 +28,7 @@ Merb::Router.prepare do
   match("/projects/:project_id/calendar").
     to(:controller => "activities", :action => "calendar")
 
-  match("/free_days/:access_key(.:format)", :method => 'GET').
+  match("/free_days/:access_key(.:format)", :method => 'get').
     to(:controller => "free_days", :action => "index").name(:free_days_index)
 
   match("/invoices/issued").
