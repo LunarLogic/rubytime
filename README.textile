@@ -4,7 +4,7 @@ RubyTime is a web application for time tracking and invoicing, written in Ruby u
 
 h2. Recent changes
 
-See CHANGELOG.txt.
+See "CHANGELOG.txt":http://github.com/LunarLogicPolska/rubytime/raw/stable/CHANGELOG.txt.
 
 h2. Setup
 
