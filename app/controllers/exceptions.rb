@@ -1,4 +1,6 @@
 class Exceptions < Merb::Controller
+
+  log_params_filtered :password
   
   # handle NotFound exceptions (404)
   def not_found
