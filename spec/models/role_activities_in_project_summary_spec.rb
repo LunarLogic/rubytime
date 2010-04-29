@@ -27,11 +27,11 @@ describe RoleActivitiesInProjectSummary do
       @role = mock('role')
       @user = mock('user', :role => @role)
       @summary = RoleActivitiesInProjectSummary.new(@user.role, [
-        mock('activity', :role_for_date => @role, :duration => 1.hour,              :price => Money.new(20, @euro)),
-        mock('activity', :role_for_date => @role, :duration => 1.hour + 20.minutes, :price => nil),
-        mock('activity', :role_for_date => @role, :duration =>          15.minutes, :price => Money.new( 7, @dollar)),
-        mock('activity', :role_for_date => @role, :duration =>          45.minutes, :price => nil),
-        mock('activity', :role_for_date => @role, :duration =>           5.minutes, :price => Money.new(11, @euro))
+        mock('activity', :role => @role, :duration => 1.hour,              :price => Money.new(20, @euro)),
+        mock('activity', :role => @role, :duration => 1.hour + 20.minutes, :price => nil),
+        mock('activity', :role => @role, :duration =>          15.minutes, :price => Money.new( 7, @dollar)),
+        mock('activity', :role => @role, :duration =>          45.minutes, :price => nil),
+        mock('activity', :role => @role, :duration =>           5.minutes, :price => Money.new(11, @euro))
       ])
     end
 
@@ -51,7 +51,7 @@ describe RoleActivitiesInProjectSummary do
     end
 
     context "if called with activity of proper role" do
-      before { @summary << mock('activity', :role_for_date => @role, :duration => 1.hour, :price => nil) }
+      before { @summary << mock('activity', :role => @role, :duration => 1.hour, :price => nil) }
       it "should add activity" do
         @summary.non_billable_time.should == 1.hour
       end
@@ -61,7 +61,7 @@ describe RoleActivitiesInProjectSummary do
       it "should add activity" do
         block_should(raise_error(ArgumentError)) do
           @summary << mock('activity',
-            :role_for_date => mock('another role'),
+            :role => mock('another role'),
             :duration => 1.hour,
             :price => nil
           )

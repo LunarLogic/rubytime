@@ -32,6 +32,13 @@ describe Activity do
       activity.date = nil
       activity.role_for_date.should be_nil
     end
+
+    it "should update role when user or date is changed" do
+      activity = Activity.generate :user => @employee, :date => 6.days.ago
+      activity.role.should == @role1
+      activity.update :date => 4.days.ago
+      activity.role.should == @role2
+    end
   end
 
   context "with empty :comments property" do

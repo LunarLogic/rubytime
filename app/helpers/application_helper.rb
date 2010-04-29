@@ -73,14 +73,14 @@ module Merb
     end
     
     def unique_roles_from(activities, client, project)
-      activities.select { |a| a.project == project }.map(&:role_for_date).uniq.sort_by(&:name)
+      activities.select { |a| a.project == project }.map(&:role).uniq.sort_by(&:name)
     end
     
     def activities_from(activities, client, project=nil, role=nil)
       activities = activities.select { |a| a.project.client == client }
       if project
         activities = activities.select { |a| a.project == project }
-        activities = activities.select { |a| a.role_for_date == role  } if role
+        activities = activities.select { |a| a.role == role  } if role
       end
       activities.sort_by { |a| a.date }
     end

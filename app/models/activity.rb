@@ -9,6 +9,7 @@ class Activity
   property :date,        Date, :required => true, :index => true
   property :minutes,     Integer, :required => true, :auto_validation => false
   property :project_id,  Integer, :required => true, :index => true
+  property :role_id,     Integer, :required => true, :index => true, :default => -1
   property :activity_type_id, Integer, :index => true
   property :user_id,     Integer, :required => true, :index => true
   property :invoice_id,  Integer, :index => true
@@ -27,10 +28,17 @@ class Activity
   validates_present :hourly_rate, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
+  belongs_to :role
   belongs_to :activity_type
   belongs_to :user, :child_key => [:user_id]
   belongs_to :invoice
   belongs_to :price_currency, :model => Currency, :child_key => [:price_currency_id]
+
+  before :valid? do
+    if (new? || attribute_dirty?(:user_id) || attribute_dirty?(:date))
+      self.role = role_for_date
+    end
+  end
 
   # Returns the right user version for activity date
   def role_for_date

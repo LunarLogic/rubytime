@@ -222,7 +222,7 @@ class Activities < Application
         csv << [
           activity.project.client.name,
           activity.project.name,
-          activity.role_for_date.name,
+          activity.role.name,
           activity.user.name,
           activity.date,
           format_number(activity.minutes / 60.0, :precision => 2)

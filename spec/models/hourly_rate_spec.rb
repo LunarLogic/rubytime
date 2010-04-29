@@ -130,7 +130,7 @@ describe HourlyRate do
 
       user = Employee.generate :role => hr1.role
 
-      activity = Activity.new :project => hr1.project, :user => user, :date => date("2009-08-02")
+      activity = Activity.generate :project => hr1.project, :user => user, :date => date("2009-08-02")
       hr = HourlyRate.find_for_activity(activity)
       hr.should be_a_kind_of(HourlyRate)
       hr.should == hr2
@@ -315,6 +315,9 @@ describe HourlyRate do
       it "should correctly determine activities' roles" do
         testers = Role.generate
         time_travel_to(date("2009-09-02")) { @user1.update :role => testers }
+
+        # the activities need to be updated; normally, role changes won't magically happen in the past...
+        [@activityA, @activityB, @activityC, @activityD, @activityE].each { |a| a.update :role => a.role_for_date }
 
         rate1 = HourlyRate.generate :project => @project, :role => @devs, :takes_effect_at => date("2009-09-01")
         rate2 = HourlyRate.generate :project => @project, :role => testers, :takes_effect_at => date("2009-09-01")
