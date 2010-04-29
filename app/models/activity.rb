@@ -34,7 +34,7 @@ class Activity
 
   # Returns the right user version for activity date
   def role_for_date
-    user.version(self.date).role
+    user && date && user.version(self.date).role
   end
   
   has n, :activity_custom_property_values

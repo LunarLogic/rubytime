@@ -6,7 +6,34 @@ describe Activity do
       Activity.prepare.save.should be_true
     end
   end
-  
+
+  context "roles and dates" do
+    before :each do
+      @role1, @role2 = (0..1).map { Role.generate }
+      @employee = time_travel_to(10.days.ago) { Employee.generate :role => @role1 }
+      time_travel_to(5.days.ago) { @employee.update :role => @role2 }
+    end
+
+    it "should find a role matching a given user and date" do
+      activity = Activity.generate :user => @employee, :date => 6.days.ago
+      activity.role_for_date.should == @role1
+      activity.date = 4.days.ago
+      activity.role_for_date.should == @role2
+    end
+
+    it "should have nil role if user is not set" do
+      activity = Activity.generate :user => @employee, :date => 6.days.ago
+      activity.user = nil
+      activity.role_for_date.should be_nil
+    end
+
+    it "should have nil role if date is not set" do
+      activity = Activity.generate :user => @employee, :date => 6.days.ago
+      activity.date = nil
+      activity.role_for_date.should be_nil
+    end
+  end
+
   context "with empty :comments property" do
     before { @activity = Activity.new(:comments => "") }
     
@@ -173,7 +200,7 @@ describe Activity do
     it "should return formatted hours for saved activity" do
       a = Activity.prepare
       a.hours = "3,5"
-      a.save!
+      a.save
       a = Activity.get(a.id) # it must be reloaded
       a.hours.should == "3:30"
     end

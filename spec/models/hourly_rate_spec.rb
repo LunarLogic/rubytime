@@ -150,13 +150,18 @@ describe HourlyRate do
       rate2 = HourlyRate.generate :takes_effect_at => Date.today - 4, :project => project, :role => managers
 
       activity = Activity.generate :project => project, :user => user, :date => Date.today - 2
+      activity.should be_valid
       activity.hourly_rate.should == rate2
 
-      activity = Activity.generate :project => project, :user => user, :date => Date.today - 4
+      activity.instance_variable_set("@hourly_rate_memoized", nil)
+      activity.date = Date.today - 4
+      activity.should be_valid
       activity.hourly_rate.should == rate1
 
-      activity = Activity.prepare :project => project, :user => user, :date => Date.today - 6
+      activity.instance_variable_set("@hourly_rate_memoized", nil)
+      activity.date = Date.today - 6
       activity.should_not be_valid
+      activity.hourly_rate.should be_nil
     end
   end
 

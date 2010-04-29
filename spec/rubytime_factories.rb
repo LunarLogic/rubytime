@@ -1,4 +1,5 @@
 def ensure_rate_exists(args)
+  return unless args[:project] && args[:role] && args[:takes_effect_at]
   params = { :project => args[:project], :role => args[:role] }
   existing = HourlyRate.first(params.merge(:takes_effect_at.lte => args[:takes_effect_at]))
   existing || Factory.create(:hourly_rate, params.merge(:takes_effect_at => Date.parse("2000-01-01")))
@@ -45,7 +46,7 @@ Factory.define(:activity, :class => Activity) do |a|
   a.date { Date.today }
   a.minutes { 30 }
   a.sequence(:comments) { |n| "Activity comment ##{n}" }
-  a.after_build { |a| ensure_rate_exists(:project => a.project, :role => a.user.role, :takes_effect_at => a.date) }
+  a.after_build { |a| ensure_rate_exists(:project => a.project, :role => a.role_for_date, :takes_effect_at => a.date) }
 end
 
 Factory.define(:activity_type) do |at|

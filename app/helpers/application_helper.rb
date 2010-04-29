@@ -65,15 +65,15 @@ module Merb
     end
     
     def unique_clients_from(activities)
-      activities.map { |a| a.project.client }.uniq.sort_by { |c| c.name }
+      activities.map(&:project).map(&:client).uniq.sort_by(&:name)
     end
     
     def unique_projects_from(activities, client)
-      activities.select { |a| a.project.client == client }.map { |a| a.project }.uniq.sort_by { |p| p.name }
+      activities.select { |a| a.project.client == client }.map(&:project).uniq.sort_by(&:name)
     end
     
     def unique_roles_from(activities, client, project)
-      activities.select { |a| a.project.client == client && a.project == project }.map { |a| a.role_for_date }.uniq.sort_by { |r| r.name }
+      activities.select { |a| a.project == project }.map(&:role_for_date).uniq.sort_by(&:name)
     end
     
     def activities_from(activities, client, project=nil, role=nil)
