@@ -248,7 +248,7 @@ class Activity
   
   def custom_properties
     @custom_properties ||= activity_custom_property_values.inject({}) do |agg, property| 
-      agg[property.activity_custom_property.id] = property.value
+      agg[property.activity_custom_property_id] = property.value
       agg
     end
   end

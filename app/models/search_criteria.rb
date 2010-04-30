@@ -61,7 +61,7 @@ class SearchCriteria
   # finders
   
   def all_clients(conditions={})
-    Client.active.all(conditions.merge!({ :order => [:name] }))
+    @all_clients ||= Client.active.all(conditions.merge!({ :order => [:name] }))
   end
 
   # Returns all projects for found clients  
@@ -87,7 +87,7 @@ class SearchCriteria
   end
   
   def all_roles(conditions={})
-    Role.all(conditions.merge!({ :order => [:name] }))
+    @all_roles ||= Role.all(conditions.merge!({ :order => [:name] }))
   end
   
   # Returns all users for found roles

@@ -53,7 +53,7 @@ class HourlyRate
   end
   
   def self.find_for_activity(activity)
-    return nil unless activity.user && activity.date && activity.project
+    return nil unless activity.user_id && activity.date && activity.project_id
     find_for( 
       :role_id => activity.role_id,
       :project_id => activity.project_id,
