@@ -76,7 +76,7 @@ class Activities < Application
 
     if @activity.save
       self.content_type = :json
-      display @activity, :status => 201
+      display @activity
     else
       if content_type == :json
         display({:errors => @activity.errors.full_messages}, {:status => 400})
