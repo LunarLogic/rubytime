@@ -28,12 +28,26 @@ class Activities < Application
     @search_criteria.project_id = [params[:project_id]] if params[:project_id]
     @search_criteria.include_inactive_projects = true if current_user.is_client_user?
     @activities = @search_criteria.found_activities
+
+    @custom_properties = ActivityCustomProperty.all
+    @column_properties = @custom_properties.select(&:show_as_column_in_tables)
+    @non_column_properties = @custom_properties.reject(&:show_as_column_in_tables)
+
     if current_user.is_admin?
       @uninvoiced_activities = @activities.reject { |a| a.invoiced? }
       @clients = Client.active.all(:order => [:name])
       @invoices = Invoice.pending.all(:order => [:name])
       @invoice = Invoice.new
     end
+
+    # prefetch activity associations - this is necessary to prevent DM from making crazy amounts of queries...
+    # DM doesn't have :include, and SEL doesn't work in this case because the activities are filtered using select { }
+    @activities.users
+    @activities.roles
+    @activities.projects.clients
+    @activities.activity_custom_property_values
+    @activities.map(&:comments)
+
     if content_type == :csv
       convert_to_csv(@activities)
     elsif request.xhr?
@@ -62,7 +76,7 @@ class Activities < Application
 
     if @activity.save
       self.content_type = :json
-      display @activity, :status => 201
+      display @activity
     else
       if content_type == :json
         display({:errors => @activity.errors.full_messages}, {:status => 400})
@@ -222,7 +236,7 @@ class Activities < Application
         csv << [
           activity.project.client.name,
           activity.project.name,
-          activity.role_for_date.name,
+          activity.role.name,
           activity.user.name,
           activity.date,
           format_number(activity.minutes / 60.0, :precision => 2)

@@ -25,7 +25,9 @@ Merb::BootLoader.after_app_loads do
   Rubytime::DATE_FORMATS.each do |name, options|
     Date.add_format(name, options[:format])
   end
+
+  Rubytime::Misc.check_activity_roles
+
   require Merb.root / "config/local_config.rb"
-  
   Dir[ Merb.root / "lib/extensions/*.rb" ].each { |filename| require filename }
 end

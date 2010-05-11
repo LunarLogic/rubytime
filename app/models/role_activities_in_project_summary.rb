@@ -11,7 +11,7 @@ class RoleActivitiesInProjectSummary
   attr_reader :role, :non_billable_time, :billable_time, :price
   
   def <<(activity)
-    raise ArgumentError unless activity.role_for_date == role
+    raise ArgumentError unless activity.role_id == role.id
     
     if activity.price
       self.billable_time += activity.duration

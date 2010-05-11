@@ -19,7 +19,7 @@ begin
   # Setup the session serialization
   class Merb::Authentication
     def authenticated?
-      if !!session[:user]
+      if !!session[:user] && user
         user.active || auth_error('Your account is not active')
       else
         auth_error('You need to login to perform this action')

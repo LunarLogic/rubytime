@@ -65,24 +65,24 @@ module Merb
     end
     
     def unique_clients_from(activities)
-      activities.map { |a| a.project.client }.uniq.sort_by { |c| c.name }
+      activities.map(&:project).map(&:client).uniq.sort_by(&:name)
     end
     
     def unique_projects_from(activities, client)
-      activities.select { |a| a.project.client == client }.map { |a| a.project }.uniq.sort_by { |p| p.name }
+      activities.select { |a| a.project.client_id == client.id }.map(&:project).uniq.sort_by(&:name)
     end
     
     def unique_roles_from(activities, client, project)
-      activities.select { |a| a.project.client == client && a.project == project }.map { |a| a.role_for_date }.uniq.sort_by { |r| r.name }
+      activities.select { |a| a.project_id == project.id }.map(&:role).uniq.sort_by(&:name)
     end
     
-    def activities_from(activities, client, project=nil, role=nil)
-      activities = activities.select { |a| a.project.client == client }
+    def activities_from(activities, client, project = nil, role = nil)
+      activities = activities.select { |a| a.project.client_id == client.id }
       if project
-        activities = activities.select { |a| a.project == project }
-        activities = activities.select { |a| a.role_for_date == role  } if role
+        activities = activities.select { |a| a.project_id == project.id }
+        activities = activities.select { |a| a.role_id == role.id } if role
       end
-      activities.sort_by { |a| a.date }
+      activities.sort_by(&:date)
     end
     
     def total_from(activities)
@@ -91,7 +91,7 @@ module Merb
     
     def total_custom_properties(activities, client, project=nil, role=nil)
       html = ""
-      ActivityCustomProperty.all.each do |activity_custom_property|
+      @custom_properties.each do |activity_custom_property|
         html << %(<p>)
         html << %(Total #{activity_custom_property.name}: )
         html << %(#{format_number(Activity.custom_property_values_sum(activities_from(activities, client, project, role), activity_custom_property))})
@@ -111,8 +111,8 @@ module Merb
         :show_exclude_from_invoice_link => false, 
         :expanded => false, 
         :show_date => true,
-        :custom_properties_to_show_in_columns => ActivityCustomProperty.all(:show_as_column_in_tables => true),
-        :custom_properties_to_show_in_expanded_view => ActivityCustomProperty.all(:show_as_column_in_tables => false)
+        :custom_properties_to_show_in_columns => @column_properties,
+        :custom_properties_to_show_in_expanded_view => @non_column_properties
       }
 
       options = default_options.merge(options)

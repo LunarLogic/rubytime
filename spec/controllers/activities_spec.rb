@@ -101,7 +101,7 @@ describe Activities do
     end
 
     it "should add new activity" do
-      as(@user).dispatch_to(Activities, :create, :activity => @fields).status.should == 201
+      as(@user).dispatch_to(Activities, :create, :activity => @fields).status.should == 200
       Activity.last.user.should == @user
     end
 
@@ -123,7 +123,7 @@ describe Activities do
       block_should(change(@user.activities, :count).by(1)).and_not(change(other.activities, :count)) do
         as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(
           :user_id => other.id
-        )).status.should == 201
+        )).status.should == 200
       end
       Activity.last.user.should == @user
     end
@@ -133,7 +133,7 @@ describe Activities do
         as(@admin).dispatch_to(Activities, :create, :activity => @fields.merge(
           :project_id => @project.id,
           :user_id => @user.id
-        )).status.should == 201
+        )).status.should == 200
       end
       Activity.last.user.should == @user
     end
@@ -141,7 +141,7 @@ describe Activities do
     it "should set user field to current user if not set" do
       block_should(change(@user.activities, :count).by(1)) do
         response = as(@user).dispatch_to(Activities, :create, :activity => @fields.merge(:project_id => @project.id))
-        response.status.should == 201
+        response.status.should == 200
       end
       Activity.last.user.should == @user
     end
@@ -149,7 +149,7 @@ describe Activities do
     it "should set user field to current user if not set, even for admin" do
       block_should(change(@admin.activities, :count).by(1)) do
         response = as(@admin).dispatch_to(Activities, :create, :activity => @fields.merge(:project_id => @project.id))
-        response.status.should == 201
+        response.status.should == 200
       end
       Activity.last.user.should == @admin
     end
@@ -168,7 +168,7 @@ describe Activities do
           :price_value => 2.5,
           :price_currency_id => Currency.first_or_generate.id,
           :invoice_id => Invoice.generate(:client => @project.client).id
-        )).status.should == 201
+        )).status.should == 200
       end
       Activity.last.price_currency.should be_nil
       Activity.last.price_value.should be_nil

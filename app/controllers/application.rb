@@ -10,6 +10,20 @@ class Application < Merb::Controller
   
   private
 
+  # overriding param protection code from merb-param-protection, because it's stupid and can't handle nested params
+  def self._filter_params(params)
+    return params if self.log_params_args.nil?
+    result = { }
+    params.each do |k,v|
+      if v.is_a?(Hash)
+        result[k] = self._filter_params(v)
+      else
+        result[k] = (self.log_params_args.include?(k.to_sym) ? '[FILTERED]' : v)
+      end
+    end
+    result
+  end
+
   def self.protect_fields_for(record, fields = {})
     if fields[:in]
       before(nil, :only => fields[:in]) do |c|

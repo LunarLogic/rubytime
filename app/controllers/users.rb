@@ -11,6 +11,8 @@ class Users < Application
     :always => [:activities_count],
     :admin => [:role_id, :client_id, :login, :active, :admin, :type, :class_name]
 
+  log_params_filtered :password, :password_confirmation
+
   def index
     @user = if params[:client_id]
               ClientUser.new :client => Client.get(params[:client_id])
