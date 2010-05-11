@@ -47,7 +47,7 @@ dependencies:
     group: 
     - :development
     - :test
-    version: ">= 0"
+    version: = 1.1.6
   merb-helpers: 
     group: 
     - :default
@@ -300,7 +300,7 @@ specs:
 - rack_revision_info: 
     version: 0.3.5
 - rcov_stats: 
-    version: 2.0.0
+    version: 1.1.6
 - ruby-debug-base: 
     version: 0.10.3
 - ruby-debug: 
@@ -309,7 +309,7 @@ specs:
     version: 2.0.0
 - vlad-git: 
     version: 2.0.0
-hash: 364e6511cee4d11da760b8ff1e13d915c19337fb
+hash: eec863a60e88e1e6d4e926e47f89817f2b43107d
 sources: 
 - Git: 
     name: dm-factory_girl

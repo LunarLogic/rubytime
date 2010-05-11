@@ -51,7 +51,7 @@ group :development, :test do
   gem "dm-factory_girl", "1.2.3", :require => "factory_girl", :git => "git://github.com/psionides/factory_girl_dm.git"
   gem "rspec", '1.3.0', :require => "spec"
   gem "rcov"
-  gem "rcov_stats"
+  gem "rcov_stats", '1.1.6'
   gem "ci_reporter"
   gem "jslint_on_rails"
   gem 'ruby-debug'
