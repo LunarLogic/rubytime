@@ -40,7 +40,6 @@ describe Currency do
     it "should not be valid" do
       @invalid_currencies.each do |c|
         @currency = Currency.prepare(:singular_name => c)
-                p @currency
         @currency.should_not be_valid
         @currency.errors.on(:singular_name).should_not be_empty
       end
