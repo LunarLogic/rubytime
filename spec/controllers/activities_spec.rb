@@ -12,6 +12,22 @@ describe Activities do
     request.should route_to(Activities, :index).with(:project_id => project.id.to_s)
   end
 
+  it "should export activities to CSV" do
+    project = Project.generate
+    activities = [
+      Activity.generate(:project => project),
+      Activity.generate(:project => project)
+    ]
+    response = as(:admin).dispatch_to(Activities, :index, { :project_id => project.id, :format => :csv })
+    lines = response.body.split(/\n/)
+    lines.length.should == 3
+    lines[0].should =~ /Client;Project;Role/
+    lines[1].index(activities[0].project.name).should_not be_nil
+    lines[1].index(activities[0].comments).should_not be_nil
+    lines[2].index(activities[1].project.client.name).should_not be_nil
+    lines[2].index(activities[1].comments).should_not be_nil
+  end
+
   describe "#index" do
     it "should show list of activities" do
       as(:employee).dispatch_to(Activities, :index).should be_successful
