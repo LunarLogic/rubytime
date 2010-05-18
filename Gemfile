@@ -35,6 +35,7 @@ end
 
 gem "mongrel", "1.1.5"
 gem "icalendar", "~>1.1.0"
+gem "fastercsv", '1.5.3'
 gem 'rack_revision_info'
 gem 'nokogiri', '1.4.1'  # for rack_revision_info
 # TODO: revision info doesn't work on the production now (which was the whole point) because Vlad deletes .git

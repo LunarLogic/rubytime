@@ -226,8 +226,7 @@ class Activities < Application
   end
   
   def convert_to_csv(activities)
-    report = StringIO.new
-    CSV::Writer.generate(report, ';') do |csv|
+    FasterCSV.generate(:col_sep => ';') do |csv|
       custom_columns = ActivityCustomProperty.all.map { |p| p.name_with_unit }
       csv << %w(Client Project Role User Date Hours) + custom_columns + %w(Type SubType Comments)
 
@@ -247,8 +246,6 @@ class Activities < Application
         ]
       end
     end
-    report.rewind
-    report.read
   end
   
   def number_of_columns
