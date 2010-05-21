@@ -5,14 +5,14 @@ dependencies:
     - :development
     - :test
     version: ">= 0"
-  merb-auth-core: 
-    group: 
-    - :default
-    version: = 1.1.0.pre
   dm-is-tree: 
     group: 
     - :default
     version: = 0.10.2
+  merb-auth-core: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
   fastercsv: 
     group: 
     - :default
@@ -51,20 +51,24 @@ dependencies:
     group: 
     - :development
     - :test
-    version: = 1.1.6
-  merb-auth-slice-password: 
+    version: ">= 0"
+  merb-helpers: 
     group: 
     - :default
     version: = 1.1.0.pre
-  dm-validations: 
-    group: 
-    - :default
-    version: = 0.10.2
   dm-serializer: 
     group: 
     - :default
     version: = 0.10.2
-  merb-helpers: 
+  dm-validations: 
+    group: 
+    - :default
+    version: = 0.10.2
+  merb-auth-slice-password: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  merb-exceptions: 
     group: 
     - :default
     version: = 1.1.0.pre
@@ -79,29 +83,29 @@ dependencies:
     version: = 1.3.0
     require: 
     - spec
-  merb-core: 
-    group: 
-    - :default
-    version: = 1.1.0.pre
-  dm-observer: 
-    group: 
-    - :default
-    version: = 0.10.2
   dm-aggregates: 
     group: 
     - :default
     version: = 0.10.2
+  dm-observer: 
+    group: 
+    - :default
+    version: = 0.10.2
+  merb-core: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
   vlad: 
     group: 
     - :development
     version: = 2.0.0
     require: []
 
-  dm-timestamps: 
+  dm-core: 
     group: 
     - :default
     version: = 0.10.2
-  dm-core: 
+  dm-timestamps: 
     group: 
     - :default
     version: = 0.10.2
@@ -144,23 +148,23 @@ dependencies:
     - :development
     - :test
     version: ">= 0"
-  merb-mailer: 
-    group: 
-    - :default
-    version: = 1.1.0.pre
-  dm-migrations: 
-    group: 
-    - :default
-    version: = 0.10.2
   dm-is-list: 
     group: 
     - :default
     version: = 0.10.2
-  merb-assets: 
+  dm-migrations: 
+    group: 
+    - :default
+    version: = 0.10.2
+  merb-mailer: 
     group: 
     - :default
     version: = 1.1.0.pre
   merb-param-protection: 
+    group: 
+    - :default
+    version: = 1.1.0.pre
+  merb-assets: 
     group: 
     - :default
     version: = 1.1.0.pre
@@ -200,11 +204,11 @@ specs:
 - daemons: 
     version: 1.0.10
 - data_objects: 
-    version: 0.10.1
+    version: 0.10.2
 - delorean: 
     version: 0.1.1
 - extlib: 
-    version: 0.9.14
+    version: 0.9.15
 - dm-core: 
     version: 0.10.2
 - dm-adjust: 
@@ -237,7 +241,7 @@ specs:
 - dm-validations: 
     version: 0.10.2
 - do_mysql: 
-    version: 0.10.1
+    version: 0.10.2
 - erubis: 
     version: 2.6.5
 - fastthread: 
@@ -280,9 +284,11 @@ specs:
     version: 1.1.0.pre
 - merb-auth-slice-password: 
     version: 1.1.0.pre
-- merb-helpers: 
-    version: 1.1.0.pre
 - merb-mailer: 
+    version: 1.1.0.pre
+- merb-exceptions: 
+    version: 1.1.0.pre
+- merb-helpers: 
     version: 1.1.0.pre
 - merb-param-protection: 
     version: 1.1.0.pre
@@ -304,7 +310,7 @@ specs:
 - rack_revision_info: 
     version: 0.3.5
 - rcov_stats: 
-    version: 1.1.6
+    version: 2.0.1
 - ruby-debug-base: 
     version: 0.10.3
 - ruby-debug: 
@@ -313,7 +319,7 @@ specs:
     version: 2.0.0
 - vlad-git: 
     version: 2.0.0
-hash: 40661b91f9e6e86a8c7ed671fd40849408d01938
+hash: d07d5cab036b8971d11f3f3c9095f34f98e5c919
 sources: 
 - Git: 
     name: dm-factory_girl
