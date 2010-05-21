@@ -18,15 +18,6 @@ Merb::BootLoader.before_app_loads do
   Merb.add_mime_type(:ics, :to_ics, %w[text/calendar])
   Merb::Mailer.delivery_method = :sendmail
   require Merb.root / "lib/rubytime/misc"
-
-  Merb::Plugins.config[:exceptions] = {
-    :email_addresses => ['jakub.suder@llp.pl'],
-    :app_name        => "RubyTime",
-    :environments    => ['production', 'staging'],
-    :email_from      => "exceptions@rt.llp.pl",
-    :mailer_config => nil,
-    :mailer_delivery_method => :sendmail
-  }
 end
 
 Merb::BootLoader.after_app_loads do
@@ -38,5 +29,17 @@ Merb::BootLoader.after_app_loads do
   Rubytime::Misc.check_activity_roles
 
   require Merb.root / "config/local_config.rb"
+
+  if Rubytime::CONFIG[:exception_report_email]
+    Merb::Plugins.config[:exceptions] = {
+      :email_addresses => [Rubytime::CONFIG[:exception_report_email]],
+      :app_name        => "RubyTime",
+      :environments    => ['production', 'staging'],
+      :email_from      => Rubytime::CONFIG[:mail_from],
+      :mailer_config => nil,
+      :mailer_delivery_method => :sendmail
+    }
+  end
+
   Dir[ Merb.root / "lib/extensions/*.rb" ].each { |filename| require filename }
 end
