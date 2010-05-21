@@ -15,8 +15,8 @@ describe Activities do
   it "should export activities to CSV" do
     project = Project.generate
     activities = [
-      Activity.generate(:project => project),
-      Activity.generate(:project => project)
+      Activity.generate(:project => project, :date => Date.today - 1),
+      Activity.generate(:project => project, :date => Date.today - 2)
     ]
     response = as(:admin).dispatch_to(Activities, :index, { :project_id => project.id, :format => :csv })
     lines = response.body.split(/\n/)
