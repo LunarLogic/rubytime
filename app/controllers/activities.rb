@@ -10,6 +10,7 @@ class Activities < Application
   before :load_users,                 :only => [:new, :edit, :update, :create]
   before :load_activity,              :only => [:edit, :update, :destroy]
   before :load_activity_custom_properties, :only => [:new, :create, :edit, :update]
+  before :load_column_properties,     :only => [:index, :day]
   before :load_owner,                 :only => [:calendar]
   before :check_calendar_viewability, :only => [:calendar]
   before :check_day_viewability,      :only => [:day]
@@ -28,10 +29,6 @@ class Activities < Application
     @search_criteria.project_id = [params[:project_id]] if params[:project_id]
     @search_criteria.include_inactive_projects = true if current_user.is_client_user?
     @activities = @search_criteria.found_activities
-
-    @custom_properties = ActivityCustomProperty.all
-    @column_properties = @custom_properties.select(&:show_as_column_in_tables)
-    @non_column_properties = @custom_properties.reject(&:show_as_column_in_tables)
 
     if current_user.is_admin?
       @uninvoiced_activities = @activities.reject { |a| a.invoiced? }
@@ -225,6 +222,12 @@ class Activities < Application
     @activity_custom_properties = ActivityCustomProperty.all
   end
   
+  def load_column_properties
+    @custom_properties = ActivityCustomProperty.all
+    @column_properties = @custom_properties.select(&:show_as_column_in_tables)
+    @non_column_properties = @custom_properties.reject(&:show_as_column_in_tables)
+  end
+
   def convert_to_csv(activities)
     FasterCSV.generate(:col_sep => ';') do |csv|
       custom_columns = ActivityCustomProperty.all.map { |p| p.name_with_unit }
