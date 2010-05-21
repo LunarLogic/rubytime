@@ -11,13 +11,22 @@ Merb::Config.use do |c|
   c[:session_secret_key]  = '1205346b9baa87cf8e49f78124c8d17a31ac0971'  # required for cookie session store
   # c[:session_id_key] = '_session_id' # cookie session id key, defaults to "_session_id"
 end
- 
+
 Merb::BootLoader.before_app_loads do
   # This will get executed after dependencies have been loaded but before your app's classes have loaded.
   Merb.add_mime_type(:csv, :to_csv, %w[text/csv])
   Merb.add_mime_type(:ics, :to_ics, %w[text/calendar])
   Merb::Mailer.delivery_method = :sendmail
   require Merb.root / "lib/rubytime/misc"
+
+  Merb::Plugins.config[:exceptions] = {
+    :email_addresses => ['jakub.suder@llp.pl'],
+    :app_name        => "RubyTime",
+    :environments    => ['production', 'staging'],
+    :email_from      => "exceptions@rt.llp.pl",
+    :mailer_config => nil,
+    :mailer_delivery_method => :sendmail
+  }
 end
 
 Merb::BootLoader.after_app_loads do

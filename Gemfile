@@ -28,6 +28,7 @@ gem "merb-auth-core", merb_gems_version
 gem "merb-auth-more", merb_gems_version
 gem "merb-auth-slice-password", merb_gems_version
 gem "merb-param-protection", merb_gems_version
+gem "merb-exceptions", merb_gems_version
 
 git "git://github.com/schwabsauce/merb_dm_xss_terminate.git" do
   gem "merb_dm_xss_terminate"
