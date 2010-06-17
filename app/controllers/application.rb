@@ -78,4 +78,10 @@ class Application < Merb::Controller
     render_failure("", 412) # :precondition_failed
   end
 
+  def load_column_properties
+    @custom_properties = ActivityCustomProperty.all
+    @column_properties = @custom_properties.select(&:show_as_column_in_tables)
+    @non_column_properties = @custom_properties.reject(&:show_as_column_in_tables)
+  end
+
 end
