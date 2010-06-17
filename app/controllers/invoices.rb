@@ -3,6 +3,7 @@ class Invoices < Application
   before :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
   before :load_invoices, :only => [:index, :create]
   before :load_clients, :only => [:index, :create, :edit]
+  before :load_column_properties, :only => [:show]
 
   def index
     raise Forbidden unless current_user.is_client_user? || current_user.is_admin?
