@@ -46,7 +46,6 @@ gem 'nokogiri', '1.4.1'  # for rack_revision_info
 group :development do
   gem 'vlad', '2.0.0', :require => []
   gem 'vlad-git', '2.0.0', :require => []
-  gem "metric_fu", "1.2.0"  # note: 1.3+ requires activesupport
 end
 
 group :development, :test do
