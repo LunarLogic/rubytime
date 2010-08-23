@@ -10,6 +10,7 @@ require 'merb-core'
 
 Merb::Config.setup(
   :merb_root   => ::File.expand_path(::File.dirname(__FILE__)),
+  :fork_for_class_load => false,
   :environment => ENV['RACK_ENV'] || 'production'
 )
 Merb.environment = Merb::Config[:environment]
