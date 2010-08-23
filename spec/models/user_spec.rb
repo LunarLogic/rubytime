@@ -410,6 +410,13 @@ describe Employee do
       @employee.versions[1].role.should == @master
     end
 
+    it "should create a first version correctly if not versioned attributes were modified" do
+      lambda {
+        @employee.versions.destroy!
+        @employee.update :remember_me_token => 'rememberme', :active => !@employee.active?
+      }.should_not raise_error
+    end
+
     it "should delete user's version after his account is deleted" do
       @employee.update :role => @master
       block_should(change(UserVersion, :count).by(-2)) do
