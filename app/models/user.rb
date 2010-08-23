@@ -213,7 +213,11 @@ class User
     # this won't be called for new users, but will be called once for users created before this code was added
     version_attributes = versioned_attributes
     version_attributes[:modified_at] = self.created_at
-    original_attributes.each { |property, value| version_attributes[property.name] = value }
+    original_attributes.each do |property, value|
+      if version_attributes.has_key?(property.name) # ignore not versioned attributes
+        version_attributes[property.name] = value
+      end
+    end
     UserVersion.create(version_attributes)
   end
 
