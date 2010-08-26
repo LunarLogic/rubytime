@@ -85,4 +85,8 @@ class Project
     end
     return full_success
   end
+
+  def estimates_grouped_by_parent_activity_type_id
+    @estimates_grouped_by_parent_activity_type_id ||= existing_and_new_estimates.group_by { |e| e.activity_type.parent_id }
+  end
 end

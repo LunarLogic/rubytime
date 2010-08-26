@@ -1,0 +1,15 @@
+<tr class="<%= estimate.activity_type.parent_id ? 'sub-estimate' : 'root-estimate' %>">
+  <td class="activity-type-name"><%= estimate.activity_type.name %></td>
+  <td>
+    <%= error_on estimate, :minutes %>
+    <%= text_field :name => "project[activity_types][#{estimate.activity_type.id}][minutes]",
+      :value => estimate.minutes,
+      :class => estimate.errors.on(:minutes).blank? ? nil : 'field_with_errors' %>
+  </td>
+  <td>
+    <%= error_on estimate, :minutes_to_go %>
+    <%= text_field :name => "project[activity_types][#{estimate.activity_type.id}][minutes_to_go]", 
+      :value => estimate.minutes_to_go, 
+      :class => estimate.errors.on(:minutes_to_go).blank? ? nil : 'field_with_errors' %>
+  </td>
+</tr>
