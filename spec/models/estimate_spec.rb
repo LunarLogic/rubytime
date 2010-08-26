@@ -137,6 +137,18 @@ describe Estimate do
     it { @estimate.should have_errors_on(:minutes_to_go) }
   end
 
+  context "with :minutes having decimal part" do
+    before { @estimate = Estimate.new :minutes => 10.5, :minutes_to_go => 5 }
+
+    it { @estimate.should have_errors_on(:minutes) }
+  end
+
+  context "with :minutes_to_go having decimal part" do
+    before { @estimate = Estimate.new :minutes => 10, :minutes_to_go => 5.5 }
+
+    it { @estimate.should have_errors_on(:minutes_to_go) }
+  end
+
   context "with :minutes_to_go greater than :minutes" do
     before { @estimate = Estimate.new :minutes => 5, :minutes_to_go => 6 }
 
