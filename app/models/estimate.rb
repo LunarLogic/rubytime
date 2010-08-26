@@ -1,4 +1,6 @@
 class Estimate
+
+  MAX_MINUTES = 999999
   include DataMapper::Resource
 
   property :project_id,       Integer, :key => true
@@ -13,7 +15,7 @@ class Estimate
 
   validates_is_unique :activity_type_id, :scope => :project_id
   validates_present :minutes, :unless => proc { |estimate| estimate.minutes_to_go.nil? }, :message => 'Minutes must not be blank when minutes to go is set.'
-  validates_is_number :minutes, :minutes_to_go, :gte => 0, :integer_only => true, :allow_nil => true
+  validates_is_number :minutes, :minutes_to_go, :gte => 0, :lte => MAX_MINUTES, :integer_only => true, :allow_nil => true
   validates_with_method :minutes_to_go, :method => :validates_minutes_to_go
 
   def minutes=(minutes)

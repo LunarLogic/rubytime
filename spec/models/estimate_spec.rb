@@ -125,6 +125,18 @@ describe Estimate do
     end
   end
 
+  context "with :minutes greater than Estimate::MAX_MINUTES" do
+    before { @estimate = Estimate.new :minutes => Estimate::MAX_MINUTES + 1, :minutes_to_go => 5 }
+
+    it { @estimate.should have_errors_on(:minutes) }
+  end
+
+  context "with :minutes_to_go greater than Estimate::MAX_MINUTES" do
+    before { @estimate = Estimate.new :minutes => Estimate::MAX_MINUTES + 2, :minutes_to_go => Estimate::MAX_MINUTES + 1 }
+
+    it { @estimate.should have_errors_on(:minutes_to_go) }
+  end
+
   context "with :minutes_to_go greater than :minutes" do
     before { @estimate = Estimate.new :minutes => 5, :minutes_to_go => 6 }
 
