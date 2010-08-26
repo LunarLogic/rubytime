@@ -16,7 +16,6 @@ class Estimate
   validates_is_unique :activity_type_id, :scope => :project_id
   validates_present :minutes, :unless => proc { |estimate| estimate.minutes_to_go.nil? }, :message => 'Minutes must not be blank when minutes to go is set.'
   validates_is_number :minutes, :minutes_to_go, :gte => 0, :lte => MAX_MINUTES, :allow_nil => true
-  validates_with_method :minutes_to_go, :method => :validates_minutes_to_go
   validates_with_method :minutes, :method => :validates_minutes_must_be_integer
   validates_with_method :minutes_to_go, :method => :validates_minutes_to_go_must_be_integer
 
@@ -47,14 +46,6 @@ class Estimate
       new? ? true : destroy
     else
       save
-    end
-  end
-
-  def validates_minutes_to_go
-    if minutes and minutes_to_go and minutes_to_go.to_i > minutes.to_i
-      [false, "Minutes to go must not be greater than minutes."]
-    else
-      true
     end
   end
 
