@@ -130,4 +130,14 @@ describe Estimate do
 
     it { @estimate.should have_errors_on(:minutes_to_go) }
   end
+
+  describe "#validates_minutes_to_go" do
+    context "when :minutes is string and :minutes_to_go is integer" do
+      before { @estimate = Estimate.new :minutes => 'five', :minutes_to_go => 4 }
+
+      it "should not crash" do
+        lambda { @estimate.save }.should_not raise_error(ArgumentError)
+      end
+    end
+  end
 end

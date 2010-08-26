@@ -33,7 +33,7 @@ class Estimate
   end
 
   def validates_minutes_to_go
-    if minutes and minutes_to_go and minutes_to_go > minutes
+    if minutes and minutes_to_go and minutes_to_go.to_i > minutes.to_i
       [false, "Minutes to go must not be greater than minutes."]
     else
       true
