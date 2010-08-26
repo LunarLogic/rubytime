@@ -1,0 +1,17 @@
+<h1>List of projects</h1>
+
+<% if @projects.empty? %>
+  No projects found.
+<% else %>
+  <table id="projects" class="list wide">
+  <tr>
+    <th>Name</th>
+    <th class="icons"></th>
+  </tr>
+  <% @projects.each do |project| %>
+    <tr>
+      <td><%= link_to(project.name, resource(project, :estimates)) %></td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>

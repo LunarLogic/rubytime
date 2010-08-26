@@ -11,10 +11,11 @@ class Project
   attr_accessor :has_activities
   belongs_to :client
   has n, :project_activity_types
-  has n, :activity_types, :through => :project_activity_types
+  has n, :activity_types, :through => :project_activity_types, :order => :position
   has n, :activities
   has n, :users, :through => :activities
   has n, :hourly_rates
+  has n, :estimates
 
   before :destroy do
     throw :halt if activities.count > 0
@@ -72,4 +73,16 @@ class Project
     used_activity_types.map { |at| at.id }
   end
 
+  def existing_and_new_estimates
+    @existing_and_new_estimates ||= activity_types.map { |activity_type| estimates.first_or_new(:activity_type_id => activity_type.id) }
+  end
+
+  def update_estimates(activity_type_ids_and_estimate_attrs)
+    full_success = true
+    existing_and_new_estimates.each do |estimate|
+      estimate.attributes = activity_type_ids_and_estimate_attrs[estimate.activity_type_id.to_s] || {}
+      full_success = false unless estimate.save_or_destroy
+    end
+    return full_success
+  end
 end

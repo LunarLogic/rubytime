@@ -1,0 +1,39 @@
+<h1>Estimates for <%= @project.name %></h1>
+
+<% if @project.activity_types.empty? %>
+  No activity types found.
+<% else %>
+  <%= form_for @project, :action => resource(@project, :estimates, :update_all), :id => "project_estimates_form", :method => "put" do %>
+    <fieldset>
+      <table id="estimates" class="list wide">
+      <tr>
+        <th>Activity type</th>
+        <th>Minutes</th>
+        <th>Minutes to go</th>
+      </tr>
+      <% @project.existing_and_new_estimates.each do |estimate| %>
+        <tr>
+          <td><%= estimate.activity_type.name %></td>
+          <td>
+            <%= error_on estimate, :minutes %>
+            <%= text_field :name => "project[activity_types][#{estimate.activity_type.id}][minutes]",
+              :value => estimate.minutes,
+              :class => estimate.errors.on(:minutes).blank? ? nil : 'field_with_errors' %>
+          </td>
+          <td>
+            <%= error_on estimate, :minutes_to_go %>
+            <%= text_field :name => "project[activity_types][#{estimate.activity_type.id}][minutes_to_go]", 
+              :value => estimate.minutes_to_go, 
+              :class => estimate.errors.on(:minutes_to_go).blank? ? nil : 'field_with_errors' %>
+          </td>
+        </tr>
+      <% end %>
+      </table>
+      <p class="buttons">
+        <%= submit 'Update', :class => "button" %>
+        or
+        <%= link_to 'Cancel', resource(:estimates) %>
+      </p>
+    </fieldset>
+  <% end =%>
+<% end %>

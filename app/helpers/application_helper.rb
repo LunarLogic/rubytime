@@ -1,7 +1,7 @@
 module Merb
   module ApplicationHelper
 
-    MANAGE_PAGES = %w(users clients projects roles activity_types activity_custom_properties currencies settings)
+    MANAGE_PAGES = %w(users clients projects roles activity_types activity_custom_properties currencies estimates settings)
 
     def format_minutes(minutes)
       return "0" unless minutes
@@ -49,6 +49,7 @@ module Merb
           sub_menu << { :title => "Activity types", :path => url(:activity_types), :selected => controller_name == 'activity_types' }
           sub_menu << { :title => "Custom activity properties", :path => url(:activity_custom_properties), :selected => controller_name == 'activity_custom_properties' }
           sub_menu << { :title => "Currencies", :path => url(:currencies), :selected => controller_name == 'currencies' }
+          sub_menu << { :title => "Estimates", :path => url(:estimates), :selected => controller_name == 'estimates' }
           sub_menu << { :title => "Settings", :path => url(:edit_settings), :selected => controller_name == 'settings' }
         end
       when 'invoices'

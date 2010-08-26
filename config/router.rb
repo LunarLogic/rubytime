@@ -56,11 +56,13 @@ Merb::Router.prepare do
   
   resources :sessions
   resources :currencies
+  resources :estimates
   resources :activities, :collection => { "day" => :get }
   resources :clients
   resources :projects, :collection => { "for_clients" => :get } do
     resource :calendar
     resources :activities
+    resources :estimates, :collection => { "update_all" => :put }
   end
   resources :roles
   resources :free_days, :collection => { "delete" => :delete }

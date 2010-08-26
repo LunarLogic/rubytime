@@ -118,6 +118,29 @@ form input.error, form textarea.error  {
   border: solid 1px #aaa;
   padding: 10px;
 }
+#project_estimates_form input {
+  width: 80px;
+  text-align: right;
+  float: left;
+  clear: both;
+}
+#project_estimates_form .buttons {
+  text-align: right;
+}
+#project_estimates_form .buttons > * {
+  display: inline;
+  float: none;
+}
+#project_estimates_form span.error {
+  float: left;
+  clear: both;
+  color: red;
+  width: 140px;
+  margin: 5px;
+}
+#project_estimates_form input.field_with_errors {
+  border: solid 1px red;
+}
 label.radio {
   width: auto;
 }
