@@ -121,7 +121,7 @@ form input.error, form textarea.error  {
 #project_estimates_form table tr.sub-estimate td.activity-type-name {
   padding-left: 25px;
 }
-#project_estimates_form input {
+#project_estimates_form input[type=text] {
   width: 80px;
   text-align: right;
   float: left;
