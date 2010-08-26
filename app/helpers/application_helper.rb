@@ -228,5 +228,11 @@ module Merb
       end
     end
 
+    def error_on(resource, attr_name)
+      return nil if resource.errors[attr_name].blank?
+      '<span class="error">' + resource.errors[attr_name].to_a.first + '</span>'
+    end
+
   end
+
 end # Merb
