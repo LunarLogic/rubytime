@@ -4,7 +4,7 @@ class Activities < Application
 
   provides :json
   
-  before :ensure_authenticated,       :exclude => :index
+  before :ensure_authenticated
   before :ensure_not_client_user,     :only => [:new, :create]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,                 :only => [:new, :edit, :update, :create]
@@ -20,8 +20,6 @@ class Activities < Application
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
-    return redirect(url(:signin)) unless session.authenticated?
-    
     provides :csv
     params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
