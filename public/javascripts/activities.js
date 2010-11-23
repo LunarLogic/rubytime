@@ -384,7 +384,18 @@ var Activities = {
   },
   
   _initUserAndProjectCombo: function() {
-    $("select#user_id, select#project_id").change(function() {
+    $("select#user_id").change(function() {
+      var location = ('' + window.location);
+      var currentId = location.match(/(\d+)\/calendar/)[1];
+      var date = $('.date');
+      var dateParams = "?year=" + date.attr('data-current-year') + "&month=" + date.attr('data-current-month');
+      location = location.replace("/" + currentId + "/", "/" + $(this).val() + "/");
+      var locationWithoutParams = location.replace(/\?.*/, '');
+      console.log(locationWithoutParams);
+      window.location = locationWithoutParams + dateParams;
+    });
+
+    $("select#project_id").change(function() {
       var location = ('' + window.location);
       var currentId = location.match(/(\d+)\/calendar/)[1];
       window.location = location.replace("/" + currentId + "/", "/" + $(this).val() + "/");
