@@ -60,6 +60,11 @@ class Invoices < Application
   def issue
     @invoice.issue!
     redirect resource(@invoice), :message => { :notice => "Invoice has been issued" }
+  rescue Exception => e
+    load_column_properties
+    @activities = @invoice.activities.all(:order => [:created_at.desc])
+    message[:error] = e.to_s
+    render :show
   end
 
   protected
