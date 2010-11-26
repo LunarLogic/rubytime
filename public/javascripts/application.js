@@ -66,7 +66,10 @@ var Application = {
       firstDay: 1,
       showOn: "both",
       buttonImage: "/images/icons/calendar_month.png",
-      buttonImageOnly: true
+      buttonImageOnly: true,
+      onSelect: function(dateText, inst) {
+       $(selector || ".datepicker").focus().blur();
+      }
     });
   },
   

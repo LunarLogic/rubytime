@@ -88,7 +88,8 @@ var Activities = {
     form.validate({
       focusInvalid: false,
       rules: {
-        "search_criteria[date_to]": 'laterThanDateFrom'
+        "search_criteria[date_to]": 'laterThanDateFrom',
+        "search_criteria[date_from]": 'laterThanDateFrom'
       },
       submitHandler: function() {
         $("#primary").load(form.url() + '?' + form.serialize(), null, function() {
