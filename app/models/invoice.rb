@@ -15,6 +15,8 @@ class Invoice
 
   attr_accessor :new_activities
 
+  validates_with_method :activities, :method => :validate_activities
+
   after :save do
     unless new_activities.blank?
       new_activities.each { |activity| activity.update(:invoice_id => id) }
@@ -24,6 +26,19 @@ class Invoice
   before :destroy do
     throw :halt if issued?
     activities.update!(:invoice_id => nil)
+  end
+
+  def validate_activities
+    unless new_activities.blank?
+      is_valid = new_activities.map(&:valid?)
+      if is_valid.all?
+        true
+      else
+        return [false, "Some of activities are invalid (#{new_activities.first.errors.first.first})."]
+      end
+    else
+      true
+    end
   end
 
   def self.pending
