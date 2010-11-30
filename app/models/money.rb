@@ -23,6 +23,10 @@ class Money
     currency.render(value)
   end
 
+  def as_json
+    { :value => value, :currency => currency }
+  end
+
   def +(other)
     raise ArgumentError unless currency == other.currency
     Money.new(value + other.value, currency)

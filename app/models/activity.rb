@@ -181,6 +181,14 @@ class Activity
     self.price_currency = money ? money.currency : nil
   end
   
+  def role_name
+    self.role.name
+  end
+
+  def price_as_json
+    price.as_json
+  end
+
   def price_frozen?
     persistent = Activity.get(id)
     not persistent.nil? and
