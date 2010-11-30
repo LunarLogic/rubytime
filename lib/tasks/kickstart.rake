@@ -31,9 +31,9 @@ namespace :rubytime do
     end
     
     # admin
-    unless Employee.first(:login => "admin")
+    unless admin = Employee.first(:login => "admin")
       puts "creating admin account: admin with pass \"#{pass}\""
-      Employee.create(:name => "Admin Adminiusz", :login => "admin", :password => pass, :password_confirmation => pass, :email => "admin@tt666.com", :role => developer, :admin => true)
+      admin = Employee.create(:name => "Admin Adminiusz", :login => "admin", :password => pass, :password_confirmation => pass, :email => "admin@tt666.com", :role => developer, :admin => true)
     end
     
     # clients
@@ -62,6 +62,15 @@ namespace :rubytime do
         Project.create(:client => client, :name => project_name)
       end
     end
-    
+
+    # hourly rates
+    Project.all.each do |project|
+      puts "creating hourly rates for #{project.name}"
+      if HourlyRates.empty?
+        HourlyRate.create(:operation_author => admin, :project => project, :role => developer, :currency => Currency.first, :takes_effect_at => DateTime.now, :value => 777)
+        HourlyRate.create(:operation_author => admin, :project => project, :role => pm, :currency => Currency.first, :takes_effect_at => DateTime.now, :value => 888)
+        HourlyRate.create(:operation_author => admin, :project => project, :role => tester, :currency => Currency.first, :takes_effect_at => DateTime.now, :value => 666)
+      end
+    end
   end
 end
