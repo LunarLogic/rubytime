@@ -1,6 +1,10 @@
 desc "send emails for RubyTime users"
 namespace :rubytime do
 
+  task :test_task => :merb_env do
+    puts 'ania'
+  end
+
   # personal notification sent to all employees that missed a day this month,
   # with a list of days without activities
   # TODO: rename this?...
