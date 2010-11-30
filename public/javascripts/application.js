@@ -188,8 +188,11 @@ var Application = {
       } else {
         element.removeAttr('disabled').parent('p').show();
       }
-      
-      element.val(originalValue);
+
+      if (originalValue) {
+        element.val(originalValue);
+      }
+
       element.change();
     };
     
