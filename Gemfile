@@ -42,6 +42,8 @@ gem 'nokogiri', '1.4.1'  # for rack_revision_info
 # TODO: revision info doesn't work on the production now (which was the whole point) because Vlad deletes .git
 # directory from deployed code so there's no way to check current revision... this should be fixed when we switch
 # to Capistrano
+gem 'whenever', :require => false
+gem 'i18n' # for whenever
 
 group :development do
   gem 'vlad', '2.0.0', :require => []

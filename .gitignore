@@ -3,6 +3,7 @@ config/database.yml
 config/deploy.rb
 config/local_config.rb
 config/rcov_stats.yml
+config/schedule.rb
 
 # regenerable
 coverage/*

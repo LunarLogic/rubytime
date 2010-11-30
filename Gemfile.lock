@@ -15,7 +15,9 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    aaronh-chronic (0.3.9)
     abstract (1.0.0)
+    activesupport (3.0.3)
     addressable (2.2.0)
     bcrypt-ruby (2.1.2)
     builder (2.1.2)
@@ -76,6 +78,7 @@ GEM
     html5 (0.10.0)
       chardet (>= 0.9.0)
       hoe (>= 1.2.0)
+    i18n (0.5.0)
     icalendar (1.1.5)
     jslint_on_rails (1.0.3)
     json_pure (1.2.4)
@@ -144,6 +147,9 @@ GEM
       open4 (~> 0.9.0)
       rake (~> 0.8.0)
     vlad-git (2.0.0)
+    whenever (0.6.2)
+      aaronh-chronic (>= 0.3.9)
+      activesupport (>= 2.3.4)
 
 PLATFORMS
   ruby
@@ -164,6 +170,7 @@ DEPENDENCIES
   dm-validations (= 0.10.2)
   do_mysql
   fastercsv (= 1.5.3)
+  i18n
   icalendar (~> 1.1.0)
   jslint_on_rails
   merb-assets (= 1.1.0.pre)
@@ -187,3 +194,4 @@ DEPENDENCIES
   ruby-debug
   vlad (= 2.0.0)
   vlad-git (= 2.0.0)
+  whenever
