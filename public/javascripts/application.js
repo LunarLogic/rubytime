@@ -135,6 +135,7 @@ var Application = {
             table = row.parents("table");
             row.remove();
             table.zebra();
+            Application.notice('Deleted successfully');
           },
           error: function(xhr) {
             target.click(handler);
