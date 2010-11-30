@@ -48,7 +48,7 @@ class Activities < Application
     elsif request.xhr?
       render :index, :layout => false
     else
-      display @activities, :methods => [:locked?]
+      display @activities, :methods => [:locked?, :price_as_json, :role_name]
     end
   end
   
