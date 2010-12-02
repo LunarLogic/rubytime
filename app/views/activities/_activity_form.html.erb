@@ -1,6 +1,6 @@
 <div id="errors" style="display:none"></div>
 
-<%= form_for @activity, :action => @activity.new? ? url(:activities) : resource(@activity), :class => "activity_form" do %>
+<%= form_for @activity, :action => @activity.new? ? url(:activities) : resource(@activity), :class => "activity_form #{@activity.new? ? 'dark': ''}" do %>
   <fieldset>
     <% if @activity.new? %><legend>New activity</legend><% end %>
     <% if current_user.is_admin? %>
@@ -16,6 +16,7 @@
         "Recent projects" => @recent_projects.map { |p| [p.id, p.name] }, 
         "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
     </p>
+    <%= hidden_field :main_activity_type_id, :value => nil %>
     <p<%= @activity.available_main_activity_types.any? ? '' : ' style="display: none"' %>>
       <%= select :main_activity_type_id, :label => "Type", :collection => @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s, :disabled => @activity.available_main_activity_types.empty? %>
     </p>

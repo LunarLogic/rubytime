@@ -75,7 +75,7 @@ var Application = {
   
   initAddActivityButton: function() {
     $(".add-activity a").click(function() {
-      $(document).trigger(EVENTS.add_activity_clicked); return false;
+      $(document).trigger(EVENTS.add_activity_clicked);return false;
     });
     $(document).bind(EVENTS.add_activity_clicked, function(e, memory) {
       // don't hide form if memory which means click on calendar form
@@ -246,7 +246,9 @@ var Application = {
       errorsContainer.hide();
 
       var indicator = new Indicator(submit);
-      indicator.start(Indicator.IMAGE_SRC);
+      var indicatorSrc = $(this).hasClass('dark') ? Indicator.IMAGE_SRC : Indicator.TRANSPARENT_IMAGE_SRC;
+      indicator.start(indicatorSrc);
+
       $.ajax({
         url: form.url(),
         type: "POST",
@@ -257,7 +259,7 @@ var Application = {
           Application._closeActivityPopup();
           // check if we were editing or creating new activity
           var eventType = ((/\d+$/).test(form.url())) ? EVENTS.activity_updated : EVENTS.activity_added;
-          $(document).trigger(eventType, { date: date });
+          $(document).trigger(eventType, {date: date});
           indicator.stop();
         },
         error: function(xhr) {
