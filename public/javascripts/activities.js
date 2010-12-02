@@ -141,6 +141,9 @@ var Activities = {
         return false;
       }
 
+      var indicator = new Indicator($('#create_invoice_button'));
+      indicator.start(Indicator.TRANSPARENT_IMAGE_SRC);
+
       try {
         $.ajax({
           type: 'POST',
@@ -149,10 +152,16 @@ var Activities = {
           success: function() {
             $("#activities_filter form:first").submit();
             Application.notice('Invoice has been created successfully');
+            indicator.stop();
+          },
+          error: function(xhr) {
+            indicator.stop();
+            Application.errorFromXhr(xhr);
           }
         });
       } catch(e) {
         alert(e);
+        indicator.stop();
       }
     
       return false;
@@ -175,6 +184,9 @@ var Activities = {
 
       var params = Activities._createInvoiceActivityParams(checkedActivityIds);
 
+      var indicator = new Indicator($('#update_invoice_button'));
+      indicator.start(Indicator.TRANSPARENT_IMAGE_SRC);
+
       $.ajax({
         type: "PUT",
         url: "/invoices/" + invoiceId,
@@ -182,6 +194,10 @@ var Activities = {
         success: function() {
           $("#activities_filter form:first").submit();
           Application.notice('Activities have been added to invoice successfully');
+          indicator.stop();
+        },
+        error: function() {
+          indicator.stop();
         }
       });
       

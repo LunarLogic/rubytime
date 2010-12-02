@@ -244,8 +244,9 @@ var Application = {
       var errorsContainer = container.find('#errors');
       
       errorsContainer.hide();
-      
-      
+
+      var indicator = new Indicator(submit);
+      indicator.start(Indicator.IMAGE_SRC);
       $.ajax({
         url: form.url(),
         type: "POST",
@@ -257,6 +258,7 @@ var Application = {
           // check if we were editing or creating new activity
           var eventType = ((/\d+$/).test(form.url())) ? EVENTS.activity_updated : EVENTS.activity_added;
           $(document).trigger(eventType, { date: date });
+          indicator.stop();
         },
         error: function(xhr) {
           var json = $.parseJSON(xhr.responseText);
@@ -269,6 +271,7 @@ var Application = {
           errorsContainer.show();
           
           submit.attr("disabled", null);
+          indicator.stop();
         }
       });
 
