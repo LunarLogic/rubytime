@@ -66,7 +66,7 @@ namespace :rubytime do
     # hourly rates
     Project.all.each do |project|
       puts "creating hourly rates for #{project.name}"
-      if HourlyRates.empty?
+      unless HourlyRate.all.any? { |hr| hr.project == project }
         HourlyRate.create(:operation_author => admin, :project => project, :role => developer, :currency => Currency.first, :takes_effect_at => DateTime.now, :value => 777)
         HourlyRate.create(:operation_author => admin, :project => project, :role => pm, :currency => Currency.first, :takes_effect_at => DateTime.now, :value => 888)
         HourlyRate.create(:operation_author => admin, :project => project, :role => tester, :currency => Currency.first, :takes_effect_at => DateTime.now, :value => 666)

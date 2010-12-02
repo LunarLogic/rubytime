@@ -56,8 +56,8 @@ class User
   has n, :versions, :model => UserVersion, :child_key => :id
   has n, :free_days
   
-  def self.active
-    all(:active => true)
+  def self.active(options = {})
+    all({ :active => true }.merge(options))
   end
 
   def self.with_activities

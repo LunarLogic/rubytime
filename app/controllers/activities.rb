@@ -113,7 +113,7 @@ class Activities < Application
   def calendar
     if current_user.is_admin?
       if params[:user_id]
-        @users = Employee.all(:active => true, :order => [:name.asc])
+        @users = Employee.active(:order => [:name.asc])
       else
         @projects = Project.all(:order => [:name.asc])
       end

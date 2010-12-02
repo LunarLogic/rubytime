@@ -392,7 +392,6 @@ var Activities = {
       var dateParams = "?year=" + date.attr('data-current-year') + "&month=" + date.attr('data-current-month');
       location = location.replace("/" + currentId + "/", "/" + $(this).val() + "/");
       var locationWithoutParams = location.replace(/\?.*/, '');
-      console.log(locationWithoutParams);
       window.location = locationWithoutParams + dateParams;
     });
 
