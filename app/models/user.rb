@@ -1,5 +1,7 @@
 class User
   include DataMapper::Resource
+
+  RECENT_ACTIVITIES_NUM = 3
   
   property :id,                            Serial
   property :name,                          String, :required => true
@@ -66,6 +68,13 @@ class User
 
   def self.with_activities_for_client(client)
     active.all('activities.project.client_id' => client.id, :unique => true)
+  end
+
+  def recent_projects
+    self.projects.active.sort_by do |p|
+      last_activity = Activity.first(:project_id => p.id, :user_id => id, :order => [:date.desc])
+      last_activity.date
+    end.reverse[0...RECENT_ACTIVITIES_NUM]
   end
 
   def authenticated?(password)

@@ -1,6 +1,5 @@
 class Activities < Application
   # TODO: extract everything related to calendar to separated Calendar controller
-  RECENT_ACTIVITIES_NUM = 3
 
   provides :json
   
@@ -203,13 +202,9 @@ class Activities < Application
   end
 
   def load_projects
-    @recent_projects = current_user.projects.active.sort_by do |p|
-      last_activity = Activity.first(:project_id => p.id, :user_id => current_user.id, :order => [:date.desc])
-      last_activity.date
-    end
-    @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
+    @recent_projects = current_user.recent_projects
     # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
-    @other_projects = Project.active.all(:order => [:name]) - @recent_projects
+    @other_projects = (Project.active - @recent_projects).sort_by { |p| p.name.downcase }
   end
   
   def load_users
