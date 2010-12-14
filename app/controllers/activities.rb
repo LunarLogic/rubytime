@@ -204,7 +204,7 @@ class Activities < Application
   def load_projects
     @recent_projects = current_user.recent_projects
     # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
-    @other_projects = (Project.active - @recent_projects).sort_by { |p| p.name.downcase }
+    @other_projects = Project.active.all(:id.not => @recent_projects.map(&:id), :order => [:name])
   end
   
   def load_users
