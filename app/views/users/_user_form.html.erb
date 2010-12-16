@@ -23,6 +23,10 @@
       </p>
       <% if !@user.new? && @user != current_user%>
         <p>
+          <label for="user_admin">Admin?</label>
+          <%= check_box :admin %>
+        </p>
+        <p>
           <label for="user_active">Active?</label>
           <%= check_box :active %>
         </p>
