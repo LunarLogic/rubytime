@@ -42,7 +42,7 @@ class Invoices < Application
       request.xhr? ? "" : redirect(resource(:invoices))
     else
       if request.xhr?
-        render_failure @invoice.errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").capitalize
+        render_failure smart_errors_format(@invoice.errors)
       else
         render :index
       end

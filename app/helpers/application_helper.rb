@@ -228,5 +228,11 @@ module Merb
       end
     end
 
+    def smart_errors_format(errors)
+      message = errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").split(' ')
+      message.first.capitalize unless message.empty?
+      message.join(' ')
+    end
+
   end
 end # Merb
