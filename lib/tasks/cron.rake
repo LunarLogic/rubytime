@@ -1,6 +1,5 @@
 desc "send emails for RubyTime users"
 namespace :rubytime do
-
   # personal notification sent to all employees that missed a day this month,
   # with a list of days without activities
   # TODO: rename this?...

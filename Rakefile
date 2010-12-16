@@ -43,8 +43,9 @@ if Rake.application.options.show_tasks or Rake.application.top_level_tasks.any? 
     $TESTING = true # Required to bypass check for reserved_name? in vlad. DataMapper 0.9.x defines Kernel#repository...
     require 'vlad'
     Vlad.load :scm => "git", :app => "passenger", :web => nil
-  rescue LoadError
-    # do nothing
+  rescue Exception => e
+    p e
+    puts e.backtrace.join("\n")
   end
 end
 

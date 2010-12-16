@@ -88,7 +88,8 @@ var Activities = {
     form.validate({
       focusInvalid: false,
       rules: {
-        "search_criteria[date_to]": 'laterThanDateFrom'
+        "search_criteria[date_to]": 'laterThanDateFrom',
+        "search_criteria[date_from]": 'laterThanDateFrom'
       },
       submitHandler: function() {
         $("#primary").load(form.url() + '?' + form.serialize(), null, function() {
@@ -140,6 +141,9 @@ var Activities = {
         return false;
       }
 
+      var indicator = new Indicator($('#create_invoice_button'));
+      indicator.start(Indicator.TRANSPARENT_IMAGE_SRC);
+
       try {
         $.ajax({
           type: 'POST',
@@ -148,10 +152,16 @@ var Activities = {
           success: function() {
             $("#activities_filter form:first").submit();
             Application.notice('Invoice has been created successfully');
+            indicator.stop();
+          },
+          error: function(xhr) {
+            indicator.stop();
+            Application.errorFromXhr(xhr);
           }
         });
       } catch(e) {
         alert(e);
+        indicator.stop();
       }
     
       return false;
@@ -174,6 +184,9 @@ var Activities = {
 
       var params = Activities._createInvoiceActivityParams(checkedActivityIds);
 
+      var indicator = new Indicator($('#update_invoice_button'));
+      indicator.start(Indicator.TRANSPARENT_IMAGE_SRC);
+
       $.ajax({
         type: "PUT",
         url: "/invoices/" + invoiceId,
@@ -181,6 +194,10 @@ var Activities = {
         success: function() {
           $("#activities_filter form:first").submit();
           Application.notice('Activities have been added to invoice successfully');
+          indicator.stop();
+        },
+        error: function() {
+          indicator.stop();
         }
       });
       
@@ -384,7 +401,17 @@ var Activities = {
   },
   
   _initUserAndProjectCombo: function() {
-    $("select#user_id, select#project_id").change(function() {
+    $("select#user_id").change(function() {
+      var location = ('' + window.location);
+      var currentId = location.match(/(\d+)\/calendar/)[1];
+      var date = $('.date');
+      var dateParams = "?year=" + date.attr('data-current-year') + "&month=" + date.attr('data-current-month');
+      location = location.replace("/" + currentId + "/", "/" + $(this).val() + "/");
+      var locationWithoutParams = location.replace(/\?.*/, '');
+      window.location = locationWithoutParams + dateParams;
+    });
+
+    $("select#project_id").change(function() {
       var location = ('' + window.location);
       var currentId = location.match(/(\d+)\/calendar/)[1];
       window.location = location.replace("/" + currentId + "/", "/" + $(this).val() + "/");

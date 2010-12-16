@@ -1,10 +1,9 @@
 class Activities < Application
   # TODO: extract everything related to calendar to separated Calendar controller
-  RECENT_ACTIVITIES_NUM = 3
 
   provides :json
   
-  before :ensure_authenticated,       :exclude => :index
+  before :ensure_authenticated
   before :ensure_not_client_user,     :only => [:new, :create]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,                 :only => [:new, :edit, :update, :create]
@@ -20,8 +19,6 @@ class Activities < Application
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
-    return redirect(url(:signin)) unless session.authenticated?
-    
     provides :csv
     params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
@@ -50,7 +47,7 @@ class Activities < Application
     elsif request.xhr?
       render :index, :layout => false
     else
-      display @activities, :methods => [:locked?]
+      display @activities, :methods => [:locked?, :price_as_json, :role_name]
     end
   end
   
@@ -115,7 +112,7 @@ class Activities < Application
   def calendar
     if current_user.is_admin?
       if params[:user_id]
-        @users = Employee.all(:order => [:name.asc])
+        @users = Employee.active.all(:order => [:name.asc])
       else
         @projects = Project.all(:order => [:name.asc])
       end
@@ -205,13 +202,8 @@ class Activities < Application
   end
 
   def load_projects
-    @recent_projects = current_user.projects.active.sort_by do |p|
-      last_activity = Activity.first(:project_id => p.id, :user_id => current_user.id, :order => [:date.desc])
-      last_activity.date
-    end
-    @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
-    # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
-    @other_projects = Project.active.all(:order => [:name]) - @recent_projects
+    @recent_projects = current_user.recent_projects
+    @other_projects = Project.active.all(:id.not => @recent_projects.map(&:id), :order => [:name])
   end
   
   def load_users

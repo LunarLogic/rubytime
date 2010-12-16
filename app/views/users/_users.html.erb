@@ -15,7 +15,7 @@
       <td class="icons">
         <%= link_to_calendar user %>
         <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), url(:edit_user,  user) %>
-        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), url(:user, user), :class => "delete_row" %>
+        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), url(:user, user), :class => "delete_row" unless user == current_user %>
         </td>
     </tr>
   <% end %>

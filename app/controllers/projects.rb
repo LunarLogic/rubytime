@@ -5,7 +5,7 @@ class Projects < Application
   before :ensure_can_list_projects, :only => [:index]
   before :load_project, :only => [:edit, :update, :destroy, :show]
   before :load_projects, :only => [:index, :create]
-  before :load_clients, :only => [:index, :new, :create, :edit, :update]
+  before :load_clients, :only => [:index, :new, :create]
   
   def index
     @project = Project.new :client => Client.get(params[:client_id])
@@ -36,6 +36,7 @@ class Projects < Application
   end
 
   def edit
+    @clients = Client.all
     render
   end
   
@@ -43,6 +44,7 @@ class Projects < Application
     if @project.update(params[:project]) || !@project.dirty?
       redirect resource(@project)
     else
+      @clients = Client.all
       render :edit
     end
   end

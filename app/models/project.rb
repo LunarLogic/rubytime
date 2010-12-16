@@ -42,7 +42,6 @@ class Project
     all('activities.user_id' => user.id, :unique => true)
   end
 
-
   # instance methods
 
   def calendar_viewable?(user)

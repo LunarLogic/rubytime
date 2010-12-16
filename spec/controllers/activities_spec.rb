@@ -49,6 +49,13 @@ describe Activities do
       response = as(:employee).dispatch_to(Activities, :index, :project_id => project.id)
       response.instance_variable_get("@search_criteria").selected_project_ids.should == [project.id.to_s]
     end
+
+    it "inactive users should not access the site" do
+      user = Employee.generate(:active => false)
+      project = Project.generate
+
+      block_should(raise_unauthenticated) { as(user).dispatch_to(Activities, :index) }
+    end
   end
 
   describe "#new" do

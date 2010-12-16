@@ -16,6 +16,10 @@ task :production do
 end
 
 namespace :vlad do
+  remote_task :update_crontab, :roles => [:app] do
+    run "cd #{current_path}; MERB_ENV=#{merb_env} bundle exec whenever --update-crontab #{application}"
+  end
+
   remote_task :symlink_configs, :roles => [:app] do
     run "ln -s #{shared_path}/config/database.yml #{current_path}/config/database.yml"
     run "ln -s #{shared_path}/config/local_config.rb #{current_path}/config/local_config.rb"
@@ -67,7 +71,7 @@ namespace :vlad do
   end
 
   PREPARING_TASKS = [
-    'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:install_gems', 'vlad:build_asset_bundles'
+    'vlad:stop', 'vlad:update', 'vlad:symlink_configs', 'vlad:install_gems', 'vlad:build_asset_bundles', 'vlad:update_crontab'
   ]
 
   task :deploy => PREPARING_TASKS + ['vlad:start']
