@@ -71,10 +71,11 @@ class User
   end
 
   def recent_projects
-    self.projects.active.sort_by do |p|
-      last_activity = Activity.first(:project_id => p.id, :user_id => id, :order => [:date.desc])
-      last_activity.date
-    end.reverse[0...RECENT_ACTIVITIES_NUM]
+    self.projects.active.sort_by { |p| self.last_activity_in_project(p).date }.reverse.first(RECENT_ACTIVITIES_NUM)
+  end
+
+  def last_activity_in_project(project)
+    self.activities.first(:project_id => project.id, :order => [:date.desc])
   end
 
   def authenticated?(password)

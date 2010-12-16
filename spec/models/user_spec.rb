@@ -154,7 +154,6 @@ describe User do
     end
 
     it "should retrieve RECENT_ACTIVITIES_NUM projects sorted by activity date" do
-      Project.all.map(&:name)
       projects = ['ani project', 'another project', 'project ani', 'not important'].map do |name|
         p = Project.generate(:name => name)
         p.users << @user
