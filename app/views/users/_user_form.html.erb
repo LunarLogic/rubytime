@@ -21,7 +21,7 @@
       <p>
         <%= text_field :email, :label => "Email" %>
       </p>
-      <% unless @user.new? %>
+      <% if !@user.new? && @user != current_user%>
         <p>
           <label for="user_active">Active?</label>
           <%= check_box :active %>
