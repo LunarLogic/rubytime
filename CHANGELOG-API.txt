@@ -7,6 +7,13 @@ been updated to the newest version which uses some new API actions, but the serv
 
 -----
 
+Version 2 - December 16, 2010
+
+changes:
+* Added price_as_json and role_name to /activities.json
+
+-----
+
 Version 1 - November 16, 2009
 
 API actions available:
