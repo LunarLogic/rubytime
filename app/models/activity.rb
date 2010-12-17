@@ -186,7 +186,7 @@ class Activity
   end
 
   def price_as_json
-    price.as_json
+    price.as_json if price
   end
 
   def price_frozen?
