@@ -122,12 +122,12 @@ class Activities < Application
     end
     
     date = if params.has_key?("year") && params.has_key?("month")
-             @year, @month = params[:year].to_i, params[:month].to_i
-             { :year => @year, :month => @month }
-           else
-             @year, @month = Date.today.year, Date.today.month
-             :this_month
-           end
+      @year, @month = params[:year].to_i, params[:month].to_i
+      { :year => @year, :month => @month }
+    else
+      @year, @month = Date.today.year, Date.today.month
+      :this_month
+    end
 
     if @month == Date.today.month && @year == Date.today.year 
       @next_year      = @next_month = nil
@@ -140,10 +140,10 @@ class Activities < Application
     @previous_year  = @month == 1 ? @year.pred : @year
     
     @activities = begin 
-                    @owner.activities.for date
-                  rescue ArgumentError
-                    raise BadRequest
-                  end
+      @owner.activities.for date
+    rescue ArgumentError
+      raise BadRequest
+    end
     @activities_by_date = @activities.group_by { |activity| activity.date }
     
     if request.xhr?

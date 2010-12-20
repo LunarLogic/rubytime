@@ -15,7 +15,12 @@ class Projects < Application
       @projects.each do |p|
         p.has_activities = @projects_with_activities.any? { |pwa| pwa.id == p.id }
       end
-      display @projects, :methods => [:has_activities]
+
+      if params[:include_activity_types]
+        display @projects, :methods => [:has_activities, :available_activity_types]
+      else
+        display @projects, :methods => [:has_activities]
+      end
     else
       display @projects
     end

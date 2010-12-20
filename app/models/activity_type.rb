@@ -37,4 +37,8 @@ class ActivityType
     super()
   end
 
+  def json_hash
+    { :id => id, :name => name, :position => position }
+  end
+
 end
