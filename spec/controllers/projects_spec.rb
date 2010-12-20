@@ -20,6 +20,28 @@ describe Projects do
       end.should be_successful
     end
 
+    it "should show projects with activity types and subactivity types if include_activity_types flag is set" do
+      project = Project.generate
+      activity_type = ActivityType.generate
+      subactivity_type = ActivityType.generate(:parent => activity_type)
+      project.activity_types << activity_type
+      project.activity_types << subactivity_type
+      project.save
+
+      response = as(:employee).dispatch_to(Projects, :index, :format => 'json', :include_activity_types => true)
+
+      response.should be_successful
+      project_hash = JSON.parse(response.body).first
+      activity_hash = project_hash["available_activity_types"].first
+      activity_hash["id"].should == activity_type.id
+      activity_hash["name"].should == activity_type.name
+      activity_hash["position"].should == activity_type.position
+      subactivity_hash = activity_hash["available_subactivity_types"].first
+      subactivity_hash["id"].should == subactivity_type.id
+      subactivity_hash["name"].should == subactivity_type.name
+      subactivity_hash["position"].should == subactivity_type.position
+    end
+
     it "shouldn't show index for employee" do
       block_should(raise_forbidden) do
         as(:employee).dispatch_to(Projects, :index)

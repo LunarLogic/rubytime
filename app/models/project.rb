@@ -44,6 +44,13 @@ class Project
 
   # instance methods
 
+  def available_activity_types
+    self.activity_types(:parent => nil).map do |at|
+      subactivity_types_array = self.activity_types(:parent => at).map(&:json_hash)
+      at.json_hash.merge({ :available_subactivity_types => subactivity_types_array })
+    end
+  end
+
   def calendar_viewable?(user)
     user.client == self.client || user.is_admin?
   end
