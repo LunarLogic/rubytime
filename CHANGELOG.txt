@@ -1,3 +1,21 @@
+Release 3.4 - December 16, 2010
+
+- New features:
+
+ * Admin can make another user admin
+ * Setup cron scheduler
+ * Added hourly rates setup to rubytime:kickstart
+ * Small chores like added indicators to ajax calls, added favicon
+ * Added price_as_json and role_name to /activities.json
+ * User cannot be able to create activity for a date that has not hourly rates specified
+
+- Other changes:
+
+ * Fixed Basic Authentication issue in /activities
+ * Fixed some annoying bugs
+
+----
+
 Release 3.3 - April 27, 2010
 
 - New features:

@@ -148,6 +148,28 @@ describe User do
     end
   end
 
+  describe "recent projects" do
+    before :each do
+      @user = Employee.generate
+    end
+
+    it "should retrieve RECENT_ACTIVITIES_NUM projects sorted by activity date" do
+      projects = ['ani project', 'another project', 'project ani', 'not important'].map do |name|
+        p = Project.generate(:name => name)
+        p.users << @user
+        p.save
+        p
+      end
+      Activity.generate(:project => projects[0], :date => Date.today-2, :user => @user)
+      Activity.generate(:project => projects[1], :date => Date.today-1, :user => @user)
+      Activity.generate(:project => projects[2], :date => Date.today, :user => @user)
+      Activity.generate(:project => projects[0], :date => Date.today+1, :user => @user)
+      recent = @user.recent_projects
+      recent.size.should == User::RECENT_ACTIVITIES_NUM
+      recent.map(&:name).should == [projects[0].name, projects[2].name, projects[1].name]
+    end
+  end
+
   describe "with_activities_for_client" do
     before :each do
       @user = Employee.generate

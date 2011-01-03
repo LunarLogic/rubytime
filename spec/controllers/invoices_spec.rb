@@ -26,6 +26,21 @@ describe Invoices do
         }).status.should == 302
       end
     end
+
+    it "should not create invoice if some of activities are not valid" do
+      project = Project.generate :client => @client
+      activity = Activity.generate :project => project
+      project.activity_types << ActivityType.generate
+      project.save
+
+      block_should_not(change(Activity.not_invoiced, :count).by(-1)) do
+        as(:admin).dispatch_to(Invoices, :create, :invoice => {
+          :name => "Theee Invoice",
+          :client_id => @client.id,
+          :activity_id => [activity.id]
+        }).status.should == 200
+      end
+    end
   end
 
   describe "#destroy" do

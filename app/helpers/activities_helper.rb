@@ -107,7 +107,7 @@ module Merb
       cal = %(<table id="#{options[:table_id]}" class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
       cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">)
       cal << link_to("&laquo; Previous", prev_url, :id => "previous_month")
-      cal << %(<span class="date">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</span>)
+      cal << %(<span class="date" data-current-year="#{options[:year]}" data-current-month="#{options[:month]}">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</span>)
       unless @next_month.nil? && @next_year.nil?
         cal << link_to("Next &raquo;", next_url, :id => "next_month")
       end

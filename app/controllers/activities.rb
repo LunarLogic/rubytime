@@ -1,6 +1,5 @@
 class Activities < Application
   # TODO: extract everything related to calendar to separated Calendar controller
-  RECENT_ACTIVITIES_NUM = 3
 
   provides :json
   
@@ -113,7 +112,7 @@ class Activities < Application
   def calendar
     if current_user.is_admin?
       if params[:user_id]
-        @users = Employee.all(:order => [:name.asc])
+        @users = Employee.active.all(:order => [:name.asc])
       else
         @projects = Project.all(:order => [:name.asc])
       end
@@ -122,12 +121,12 @@ class Activities < Application
     end
     
     date = if params.has_key?("year") && params.has_key?("month")
-             @year, @month = params[:year].to_i, params[:month].to_i
-             { :year => @year, :month => @month }
-           else
-             @year, @month = Date.today.year, Date.today.month
-             :this_month
-           end
+      @year, @month = params[:year].to_i, params[:month].to_i
+      { :year => @year, :month => @month }
+    else
+      @year, @month = Date.today.year, Date.today.month
+      :this_month
+    end
 
     if @month == Date.today.month && @year == Date.today.year 
       @next_year      = @next_month = nil
@@ -140,10 +139,10 @@ class Activities < Application
     @previous_year  = @month == 1 ? @year.pred : @year
     
     @activities = begin 
-                    @owner.activities.for date
-                  rescue ArgumentError
-                    raise BadRequest
-                  end
+      @owner.activities.for date
+    rescue ArgumentError
+      raise BadRequest
+    end
     @activities_by_date = @activities.group_by { |activity| activity.date }
     
     if request.xhr?
@@ -203,13 +202,8 @@ class Activities < Application
   end
 
   def load_projects
-    @recent_projects = current_user.projects.active.sort_by do |p|
-      last_activity = Activity.first(:project_id => p.id, :user_id => current_user.id, :order => [:date.desc])
-      last_activity.date
-    end
-    @recent_projects = @recent_projects.reverse[0...RECENT_ACTIVITIES_NUM]
-    # .all(:order => ["activities.created_at DESC"], :limit => RECENT_ACTIVITIES_NUM)
-    @other_projects = Project.active.all(:order => [:name]) - @recent_projects
+    @recent_projects = current_user.recent_projects
+    @other_projects = Project.active.all(:id.not => @recent_projects.map(&:id), :order => [:name])
   end
   
   def load_users
