@@ -2,11 +2,13 @@ class User
   include DataMapper::Resource
 
   RECENT_ACTIVITIES_NUM = 3
-  
+  LOGIN_REGEXP = /^[\w_\.-]{3,20}$/
+
   property :id,                            Serial
   property :name,                          String, :required => true
   property :type,                          Discriminator, :index => true
-  property :login,                         String, :required => true, :index => true, :format => /^[\w_\.-]{3,20}$/
+  property :login,                         String, :required => true, :index => true, :format => LOGIN_REGEXP
+  property :ldap_login,                    String, :format => LOGIN_REGEXP, :unique => true
   property :email,                         String, :required => true, :format => :email_address
   property :active,                        Boolean, :required => true, :default => true
   property :admin,                         Boolean, :required => true, :default => false
@@ -79,7 +81,14 @@ class User
   end
 
   def authenticated?(password)
-    crypted_password == encrypt(password) && active
+    (Auth::LDAP.authenticate(ldap_login, password) || crypted_password == encrypt(password) ) && active
+
+  end
+  class << self
+    def authenticate(login, password)
+      u = (User.all(:login => login)+User.all(:ldap_login => login)).first
+      u && u.authenticated?(password) ? u : nil
+    end
   end
   
   def is_admin?
