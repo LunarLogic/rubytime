@@ -2,7 +2,7 @@ class Application < Merb::Controller
   before :ensure_authenticated
   before :set_api_version_header
 
-  JSON_API_VERSION = 1  # see CHANGELOG-API.txt
+  JSON_API_VERSION = 3  # see CHANGELOG-API.txt
 
   def current_user
     session.user
