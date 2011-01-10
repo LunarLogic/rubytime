@@ -1,3 +1,9 @@
+Release 3.4.1 - January 5, 2011
+
+- New features:
+ * Added include_activity_types option in /projects.json
+
+-----
 Release 3.4 - December 16, 2010
 
 - New features:
