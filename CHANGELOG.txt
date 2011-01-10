@@ -1,7 +1,13 @@
-Release 3.4.1 - January 5, 2011
+Release 3.4.2 - January 5, 2011
 
 - New features:
  * Added include_activity_types option in /projects.json
+
+-----
+
+Release 3.4.1 - December 17, 2010
+
+* Fixed crash in API if price is nil
 
 -----
 Release 3.4 - December 16, 2010
