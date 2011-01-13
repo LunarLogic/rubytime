@@ -18,6 +18,7 @@ Merb::BootLoader.before_app_loads do
   Merb.add_mime_type(:ics, :to_ics, %w[text/calendar])
   Merb::Mailer.delivery_method = :sendmail
   require Merb.root / "lib/rubytime/misc"
+  require Merb.root / "lib/auth/ldap"
 end
 
 Merb::BootLoader.after_app_loads do

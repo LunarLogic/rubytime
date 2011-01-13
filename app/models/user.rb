@@ -7,8 +7,8 @@ class User
   property :id,                            Serial
   property :name,                          String, :required => true
   property :type,                          Discriminator, :index => true
-  property :login,                         String, :required => true, :index => true, :format => LOGIN_REGEXP
-  property :ldap_login,                    String, :format => LOGIN_REGEXP, :unique => true
+  property :login,                         String, :required => true, :index => true, :format => LOGIN_REGEXP, :unique => true
+  property :ldap_login,                    String, :format => LOGIN_REGEXP, :unique => true, :index => true
   property :email,                         String, :required => true, :format => :email_address
   property :active,                        Boolean, :required => true, :default => true
   property :admin,                         Boolean, :required => true, :default => false
@@ -81,13 +81,31 @@ class User
   end
 
   def authenticated?(password)
-    (Auth::LDAP.authenticate(ldap_login, password) || crypted_password == encrypt(password) ) && active
-
+    crypted_password == encrypt(password) && active
   end
-  class << self
-    def authenticate(login, password)
-      u = (User.all(:login => login)+User.all(:ldap_login => login)).first
-      u && u.authenticated?(password) ? u : nil
+
+  def authenticated_with_ldap?(login, password)
+    Auth::LDAP.authenticate(login, password) && active
+  end
+
+  def self.authenticate(login, password)
+    u = User.all(:login => login).first
+    if u && u.authenticated?(password)
+      u
+    else
+      Auth::LDAP.isLDAP? ? authenticate_with_ldap(login, password) : nil
+    end
+  end
+
+  def self.authenticate_with_ldap(login, password)
+    u= User.all(:ldap_login => login).first
+    u && u.authenticated_with_ldap?(login, password)? u : nil
+  end
+
+  def self.authenticate_with_token(token)
+    user = self.first(:remember_me_token => token)
+    if user
+      user.remember_me_token_expiration > DateTime.now ? user : nil
     end
   end
   
@@ -156,13 +174,6 @@ class User
   def forget_me!
     self.remember_me_token_expiration = self.remember_me_token = nil
     save
-  end
-
-  def self.authenticate_with_token(token)
-    user = self.first(:remember_me_token => token)
-    if user
-      user.remember_me_token_expiration > DateTime.now ? user : nil
-    end
   end
   
   def reset_password!
