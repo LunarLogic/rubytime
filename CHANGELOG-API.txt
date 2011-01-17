@@ -7,6 +7,13 @@ been updated to the newest version which uses some new API actions, but the serv
 
 -----
 
+Version 3 - January 5, 2011
+
+changes:
+* Added include_activity_types option in /projects.json
+
+-----
+
 Version 2 - December 16, 2010
 
 changes:
