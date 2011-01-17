@@ -7,7 +7,8 @@ class User
   property :id,                            Serial
   property :name,                          String, :required => true
   property :type,                          Discriminator, :index => true
-  property :login,                         String, :required => true, :index => true, :format => LOGIN_REGEXP, :unique => true
+  property :login,                         String, :required => true, :index => true,
+                                             :format => LOGIN_REGEXP, :unique => true
   property :ldap_login,                    String, :format => LOGIN_REGEXP, :unique => true, :index => true
   property :email,                         String, :required => true, :format => :email_address
   property :active,                        Boolean, :required => true, :default => true
@@ -72,24 +73,8 @@ class User
     active.all('activities.project.client_id' => client.id, :unique => true)
   end
 
-  def recent_projects
-    self.projects.active.sort_by { |p| self.last_activity_in_project(p).date }.reverse.first(RECENT_ACTIVITIES_NUM)
-  end
-
-  def last_activity_in_project(project)
-    self.activities.first(:project_id => project.id, :order => [:date.desc])
-  end
-
-  def authenticated?(password)
-    crypted_password == encrypt(password) && active
-  end
-
-  def authenticated_with_ldap?(login, password)
-    Auth::LDAP.authenticate(login, password) && active
-  end
-
   def self.authenticate(login, password)
-    u = User.all(:login => login).first
+    u = User.first(:login => login)
     if u && u.authenticated?(password)
       u
     else
@@ -98,7 +83,7 @@ class User
   end
 
   def self.authenticate_with_ldap(login, password)
-    u= User.all(:ldap_login => login).first
+    u = User.first(:ldap_login => login)
     u && u.authenticated_with_ldap?(login, password)? u : nil
   end
 
@@ -108,7 +93,23 @@ class User
       user.remember_me_token_expiration > DateTime.now ? user : nil
     end
   end
-  
+
+  def recent_projects
+    self.projects.active.sort_by { |p| self.last_activity_in_project(p).date }.reverse.first(RECENT_ACTIVITIES_NUM)
+  end
+
+  def last_activity_in_project(project)
+    self.activities.first(:project_id => project.id, :order => [:date.desc])
+  end
+
+  def authenticated?(password)
+    active && crypted_password == encrypt(password)
+  end
+
+  def authenticated_with_ldap?(login, password)
+    active && Auth::LDAP.authenticate(login, password)
+  end
+
   def is_admin?
     !self.is_client_user? && self.admin?
   end
