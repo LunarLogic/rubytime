@@ -19,6 +19,9 @@
         <%= text_field :login, :label => "Login" %>
       </p>
       <p>
+        <%= text_field :ldap_login, :label => "LDAP Login" %>
+      </p>
+      <p>
         <%= text_field :email, :label => "Email" %>
       </p>
       <% if !@user.new? && @user != current_user%>

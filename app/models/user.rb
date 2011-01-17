@@ -2,11 +2,14 @@ class User
   include DataMapper::Resource
 
   RECENT_ACTIVITIES_NUM = 3
-  
+  LOGIN_REGEXP = /^[\w_\.-]{3,20}$/
+
   property :id,                            Serial
   property :name,                          String, :required => true
   property :type,                          Discriminator, :index => true
-  property :login,                         String, :required => true, :index => true, :format => /^[\w_\.-]{3,20}$/
+  property :login,                         String, :required => true, :index => true,
+                                             :format => LOGIN_REGEXP, :unique => true
+  property :ldap_login,                    String, :format => LOGIN_REGEXP, :unique => true, :index => true
   property :email,                         String, :required => true, :format => :email_address
   property :active,                        Boolean, :required => true, :default => true
   property :admin,                         Boolean, :required => true, :default => false
@@ -70,6 +73,27 @@ class User
     active.all('activities.project.client_id' => client.id, :unique => true)
   end
 
+  def self.authenticate(login, password)
+    u = User.first(:login => login)
+    if u && u.authenticated?(password)
+      u
+    else
+      Auth::LDAP.isLDAP? ? authenticate_with_ldap(login, password) : nil
+    end
+  end
+
+  def self.authenticate_with_ldap(login, password)
+    u = User.first(:ldap_login => login)
+    u && u.authenticated_with_ldap?(login, password)? u : nil
+  end
+
+  def self.authenticate_with_token(token)
+    user = self.first(:remember_me_token => token)
+    if user
+      user.remember_me_token_expiration > DateTime.now ? user : nil
+    end
+  end
+
   def recent_projects
     self.projects.active.sort_by { |p| self.last_activity_in_project(p).date }.reverse.first(RECENT_ACTIVITIES_NUM)
   end
@@ -79,9 +103,13 @@ class User
   end
 
   def authenticated?(password)
-    crypted_password == encrypt(password) && active
+    active && crypted_password == encrypt(password)
   end
-  
+
+  def authenticated_with_ldap?(login, password)
+    active && Auth::LDAP.authenticate(login, password)
+  end
+
   def is_admin?
     !self.is_client_user? && self.admin?
   end
@@ -147,13 +175,6 @@ class User
   def forget_me!
     self.remember_me_token_expiration = self.remember_me_token = nil
     save
-  end
-
-  def self.authenticate_with_token(token)
-    user = self.first(:remember_me_token => token)
-    if user
-      user.remember_me_token_expiration > DateTime.now ? user : nil
-    end
   end
   
   def reset_password!

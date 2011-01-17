@@ -125,6 +125,7 @@ GEM
       daemons (>= 1.0.3)
       fastthread (>= 1.0.1)
       gem_plugin (>= 0.2.3)
+    net-ldap (0.1.1)
     nokogiri (1.4.1)
     open4 (0.9.6)
     rack (1.2.1)
@@ -186,6 +187,7 @@ DEPENDENCIES
   merb_datamapper (= 1.1.0.pre)
   merb_dm_xss_terminate!
   mongrel (= 1.1.5)
+  net-ldap
   nokogiri (= 1.4.1)
   rack_revision_info
   rcov

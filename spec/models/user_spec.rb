@@ -42,6 +42,23 @@ describe User do
     User.authenticate(login, password).should be_nil
   end
 
+  it "should authenticate user with ldap if basic auth fails" do
+    Auth::LDAP.should_receive(:authenticate).and_return(true)
+
+    password = "awsumpass"
+    login = "SomeLogin"
+
+    employee = Employee.prepare(
+      :active => true,
+      :login => login,
+      :ldap_login => "ldap_login",
+      :password => password,
+      :password_confirmation => password
+    )
+    employee.save.should be_true
+    User.authenticate("ldap_login", "ldap_password").should_not be_nil
+  end
+
   it "should send welcome email to new user" do
     block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
       Employee.generate
