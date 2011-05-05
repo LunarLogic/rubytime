@@ -76,5 +76,5 @@ Merb::Router.prepare do
 
   default_routes
   
-  match('/').to(:controller => 'activities', :action =>'index').name(:root)
+  match('/').to(:controller => 'home', :action => 'index').name(:root)
 end
