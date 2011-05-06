@@ -84,7 +84,7 @@ class User
 
   def self.authenticate_with_ldap(login, password)
     u = User.first(:ldap_login => login)
-    u && u.authenticated_with_ldap?(login, password)? u : nil
+    u && u.authenticated_with_ldap?(password)? u : nil
   end
 
   def self.authenticate_with_token(token)
@@ -106,8 +106,8 @@ class User
     active && crypted_password == encrypt(password)
   end
 
-  def authenticated_with_ldap?(login, password)
-    active && Auth::LDAP.authenticate(login, password)
+  def authenticated_with_ldap?(password)
+    active && Auth::LDAP.authenticate(ldap_login, password)
   end
 
   def is_admin?
