@@ -1,9 +1,10 @@
 require 'net/ldap'
 require 'yaml'
 
+class LdapConnectionError < StandardError; end
+
 module Auth
   module LDAP
-
     LDAP_CONFIG_FILE = File.join(Merb.root, 'config', 'ldap.yml')
 
     def self.isLDAP?
@@ -25,7 +26,8 @@ module Auth
           :password => password
         }})
       ldap.bind
+    rescue Net::LDAP::LdapError, Timeout::Error, SystemCallError => e
+      raise LdapConnectionError, e
     end
-
   end
 end
