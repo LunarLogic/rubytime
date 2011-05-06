@@ -3,7 +3,7 @@ class Projects < Application
 
   before :ensure_admin, :exclude => [:for_clients, :index]
   before :ensure_can_list_projects, :only => [:index]
-  before :load_project, :only => [:edit, :update, :destroy, :show]
+  before :load_project, :only => [:edit, :update, :destroy, :show, :set_default_activity_type]
   before :load_projects, :only => [:index, :create]
   before :load_clients, :only => [:index, :new, :create]
   
@@ -28,6 +28,9 @@ class Projects < Application
   
   def show
     @expand_hourly_rates = (params[:expand_hourly_rates] == 'yes')
+    unless @project.activity_types.empty?
+      @activities_without_types = @project.activities.all(:activity_type_id => nil)
+    end
     render
   end
   
@@ -60,6 +63,18 @@ class Projects < Application
     else
       render_failure "This project has activities. Couldn't delete."
     end
+  end
+  
+  def set_default_activity_type
+    @activity_type = ActivityType.get(params[:activity_type_id]) or raise NotFound
+
+    @activities = @project.activities.all(:activity_type_id => nil)
+    @activities.each do |a|
+      a.activity_type = @activity_type
+      a.save
+    end
+
+    redirect resource(@project)
   end
   
   # Returns all projects matching current selected clients

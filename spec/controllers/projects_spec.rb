@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Projects do
   it "shouldn't show any action for guest, employee and client's user" do
-    [:create, :edit, :update, :destroy].each do |action|
+    [:create, :edit, :update, :destroy, :set_default_activity_type].each do |action|
       block_should(raise_unauthenticated) { as(:guest).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:employee).dispatch_to(Projects, action) }
       block_should(raise_forbidden) { as(:client).dispatch_to(Projects, action) }
@@ -137,6 +137,65 @@ describe Projects do
 
     it "shouldn't update nonexistent project" do
       block_should(raise_not_found) { as(:admin).dispatch_to(Projects, :update, :id => 12345678, :project => {}) }
+    end
+  end
+
+  describe "#set_default_activity_type" do
+    let(:type) { ActivityType.generate }
+    let(:project) { Project.generate(:activity_types => [type]) }
+
+    context "if project doesn't exist" do
+      it "should raise not found" do
+        block_should(raise_not_found) do
+          as(:admin).dispatch_to(Projects, :set_default_activity_type, :id => 888, :activity_type_id => type.id)
+        end
+      end
+    end
+
+    context "if activity type doesn't exist" do
+      it "should raise not found" do
+        block_should(raise_not_found) do
+          as(:admin).dispatch_to(Projects, :set_default_activity_type, :id => project.id, :activity_type_id => 888)
+        end
+      end
+    end
+
+    context "if both project and activity type exist" do
+      let(:type2) { ActivityType.generate }
+
+      before :each do
+        project.activity_types = []
+        project.save
+        project.reload
+
+        @activities_without_types = (0..1).map { Activity.generate(:project => project, :activity_type => nil) }
+
+        project.activity_types = [type, type2]
+        project.save
+        project.reload
+
+        @activities_with_types = (0..1).map { Activity.generate(:project => project, :activity_type => type2) }
+
+        as(:admin).dispatch_to(Projects, :set_default_activity_type, :id => project.id, :activity_type_id => type.id)
+      end
+
+      context "if activities have a type assigned" do
+        it "shouldn't update them" do
+          @activities_with_types.each do |a|
+            a.reload
+            a.activity_type.should == type2
+          end
+        end
+      end
+
+      context "if activities don't have a type assigned" do
+        it "should set their type" do
+          @activities_without_types.each do |a|
+            a.reload
+            a.activity_type.should == type
+          end
+        end
+      end
     end
   end
 

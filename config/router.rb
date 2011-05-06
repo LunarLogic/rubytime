@@ -58,7 +58,9 @@ Merb::Router.prepare do
   resources :currencies
   resources :activities, :collection => { "day" => :get }
   resources :clients
-  resources :projects, :collection => { "for_clients" => :get } do
+  resources :projects,
+    :collection => { "for_clients" => :get },
+    :member => { "set_default_activity_type" => :put } do
     resource :calendar
     resources :activities
   end

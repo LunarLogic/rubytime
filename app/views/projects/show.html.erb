@@ -16,6 +16,33 @@
   <%= link_to "Edit", url(:edit_project, @project) %>
 </p>
 
+<% unless @activities_without_types.blank? %>
+  <div class="sections warning">
+    <h4>Warning:</h4>
+
+    <p>
+      <% @one = (@activities_without_types.length == 1) %>
+      <%= @one ? "There's one activity" : "There are #{@activities_without_types.length} activities" %>
+      in this project that <%= @one ? "doesn't have a type" : "don't have any types" %> assigned, which
+      <%= @one ? 'is' : 'are' %> currently invalid. You should assign a default activity type
+      to <%= @one ? 'it' : 'them' %>.
+    </p>
+
+    <%= form_for @project, :action => resource(@project, :set_default_activity_type) do %>
+      <fieldset>
+        <p>
+          Default activity type:
+          <%= activity_type_select(@project) %>
+        </p>
+
+        <p class="buttons">
+          <%= submit 'Update activities', :class => "button" %>
+        </p>
+      </fieldset>
+    <% end =%>
+  </div>
+<% end %>
+
 <div class="sections">
   <a class="head" href="#">Hourly rates</a>
   <div id="project_hourly_rates"<%= @expand_hourly_rates ? ' class="expanded_by_default"' : '' %>>

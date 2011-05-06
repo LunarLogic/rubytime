@@ -12,6 +12,24 @@ module Merb
       Rubytime::CONFIG[:site_url]
     end
 
+    def activity_type_select(obj)
+      types = if obj.is_a?(Project)
+        obj.available_activity_types
+      else
+        obj.project && obj.project.available_activity_types || []
+      end
+      
+      selected = obj.activity_type_id if obj.is_a?(Activity)
+      
+      list = types.map do |main_type|
+        data = [[main_type[:id], main_type[:name]]]
+        data += main_type[:available_subactivity_types].map { |st| [st[:id], "– " + st[:name]] }
+        data
+      end
+      
+      select :name => 'activity_type_id', :collection => list.inject(&:+), :selected => selected
+    end
+
     def main_menu_items 
       return [] unless current_user
       main_menu = []
