@@ -63,6 +63,7 @@ group :development, :test do
     gem 'ruby-debug19'
   else
     gem 'ruby-debug'
+    gem 'linecache', '0.43'
   end
   gem 'delorean'
 end
