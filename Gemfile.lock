@@ -26,6 +26,7 @@ GEM
       hoe (>= 1.2.1)
     ci_reporter (1.6.2)
       builder (>= 2.1.2)
+    cmdparse (2.0.3)
     columnize (0.3.3)
     daemons (1.1.0)
     data_objects (0.10.2)
@@ -80,6 +81,10 @@ GEM
     icalendar (1.1.5)
     jslint_on_rails (1.0.3)
     json_pure (1.2.4)
+    juicer (1.0.12)
+      cmdparse
+      nokogiri
+      rubyzip
     linecache (0.43)
     mailfactory (1.4.0)
       mime-types (>= 1.13.1)
@@ -135,6 +140,7 @@ GEM
       linecache (>= 0.3)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
+    rubyzip (0.9.4)
     stringex (1.1.0)
     thin (1.2.7)
       daemons (>= 1.0.9)
@@ -171,6 +177,7 @@ DEPENDENCIES
   i18n
   icalendar (~> 1.1.0)
   jslint_on_rails
+  juicer
   linecache (= 0.43)
   merb-assets (= 1.1.0.pre)
   merb-auth-core (= 1.1.0.pre)
