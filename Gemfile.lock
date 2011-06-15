@@ -80,7 +80,7 @@ GEM
     icalendar (1.1.5)
     jslint_on_rails (1.0.3)
     json_pure (1.2.4)
-    linecache (0.45)
+    linecache (0.43)
     mailfactory (1.4.0)
       mime-types (>= 1.13.1)
     merb-assets (1.1.0.pre)
@@ -171,6 +171,7 @@ DEPENDENCIES
   i18n
   icalendar (~> 1.1.0)
   jslint_on_rails
+  linecache (= 0.43)
   merb-assets (= 1.1.0.pre)
   merb-auth-core (= 1.1.0.pre)
   merb-auth-more (= 1.1.0.pre)
