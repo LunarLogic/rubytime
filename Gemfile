@@ -36,7 +36,9 @@ end
 
 gem "thin"
 gem "icalendar", "~>1.1.0"
-gem "fastercsv", '1.5.3'
+if RUBY_VERSION.include?('1.8')
+  gem "fastercsv", '1.5.3'
+end
 gem 'rack_revision_info'
 gem 'nokogiri', '1.4.1'  # for rack_revision_info
 # TODO: revision info doesn't work on the production now (which was the whole point) because Vlad deletes .git
@@ -57,6 +59,10 @@ group :development, :test do
   gem "rcov_stats"
   gem "ci_reporter"
   gem "jslint_on_rails"
-  gem 'ruby-debug'
+  if RUBY_VERSION.include?('1.9')
+    gem 'ruby-debug19'
+  else
+    gem 'ruby-debug'
+  end
   gem 'delorean'
 end
