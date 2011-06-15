@@ -67,3 +67,7 @@ group :development, :test do
   end
   gem 'delorean'
 end
+
+group :production do
+  gem 'juicer'
+end
