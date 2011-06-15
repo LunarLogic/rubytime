@@ -34,7 +34,7 @@ git "git://github.com/schwabsauce/merb_dm_xss_terminate.git" do
   gem "merb_dm_xss_terminate"
 end
 
-gem "mongrel", "1.1.5"
+gem "thin"
 gem "icalendar", "~>1.1.0"
 gem "fastercsv", '1.5.3'
 gem 'rack_revision_info'
