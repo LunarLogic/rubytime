@@ -4,6 +4,7 @@ config/deploy.rb
 config/local_config.rb
 config/rcov_stats.yml
 config/schedule.rb
+config/ldap.yml
 
 # regenerable
 coverage/*
