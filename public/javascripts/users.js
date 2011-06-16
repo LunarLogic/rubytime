@@ -10,7 +10,7 @@ var Users = {
   _initValidation: function() {
     // add login validation method
     function loginFormat(value, element, params) {
-      return this.optional(element) || (/^[\w_\-]{3,20}$/).test(value);
+      return this.optional(element) || (/^[\w\.\-]{3,20}$/).test(value);
     }
 
     $.validator.addMethod('login', loginFormat,

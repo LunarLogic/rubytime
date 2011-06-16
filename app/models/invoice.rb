@@ -32,7 +32,8 @@ class Invoice
     if new_activities.blank? || new_activities.all?(&:valid?)
       true
     else
-      [false, "Some of activities are invalid (#{new_activities.first.errors.first.first})."]
+      errors = new_activities.map { |a| a.errors.full_messages.uniq }.flatten
+      [false, "Some of activities are invalid (#{errors.join("; ")})."]
     end
   end
 

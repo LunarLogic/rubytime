@@ -310,6 +310,15 @@ li.role strong {
 .sections div {
   margin: 10px 0;
 }
+.warning {
+  background: #ffd;
+  border: 1px solid #eeb;
+  margin: 20px 0px;
+  padding: 10px;
+}
+.warning p {
+  margin: 10px 0px;
+}
 #errors {
   color: #CF3333;
   margin-bottom: 10px;

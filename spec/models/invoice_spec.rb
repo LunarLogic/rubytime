@@ -23,4 +23,16 @@ describe Invoice do
     end 
   end
 
+  context "if some new activities are invalid" do
+    it "should not be valid" do
+      invoice = Invoice.prepare
+      invoice.new_activities = [Activity.new]
+      invoice.should_not be_valid
+
+      invoice.new_activities = [Activity.prepare, Activity.new]
+      expect { invoice.valid? }.to_not(raise_error)
+      invoice.should_not be_valid
+    end
+  end
+
 end

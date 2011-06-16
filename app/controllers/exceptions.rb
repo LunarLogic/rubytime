@@ -32,6 +32,10 @@ class Exceptions < Merb::Controller
     end
   end
   
+  def ldap_connection_error
+    redirect url(:login), :message => { :error => "There are connection problems, try again later." }
+  end
+  
   def number_of_columns
     1
   end

@@ -5,18 +5,24 @@ actions are irrelevant in this context).
 This is done so that it's possible to handle incompatibilities between client and server versions (e.g. iPhone app has
 been updated to the newest version which uses some new API actions, but the server wasn't).
 
+Version 4 - June 16, 2011
+
+Changes:
+* Added price_as_json (with currency) and role_name to Activity JSON response in Activities#index
+* Added JSON response type in Roles#index and Users#index
+
 -----
 
 Version 3 - January 5, 2011
 
-changes:
+Changes:
 * Added include_activity_types option in /projects.json
 
 -----
 
 Version 2 - December 16, 2010
 
-changes:
+Changes:
 * Added price_as_json and role_name to /activities.json
 
 -----

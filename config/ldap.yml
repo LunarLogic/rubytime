@@ -1,0 +1,6 @@
+---
+
+:host: ldap.llp.pl
+:port: 10389
+:base: ou=users,dc=llp,dc=pl
+:attr: uid

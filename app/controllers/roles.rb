@@ -3,10 +3,11 @@ class Roles < Application
   before :load_roles, :only => [:index, :create]
   
   def index
+    provides :json
     @role = Role.new
-    render
+    display @roles
   end
-  
+
   def create
     @role = Role.new(params[:role])
     if @role.save

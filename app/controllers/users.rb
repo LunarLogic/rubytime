@@ -1,5 +1,5 @@
 class Users < Application
-  # provides :xml, :yaml, :js
+  provides :json #,:xml, :yaml, :js
   before :ensure_authenticated, :exclude => [:request_password, :reset_password]
   before :ensure_admin, :only => [:new, :create, :edit, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
