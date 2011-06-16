@@ -30,6 +30,8 @@ h3. Configure
 
 * copy config/database.yml.example to config/database.yml, then edit it to match your database configuration
 * copy config/local_config.rb.example to config/local_config.rb, then set application domain and mailer "From" address
+* copy config/schedule.rb.example to config/schedule.rb and update it to set your reminder schedules
+* copy config/ldap.yml.example to config/ldap.yml and set your LDAP address/port if you want LDAP authentication support
 
 h3. Running in development mode (on local machine)
 
