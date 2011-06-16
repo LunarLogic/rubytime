@@ -1,3 +1,16 @@
+Release 3.5 - June 16, 2011
+
+- New features:
+ * Users can authenticate using LDAP (once they set their LDAP login in their settings)
+ * Admin can set a default activity type for old activities in a project
+ * API extensions to provide some data needed by Dashboard project
+
+- Other changes:
+ * Removed the "You need to login" flash message at the beginning
+ * Fixed some crashes related to creating invoices
+
+----
+
 Release 3.4.2 - January 5, 2011
 
 - New features:
