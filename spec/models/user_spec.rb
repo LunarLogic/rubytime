@@ -43,6 +43,7 @@ describe User do
   end
 
   it "should authenticate user with ldap if basic auth fails" do
+    Auth::LDAP.should_receive(:isLDAP?).and_return(true)
     Auth::LDAP.should_receive(:authenticate).and_return(true)
 
     password = "awsumpass"
