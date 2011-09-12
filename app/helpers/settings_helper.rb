@@ -1,5 +1,3 @@
-module Merb
-  module SettingsHelper
+module SettingsHelper
 
-  end
-end # Merb
+end

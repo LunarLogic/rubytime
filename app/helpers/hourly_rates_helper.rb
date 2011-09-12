@@ -1,5 +1,3 @@
-module Merb
-  module HourlyRatesHelper
+module HourlyRatesHelper
 
-  end
-end # Merb
+end

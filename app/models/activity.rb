@@ -13,7 +13,7 @@ class Activity
   property :activity_type_id, Integer, :index => true
   property :user_id,     Integer, :required => true, :index => true
   property :invoice_id,  Integer, :index => true
-  property :price_value, BigDecimal, :scale => 2, :precision => 10
+  property :price_value, Decimal, :scale => 2, :precision => 10
   property :price_currency_id, Integer
   property :updated_at,  DateTime
   property :created_at,  DateTime

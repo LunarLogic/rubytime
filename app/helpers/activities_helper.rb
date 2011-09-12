@@ -1,15 +1,14 @@
-module Merb
   module ActivitiesHelper
-    # TODO: use css instead of &nbsp; in activities_calendar, edit_activity and delete_activity
-    
-    def activities_calendar(options = {})
-      # no need to check for :year and :month - calendar_table does it
-      activities = options[:activities] or raise ArgumentError.new("options[:activities] is a mandatory argument")
-      year = options[:year]
-      month = options[:month]
-      owner = options[:owner] or raise ArgumentError.new("options[:owner] is a mandatory argument")
-      owner_type = owner.is_a?(Project) ? "project" : "user"
-      owner_id_name = :"#{owner_type}_id"
+  # TODO: use css instead of &nbsp; in activities_calendar, edit_activity and delete_activity
+  
+  def activities_calendar(options = {})
+    # no need to check for :year and :month - calendar_table does it
+    activities = options[:activities] or raise ArgumentError.new("options[:activities] is a mandatory argument")
+    year = options[:year]
+    month = options[:month]
+    owner = options[:owner] or raise ArgumentError.new("options[:owner] is a mandatory argument")
+    owner_type = owner.is_a?(Project) ? "project" : "user"
+    owner_id_name = :"#{owner_type}_id"
 
       calendar_table(:year => year, :month => month, :first_day_of_week => 1, :owner_type => owner_type) do |date|
         vacation_for_today = owner.respond_to?(:has_free_day_on) ? owner.has_free_day_on(date) : false
@@ -182,4 +181,3 @@ module Merb
     end
 
   end # ActivitiesHelper
-end # Merb

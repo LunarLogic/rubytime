@@ -1,5 +1,3 @@
-module Merb
-  module ClientsHelper
-
-  end
-end # Merb
+module ClientsHelper
+  
+end

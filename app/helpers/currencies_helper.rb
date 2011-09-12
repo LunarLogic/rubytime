@@ -1,5 +1,3 @@
-module Merb
-  module CurrenciesHelper
+module CurrenciesHelper
 
-  end
-end # Merb
+end

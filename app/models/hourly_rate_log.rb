@@ -12,7 +12,7 @@ class HourlyRateLog
   property :hr_project_id,              Integer, :writer => :private
   property :hr_role_id,                 Integer, :writer => :private
   property :hr_takes_effect_at,         Date,    :writer => :private
-  property :hr_value,                   BigDecimal, :writer => :private, :scale => 2, :precision => 10
+  property :hr_value,                   Decimal, :writer => :private, :scale => 2, :precision => 10
   property :hr_currency_id,             Integer, :writer => :private
   
   belongs_to :operation_author, :model => User, :child_key => [:operation_author_id]

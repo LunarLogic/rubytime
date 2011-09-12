@@ -33,6 +33,8 @@ class User
                                              :required => true,
                                              :default => Rubytime::DECIMAL_SEPARATORS.first
 
+  devise :database_authenticatable
+
   validates_length :name, :min => 3
 
   validates_length :password, :min => 6 , :if => :password_required?

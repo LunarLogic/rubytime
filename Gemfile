@@ -1,8 +1,11 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
-gem "do_mysql"
+gem 'rails', '~> 3.0'
+gem 'merb-to-rails3'
 
-dm_gems_version = "0.10.2"
+gem 'mysql'
+
+dm_gems_version = "1.1.0"
 
 gem "dm-core", dm_gems_version
 gem "dm-aggregates", dm_gems_version
@@ -15,24 +18,11 @@ gem "dm-serializer", dm_gems_version
 # gem "dm-constraints", dm_gems_version  # TODO: this doesn't work, throws some kind of SQL error during migration
 gem "dm-is-tree", dm_gems_version
 gem "dm-is-list", dm_gems_version
+gem "dm-rails", dm_gems_version
+gem "dm-mysql-adapter", dm_gems_version
 
-merb_gems_version = "1.1.0.pre" # TODO: update to 1.1.1 when available; 1.1.0 final breaks mongrel with rack middlewares
-
-gem "merb-core", merb_gems_version
-gem "merb_datamapper", merb_gems_version
-gem "merb-assets", merb_gems_version
-gem "merb-helpers", merb_gems_version
-gem "merb-mailer", merb_gems_version
-gem "merb-slices", merb_gems_version
-gem "merb-auth-core", merb_gems_version
-gem "merb-auth-more", merb_gems_version
-gem "merb-auth-slice-password", merb_gems_version
-gem "merb-param-protection", merb_gems_version
-gem "merb-exceptions", merb_gems_version
-gem "net-ldap"
-git "git://github.com/schwabsauce/merb_dm_xss_terminate.git" do
-  gem "merb_dm_xss_terminate"
-end
+gem 'devise'
+gem 'dm-devise', '~> 1.5.0'
 
 gem "thin"
 gem "icalendar", "~>1.1.0"
@@ -48,15 +38,13 @@ gem 'whenever', :require => false
 gem 'i18n' # for whenever
 
 group :development do
-  gem 'vlad', '2.0.0', :require => []
-  gem 'vlad-git', '2.0.0', :require => []
+  gem 'vlad', :require => []
+  gem 'vlad-git', :require => []
 end
 
 group :development, :test do
-  gem "dm-factory_girl", "1.2.3", :require => "factory_girl", :git => "git://github.com/psionides/factory_girl_dm.git"
   gem "rspec", '1.3.0', :require => "spec"
   gem "rcov"
-  gem "rcov_stats"
   gem "ci_reporter"
   gem "jslint_on_rails"
   if RUBY_VERSION.include?('1.9')
@@ -66,8 +54,10 @@ group :development, :test do
     gem 'linecache', '0.43'
   end
   gem 'delorean'
+  gem 'factory_girl_rails'
 end
 
 group :production do
   gem 'juicer'
 end
+

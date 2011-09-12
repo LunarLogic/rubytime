@@ -1,5 +1,3 @@
-module Merb
-  module FreeDaysHelper
+module FreeDaysHelper
 
-  end
-end # Merb
+end

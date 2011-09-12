@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 desc "add testing users"
 namespace :rubytime do
   task :kickstart => :merb_env do

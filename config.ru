@@ -1,20 +1,4 @@
-begin
-  require File.expand_path('../.bundle/environment', __FILE__)
-rescue LoadError
-  require "rubygems"
-  require "bundler"
-  Bundler.setup
-end
+# This file is used by Rack-based servers to start the application.
 
-require 'merb-core'
-
-Merb::Config.setup(
-  :merb_root   => ::File.expand_path(::File.dirname(__FILE__)),
-  :fork_for_class_load => false,
-  :environment => ENV['RACK_ENV'] || 'production'
-)
-Merb.environment = Merb::Config[:environment]
-Merb.root = Merb::Config[:merb_root]
-Merb::BootLoader.run
-
-run Merb::Rack::Application.new
+require ::File.expand_path('../config/environment',  __FILE__)
+run Rubytime::Application

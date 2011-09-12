@@ -1,11 +1,10 @@
----
 development: &defaults
   adapter:  mysql
   database: rubytime3_dev
   username: root
   password: 
   host: localhost
-  encoding: UTF-8
+  encoding: utf8
 
 test:
   <<:       *defaults

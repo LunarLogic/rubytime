@@ -5,7 +5,7 @@ class HourlyRate
   property :project_id, Integer, :required => true
   property :role_id, Integer, :required => true
   property :takes_effect_at, Date, :required => true
-  property :value, BigDecimal, :scale => 2, :precision => 10, :required => true
+  property :value, Decimal, :scale => 2, :precision => 10, :required => true
   property :currency_id, Integer, :required => true
 
   belongs_to :project
