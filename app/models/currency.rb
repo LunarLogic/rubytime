@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Currency
   include DataMapper::Resource
   
@@ -23,10 +24,10 @@ class Currency
   
   [:singular_name, :plural_name].each do |attr|
     define_method "validates_#{attr}_format" do
-      if self.send(attr)=~ /^[\w ]*$/ && self.send(attr) !~ /[\d_]/
+      if self.send(attr) =~ /^[\p{Word} ]*$/u && self.send(attr) !~ /[\d_]/
         true
       else
-        [false, "#{attr.to_s.gsub(/_/, ' ').capitalize} has an invalid format."]
+        [false, "#{attr.to_s.humanize} has an invalid format."]
       end 
     end
   end
