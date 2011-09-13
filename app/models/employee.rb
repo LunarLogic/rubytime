@@ -20,12 +20,12 @@ class Employee < User
   end
   
   def send_timesheet_nagger_for(date)
-    m = UserMailer.new(:user => self, :day_without_activities => date)
-    m.dispatch_and_deliver(:timesheet_nagger,
-      :from => Rubytime::CONFIG[:mail_from],
-      :to => email,
-      :subject => "RubyTime timesheet nagger for #{date}"
-    )
+    UserMailer.timesheet_nagger(:user => self, 
+                                :day_without_activities => date,
+                                :from => Rubytime::CONFIG[:mail_from],
+                                :to => email,
+                                :subject => "RubyTime timesheet nagger for #{date}").
+      deliver
   end
   
   def self.without_activities_on(date)

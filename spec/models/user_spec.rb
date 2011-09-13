@@ -61,10 +61,10 @@ describe User do
   end
 
   it "should send welcome email to new user" do
-    block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
+    block_should(change(ActionMailer::Base.deliveries, :size).by(1)) do
       Employee.generate
     end
-    last_delivered_mail.text.should include("welcome")
+    last_delivered_mail.encoded.should include("welcome")
   end
 
   it "should generate a password reset token with expiration time" do
@@ -75,10 +75,10 @@ describe User do
 
   it "should send email with password reset link to user requesting it" do
     user = Employee.generate
-    block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
+    block_should(change(ActionMailer::Base.deliveries, :size).by(1)) do
       user.generate_password_reset_token
     end
-    last_delivered_mail.text.should include("reset password")
+    last_delivered_mail.encoded.should include("reset password")
   end
 
   it "should require password" do
@@ -86,6 +86,7 @@ describe User do
 
     user = Employee.generate
     user = Employee.get(user.id) # needs to be reloaded, to prevent from keeping password_confirmation set
+
     user.password_required?.should be_false
     user.password = "kiszka"
     user.password_required?.should be_true
@@ -147,16 +148,16 @@ describe User do
   end
 
   describe "with_activities" do
-    before :all do
+    before :each do
       @user = Employee.generate
     end
 
-    it "should include users which have added activities" do
+    it "should include users who have added activities" do
       Activity.generate :user => @user
       User.with_activities.should include(@user)
     end
 
-    it "should not include users which haven't added any activities" do
+    it "should not include users who haven't added any activities" do
       User.with_activities.should_not include(@user)
     end
 
@@ -308,7 +309,7 @@ describe Employee do
 
       Employee.send_timesheet_naggers_for(day)
 
-      emails = Merb::Mailer.deliveries.map(&:to).flatten
+      emails = ActionMailer::Base.deliveries.map(&:to).flatten
       emails.should_not include(@user.email)
       emails.should include(@other.email)
     end
@@ -319,7 +320,7 @@ describe Employee do
       Activity.all.destroy!
       Activity.generate :user => @user, :date => date('2009-08-03')
 
-      block_should(change(Merb::Mailer.deliveries, :size).by(1)) do
+      block_should(change(ActionMailer::Base.deliveries, :size).by(1)) do
         Employee.send_timesheet_reporter_for(Date.parse('2009-08-03'))
       end
 

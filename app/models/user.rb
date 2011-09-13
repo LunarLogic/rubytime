@@ -77,7 +77,7 @@ class User
 
   def self.authenticate(login, password)
     u = User.first(:login => login)
-    if u && u.authenticated?(password)
+    if u && u.active? && u.valid_password?(password)
       u
     else
       Auth::LDAP.isLDAP? ? authenticate_with_ldap(login, password) : nil
@@ -102,10 +102,6 @@ class User
 
   def last_activity_in_project(project)
     self.activities.first(:project_id => project.id, :order => [:date.desc])
-  end
-
-  def authenticated?(password)
-    active && crypted_password == encrypt(password)
   end
 
   def authenticated_with_ldap?(password)
@@ -196,7 +192,7 @@ class User
   end
 
   def password_required?
-    (password != password_confirmation) || (!password && !password_confirmation)
+    new? || (password != password_confirmation)
   end
   
   def class_name

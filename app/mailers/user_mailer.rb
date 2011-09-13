@@ -50,7 +50,7 @@ class UserMailer < ActionMailer::Base
 
   private
 
-  # Backwards compatibility with Merb helper
+  # Helper for backwards compatibility with Merb
   def render_mail(params)
     mail(:to => params[:to], :from => params[:from], :subject => params[:subject])
   end

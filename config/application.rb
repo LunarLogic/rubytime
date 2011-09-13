@@ -27,6 +27,7 @@ module Rubytime
     for file in Dir["#{config.root}/lib/**/*.rb"]
       require file
     end
+    require "#{config.root}/config/local_config.rb"
 
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer

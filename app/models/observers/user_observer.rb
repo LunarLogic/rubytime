@@ -26,7 +26,7 @@ class UserObserver
   end
 
   after :generate_password_reset_token do
-    m = UserMailer.password_rest_link(:user => self, :to => self.email,
+    m = UserMailer.password_reset_link(:user => self, :to => self.email,
       :from => Rubytime::CONFIG[:mail_from], :subject => "Password reset request from Rubytime").deliver
   end
   

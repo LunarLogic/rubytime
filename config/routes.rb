@@ -12,38 +12,49 @@ Rubytime::Application.routes.draw do
 
   match('/signin', :controller => 'exceptions', :action => 'unauthenticated', :as => :signin)
 
-  resources :users,
-    :member => {
-      "settings" => :get
-    },
-    :collection => {
-      "with_roles" => :get,
-      "request_password" => :get,
-      "reset_password" => :get,
-      "authenticate" => :get,
-      "with_activities" => :get
-    } do
+  resources :users do
+    member do
+      get "settings"
+    end
+    collection do
+      get "with_roles"
+      get "request_password"
+      get "reset_password"
+      get "authenticate"
+      get "with_activities"
+    end
     resource :calendar
     resources :activities
   end
   
   resources :sessions
   resources :currencies
-  resources :activities, :collection => { "day" => :get }
+  resources :activities do
+    collection { get "day" }
+  end
   resources :clients
-  resources :projects,
-    :collection => { "for_clients" => :get },
-    :member => { "set_default_activity_type" => :put } do
+  resources :projects do
+    collection { get "for_clients" }
+    member { put "set_default_activity_type" }
     resource :calendar
     resources :activities
   end
   resources :roles
-  resources :free_days, :collection => { "delete" => :delete }
+  resources :free_days do
+    collection { delete "delete" }
+  end
   resources :hourly_rates
-  resources :invoices, :member => { "issue" => :put }
+  resources :invoices do
+    member { put "issue" }
+  end
   resource :settings, :controller => 'settings' # TODO conflict with line 30, # .name(:settings)
   
-  resources :activity_types, :collection => { "available" => :get, "for_projects" => :get }
+  resources :activity_types do
+    collection do
+      get "available"
+      get "for_projects"
+    end
+  end
   resources :activity_custom_properties
 
   root(:controller => "home", :action => "index")
