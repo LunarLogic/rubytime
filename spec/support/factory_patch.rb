@@ -24,7 +24,9 @@ class FactoryGirl::DefinitionProxy
 
 end
 
-# Monkey patch to make factory_girl work with Datamapper
+# Monkey patch to make factory_girl work with Datamapper as expected
+# Without this the factory happily returns invalid objects by calling
+# save! which just skips validations and hooks in DM
 
 class FactoryGirl::Proxy::Create < FactoryGirl::Proxy::Build
   def result(to_create)
@@ -32,7 +34,7 @@ class FactoryGirl::Proxy::Create < FactoryGirl::Proxy::Build
     if to_create
       to_create.call(@instance)
     else
-      raise "Validation failed" unless @instance.save
+      raise "Validation failed in #{@instance.class} factory" unless @instance.save
     end
     run_callbacks(:after_create)
     @instance

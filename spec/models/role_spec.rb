@@ -10,7 +10,10 @@ describe Role do
 
   describe ":name attribute writer" do
     context "for new records" do
-      before { @role = Role.generate(:name => 'Original Name') }
+      before do
+        Role.all.destroy!
+        @role = Role.generate(:name => 'Original Name')
+      end
 
       it "should normally assign values" do
         @role.name.should == 'Original Name'
@@ -18,7 +21,10 @@ describe Role do
     end
 
     context "for existing records" do
-      before { @role = Role.generate(:name => 'Original Name') }
+      before do
+        Role.all.destroy!
+        @role = Role.generate(:name => 'Original Name')
+      end
 
       it "should raise Exception" do
         block_should(raise_error(Exception)) { @role.name = 'New Name' }
