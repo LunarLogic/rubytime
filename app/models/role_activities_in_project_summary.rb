@@ -21,6 +21,6 @@ class RoleActivitiesInProjectSummary
     end
   end
   
-  private 
+  protected
   attr_writer :role, :non_billable_time, :billable_time, :price
 end
