@@ -31,7 +31,7 @@ describe Client do
       block_should_not(change(Activity, :count)) do
         block_should_not(change(Project, :count)) do
           block_should_not(change(Client, :count)) do
-            client.destroy.should be_nil
+            client.destroy.should be_false
           end
         end
       end
@@ -46,7 +46,7 @@ describe Client do
       block_should_not(change(Activity, :count)) do
         block_should_not(change(Project, :count)) do
           block_should_not(change(Client, :count)) do
-            client.destroy.should be_nil
+            client.destroy.should be_false
           end
         end
       end
