@@ -82,11 +82,11 @@ describe HourlyRate do
       @user = Employee.generate :role => @role
       @hourly_rate = HourlyRate.generate :project => @project, :role => @role, :takes_effect_at => date("2009-09-04")
       Activity.all.destroy!
-      Activity.generate :project => @project, :user => @user, :date => date("2009-09-06")
+      Activity.generate(:project => @project, :user => @user, :date => date("2009-09-06"))
     end
 
     it "should not allow to destroy the record" do
-      @hourly_rate.destroy.should be_nil
+      @hourly_rate.destroy.should be_false
       HourlyRate.get(@hourly_rate.id).should_not be_nil
       @hourly_rate.errors.on(:base).should_not be_nil
     end

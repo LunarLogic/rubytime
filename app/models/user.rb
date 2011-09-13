@@ -194,6 +194,10 @@ class User
   def clear_password_reset_token!
     update(:password_reset_token => nil, :password_reset_token_exp => nil)
   end
+
+  def password_required?
+    (password != password_confirmation) || (!password && !password_confirmation)
+  end
   
   def class_name
     self.class.to_s
@@ -239,7 +243,7 @@ class User
   end
 
   def save_new_version
-    UserVersion.create(versioned_attributes)
+    UserVersion.create(versioned_attributes).errors
   end
 
   def save_first_version

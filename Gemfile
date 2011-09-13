@@ -27,6 +27,7 @@ gem 'dm-devise', '~> 1.5.0'
 
 gem "thin"
 gem "icalendar", "~>1.1.0"
+gem "net-ldap"
 if RUBY_VERSION.include?('1.8')
   gem "fastercsv", '1.5.3'
 end

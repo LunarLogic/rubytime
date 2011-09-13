@@ -5,7 +5,7 @@ class LdapConnectionError < StandardError; end
 
 module Auth
   module LDAP
-    LDAP_CONFIG_FILE = File.join(Merb.root, 'config', 'ldap.yml')
+    LDAP_CONFIG_FILE = File.join(Rails.root, 'config', 'ldap.yml')
 
     def self.isLDAP?
       File.exist?(LDAP_CONFIG_FILE)

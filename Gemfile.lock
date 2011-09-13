@@ -128,6 +128,7 @@ GEM
     merb-to-rails3 (0.1.0)
     mime-types (1.16)
     mysql (2.8.1)
+    net-ldap (0.1.1)
     nokogiri (1.4.1)
     open4 (0.9.6)
     orm_adapter (0.0.5)
@@ -233,6 +234,7 @@ DEPENDENCIES
   juicer
   merb-to-rails3
   mysql
+  net-ldap
   nokogiri (= 1.4.1)
   rack_revision_info
   rails (~> 3.0)

@@ -16,8 +16,12 @@ class UserVersion
   property :client_id,                     Integer
   property :created_at,                    DateTime
   property :modified_at,                   DateTime # not updated_at on purpose
-  property :date_format,                   Integer
-  property :recent_days_on_list,           Integer
+  property :date_format,                   Enum[*Rubytime::DATE_FORMAT_NAMES],
+                                             :required => true,
+                                             :default => :european
+  property :recent_days_on_list,           Enum[*Rubytime::RECENT_DAYS_ON_LIST],
+                                             :required => true,
+                                             :default => Rubytime::RECENT_DAYS_ON_LIST.first
   property :remind_by_email,               Boolean
   property :version_id,                    Serial
 

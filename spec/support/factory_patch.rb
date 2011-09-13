@@ -23,3 +23,18 @@ class FactoryGirl::DefinitionProxy
   end
 
 end
+
+# Monkey patch to make factory_girl work with Datamapper
+
+class FactoryGirl::Proxy::Create < FactoryGirl::Proxy::Build
+  def result(to_create)
+    run_callbacks(:after_build)
+    if to_create
+      to_create.call(@instance)
+    else
+      raise "Validation failed" unless @instance.save
+    end
+    run_callbacks(:after_create)
+    @instance
+  end
+end

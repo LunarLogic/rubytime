@@ -23,9 +23,10 @@ module Rubytime
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-    require "#{config.root}/lib/rubytime/misc"
-    config.autoload_paths += %W(#{config.root}/lib) 
-    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    for file in Dir["#{config.root}/lib/**/*.rb"]
+      require file
+    end
 
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
