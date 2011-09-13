@@ -1,8 +1,8 @@
-class HourlyRates < Application
+class HourlyRatesController < ApplicationController
   
   before :ensure_user_that_can_manage_financial_data
   
-  only_provides :json
+  respond_to :json
 
   def index
     @project = Project.get(params[:project_id])

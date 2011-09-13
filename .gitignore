@@ -23,5 +23,6 @@ tmp/pids/*
 # gems
 .bundle
 
-#emacs
+# emacs
 *~
+*#*

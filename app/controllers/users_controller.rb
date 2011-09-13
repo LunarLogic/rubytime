@@ -1,5 +1,5 @@
-class Users < Application
-  provides :json #,:xml, :yaml, :js
+class UsersController < ApplicationController
+  respond_to :json #,:xml, :yaml, :js
   before :ensure_authenticated, :exclude => [:request_password, :reset_password]
   before :ensure_admin, :only => [:new, :create, :edit, :destroy, :index]
   before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
@@ -10,8 +10,6 @@ class Users < Application
   protect_fields_for :user, :in => [:update],
     :always => [:activities_count],
     :admin => [:role_id, :client_id, :login, :active, :admin, :type, :class_name]
-
-  log_params_filtered :password, :password_confirmation
 
   def index
     @user = if params[:client_id]

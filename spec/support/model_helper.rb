@@ -3,7 +3,7 @@ module Rubytime
     module ModelHelper
 
       def parse_factory_arguments(args)
-        factory_name = (args.first.is_a?(Symbol) ? args.shift : self.name.snake_case).to_sym
+        factory_name = (args.first.is_a?(Symbol) ? args.shift : self.name.underscore).to_sym
         properties = args.first || {}
         [factory_name, properties]
       end

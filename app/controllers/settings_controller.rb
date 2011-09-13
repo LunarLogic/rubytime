@@ -1,4 +1,4 @@
-class Settings < Application
+class SettingsController < ApplicationController
 
   before :ensure_admin
 

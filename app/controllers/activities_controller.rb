@@ -1,7 +1,7 @@
-class Activities < Application
+class ActivitiesController < ApplicationController
   # TODO: extract everything related to calendar to separated Calendar controller
 
-  provides :json
+  respond_to :json
   
   before :ensure_authenticated
   before :ensure_not_client_user,     :only => [:new, :create]
@@ -19,7 +19,7 @@ class Activities < Application
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
-    provides :csv
+    respond_to :csv
     params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @search_criteria.user_id = [params[:user_id]] if params[:user_id]
@@ -85,7 +85,7 @@ class Activities < Application
   end
   
   def update
-    provides :json, :html
+    respond_to :json, :html
 
     @activity.user = current_user unless current_user.is_admin?
 

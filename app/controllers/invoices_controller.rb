@@ -1,4 +1,4 @@
-class Invoices < Application
+class InvoicesController < ApplicationController
   before :ensure_admin, :exclude => [:index, :show]
   before :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
   before :load_invoices, :only => [:index, :create]

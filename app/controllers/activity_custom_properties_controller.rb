@@ -1,4 +1,4 @@
-class ActivityCustomProperties < Application
+class ActivityCustomPropertiesController < ApplicationController
   
   before :ensure_admin
   before :load_activity_custom_property, :only => [:edit, :update, :destroy]

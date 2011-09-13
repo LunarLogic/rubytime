@@ -1,5 +1,5 @@
-class Projects < Application
-  provides :json
+class ProjectsController < ApplicationController
+  respond_to :json
 
   before :ensure_admin, :exclude => [:for_clients, :index]
   before :ensure_can_list_projects, :only => [:index]

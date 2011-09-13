@@ -1,7 +1,7 @@
 # Monkey patch for factory_girl to have a more generic sequence
 # http://devblog.timmedina.com
 
-class Factory
+class FactoryGirl::DefinitionProxy
 
   def custom_sequence(name, initial_value = 1, &block)
     s = Sequence.new(initial_value, &block)

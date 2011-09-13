@@ -5,10 +5,13 @@ def ensure_rate_exists(args)
   existing || Factory.create(:hourly_rate, params.merge(:takes_effect_at => Date.parse("2000-01-01")))
 end
 
+Factory.sequence(:user_name) { |n| "User RubyTime User ##{n}" }
+Factory.sequence(:user_login) { |n| "user_#{n}" }
+Factory.sequence(:user_email) { |n| "user_#{n}@rubytime.org" }
 Factory.define(:user, :class => 'User') do |u|
-  u.sequence(:name) { |n| "RubyTime User ##{n}" }
-  u.sequence(:login) { |n| "user_#{n}" }
-  u.sequence(:email) { |n| "user_#{n}@rubytime.org" }
+  u.name { Factory.next(:user_name) }
+  u.login { Factory.next(:user_login) }
+  u.email { Factory.next(:user_email) }
   u.password 'asdf1234'
   u.password_confirmation { |u| u.password }
 end
@@ -25,36 +28,44 @@ Factory.define(:client_user, :parent => :user, :class => ClientUser) do |u|
   u.association :client
 end
 
+Factory.sequence(:client_name) { |n| "Client ##{n}" }
+Factory.sequence(:client_description) { |n| "The description of client ##{n}" }
+Factory.sequence(:client_email) { |n| "client_#{n}@company.com" }
 Factory.define(:client, :class => Client) do |u|
-  u.sequence(:name) { |n| "Client ##{n}" }
-  u.sequence(:description) { |n| "The decription of client ##{n}" }
-  u.sequence(:email) { |n| "client_#{n}@company.com" }
+  u.name { Factory.next(:client_name) }
+  u.description { Factory.next(:client_description) }
+  u.email { Factory.next(:client_email) }
 end
 
+Factory.sequence(:role_name) { |n| "role_#{n}" }
 Factory.define(:role, :class => Role) do |r|
-  r.sequence(:name) { |n| "role_#{n}" }
+  r.name { Factory.next(:role_name) }
 end
 
+Factory.sequence(:project_name) { |n| "Project ##{n}" }
 Factory.define(:project, :class => Project) do |p|
-  p.sequence(:name) { |n| "Project ##{n}" }
+  p.name { Factory.next(:project_name) }
   p.association :client
 end
 
+Factory.sequence(:comment) { |n| "Activity comment ##{n}" }
 Factory.define(:activity, :class => Activity) do |a|
-  a.user { |rec| rec.association(:employee) }
-  a.project { |rec| rec.association(:project) }
+  a.association :user, :factory => :employee
+  a.association :project
   a.date { Date.today }
   a.minutes { 30 }
-  a.sequence(:comments) { |n| "Activity comment ##{n}" }
+  a.comments { Factory.next(:comment) }
   a.after_build { |a| ensure_rate_exists(:project => a.project, :role => a.role_for_date, :takes_effect_at => a.date) }
 end
 
+Factory.sequence(:activity_type_name)
 Factory.define(:activity_type) do |at|
-  at.sequence(:name) { |n| "ActivityType#{n}" }
+  at.name { Factory.next(:activity_type_name) }
 end
 
+Factory.sequence(:activity_custom_property_name)
 Factory.define(:activity_custom_property) do |acp|
-  acp.sequence(:name) { |n| "Property#{n}" }
+  acp.name { Factory.next(:activity_custom_property_name) }
   acp.required false
   acp.show_as_column_in_tables true
 end 
@@ -65,10 +76,11 @@ Factory.define(:activity_custom_property_value) do |acpv|
   acpv.numeric_value 1.0
 end
 
+Factory.sequence(:invoice_number) { |n| "Invoice ##{n}" }
 Factory.define(:invoice, :class => Invoice) do |i|
-  i.sequence(:name) { |n| "Invoice ##{n}" }
-  i.client { |a| a.association(:client) }
-  i.user { |a| a.association(:employee) }
+  i.name { Factory.next(:invoice_number) }
+  i.association(:client, :factory => :client)
+  i.association(:user, :factory => :employee)
 end
 
 Factory.define(:invoice_issued, :parent => :invoice) do |i|

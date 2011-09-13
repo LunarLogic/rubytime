@@ -19,6 +19,7 @@ gem "dm-serializer", dm_gems_version
 gem "dm-is-tree", dm_gems_version
 gem "dm-is-list", dm_gems_version
 gem "dm-rails", dm_gems_version
+gem "dm-transactions", dm_gems_version
 gem "dm-mysql-adapter", dm_gems_version
 
 gem 'devise'
@@ -43,7 +44,7 @@ group :development do
 end
 
 group :development, :test do
-  gem "rspec", '1.3.0', :require => "spec"
+  gem "rspec-rails"
   gem "rcov"
   gem "ci_reporter"
   gem "jslint_on_rails"

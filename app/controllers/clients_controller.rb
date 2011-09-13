@@ -1,4 +1,4 @@
-class Clients < Application
+class ClientsController < ApplicationController
   before :ensure_admin
   before :load_client, :only => [:show, :edit, :destroy, :update]
   before :load_clients, :only => [:index, :create]

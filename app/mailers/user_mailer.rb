@@ -1,4 +1,4 @@
-class UserMailer < Merb::MailController
+class UserMailer < ActionMailer::Base
   def welcome
     @user = params[:user]
     @url = Rubytime::CONFIG[:site_url]

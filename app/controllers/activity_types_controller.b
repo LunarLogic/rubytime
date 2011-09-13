@@ -1,4 +1,4 @@
-class ActivityTypes < Application
+class ActivityTypesController < ApplicationController
   
   before :ensure_admin, :exclude => [:available, :for_projects]
   before :ensure_can_see_available, :only => [:available]

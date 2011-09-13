@@ -1,4 +1,4 @@
-class Roles < Application
+class RolesController < ApplicationController
   before :ensure_admin
   before :load_roles, :only => [:index, :create]
   

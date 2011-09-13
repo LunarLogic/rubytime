@@ -1,4 +1,4 @@
-class Currencies < Application
+class CurrenciesController < ApplicationController
   before :ensure_admin
   before :load_currencies, :only => [:index, :create]
   before :load_currency, :only => [:destroy]

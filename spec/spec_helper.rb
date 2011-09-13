@@ -1,33 +1,23 @@
-require 'rubygems'
+ENV["RAILS_ENV"] ||= 'test'
+require File.expand_path("../../config/environment", __FILE__)
+require 'rspec/rails'
+require 'rspec/mocks/standalone'
+require 'rspec/autorun'
 
-require 'dm-core'
-require 'merb-core'
-require 'merb-mailer'
-require 'spec'
-
-# this loads all plugins required in your init file so don't add them
-# here again, Merb will do it for you
-Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
-Merb::Mailer.delivery_method = :test_send
-
-require Merb.root / 'spec/factory_patch'
-require Merb.root / 'spec/rubytime_factories' # note: not named 'factories' to disable auto-loading
-require Merb.root / 'spec/matchers'
-require Merb.root / 'spec/rubytime_specs_helper'
-require Merb.root / 'spec/controller_helper'
-require Merb.root / 'spec/mailer_helper'
-require Merb.root / 'spec/model_helper'
+Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+require "rubytime_factories"
 
 DataMapper.auto_migrate!
 DataMapper::Model.append_extensions(Rubytime::Test::ModelHelper)
 
-Spec::Runner.configure do |config|
-  config.include(Merb::Test::RouteHelper)
-  config.include(Merb::Test::ControllerHelper)
+RSpec::Runner.configure do |config|
   config.include(Rubytime::Test::ControllerHelper)
   config.include(Rubytime::Test::SpecsHelper)
   config.include(Rubytime::Test::MailerHelper)
+  config.include(Devise::TestHelpers, :type => :controller)
   config.include(Delorean)
+
+  config.mock_with :rspec
 
   config.after(:each) do
     repository(:default) do

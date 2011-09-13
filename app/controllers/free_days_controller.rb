@@ -1,4 +1,4 @@
-class FreeDays < Application
+class FreeDaysController < ApplicationController
 
   before :ensure_authenticated, :exclude => [:index]
   before :prepare_source, :exclude => [:index]
