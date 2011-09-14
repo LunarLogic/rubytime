@@ -49,15 +49,13 @@ class Employee < User
   
   def self.send_timesheet_reporter_for(date, logger = Logger.new(nil))
     logger.info "Sending timesheet report email to #{email}."
-    m = UserMailer.new(
+    UserMailer.timesheet_reporter(
       :employees_without_activities => Employee.without_activities_on(date),
-      :day_without_activities => date
-    )
-    m.dispatch_and_deliver(:timesheet_reporter,
+      :day_without_activities => date,
       :from => Rubytime::CONFIG[:mail_from],
       :to => Rubytime::CONFIG[:timesheet_report_addressee_email],
       :subject => "RubyTime timesheet report for #{date}"
-    )
+    ).deliver
   end
   
   def self.send_timesheet_reporter_for__if_enabled(date, logger = Logger.new(nil))
@@ -69,16 +67,14 @@ class Employee < User
   end
   
   def send_timesheet_summary_for(dates_range)
-    m = UserMailer.new(
+    UserMailer.timesheet_summary(
       :user => self,
       :dates_range => dates_range,
-      :activities_by_dates_and_projects => activities_by_dates_and_projects(dates_range)
-    )
-    m.dispatch_and_deliver(:timesheet_summary,
+      :activities_by_dates_and_projects => activities_by_dates_and_projects(dates_range),
       :from => Rubytime::CONFIG[:mail_from],
       :to => email,
       :subject => "RubyTime timesheet summary for #{dates_range}"
-    )
+    ).deliver
   end
   
   def activities_by_dates_and_projects(date_range)

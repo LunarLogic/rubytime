@@ -239,7 +239,7 @@ class User
   end
 
   def save_new_version
-    UserVersion.create(versioned_attributes).errors
+    UserVersion.create(versioned_attributes)
   end
 
   def save_first_version

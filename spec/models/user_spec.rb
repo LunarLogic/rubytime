@@ -324,7 +324,7 @@ describe Employee do
         Employee.send_timesheet_reporter_for(Date.parse('2009-08-03'))
       end
 
-      message = last_delivered_mail.text
+      message = last_delivered_mail.encoded
       message.should_not include(@user.name) 
       message.should include(@other.name)
     end
@@ -359,17 +359,16 @@ describe Employee do
       @activities_by_dates_and_projects = mock('activities_by_dates_and_projects')
       @user.stub! :activities_by_dates_and_projects => @activities_by_dates_and_projects
 
-      @user_mailer = mock('UserMailer')
-      @user_mailer.should_receive(:dispatch_and_deliver).with(:timesheet_summary,
+      @mail = mock('Mail')
+      UserMailer.should_receive(:timesheet_summary).with(
         :to => @user.email,
         :from => Rubytime::CONFIG[:mail_from],
-        :subject => "RubyTime timesheet summary for #{@date_range}"
-      )
-      UserMailer.should_receive(:new).with(
+        :subject => "RubyTime timesheet summary for #{@date_range}",
         :user => @user,
         :dates_range => @date_range,
         :activities_by_dates_and_projects => @activities_by_dates_and_projects
-      ).and_return(@user_mailer)
+      ).and_return(@mail)
+      @mail.should_receive(:deliver)
 
       @user.send_timesheet_summary_for(@date_range)
     end
@@ -400,6 +399,7 @@ describe Employee do
   describe "saving user versions" do
 
     before :each do
+      Role.all.destroy!
       @employee = Employee.generate
       @master = Role.generate :name => 'Jedi Master'
     end
@@ -469,6 +469,7 @@ describe Employee do
   describe "finding user versions" do
 
     before :each do
+      Role.all.destroy!
       @employee = Employee.generate
       @captain = Role.generate :name => 'Captain'
       @major   = Role.generate :name => 'Major'

@@ -2,6 +2,7 @@ class UserObserver
   include DataMapper::Observer
 
   observe User
+  observe Employee
 
   before :save do
     self.version(DateTime.now) unless new?  # force creation of first version if it should exist but it doesn't
@@ -18,7 +19,7 @@ class UserObserver
   end
 
   after :create do
-    m = UserMailer.welcome(:user => self, :to => self.email, :from => Rubytime::CONFIG[:mail_from], :subject => "Welcome to Rubytime!").deliver
+    UserMailer.welcome(:user => self, :to => self.email, :from => Rubytime::CONFIG[:mail_from], :subject => "Welcome to Rubytime!").deliver
   end
 
   before :destroy do
@@ -26,7 +27,7 @@ class UserObserver
   end
 
   after :generate_password_reset_token do
-    m = UserMailer.password_reset_link(:user => self, :to => self.email,
+    UserMailer.password_reset_link(:user => self, :to => self.email,
       :from => Rubytime::CONFIG[:mail_from], :subject => "Password reset request from Rubytime").deliver
   end
   

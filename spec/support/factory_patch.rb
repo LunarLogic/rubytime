@@ -34,7 +34,9 @@ class FactoryGirl::Proxy::Create < FactoryGirl::Proxy::Build
     if to_create
       to_create.call(@instance)
     else
-      raise "Validation failed in #{@instance.class} factory" unless @instance.save
+      unless @instance.save
+        raise "Validation failed in #{@instance.class} factory. Errors: #{@instance.errors.values.join("; ")}"
+      end
     end
     run_callbacks(:after_create)
     @instance
