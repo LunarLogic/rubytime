@@ -35,6 +35,12 @@ class User
 
   devise :database_authenticatable
 
+  # Don't allow inactive users to authenticate
+  def self.find_for_authentication(conditions = {})
+    conditions[:active] = true
+    super
+  end
+
   validates_length :name, :min => 3
 
   validates_length :password, :min => 6 , :if => :password_required?

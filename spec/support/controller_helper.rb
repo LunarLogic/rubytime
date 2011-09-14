@@ -7,6 +7,7 @@ module Rubytime
                           when :admin then Employee.generate(:admin)
                           when :employee then Employee.generate
                           when :client then ClientUser.generate
+                          when :inactive_user then Employee.generate(:active => false)
                           when :guest then nil
                           else user
                         end

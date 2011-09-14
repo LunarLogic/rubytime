@@ -10,7 +10,7 @@ require "rubytime_factories"
 DataMapper.auto_migrate!
 DataMapper::Model.append_extensions(Rubytime::Test::ModelHelper)
 
-RSpec::Runner.configure do |config|
+RSpec.configure do |config|
   config.include(Rubytime::Test::SpecsHelper)
   config.include(Rubytime::Test::MailerHelper)
 

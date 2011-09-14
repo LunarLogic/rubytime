@@ -27,7 +27,6 @@ Rubytime::Application.routes.draw do
     resources :activities
   end
   
-  resources :sessions
   resources :currencies
   resources :activities do
     collection { get "day" }

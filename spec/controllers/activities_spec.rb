@@ -1,60 +1,59 @@
 require 'spec_helper'
 
-describe Activities do
-  
-  it "should should match /activities to Activities#index" do
-    request_to("/activities", :get).should route_to(Activities, :index)
+describe ActivitiesController do
+  context "as admin" do
+    login(:admin)
+    
+    it "should export activities to CSV" do
+      project = Project.generate
+      activities = [
+                    Activity.generate(:project => project, :date => Date.today - 1),
+                    Activity.generate(:project => project, :date => Date.today - 2)
+                   ]
+
+      get(:index, :project_id => project.id, :format => :csv )
+
+      lines = response.body.split(/\n/)
+      lines.length.should == 3
+      lines[0].should =~ /Client;Project;Role/
+      lines[1].index(activities[0].project.name).should_not be_nil
+      lines[1].index(activities[0].comments).should_not be_nil
+      lines[2].index(activities[1].project.client.name).should_not be_nil
+      lines[2].index(activities[1].comments).should_not be_nil
+    end
   end
 
-  it "should should match /project/x/activities to Activities#index with :project_id set" do
-    project = Project.generate
-    request = request_to("/projects/#{project.id}/activities", :get)
-    request.should route_to(Activities, :index).with(:project_id => project.id.to_s)
-  end
+  describe "GET 'index'" do
+    context "as employee" do
+      login(:employee)
 
-  it "should export activities to CSV" do
-    project = Project.generate
-    activities = [
-      Activity.generate(:project => project, :date => Date.today - 1),
-      Activity.generate(:project => project, :date => Date.today - 2)
-    ]
-    response = as(:admin).dispatch_to(Activities, :index, { :project_id => project.id, :format => :csv })
-    lines = response.body.split(/\n/)
-    lines.length.should == 3
-    lines[0].should =~ /Client;Project;Role/
-    lines[1].index(activities[0].project.name).should_not be_nil
-    lines[1].index(activities[0].comments).should_not be_nil
-    lines[2].index(activities[1].project.client.name).should_not be_nil
-    lines[2].index(activities[1].comments).should_not be_nil
-  end
+      it { get(:index).should be_successful }
 
-  describe "#index" do
-    it "should show list of activities" do
-      as(:employee).dispatch_to(Activities, :index).should be_successful
-      as(:client).dispatch_to(Activities, :index).should be_successful
-      as(:admin).dispatch_to(Activities, :index).should be_successful
+      it "should include activity locked? field in JSON response" do
+        project = Project.generate
+        Activity.generate :user => @current_user, :project => project
+
+        get(:index, :search_criteria => { :limit => 1 }, :format => 'json')
+        response.body.should =~ /"locked\?"/
+      end        
+      
+      it "should filter by project if actions is accessed by /projects/x/activities" do
+        project = Project.generate
+        get(:index, :project_id => project.id.to_s)
+        assigns[:search_criteria].selected_project_ids.should == [project.id.to_s]
+      end
     end
 
-    it "should include activity locked? field in JSON response" do
-      user = Employee.generate
-      project = Project.generate
-      Activity.generate :user => user, :project => project
+    context "as client" do
+      login (:client)
 
-      response = as(user).dispatch_to(Activities, :index, :search_criteria => { :limit => 1 }, :format => 'json')
-      response.body.should =~ /"locked\?"/
+      it { get(:index).should be_successful }
     end
 
-    it "should filter by project if actions is accessed by /projects/x/activities" do
-      project = Project.generate
-      response = as(:employee).dispatch_to(Activities, :index, :project_id => project.id)
-      response.instance_variable_get("@search_criteria").selected_project_ids.should == [project.id.to_s]
-    end
+    context "as admin" do
+      login(:admin)
 
-    it "inactive users should not access the site" do
-      user = Employee.generate(:active => false)
-      project = Project.generate
-
-      block_should(raise_unauthenticated) { as(user).dispatch_to(Activities, :index) }
+      it { get(:index).should be_successful }
     end
   end
 

@@ -33,21 +33,20 @@ module Rubytime
     end
   end
 
-=begin  
-  # TODO fix this in a Rails 3 way
-  decimal_separator_formats = {
-    :dot   => { :number => { :delimiter => '', :separator => '.' } },
-    :comma => { :number => { :delimiter => '', :separator => ',' } }
-  }
+   decimal_separator_formats = {
+     :dot   => { :number => { :delimiter => '', :separator => '.' } },
+     :comma => { :number => { :delimiter => '', :separator => ',' } }
+   }
   
-  Numeric::Transformer.add_format(decimal_separator_formats)
-=end
-
   DATE_FORMAT_NAMES = [:european, :american]
   DATE_FORMATS = { :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" }, :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" } }
-  RECENT_DAYS_ON_LIST = [7, 14, 30]
+   RECENT_DAYS_ON_LIST = [7, 14, 30]
   PASSWORD_RESET_LINK_EXP_TIME = 86400 # One day
   DECIMAL_SEPARATORS = [:dot, :comma]
+  DECIMAL_FORMATS = {
+    :dot => {:delimiter => "", :separator => "."},
+    :comma => {:delimiter => "", :separator => ","}
+   }
 
   CONFIG = {}
 end

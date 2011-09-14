@@ -1,9 +1,13 @@
 class ActivitiesController < ApplicationController
   # TODO: extract everything related to calendar to separated Calendar controller
 
+  # TODO: Refactor. Methods from these helper are needed for the convert_to_csv method
+  include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
+
   respond_to :json
   
-  before :ensure_authenticated
+  before :authenticate_user!
   before :ensure_not_client_user,     :only => [:new, :create]
   before :load_projects,              :only => [:new, :edit, :update, :create]
   before :load_users,                 :only => [:new, :edit, :update, :create]
@@ -19,7 +23,6 @@ class ActivitiesController < ApplicationController
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
   def index
-    respond_to :csv
     params[:search_criteria] ||= { :date_from => Date.today - current_user.recent_days_on_list }
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
     @search_criteria.user_id = [params[:user_id]] if params[:user_id]
@@ -40,14 +43,16 @@ class ActivitiesController < ApplicationController
     @activities.roles
     @activities.projects.clients
     @activities.activity_custom_property_values
-    @activities.map(&:comments)
+    @activities.map(&:comments)    
 
-    if content_type == :csv
-      convert_to_csv(@activities)
-    elsif request.xhr?
-      render :index, :layout => false
-    else
-      display @activities, :methods => [:locked?, :price_as_json, :role_name]
+    respond_to do |format|
+      format.csv { render :text => convert_to_csv(@activities) }
+      if request.xhr?
+        format.any { render :index, :layout => false }
+      else
+        format.json { render(:json => @activities, :methods => [:locked?, :price_as_json, :role_name]) }
+        format.html { render(:html => @activities, :methods => [:locked?, :price_as_json, :role_name]) }
+      end
     end
   end
   
@@ -215,7 +220,7 @@ class ActivitiesController < ApplicationController
   end
   
   def convert_to_csv(activities)
-    FasterCSV.generate(:col_sep => ';') do |csv|
+    CSV.generate(:col_sep => ';') do |csv|
       custom_columns = ActivityCustomProperty.all.map { |p| p.name_with_unit }
       csv << %w(Client Project Role User Date Hours) + custom_columns + %w(Type SubType Comments)
 
