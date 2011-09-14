@@ -1,33 +1,19 @@
 module Rubytime
   module Test
     module ControllerHelper
-      private
-
-      class As
-        def initialize(user, spec)
-          @user = case user
-                    when :admin then Employee.generate(:admin)
-                    when :employee then Employee.generate
-                    when :client then ClientUser.generate
-                    when :guest then nil
-                    else user
-                  end
-          @spec = spec
-        end
-
-        def dispatch_to(controller_klass, action, params = {}, env = {}, &blk)
-          @spec.dispatch_to(controller_klass, action, params, env) do |controller|
-            controller.session.user = @user
-            blk.call(controller) if block_given?
-            controller
-          end
+      def login(user = nil)
+        before do
+          @current_user = case user
+                          when :admin then Employee.generate(:admin)
+                          when :employee then Employee.generate
+                          when :client then ClientUser.generate
+                          when :guest then nil
+                          else user
+                        end
+          sign_in(@current_user) if @current_user
         end
       end
-
-      def as(user)
-        As.new(user, self)
-      end
-
+        
       def raise_not_found
         raise_error Merb::Controller::NotFound
       end

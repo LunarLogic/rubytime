@@ -11,10 +11,12 @@ DataMapper.auto_migrate!
 DataMapper::Model.append_extensions(Rubytime::Test::ModelHelper)
 
 RSpec::Runner.configure do |config|
-  config.include(Rubytime::Test::ControllerHelper)
   config.include(Rubytime::Test::SpecsHelper)
   config.include(Rubytime::Test::MailerHelper)
+
   config.include(Devise::TestHelpers, :type => :controller)
+  config.extend(Rubytime::Test::ControllerHelper, :type => :controller)
+
   config.include(Delorean)
 
   config.mock_with :rspec
