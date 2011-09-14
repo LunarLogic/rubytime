@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Activity do
+  before :each do
+    ActivityCustomProperty.all.destroy!
+  end
+
   it "should be created" do
     block_should(change(Activity, :count).by(1)) do
       Activity.prepare.save.should be_true
@@ -300,11 +304,11 @@ describe Activity do
       Employee.generate :role => manager_role
       managers = Employee.managers.all
 
-      block_should change(Merb::Mailer.deliveries, :size).by(managers.length) do
+      block_should change(ActionMailer::Base.deliveries, :size).by(managers.length) do
         @activity.notify_project_managers(:updated)
       end
 
-      included_emails = Merb::Mailer.deliveries.last(managers.length).map(&:to).flatten
+      included_emails = ActionMailer::Base.deliveries.last(managers.length).map(&:to).flatten
       expected_emails = managers.map(&:email)
       included_emails.sort.should == expected_emails.sort
     end
@@ -436,10 +440,11 @@ describe Activity do
       context "if there is no corresponding hourly rate" do
         before do
           @activity.stub!(:hourly_rate => nil)
+          @activity.stub!(:saved? => false)
         end
 
         it "should raise an Exception" do
-          block_should(raise_error(Exception)) { @activity.freeze_price! }
+          lambda{ @activity.freeze_price! }.should raise_error
         end
       end
     end
@@ -594,6 +599,8 @@ describe Activity do
       typeA = ActivityType.generate
       activity = Activity.generate
 
+      # TODO this seems out of date with Ruby 1.9.2 not having Object#id - verify
+      ActivityType.get(nil.object_id).destroy!
       type4 = ActivityType.generate :id => nil.object_id  # for testing if id isn't set to nil.id
       type4.id.should == 4
 
@@ -842,8 +849,8 @@ describe Activity do
     end
     
     it "should return the sum of given custom property values" do
-      Activity.custom_property_values_sum(@activities, @custom_property_AAA).to_s.should == 16.08.to_s
-      Activity.custom_property_values_sum(@activities, @custom_property_BBB).should == 137
+      Activity.custom_property_values_sum(@activities, @custom_property_AAA).should be_within(0.1).of(16.08)
+      Activity.custom_property_values_sum(@activities, @custom_property_BBB).should be_within(0.1).of(137)
     end
   end
 

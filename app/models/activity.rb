@@ -224,11 +224,14 @@ class Activity
 
   def notify_project_managers(kind_of_change)
     Employee.managers.each do |project_manager|
-      m = UserMailer.new(:activity => self, :kind_of_change => kind_of_change, :project_manager => project_manager)
-      m.dispatch_and_deliver(:timesheet_changes_notifier,
+      UserMailer.timesheet_changes_notifier(
+        :activity => self,
+        :kind_of_change => kind_of_change,
+        :project_manager => project_manager,
         :to => project_manager.email,
         :from => Rubytime::CONFIG[:mail_from],
-        :subject => "Timesheet update notification")
+        :subject => "Timesheet update notification"
+      ).deliver
     end
   end
 
@@ -250,6 +253,8 @@ class Activity
     custom_properties.each_pair do |custom_property_id, value|
       @custom_properties[custom_property_id.to_i] = ActivityCustomPropertyValue.new(:value => value).value unless value.blank?
     end
+    # Just to let DM know the object is not clean
+    self.updated_at = DateTime.now
     @custom_properties_modified = true
     @custom_properties
   end
