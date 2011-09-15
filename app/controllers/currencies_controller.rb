@@ -11,7 +11,7 @@ class CurrenciesController < ApplicationController
   def create
     @currency = Currency.new(params[:currency])
     if @currency.save
-      redirect resource(:currencies)
+      redirect_to currencies_path
     else
       render :index
     end
@@ -25,7 +25,7 @@ class CurrenciesController < ApplicationController
   def update
     @currency = Currency.get(params[:id]) or raise NotFound
     if @currency.update(params[:currency]) || !@currency.dirty?
-      redirect resource(:currencies)
+      redirect_to currencies_path
     else
       render :edit
     end
@@ -47,7 +47,7 @@ class CurrenciesController < ApplicationController
   end
   
   def load_currency
-    @currency = Currency.get(params[:id]) or raise NotFound
+    not_found unless @currency = Currency.get(params[:id]) 
   end
   
   def number_of_columns

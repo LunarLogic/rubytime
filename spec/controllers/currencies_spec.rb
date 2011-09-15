@@ -2,144 +2,156 @@ require 'spec_helper'
 
 describe CurrenciesController do
 
-  it "should refuse to perform any action for guest, non-pm employee and client's user" do
-    [:index, :create, :destroy].each do |action|
-      block_should(raise_unauthenticated) { as(:guest).dispatch_to(Currencies, action) }
-      block_should(raise_forbidden) { as(:employee).dispatch_to(Currencies, action) }
-      block_should(raise_forbidden) { as(:client).dispatch_to(Currencies, action) }
+  before(:each) do
+    @currency = Currency.generate
+  end
+
+  it "should ask guest to login on all actions" do
+    login(:guest)
+
+    get(:index)
+    response.should redirect_to new_user_session_path
+
+    post(:create)
+    response.should redirect_to new_user_session_path
+
+    delete(:destroy, :id => @currency.id)
+    response.should redirect_to new_user_session_path
+  end
+
+  it "should refuse to perform any action for non-admins" do
+    [:employee, :client].each do |user|
+      login(user)
+      get(:index).                           status.should == 403
+      post(:create).                         status.should == 403
+      delete(:destroy, :id => @currency.id). status.should == 403
     end
   end
 
-  describe "#index" do
-    before :each do
-      3.times { Currency.generate }
-      @response = as(:admin).dispatch_to(Currencies, :index)
-    end
+  context "as admin" do
+    login(:admin)
 
-    it "should respond successfully" do
-      @response.should be_successful
-    end
-
-    it "should put all currencies into @currencies" do
-      @response.assigns(:currencies).should == Currency.all
-    end
-
-    it "should put a new instance to @currency" do
-      @response.assigns(:currency).should be_instance_of(Currency)
-      @response.assigns(:currency).should be_new_record
-    end
-  end
-
-  describe "#create" do
-
-    it "should make new record with given attributes and attempt to save it" do
-      @currency = mock('currency')
-      Currency.should_receive(:new).with('these' => 'attrs').and_return(@currency)
-      @currency.should_receive(:save).and_return(true)
-
-      @response = as(:admin).dispatch_to(Currencies, :create, :currency => { :these => :attrs })
-    end
-
-    context "if record created successfully" do
+    describe "GET 'index'" do
       before :each do
-        @currency = mock('currency', :save => true)
-        Currency.stub! :new => @currency
-        @request = lambda { @response = as(:admin).dispatch_to(Currencies, :create, :currency => { :these => :attrs }) }
+        3.times { Currency.generate }
+        get(:index)
       end
-
-      it "should redirect to :currencies" do
-        @request.call
-        @response.should redirect_to(resource(:currencies))
-      end
-
-    end
-
-    context "if record creation failed" do
-      before :each do
-        @currency = Currency.new 
-        @currency.stub! :save => false
-
-        Currency.stub! :new => @currency
-        @response = as(:admin).dispatch_to(Currencies, :create)
-      end
-
+      
       it "should respond successfully" do
-        @response.should be_successful
+        response.should be_successful
+      end
+      
+      it "should put all currencies into @currencies" do
+        assigns(:currencies).should == Currency.all
+      end
+      
+      it "should put a new instance to @currency" do
+        assigns(:currency).should be_instance_of(Currency)
+        assigns(:currency).should be_new_record
       end
     end
-  end
-
-  describe "#edit" do
-    it "should show currency edit form" do
-      currency = Currency.generate
-      as(:admin).dispatch_to(Currencies, :edit, :id => currency.id).should be_successful
-    end
-  end
-
-  describe "#update" do
-    it "should update the currency" do
-      currency = Currency.generate :plural_name => 'Gold coins'
-      response = as(:admin).dispatch_to(Currencies, :update, :id => currency.id, :currency => {
-        :plural_name => 'Silver coins'
-      })
-
-      response.should redirect_to(resource(:currencies))
-      Currency.get(currency.id).plural_name.should == 'Silver coins'
-    end
-  end
-
-  describe "#destroy" do
-
-    it "should look for the record of given id" do
-      @currency = mock('currency', :destroy => true)
-      Currency.should_receive(:get).with('39').and_return(@currency)
-
-      @response = as(:admin).dispatch_to(Currencies, :destroy, :id => 39)
-    end
-
-    context "when record of given :id existed" do
-
-      it "should attempt to destroy it" do
+  
+    describe "POST 'create'" do
+      it "should make new record with given attributes and attempt to save it" do
         @currency = mock('currency')
-        Currency.stub! :get => @currency
-        @currency.should_receive(:destroy).and_return(true)
+        Currency.should_receive(:new).with('these' => 'attrs').and_return(@currency)
+        @currency.should_receive(:save).and_return(true)
 
-        @response = as(:admin).dispatch_to(Currencies, :destroy, :id => 39)
+        post(:create, :currency => { "these" => "attrs" })
       end
 
-      context "and was successfully destroyed" do
+      context "if record created successfully" do
         before :each do
-          @currency = mock('currency', :destroy => true)
-          Currency.stub! :get => @currency
-          @request = lambda { @response = as(:admin).dispatch_to(Currencies, :destroy) }
+          @currency = mock('currency', :save => true)
+          Currency.stub! :new => @currency
+        end
+
+        it "should redirect to :currencies" do
+          post(:create, :currency => { "these" => "attrs" })
+          response.should redirect_to(currencies_path)
+        end
+      end
+
+      context "if record creation failed" do
+        before :each do
+          @currency = Currency.new 
+          @currency.stub! :save => false
+
+          Currency.stub! :new => @currency
+          post(:create)
         end
 
         it "should respond successfully" do
-          @request.call
           @response.should be_successful
         end
       end
+    end
 
-      context "and couldn't be destroyed" do
-        before :each do
-          @currency = mock('currency', :destroy => false)
-          Currency.stub! :get => @currency
-          @request = lambda { @response = as(:admin).dispatch_to(Currencies, :destroy) }
-        end
-
-        it "should not respond successfully" do
-          @request.call
-          @response.should_not be_successful
-        end
+    describe "GET 'edit'" do
+      it "should show currency edit form" do
+        get(:edit, :id => @currency.id).should be_successful
       end
     end
 
-    context "when record of given :id didn't exist" do
-      it "should raise NotFound error" do
-        Currency.stub! :get => nil
-        block_should(raise_not_found) { as(:admin).dispatch_to(Currencies, :destroy, :id => 39) }
+    describe "POST 'update'" do
+      it "should update the currency" do
+        put(:update, :id => @currency.id, :currency => {:plural_name => 'Silver coins'})
+
+        response.should redirect_to(currencies_path)
+        @currency.reload.plural_name.should == 'Silver coins'
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+
+      it "should look for the record of given id" do
+        @currency = mock('currency', :destroy => true)
+        Currency.should_receive(:get).with('39').and_return(@currency)
+
+        delete(:destroy, :id => "39")
+      end
+
+      context "when record of given :id existed" do
+
+        it "should attempt to destroy it" do
+          @currency = mock('currency')
+          Currency.stub! :get => @currency
+          @currency.should_receive(:destroy).and_return(true)
+
+          delete(:destroy, :id => "39")
+        end
+
+        context "and was successfully destroyed" do
+          before :each do
+            @currency = mock('currency', :destroy => true)
+            Currency.stub! :get => @currency
+          end
+
+          it "should respond successfully" do
+            delete(:destroy, :id => "39")
+            response.should be_successful
+          end
+        end
+
+        context "and couldn't be destroyed" do
+          before :each do
+            @currency = mock('currency', :destroy => false)
+            Currency.stub! :get => @currency
+          end
+
+          it "should not respond successfully" do
+            delete(:destroy, :id => "39")
+            response.should_not be_successful
+          end
+        end
+      end
+
+      context "when record of given :id didn't exist" do
+        it "should set not found status" do
+          Currency.stub! :get => nil
+          delete(:destroy, :id => 39).status.should == 404
+        end
       end
     end
   end
-
 end

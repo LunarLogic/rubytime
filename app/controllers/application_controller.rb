@@ -88,4 +88,8 @@ class ApplicationController < ActionController::Base
     @non_column_properties = @custom_properties.reject(&:show_as_column_in_tables)
   end
 
+  def not_found
+    render "exceptions/not_found", :status => :not_found and return
+  end
+
 end
