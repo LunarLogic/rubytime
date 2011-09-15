@@ -1,7 +1,7 @@
 class ActivityTypesController < ApplicationController
   
-  before :ensure_admin, :exclude => [:available, :for_projects]
-  before :ensure_can_see_available, :only => [:available]
+  before_filter :ensure_admin, :exclude => [:available, :for_projects]
+  before_filter :ensure_can_see_available, :only => [:available]
 
   def index
     @activity_types = ActivityType.roots

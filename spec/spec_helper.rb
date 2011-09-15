@@ -15,7 +15,8 @@ RSpec.configure do |config|
   config.include(Rubytime::Test::MailerHelper)
 
   config.include(Devise::TestHelpers, :type => :controller)
-  config.extend(Rubytime::Test::ControllerHelper, :type => :controller)
+  config.extend(Rubytime::Test::ControllerHelper::ClassMethods, :type => :controller)
+  config.include(Rubytime::Test::ControllerHelper, :type => :controller)
 
   config.include(Delorean)
 

@@ -1,6 +1,6 @@
 class HourlyRatesController < ApplicationController
   
-  before :ensure_user_that_can_manage_financial_data
+  before_filter :ensure_user_that_can_manage_financial_data
   
   respond_to :json
 

@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
   respond_to :json #,:xml, :yaml, :js
-  before :ensure_authenticated, :exclude => [:request_password, :reset_password]
-  before :ensure_admin, :only => [:new, :create, :edit, :destroy, :index]
-  before :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
-  before :load_users, :only => [:index, :create]
-  before :load_clients_and_roles, :only => [:index, :create, :edit, :update]
-  before :check_authorization, :only => [:edit, :update, :show, :settings]
+  before_filter :ensure_authenticated, :exclude => [:request_password, :reset_password]
+  before_filter :ensure_admin, :only => [:new, :create, :edit, :destroy, :index]
+  before_filter :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
+  before_filter :load_users, :only => [:index, :create]
+  before_filter :load_clients_and_roles, :only => [:index, :create, :edit, :update]
+  before_filter :check_authorization, :only => [:edit, :update, :show, :settings]
 
   protect_fields_for :user, :in => [:update],
     :always => [:activities_count],

@@ -1,7 +1,7 @@
 class FreeDaysController < ApplicationController
 
-  before :ensure_authenticated, :exclude => [:index]
-  before :prepare_source, :exclude => [:index]
+  before_filter :ensure_authenticated, :exclude => [:index]
+  before_filter :prepare_source, :exclude => [:index]
 
   def index
     only_provides :ics

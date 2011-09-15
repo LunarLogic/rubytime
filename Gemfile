@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rails', '~> 3.0'
-gem 'merb-to-rails3'
 
 gem 'mysql'
 

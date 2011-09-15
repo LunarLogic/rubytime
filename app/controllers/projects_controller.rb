@@ -1,11 +1,11 @@
 class ProjectsController < ApplicationController
   respond_to :json
 
-  before :ensure_admin, :exclude => [:for_clients, :index]
-  before :ensure_can_list_projects, :only => [:index]
-  before :load_project, :only => [:edit, :update, :destroy, :show, :set_default_activity_type]
-  before :load_projects, :only => [:index, :create]
-  before :load_clients, :only => [:index, :new, :create]
+  before_filter :ensure_admin, :exclude => [:for_clients, :index]
+  before_filter :ensure_can_list_projects, :only => [:index]
+  before_filter :load_project, :only => [:edit, :update, :destroy, :show, :set_default_activity_type]
+  before_filter :load_projects, :only => [:index, :create]
+  before_filter :load_clients, :only => [:index, :new, :create]
   
   def index
     @project = Project.new :client => Client.get(params[:client_id])

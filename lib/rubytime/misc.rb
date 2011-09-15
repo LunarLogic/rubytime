@@ -40,7 +40,7 @@ module Rubytime
   
   DATE_FORMAT_NAMES = [:european, :american]
   DATE_FORMATS = { :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" }, :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" } }
-   RECENT_DAYS_ON_LIST = [7, 14, 30]
+  RECENT_DAYS_ON_LIST = [7, 14, 30]
   PASSWORD_RESET_LINK_EXP_TIME = 86400 # One day
   DECIMAL_SEPARATORS = [:dot, :comma]
   DECIMAL_FORMATS = {

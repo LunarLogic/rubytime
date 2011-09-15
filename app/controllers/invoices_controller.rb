@@ -1,9 +1,9 @@
 class InvoicesController < ApplicationController
-  before :ensure_admin, :exclude => [:index, :show]
-  before :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
-  before :load_invoices, :only => [:index, :create]
-  before :load_clients, :only => [:index, :create, :edit]
-  before :load_column_properties, :only => [:show]
+  before_filter :ensure_admin, :exclude => [:index, :show]
+  before_filter :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
+  before_filter :load_invoices, :only => [:index, :create]
+  before_filter :load_clients, :only => [:index, :create, :edit]
+  before_filter :load_column_properties, :only => [:show]
 
   def index
     raise Forbidden unless current_user.is_client_user? || current_user.is_admin?

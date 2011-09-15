@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
 
   def self.protect_fields_for(record, fields = {})
     if fields[:in]
-      before(nil, :only => fields[:in]) do |c|
+      before_filter(:only => fields[:in]) do |c|
         c.params[record] ||= {}
         fields_to_delete = []
         fields_to_delete += fields[:always] if fields[:always]
@@ -49,11 +49,13 @@ class ApplicationController < ActionController::Base
   end
   
   def ensure_not_client_user
-    raise Forbidden if current_user.is_client_user?
+    if current_user.is_client_user?
+      render :nothing => true, :status => :forbidden
+    end
   end
   
   def render_success(content = "", status = 200)
-    render content, :layout => false, :status => status 
+    render :text => content, :layout => false, :status => status 
   end
   
   def render_failure(content = "", status = 400)

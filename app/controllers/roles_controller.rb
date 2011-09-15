@@ -1,6 +1,6 @@
 class RolesController < ApplicationController
-  before :ensure_admin
-  before :load_roles, :only => [:index, :create]
+  before_filter :ensure_admin
+  before_filter :load_roles, :only => [:index, :create]
   
   def index
     provides :json

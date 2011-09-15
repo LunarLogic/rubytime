@@ -1,7 +1,7 @@
 class ClientsController < ApplicationController
-  before :ensure_admin
-  before :load_client, :only => [:show, :edit, :destroy, :update]
-  before :load_clients, :only => [:index, :create]
+  before_filter :ensure_admin
+  before_filter :load_client, :only => [:show, :edit, :destroy, :update]
+  before_filter :load_clients, :only => [:index, :create]
   
   def show
     render

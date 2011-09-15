@@ -125,7 +125,6 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    merb-to-rails3 (0.1.0)
     mime-types (1.16)
     mysql (2.8.1)
     net-ldap (0.1.1)
@@ -232,7 +231,6 @@ DEPENDENCIES
   icalendar (~> 1.1.0)
   jslint_on_rails
   juicer
-  merb-to-rails3
   mysql
   net-ldap
   nokogiri (= 1.4.1)

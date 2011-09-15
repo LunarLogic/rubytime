@@ -7,18 +7,18 @@ class ActivitiesController < ApplicationController
 
   respond_to :json
   
-  before :authenticate_user!
-  before :ensure_not_client_user,     :only => [:new, :create]
-  before :load_projects,              :only => [:new, :edit, :update, :create]
-  before :load_users,                 :only => [:new, :edit, :update, :create]
-  before :load_activity,              :only => [:edit, :update, :destroy]
-  before :load_activity_custom_properties, :only => [:new, :create, :edit, :update]
-  before :load_column_properties,     :only => [:index, :day]
-  before :load_owner,                 :only => [:calendar]
-  before :check_calendar_viewability, :only => [:calendar]
-  before :check_day_viewability,      :only => [:day]
-  before :check_deletable_by,         :only => [:destroy]
-  before :check_if_valid_project,     :only => [:create]
+  before_filter :authenticate_user!
+  before_filter :ensure_not_client_user,     :only => [:new, :create]
+  before_filter :load_projects,              :only => [:new, :edit, :update, :create]
+  before_filter :load_users,                 :only => [:new, :edit, :update, :create]
+  before_filter :load_activity,              :only => [:edit, :update, :destroy]
+  before_filter :load_activity_custom_properties, :only => [:new, :create, :edit, :update]
+  before_filter :load_column_properties,     :only => [:index, :day]
+  before_filter :load_owner,                 :only => [:calendar]
+  before_filter :check_calendar_viewability, :only => [:calendar]
+  before_filter :check_day_viewability,      :only => [:day]
+  before_filter :check_deletable_by,         :only => [:destroy]
+  before_filter :check_if_valid_project,     :only => [:create]
   
   protect_fields_for :activity, :in => [:create, :update], :always => [:price_value, :price_currency_id, :invoice_id]
 
@@ -72,15 +72,13 @@ class ActivitiesController < ApplicationController
   def create
     @activity = Activity.new(params[:activity])
     @activity.user = current_user unless current_user.is_admin? && @activity.user
-
+    
     if @activity.save
-      self.content_type = :json
-      display @activity
+      render :json => @activity
     else
-      if content_type == :json
-        display({:errors => @activity.errors.full_messages}, {:status => 400})
-      else
-        render :new, :status => 400, :layout => false
+      respond_to do |format|
+        format.json { render(:json => {:errors => @activity.errors.full_messages}, :status => 400) }
+        format.any { render :new, :status => 400, :layout => false }
       end
     end
   end
@@ -90,17 +88,17 @@ class ActivitiesController < ApplicationController
   end
   
   def update
-    respond_to :json, :html
-
     @activity.user = current_user unless current_user.is_admin?
 
     if @activity.update(params[:activity])
-      display(@activity)
+      respond_to do |format|
+        format.json { render(:json => @activity) }
+        format.html { render(:html => @activity) }
+      end
     else
-      if content_type == :json
-        display({:errors => @activity.errors.full_messages}, {:status => 400})
-      else
-        render :new, :status => 400, :layout => false
+      respond_to do |format|
+        format.json { render(:json => {:errors => @activity.errors.full_message }, :status => :bad_request) }
+        format.html { render(:new, :status => :bad_request, :layout => false) }
       end
     end
   end
@@ -112,7 +110,7 @@ class ActivitiesController < ApplicationController
       render "Could not delete activity.", :status => 403
     end 
   end
-
+  
   # TODO refactor
   def calendar
     if current_user.is_admin?
@@ -144,14 +142,14 @@ class ActivitiesController < ApplicationController
     @previous_year  = @month == 1 ? @year.pred : @year
     
     @activities = begin 
-      @owner.activities.for date
-    rescue ArgumentError
-      raise BadRequest
-    end
+                    @owner.activities.for date
+                  rescue ArgumentError
+                    render :nothing => true, :status => :bad_request and return
+                  end
     @activities_by_date = @activities.group_by { |activity| activity.date }
     
     if request.xhr?
-      activities_calendar :activities => @activities_by_date, :year => @year, :month => @month, :owner => @owner
+      render :text => activities_calendar(:activities => @activities_by_date, :year => @year, :month => @month, :owner => @owner), :layout => false
     else
       render
     end
@@ -159,7 +157,7 @@ class ActivitiesController < ApplicationController
   
   def day
     @activities = SearchCriteria.new(params[:search_criteria], current_user).found_activities
-    @day = Date.parse(params[:search_criteria][:date_from]).formatted(current_user.date_format)
+    @day = Date.parse(params[:search_criteria][:date_from]).to_s(current_user.date_format)
     render :layout => false
   end
 
@@ -186,16 +184,21 @@ class ActivitiesController < ApplicationController
   end
   
   def check_calendar_viewability
-    @owner.calendar_viewable?(current_user) or raise Forbidden
+    unless @owner.calendar_viewable?(current_user)
+      render :nothing => true, :status => :forbidden and return
+    end
   end
 
   def check_if_valid_project
-    raise BadRequest unless params[:activity] && Project.get(params[:activity][:project_id])
+    unless params[:activity] && Project.get(params[:activity][:project_id])
+      render :new, :status => :bad_request, :layout => false
+    end
   end
 
   def load_activity
     source = (current_user.is_admin?) ? Activity : current_user.activities
-    @activity = source.get(params[:id]) or raise NotFound
+    @activity = source.get(params[:id])
+    render "exceptions/not_found", :status => :not_found and return unless @activity
   end
 
   def load_owner

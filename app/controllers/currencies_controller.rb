@@ -1,7 +1,7 @@
 class CurrenciesController < ApplicationController
-  before :ensure_admin
-  before :load_currencies, :only => [:index, :create]
-  before :load_currency, :only => [:destroy]
+  before_filter :ensure_admin
+  before_filter :load_currencies, :only => [:index, :create]
+  before_filter :load_currency, :only => [:destroy]
 
   def index
     @currency = Currency.new

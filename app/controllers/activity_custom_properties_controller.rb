@@ -1,7 +1,7 @@
 class ActivityCustomPropertiesController < ApplicationController
   
-  before :ensure_admin
-  before :load_activity_custom_property, :only => [:edit, :update, :destroy]
+  before_filter :ensure_admin
+  before_filter :load_activity_custom_property, :only => [:edit, :update, :destroy]
 
   def index
     @new_activity_custom_property = ActivityCustomProperty.new

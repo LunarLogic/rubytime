@@ -1,6 +1,6 @@
 class SettingsController < ApplicationController
 
-  before :ensure_admin
+  before_filter :ensure_admin
 
   def edit
     only_provides :html
