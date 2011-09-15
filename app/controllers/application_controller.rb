@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
   def ensure_admin
     unless current_user.is_admin?
-      render :nothing => true, :status => :forbidden
+      forbidden and return
     end
   end
 
@@ -47,12 +47,14 @@ class ApplicationController < ActionController::Base
   end
   
   def ensure_user_that_can_manage_financial_data
-    raise Forbidden unless current_user.can_manage_financial_data?
+    unless current_user.can_manage_financial_data?
+      forbidden and return
+    end
   end
   
   def ensure_not_client_user
     if current_user.is_client_user?
-      render :nothing => true, :status => :forbidden
+      forbidden and return
     end
   end
   

@@ -2,11 +2,34 @@ require 'spec_helper'
 
 describe HourlyRatesController do
 
-  it "should refuse to perform any action for guest, non-pm employee and client's user" do
-    [:index, :create, :update, :destroy].each do |action|
-      block_should(raise_unauthenticated) { as(:guest).dispatch_to(HourlyRates, action) }
-      block_should(raise_forbidden) { as(:employee).dispatch_to(HourlyRates, action) }
-      block_should(raise_forbidden) { as(:client).dispatch_to(HourlyRates, action) }
+  context "as guest" do
+    before(:each) do
+      @hourly_rate = HourlyRate.generate
+    end
+    login(:guest)
+
+    it "should ask to login" do
+      get(:index).                              should redirect_to(new_user_session_path)
+      post(:create).                            should redirect_to(new_user_session_path)
+      put(:update, :id => @hourly_rate.id).     should redirect_to(new_user_session_path)
+      delete(:destroy, :id => @hourly_rate.id). should redirect_to(new_user_session_path)
+    end
+  end
+
+  context "as non-admin user" do
+    before(:each) do
+      @hourly_rate = HourlyRate.generate
+    end
+
+    it "should refuse to perform any action" do
+      [:employee, :client].each do |user|
+        login(user)
+
+        get(:index).                              status.should == 403
+        post(:create).                            status.should == 403
+        put(:update, :id => @hourly_rate.id).     status.should == 403
+        delete(:destroy, :id => @hourly_rate.id). status.should == 403
+      end
     end
   end
 
