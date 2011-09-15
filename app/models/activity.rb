@@ -18,14 +18,14 @@ class Activity
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
-  validates_present :comments, :if => proc { |a| a.activity_type.nil? }
+  validates_presence_of :comments, :if => proc { |a| a.activity_type.nil? }
   validates_with_method :hours, :method => :validate_hours
-  validates_absent  :activity_type_id, :unless => proc { |a| a.activity_type_required? }
-  validates_present :activity_type_id,     :if => proc { |a| a.activity_type_required? }
+  validates_absence_of  :activity_type_id, :unless => proc { |a| a.activity_type_required? }
+  validates_presence_of :activity_type_id,     :if => proc { |a| a.activity_type_required? }
   validates_with_method :activity_type_id, :method => :activity_type_must_be_assigned_to_project, :if => proc { |a| a.activity_type_required? and a.activity_type }
   validates_with_method :activity_custom_property_values, :method => :required_custom_properties_are_present
   validates_with_method :activity_custom_property_values, :method => :custom_properties_are_valid
-  validates_present :hourly_rate, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
+  validates_presence_of :hourly_rate, :message => 'There is no hourly rate for that day. Please contact the person responsible for hourly rates management.'
 
   belongs_to :project
   belongs_to :role

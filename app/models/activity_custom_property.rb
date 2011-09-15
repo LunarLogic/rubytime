@@ -11,7 +11,7 @@ class ActivityCustomProperty
   
   has n, :activity_custom_property_values
   
-  validates_is_unique :name
+  validates_uniqueness_of :name
   
   def name_with_unit
     name + (unit.blank? ? "" : " (#{unit})")

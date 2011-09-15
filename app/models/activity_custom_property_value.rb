@@ -11,8 +11,8 @@ class ActivityCustomPropertyValue
   belongs_to :activity_custom_property
   belongs_to :activity
   
-  validates_is_unique :activity_custom_property_id, :scope => :activity_id
-  validates_present :value
+  validates_uniqueness_of :activity_custom_property_id, :scope => :activity_id
+  validates_presence_of :value
   
   def value=(value)
     self.numeric_value = value.blank? ? nil : value

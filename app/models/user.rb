@@ -41,9 +41,9 @@ class User
     super
   end
 
-  validates_length :name, :min => 3
+  validates_length_of :name, :min => 3
 
-  validates_length :password, :min => 6 , :if => :password_required?
+  validates_length_of :password, :min => 6 , :if => :password_required?
   #validates_is_confirmed :password, :if => :password_required?
 
   validates_with_method :login, :method => :validates_login_globally_unique

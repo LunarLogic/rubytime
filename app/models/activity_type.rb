@@ -14,7 +14,7 @@ class ActivityType
   has n, :projects, :through => :project_activity_types
   has n, :activities
   
-  validates_is_unique :name, :scope => :parent_id
+  validates_uniqueness_of :name, :scope => :parent_id
   
   def breadcrumb_name
     parent ? "#{parent.breadcrumb_name} -> #{name}" : "#{name}"

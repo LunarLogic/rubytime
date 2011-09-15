@@ -1,5 +1,5 @@
 class ClientUser < User
-  validates_present :client
+  validates_presence_of :client
   
   before :valid? do
     self.role_id = nil

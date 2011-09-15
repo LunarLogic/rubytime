@@ -12,8 +12,8 @@ class HourlyRate
   belongs_to :role
   belongs_to :currency
   
-  validates_is_unique :takes_effect_at, :scope => [:project_id, :role_id], :message => 'There already exists hourly rate for that project, role and date.'
-  validates_present :operation_author
+  validates_uniqueness_of :takes_effect_at, :scope => [:project_id, :role_id], :message => 'There already exists hourly rate for that project, role and date.'
+  validates_presence_of :operation_author
   
   default_scope(:default).update(:order => [:takes_effect_at])
   

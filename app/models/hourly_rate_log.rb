@@ -21,7 +21,7 @@ class HourlyRateLog
   default_scope(:default).update(:order => [:logged_at])
   
   validates_within :operation_type, :set => VALID_OPERATION_TYPES
-  validates_present :hr_id, :message => 'No hourly rate assigned'
+  validates_presence_of :hr_id, :message => 'No hourly rate assigned'
   
   def hourly_rate=(hourly_rate)    
     (ATTRIBUTES_TO_LOG + [:id]).each do |attr_to_log|

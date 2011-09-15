@@ -10,9 +10,9 @@ class Currency
   property :prefix,        String
   property :suffix,        String
   
-  validates_is_unique :singular_name, :plural_name
-  validates_format :prefix, :with => PREFIX_REGEX, :if => proc { |c| not c.prefix.nil? }
-  validates_format :suffix, :with => SUFFIX_REGEX, :if => proc { |c| not c.suffix.nil? }
+  validates_uniqueness_of :singular_name, :plural_name
+  validates_format_of :prefix, :with => PREFIX_REGEX, :if => proc { |c| not c.prefix.nil? }
+  validates_format_of :suffix, :with => SUFFIX_REGEX, :if => proc { |c| not c.suffix.nil? }
   validates_with_method :singular_name, :method => :validates_singular_name_format
   validates_with_method :plural_name, :method => :validates_plural_name_format
   

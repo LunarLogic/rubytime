@@ -1,7 +1,7 @@
 require 'logger'
 
 class Employee < User
-  validates_present :role
+  validates_presence_of :role
   
   before :valid? do
     self.client_id = nil
