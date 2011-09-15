@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Invoices do
+describe InvoicesController do
   describe "#create" do
     before :each do
       @client = Client.generate

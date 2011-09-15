@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Clients do
+describe ClientsController do
 
   before :each do
     @client = Client.generate

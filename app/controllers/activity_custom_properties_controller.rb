@@ -1,19 +1,21 @@
 class ActivityCustomPropertiesController < ApplicationController
   
+  respond_to :html
+
   before_filter :ensure_admin
   before_filter :load_activity_custom_property, :only => [:edit, :update, :destroy]
 
   def index
     @new_activity_custom_property = ActivityCustomProperty.new
     @activity_custom_properties = ActivityCustomProperty.all
-    display @activity_custom_properties  
+    respond_with @activity_custom_properties  
   end
   
   def create
     @new_activity_custom_property = ActivityCustomProperty.new(params[:activity_custom_property])
     if @new_activity_custom_property.save
-      redirect resource(:activity_custom_properties), 
-        :message => {:notice => "Custom property was successfully created"}
+      redirect_to activity_custom_properties_path, :message => 
+        {:notice => "Custom property was successfully created"}
     else
       @activity_custom_properties = ActivityCustomProperty.all
       render :index
@@ -21,13 +23,13 @@ class ActivityCustomPropertiesController < ApplicationController
   end
   
   def edit
-    display @activity_custom_property
+    respond_with @activity_custom_property
   end
   
   def update
     if @activity_custom_property.update(params[:activity_custom_property])
-      redirect resource(:activity_custom_properties), 
-        :message => {:notice => "Custom property was successfully created"}
+      redirect_to activity_custom_properties_path, :message => 
+        {:notice => "Custom property was successfully created"}
     else
       render :edit
     end
@@ -35,11 +37,11 @@ class ActivityCustomPropertiesController < ApplicationController
   
   def destroy
     if @activity_custom_property.destroy
-      redirect resource(:activity_custom_properties), 
-        :message => {:notice => "Custom property was successfully deleted"}
+      redirect_to activity_custom_properties_path, :message => 
+        {:notice => "Custom property was successfully deleted"}
     else
-      redirect resource(:activity_custom_properties), 
-        :message => {:error => "Unable to delete"}
+      redirect_to activity_custom_properties_path, :message => 
+        {:error => "Unable to delete"}
     end
   end
   

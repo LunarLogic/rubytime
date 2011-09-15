@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Users do
+describe UsersController do
   describe "#index" do
     it "shouldn't show index for guest" do
       block_should(raise_unauthenticated) do

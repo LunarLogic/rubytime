@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Roles do
+describe RolesController do
 
   it "shouldn't show any action for guest, employee and client's user" do
     [:index, :create, :edit, :update, :destroy].each do |action|

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Settings do
+describe SettingsController do
 
   it "shouldn't show any action for guest, employee and client's user" do
     [:edit, :update].each do |action|

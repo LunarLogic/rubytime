@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Currencies do
+describe CurrenciesController do
 
   it "should refuse to perform any action for guest, non-pm employee and client's user" do
     [:index, :create, :destroy].each do |action|

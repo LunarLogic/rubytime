@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HourlyRates do
+describe HourlyRatesController do
 
   it "should refuse to perform any action for guest, non-pm employee and client's user" do
     [:index, :create, :update, :destroy].each do |action|

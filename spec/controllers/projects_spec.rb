@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Projects do
+describe ProjectsController do
   it "shouldn't show any action for guest, employee and client's user" do
     [:create, :edit, :update, :destroy, :set_default_activity_type].each do |action|
       block_should(raise_unauthenticated) { as(:guest).dispatch_to(Projects, action) }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FreeDays do
+describe FreeDaysController do
   describe ".index" do
     before { Setting.stub!(:free_days_access_key => 'access_key') }
 

@@ -37,7 +37,9 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_admin
-    raise Forbidden unless current_user.is_admin?
+    unless current_user.is_admin?
+      render :nothing => true, :status => :forbidden
+    end
   end
 
   def ensure_not_client_user
