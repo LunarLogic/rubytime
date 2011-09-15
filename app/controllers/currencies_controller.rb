@@ -47,7 +47,7 @@ class CurrenciesController < ApplicationController
   end
   
   def load_currency
-    not_found unless @currency = Currency.get(params[:id]) 
+    not_found and return unless @currency = Currency.get(params[:id]) 
   end
   
   def number_of_columns

@@ -1,12 +1,14 @@
 class FreeDaysController < ApplicationController
 
-  before_filter :ensure_authenticated, :exclude => [:index]
-  before_filter :prepare_source, :exclude => [:index]
+  skip_before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => [:index]
+  before_filter :prepare_source, :except => [:index]
 
   def index
-    only_provides :ics
-    raise Forbidden unless params[:access_key] == Setting.free_days_access_key
-    render FreeDay.to_ical
+    forbidden and return unless params[:access_key] == Setting.free_days_access_key
+    respond_to do |format|
+      format.ics {render :text => FreeDay.to_ical}
+    end
   end
 
   def create
@@ -36,5 +38,4 @@ class FreeDaysController < ApplicationController
     user ||= current_user
     @free_days = user.free_days
   end
-
 end
