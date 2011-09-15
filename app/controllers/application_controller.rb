@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
   end
   
   def render_failure(content = "", status = 400)
-    render content, :layout => false, :status => status
+    render :text => content, :layout => false, :status => status
   end
   
   def number_of_columns

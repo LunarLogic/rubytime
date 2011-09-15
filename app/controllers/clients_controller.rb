@@ -13,7 +13,7 @@ class ClientsController < ApplicationController
     if @client_user.valid? && @client.valid?
       @client_user.save
       @client.save
-      redirect resource(@client)
+      redirect_to client_path(@client)
     else
       render :index
     end
@@ -32,7 +32,7 @@ class ClientsController < ApplicationController
   
   def update
     if @client.update(params[:client]) || !@client.dirty?
-      redirect resource(@client)
+      redirect_to client_path(@client)
     else
       render :edit
     end
