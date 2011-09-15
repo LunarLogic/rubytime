@@ -4,9 +4,9 @@ class HomeController < ApplicationController
 
   def index
     if current_user
-      redirect resource(:activities)
+      redirect_to activities_path
     else
-      redirect new_user_session_path
+      redirect_to new_user_session_path
     end
   end
 
