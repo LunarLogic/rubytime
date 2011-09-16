@@ -23,7 +23,7 @@ class Invoice
     end
   end
   
-  before :destroy do
+  before :destroy do   
     throw :halt if issued?
     activities.update!(:invoice_id => nil)
   end
@@ -57,6 +57,11 @@ class Invoice
   end
 
   def activity_id=(ids)
-    self.new_activities = Activity.all(:id => ids, :invoice_id => nil)
+    self.new_activities = Activity.all(:id => ids, :invoice_id => nil) 
+  end
+
+  # Hooks should be called if only new_activities was updated
+  def dirty_self?
+    super || !new_activities.blank?
   end
 end

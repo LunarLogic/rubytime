@@ -35,4 +35,17 @@ describe Invoice do
     end
   end
 
+  describe "#activity_id" do
+    it "should update activites even if no other fields were changed" do
+      client = Client.generate
+      project = Project.generate :client => client
+      activity = Activity.generate :project => project
+      invoice = Invoice.generate :client => client
+
+      block_should(change(Activity.not_invoiced, :count).by(-1)) do
+        invoice.update(:activity_id => [activity.id])
+      end
+    end
+  end
+
 end
