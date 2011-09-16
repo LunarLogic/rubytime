@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
-  respond_to :json
+  respond_to :json, :html
 
-  before_filter :ensure_admin, :exclude => [:for_clients, :index]
+  before_filter :ensure_admin, :except => [:for_clients, :index]
   before_filter :ensure_can_list_projects, :only => [:index]
   before_filter :load_project, :only => [:edit, :update, :destroy, :show, :set_default_activity_type]
   before_filter :load_projects, :only => [:index, :create]
@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
   
   def index
     @project = Project.new :client => Client.get(params[:client_id])
-    if content_type == :json
+    if request.format.json?
       # for JSON API, add flag 'has_activities' which says if that project has any activities by current user
       @projects_with_activities = Project.with_activities_for(current_user)
       @projects.each do |p|
@@ -17,12 +17,12 @@ class ProjectsController < ApplicationController
       end
 
       if params[:include_activity_types]
-        display @projects, :methods => [:has_activities, :available_activity_types]
+        respond_with @projects, :methods => [:has_activities, :available_activity_types]
       else
-        display @projects, :methods => [:has_activities]
+        respond_with @projects, :methods => [:has_activities]
       end
     else
-      display @projects
+      respond_with @projects
     end
   end
   
@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(params[:project])
     if @project.save
-      redirect resource(@project, :expand_hourly_rates => 'yes')
+      redirect_to projects_path(@project, :expand_hourly_rates => 'yes')
     else
       render :index
     end
@@ -50,7 +50,7 @@ class ProjectsController < ApplicationController
   
   def update
     if @project.update(params[:project]) || !@project.dirty?
-      redirect resource(@project)
+      redirect_to projects_path(@project)
     else
       @clients = Client.all
       render :edit
@@ -66,7 +66,8 @@ class ProjectsController < ApplicationController
   end
   
   def set_default_activity_type
-    @activity_type = ActivityType.get(params[:activity_type_id]) or raise NotFound
+    @activity_type = ActivityType.get(params[:activity_type_id])
+    not_found and return unless @activity_type
 
     @activities = @project.activities.all(:activity_type_id => nil)
     @activities.each do |a|
@@ -74,24 +75,27 @@ class ProjectsController < ApplicationController
       a.save
     end
 
-    redirect resource(@project)
+    redirect_to projects_path(@project)
   end
   
   # Returns all projects matching current selected clients
   def for_clients
-    raise Forbidden if current_user.is_client_user?
-    only_provides :json
+    forbidden and return if current_user.is_client_user?
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    display :options => @search_criteria.all_projects.map { |p| { :id => p.id, :name => p.name } }
+
+    render :json => {:options => 
+      @search_criteria.all_projects.map { |p| { :id => p.id, :name => p.name } } }
   end
 
 protected
   def ensure_can_list_projects
-    raise Forbidden unless current_user.is_admin? || current_user.is_client_user? || content_type == :json
+    forbidden and return unless current_user.is_admin? || current_user.is_client_user? || request.format.json?
   end
 
   def load_project
-    @project = Project.get(params[:id]) or raise NotFound
+    unless @project = Project.get(params[:id])
+      not_found and return
+    end
   end
   
   def load_projects
