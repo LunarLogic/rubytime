@@ -1,15 +1,16 @@
 require 'spec_helper'
 
 describe InvoicesController do
-  describe "#create" do
+  describe "POST 'create'" do
     before :each do
       @client = Client.generate
+      login(:admin)
     end
 
     it "should create empty invoice" do
       block_should_not(change(Activity.not_invoiced, :count)) do
-        as(:admin).dispatch_to(Invoices, :create, :invoice => { 
-          :name => "Theee Invoice",
+        post(:create, :invoice => { 
+          :name => Factory.attributes_for(:invoice)[:name],
           :client_id => @client.id,
         }).status.should == 302
       end
@@ -19,8 +20,8 @@ describe InvoicesController do
       project = Project.generate :client => @client
       activity = Activity.generate :project => project
       block_should(change(Activity.not_invoiced, :count).by(-1)) do
-        as(:admin).dispatch_to(Invoices, :create, :invoice => { 
-          :name => "Theee Invoice",
+        post(:create, :invoice => { 
+          :name => Factory.attributes_for(:invoice)[:name],
           :client_id => @client.id,
           :activity_id => [activity.id]
         }).status.should == 302
@@ -34,8 +35,8 @@ describe InvoicesController do
       project.save
 
       block_should_not(change(Activity.not_invoiced, :count).by(-1)) do
-        as(:admin).dispatch_to(Invoices, :create, :invoice => {
-          :name => "Theee Invoice",
+        post(:create, :invoice => {
+          :name => Factory.attributes_for(:invoice)[:name],
           :client_id => @client.id,
           :activity_id => [activity.id]
         }).status.should == 200
@@ -43,30 +44,36 @@ describe InvoicesController do
     end
   end
 
-  describe "#destroy" do
+  describe "DELETE 'destroy'" do
+    login(:admin)
+
     it "should allow admin to destroy invoice if it's not issued" do
       issued = Invoice.generate
       not_issued = Invoice.generate
       issued.issue!
 
       block_should(change(Invoice, :count).by(-1)) do
-        as(:admin).dispatch_to(Invoices, :destroy, :id => not_issued.id).should be_successful
+        delete(:destroy, :id => not_issued.id).should be_successful
       end
       block_should_not(change(Invoice, :count)) do
-        as(:admin).dispatch_to(Invoices, :destroy, :id => issued.id).status.should == 400
+        delete(:destroy, :id => issued.id).status.should == 400
       end
     end
   end
 
-  describe "#issue" do
+  describe "PUT 'issue'" do
+    login(:admin)
+
     it "should allow admin to issue an invoice" do
       invoice = Invoice.generate
-      as(:admin).dispatch_to(Invoices, :issue, :id => invoice.id).should redirect
+      put(:issue, :id => invoice.id).should redirect_to(invoices_path(invoice))
       invoice.reload.should be_issued
     end
   end
 
-  describe "#update" do
+  describe "PUT 'update'" do
+    login(:admin)
+
     it "should allow admin to add activities to existing invoice" do
       client = Client.generate
       project = Project.generate :client => client
@@ -74,46 +81,53 @@ describe InvoicesController do
       invoice = Invoice.generate :client => client
 
       block_should(change(Activity.not_invoiced, :count).by(-1)) do
-        as(:admin).dispatch_to(Invoices, :update, {
+        put(:update, {
           :id => invoice.id,
           :invoice => { :activity_id => [activity.id] }
-        }).should redirect(resource(invoice))
+        }).should redirect_to(invoices_path(invoice))
       end
     end
   end
 
-  describe "#index" do
-    it "should allow admin to view list of invoices" do
-      as(:admin).dispatch_to(Invoices, :index).should be_successful
-      as(:admin).dispatch_to(Invoices, :index, :filter => "pending").should be_successful
-      as(:admin).dispatch_to(Invoices, :index, :filter => "issued").should be_successful
+  describe "GET 'index'" do
+    context "as admin" do
+      login(:admin)
+
+      it "should allow render a list of invoices" do
+        get(:index).should be_successful
+        get(:index, :filter => "pending").should be_successful
+        get(:index, :filter => "issued").should be_successful
+      end
     end
 
-    it "should allow client to view list of its invoices" do
-      client = Client.generate
-      invoices = (0..1).map { Invoice.generate :client => client }
-      invoices.first.issue!
-      user = ClientUser.generate :client => client
+    context "as client" do
+      it "should allow client to view list of its invoices" do
+        client = Client.generate
+        invoices = (0..1).map { Invoice.generate :client => client }
+        invoices.first.issue!
+        user = ClientUser.generate :client => client
+        login(user)
+        
+        client2 = Client.generate
+        invoices2 = (0..1).map { Invoice.generate :client => client2 }
+        invoices2.first.issue!
+        
+        check_response = lambda do |*params|
+          get(*params)
+          response.should be_successful
+          invoices = assigns[:invoices]
+          invoices.should_not be_empty
+          invoices.reject { |i| i.client == client }.should be_empty
+        end
 
-      client2 = Client.generate
-      invoices2 = (0..1).map { Invoice.generate :client => client2 }
-      invoices2.first.issue!
-
-      check_response = lambda do |*params|
-        response = as(user).dispatch_to(*params)
-        response.should be_successful
-        invoices = response.instance_variable_get(:@invoices)
-        invoices.should_not be_empty
-        invoices.reject { |i| i.client == client }.should be_empty
+        check_response.call(:index)
+        check_response.call(:index, :filter => 'pending')
+        check_response.call(:index, :filter => 'issued')
       end
-
-      check_response.call(Invoices, :index)
-      check_response.call(Invoices, :index, :filter => 'pending')
-      check_response.call(Invoices, :index, :filter => 'issued')
     end
   end
 
-  describe "#show" do
+  describe "GET 'show'" do
 
     before :each do
       @client = Client.generate
@@ -121,21 +135,28 @@ describe InvoicesController do
       @invoice = Invoice.generate :client => @client
     end
 
-    it "should allow client to view its invoice" do
-      response = as(@user).dispatch_to(Invoices, :show, :id => @invoice.id)
-      response.should be_successful
+    context "as client" do
+      before(:each) do
+        login(@user)
+      end
+
+      it "should allow clients to view their invoices" do
+        get(:show, :id => @invoice.id)
+        response.should be_successful
+      end
+
+      it "should not allow client to view other client's invoice" do
+        get(:show, :id => Invoice.generate.id).status.should == 403
+      end
     end
 
-    it "should allow admin to view any invoice" do
-      response = as(:admin).dispatch_to(Invoices, :show, :id => @invoice.id)
-      response.should be_successful
-    end
+    context "as admin" do
+      login(:admin)
 
-    it "should not allow client to view other client's invoice" do
-      block_should(raise_forbidden) do 
-        as(:client).dispatch_to(Invoices, :show, :id => @invoice.id)
+      it "should allow admin to view any invoice" do
+        get(:show, :id => @invoice.id)
+        response.should be_successful
       end
     end
   end
-
 end

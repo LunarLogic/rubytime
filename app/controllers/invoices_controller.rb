@@ -1,24 +1,26 @@
 class InvoicesController < ApplicationController
-  before_filter :ensure_admin, :exclude => [:index, :show]
+  include InvoicesHelper
+
+  before_filter :ensure_admin, :except => [:index, :show]
   before_filter :load_invoice, :only => [:edit, :update, :destroy, :show, :issue]
   before_filter :load_invoices, :only => [:index, :create]
   before_filter :load_clients, :only => [:index, :create, :edit]
   before_filter :load_column_properties, :only => [:show]
 
   def index
-    raise Forbidden unless current_user.is_client_user? || current_user.is_admin?
+    forbidden and return unless current_user.is_client_user? || current_user.is_admin?
     @invoice = Invoice.new
     render
   end
   
   def show
-    raise Forbidden unless current_user.can_see_invoice?(@invoice)
+    forbidden and return unless current_user.can_see_invoice?(@invoice)
     @activities = @invoice.activities.all(:order => [:created_at.desc])
     render
   end
 
   def edit
-    raise Forbidden unless current_user.is_admin?
+    forbidden and return unless current_user.is_admin?
     render
   end
 
@@ -27,7 +29,7 @@ class InvoicesController < ApplicationController
       if request.xhr?
         @invoice.to_json
       else
-        redirect resource(@invoice, filter_hash), :message => { :notice => "Invoice has been updated" }
+        redirect_to invoices_path(@invoice, filter_hash), :message => { :notice => "Invoice has been updated" }
       end
     else
       load_clients
@@ -39,7 +41,7 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(params[:invoice].merge(:user_id => current_user.id))
     if @invoice.save
-      request.xhr? ? "" : redirect(resource(:invoices))
+      request.xhr? ? render(:nothing => true) : redirect_to(invoices_path)
     else
       if request.xhr?
         render_failure smart_errors_format(@invoice.errors)
@@ -59,11 +61,11 @@ class InvoicesController < ApplicationController
   
   def issue
     @invoice.issue!
-    redirect resource(@invoice), :message => { :notice => "Invoice has been issued" }
+    redirect_to invoices_path(@invoice), :message => { :notice => "Invoice has been issued" }
   rescue Exception => e
     load_column_properties
     @activities = @invoice.activities.all(:order => [:created_at.desc])
-    message[:error] = e.to_s
+    flash[:error] = e.to_s
     render :show
   end
 
