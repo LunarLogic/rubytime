@@ -2,20 +2,21 @@ class SettingsController < ApplicationController
 
   before_filter :ensure_admin
 
+  respond_to :html
+
   def edit
-    only_provides :html
     @setting = Setting.get
-    raise NotFound unless @setting
-    display @setting
+    not_found and return unless @setting
+    respond_with @setting
   end
 
   def update
     @setting = Setting.get
-    raise NotFound unless @setting
+    not_found and return unless @setting
     if @setting.update(params[:setting])
-      redirect url(:edit_settings)
+      redirect_to edit_settings_path
     else
-      display @setting, :edit
+      render :edit
     end
   end
 
