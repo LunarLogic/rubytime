@@ -1,38 +1,41 @@
 class RolesController < ApplicationController
   before_filter :ensure_admin
   before_filter :load_roles, :only => [:index, :create]
+
+  respond_to :html, :json
   
   def index
-    provides :json
     @role = Role.new
-    display @roles
+    respond_with @roles
   end
 
   def create
     @role = Role.new(params[:role])
     if @role.save
-      redirect url(:roles)
+      redirect_to roles_path
     else
       render :index
     end
   end
   
   def edit
-    @role = Role.get(params[:id]) or raise NotFound
+    not_found and return unless @role = Role.get(params[:id])
     render
   end
   
   def update
-    @role = Role.get(params[:id]) or raise NotFound
+    not_found and return unless @role = Role.get(params[:id])
+
     if @role.update(params[:role]) || !@role.dirty?
-      redirect resource(:roles)
+      redirect_to roles_path
     else
       render :edit
     end
   end
   
   def destroy
-    raise NotFound unless @role = Role.get(params[:id])
+    not_found and return unless @role = Role.get(params[:id])
+
     if @role.destroy
       render_success
     else

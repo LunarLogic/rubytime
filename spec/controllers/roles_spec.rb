@@ -1,55 +1,79 @@
 require 'spec_helper'
 
 describe RolesController do
-
-  it "shouldn't show any action for guest, employee and client's user" do
-    [:index, :create, :edit, :update, :destroy].each do |action|
-      block_should(raise_unauthenticated) { as(:guest).dispatch_to(Roles, action) }
-      block_should(raise_forbidden) { as(:employee).dispatch_to(Roles, action) }
-      block_should(raise_forbidden) { as(:client).dispatch_to(Roles, action) }
+  context "as guest" do
+    login(:guest)
+    
+    it "should ask to login on any action" do
+      get(:index).                               should redirect_to(new_user_session_path)
+      post(:create).                             should redirect_to(new_user_session_path)
+      get(:edit, :id => 1).                      should redirect_to(new_user_session_path)
+      put(:update, :id => 1).                    should redirect_to(new_user_session_path)
+      delete(:destroy, :id => 1).                should redirect_to(new_user_session_path)
     end
   end
 
-  describe "#index" do
-    it "should show list of roles" do
-      as(:admin).dispatch_to(Roles, :index).should be_successful
-    end
-  end
+  context "as non-admin user" do
+    it "should forbid all actions" do
+      [:employee, :client].each do |user|
+        login(user)
 
-  describe "#create" do
-    it "should create new role successfully and redirect to index" do
-      block_should(change(Role, :count)) do
-        controller = as(:admin).dispatch_to(Roles, :create, { :role => { :name => "Mastah" }})
-        controller.should redirect_to(resource(:roles))
+        get(:index).                               status.should == 403
+        post(:create).                             status.should == 403
+        get(:edit, :id => 1).                      status.should == 403
+        put(:update, :id => 1).                    status.should == 403
+        delete(:destroy, :id => 1).                status.should == 403
       end
     end
   end
 
-  describe "#edit" do
-    it "should show role edit form" do
-      role = Role.generate
-      as(:admin).dispatch_to(Roles, :edit, :id => role.id).should be_successful
+  describe "GET 'index'" do
+    login(:admin)
+
+    it { get(:index).should be_successful }
+  end
+
+  describe "POST 'create'" do
+    login(:admin)
+    
+    it "should create new role successfully and redirect to index" do
+      block_should(change(Role, :count)) do
+        post(:create, { :role => { :name => "Mastah" }})
+        response.should redirect_to(roles_path)
+      end
     end
   end
 
-  describe "#update" do
+  describe "GET 'edit'" do
+    login(:admin)
+
+    it "should show role edit form" do
+      role = Role.generate
+      get(:edit, :id => role.id).should be_successful
+    end
+  end
+
+  describe "PUT 'update'" do
+    login(:admin)
+
     it "should update the role" do
-      role = Role.generate :name => 'OriginalName'
-      response = as(:admin).dispatch_to(Roles, :update, :id => role.id, :role => {
+      role = Role.generate
+      put(:update, :id => role.id, :role => {
         :can_manage_financial_data => true
       })
 
-      response.should redirect_to(resource(:roles))
-      Role.get(role.id).can_manage_financial_data.should be_true
+      response.should redirect_to(roles_path)
+      role.reload.can_manage_financial_data.should be_true
     end
   end
 
-  describe "#destroy" do
+  describe "DELETE 'destroy'" do
+    login(:admin)
     it "should delete role" do
       role = Role.generate
-      admin = Employee.generate :admin
+
       block_should(change(Role, :count).by(-1)) do
-        as(admin).dispatch_to(Roles, :destroy, :id => role.id)
+        delete(:destroy, :id => role.id)
       end
     end
   end
