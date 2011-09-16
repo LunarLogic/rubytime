@@ -15,40 +15,40 @@ class HourlyRatesController < ApplicationController
         :hourly_rates => grouped_rates[role].each { |hr| hr.date_format_for_json = current_user.date_format }
       }
     end
-    display @hourly_rates
+    respond_with @hourly_rates
   end
 
-  def create
+  def create    
     @hourly_rate = HourlyRate.new(params[:hourly_rate])
     @hourly_rate.operation_author = current_user
     if @hourly_rate.save
       @hourly_rate.date_format_for_json = current_user.date_format
-      display :status => :ok, :hourly_rate => @hourly_rate
+      render :json => {:status => :ok, :hourly_rate => @hourly_rate}
     else
-      display :status => :invalid, :hourly_rate => { :error_messages => @hourly_rate.error_messages }
+      render :json => {:status => :invalid, :hourly_rate => { :error_messages => @hourly_rate.error_messages }}
     end
   end
 
   def update
     @hourly_rate = HourlyRate.get(params[:id])
-    raise NotFound unless @hourly_rate
+    not_found and return unless @hourly_rate
     @hourly_rate.operation_author = current_user
     if @hourly_rate.update(params[:hourly_rate])
       @hourly_rate.date_format_for_json = current_user.date_format
-      display :status => :ok, :hourly_rate => @hourly_rate
+      render :json => {:status => :ok, :hourly_rate => @hourly_rate}
     else
-      display :status => :invalid, :hourly_rate => { :error_messages => @hourly_rate.error_messages }
+      render :json => {:status => :invalid, :hourly_rate => { :error_messages => @hourly_rate.error_messages }}
     end
   end
 
   def destroy
     @hourly_rate = HourlyRate.get(params[:id])
-    raise NotFound unless @hourly_rate
+    not_found and return unless @hourly_rate
     @hourly_rate.operation_author = current_user
     if @hourly_rate.destroy
-      display :status => :ok
+      render :json => {:status => :ok}
     else
-      display :status => :error, :hourly_rate => { :error_messages => @hourly_rate.error_messages }
+      render :json => {:status => :error, :hourly_rate => { :error_messages => @hourly_rate.error_messages }}
     end
   end
 

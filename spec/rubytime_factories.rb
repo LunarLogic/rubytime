@@ -93,8 +93,8 @@ Factory.define(:free_day, :class => FreeDay) do |fd|
 end
 
 Factory.define(:hourly_rate, :class => HourlyRate) do |hr|
-  hr.project { Project.pick_or_generate }
-  hr.role { Role.pick_or_generate }
+  hr.project { Project.generate }
+  hr.role { Role.generate }
   hr.takes_effect_at { Date.today }
   hr.value { 1000 }
   hr.currency { Currency.pick_or_generate }

@@ -33,7 +33,9 @@ describe HourlyRatesController do
     end
   end
 
-  describe "#index" do
+  describe "GET 'index'" do
+    login(:admin)
+
     it "should return hourly rates grouped by roles" do
       HourlyRate.all.destroy!
       Project.all.destroy!
@@ -54,7 +56,7 @@ describe HourlyRatesController do
       ]
       rates.each { |rate| rate.date_format_for_json = admin.date_format }
 
-      response = as(admin).dispatch_to(HourlyRates, :index, :project_id => project.id)
+      get(:index, :project_id => project.id, :format => :json)
       response.should be_successful
       response.body.should == [
         { :project_id => project.id, :role_id => devs.id,     :role_name => 'Devs',     :hourly_rates => [rates[0]] },
@@ -64,52 +66,52 @@ describe HourlyRatesController do
     end
   end
 
-  describe "#create" do
+  describe "POST 'create'" do
+    login(:admin)
 
     it "should make new record with given attributes and attempt to save it" do
-      @hourly_rate = mock('hourly rate', :operation_author= => nil, :date_format_for_json= => nil)
+      @hourly_rate = mock('hourly rate', :operation_author= => nil,
+                          :date_format_for_json= => nil, :to_json => "", :as_json => "".as_json)
       HourlyRate.should_receive(:new).with('these' => 'attrs').and_return(@hourly_rate)
       @hourly_rate.should_receive(:save).and_return(true)
 
-      @response = as(:admin).dispatch_to(HourlyRates, :create, :hourly_rate => { :these => :attrs })
+      post(:create, :hourly_rate => { 'these' => 'attrs' })
     end
 
     it "should set :operation_author attr of the record" do
-      admin = Employee.generate :admin
-      @hourly_rate = mock('hourly rate', :operation_author= => nil, :save => true, :date_format_for_json= => nil)
+      @hourly_rate = mock('hourly rate', :operation_author= => nil, :save => true,
+                          :date_format_for_json= => nil, :to_json => "", :as_json => "".as_json)
       HourlyRate.should_receive(:new).with('these' => 'attrs').and_return(@hourly_rate)
-      @hourly_rate.should_receive(:operation_author=).with(admin)
+      @hourly_rate.should_receive(:operation_author=).with(@current_user)
 
-      as(admin).dispatch_to(HourlyRates, :create, :hourly_rate => { :these => :attrs })
+      post(:create, :hourly_rate => { 'these' => 'attrs' })
     end
 
     context "if record created successfully" do
       before :each do
         @hourly_rate = mock('hourly rate',
-          :operation_author= => nil,
-          :save => true,
-          :date_format_for_json= => nil,
-          :to_json => 'json attributes'.to_json
-        )
+                            :operation_author= => nil,
+                            :save => true,
+                            :date_format_for_json= => nil,
+                            :to_json => 'json attributes'.to_json,
+                            :as_json => 'json attributes'.as_json)
         HourlyRate.stub! :new => @hourly_rate
-        @request = lambda do
-          @response = as(:admin).dispatch_to(HourlyRates, :create, :hourly_rate => { :these => :attrs })
-        end
       end
 
       it "should respond successfully" do
-        @request.call
-        @response.should be_successful
+        post(:create, :hourly_rate => { :these => :attrs })
+        response.should be_successful
       end
 
       it "should set :date_format_for_json of the record" do
         @hourly_rate.should_receive(:date_format_for_json=)
-        @request.call
+        post(:create, :hourly_rate => { :these => :attrs })
       end
 
       it "should return json with status :ok and record attributes" do
-        @request.call
-        @response.body.should == { :status => :ok, :hourly_rate => 'json attributes' }.to_json
+        post(:create, :hourly_rate => { :these => :attrs })
+        response.body.to_s.should == 
+          { :status => :ok, :hourly_rate => 'json attributes'}.to_json
       end
     end
 
@@ -121,15 +123,15 @@ describe HourlyRatesController do
           :error_messages => 'Error messages'
         )
         HourlyRate.stub! :new => @hourly_rate
-        @response = as(:admin).dispatch_to(HourlyRates, :create)
+        post(:create)
       end
 
       it "should respond successfully" do
-        @response.should be_successful
+        response.should be_successful
       end
 
       it "should return json with status :invalid and error messages" do
-        @response.body.should == {
+        response.body.should == {
           :status => :invalid,
           :hourly_rate => { :error_messages => 'Error messages' }
         }.to_json
@@ -137,60 +139,61 @@ describe HourlyRatesController do
     end
   end
 
-  describe "#update" do
+  describe "PUT 'update'" do
+    login(:admin)
     
     it "should look for the record of given id" do
-      @hourly_rate = mock('hourly rate', :operation_author= => nil, :update => true, :date_format_for_json= => nil)
+      @hourly_rate = mock('hourly rate', :operation_author= => nil,
+                          :update => true, :date_format_for_json= => nil,
+                          :to_json => "", :as_json => "".as_json)
       HourlyRate.should_receive(:get).with('39').and_return(@hourly_rate)
 
-      @response = as(:admin).dispatch_to(HourlyRates, :update, :id => 39)
+      put(:update, :id => '39')
     end
 
     context "if record of given :id existed" do
 
       it "should set :operation_author attr of the record" do
-        admin = Employee.generate :admin
-        @hourly_rate = mock('hourly rate', :update => true, :date_format_for_json= => nil)
+        @hourly_rate = mock('hourly rate', :update => true,
+                            :date_format_for_json= => nil, :as_json => "".as_json)
         HourlyRate.stub! :get => @hourly_rate
-        @hourly_rate.should_receive(:operation_author=).with(admin)
+        @hourly_rate.should_receive(:operation_author=).with(@current_user)
 
-        as(admin).dispatch_to(HourlyRates, :update, :id => 39, :hourly_rate => { :these => :attrs })
+        put(:update, :id => 39, :hourly_rate => { :these => :attrs })
       end
 
       it "should attempt to update it with given attributes" do
-        @hourly_rate = mock('hourly rate', :operation_author= => nil, :date_format_for_json= => nil)
+        @hourly_rate = mock('hourly rate', :operation_author= => nil,
+                            :date_format_for_json= => nil, :as_json => "".as_json)
         HourlyRate.stub! :get => @hourly_rate
         @hourly_rate.should_receive(:update).with('these' => 'attrs').and_return(true)
 
-        @response = as(:admin).dispatch_to(HourlyRates, :update, :id => 39, :hourly_rate => { :these => :attrs })
+        put(:update, :id => 39, :hourly_rate => { "these" => "attrs" })
       end
 
       context "and was successfully updated" do
         before :each do
           @hourly_rate = mock('hourly rate',
-            :operation_author= => nil,
-            :update => true,
-            :date_format_for_json= => nil,
-            :to_json => 'json attributes'.to_json
-          )
+                              :operation_author= => nil,
+                              :update => true,
+                              :date_format_for_json= => nil,
+                              :to_json => 'json attributes'.to_json,
+                              :as_json => 'json attributes'.as_json)
           HourlyRate.stub! :get => @hourly_rate
-          @request = lambda do
-            @response = as(:admin).dispatch_to(HourlyRates, :update, :hourly_rate => { :these => :attrs })
-          end
         end
 
         it "should respond successfully" do
-          @request.call
+          put(:update, :id => "39", :hourly_rate => { :these => :attrs })
           @response.should be_successful
         end
 
         it "should set :date_format_for_json of the record" do
           @hourly_rate.should_receive(:date_format_for_json=)
-          @request.call
+          put(:update, :id => "39", :hourly_rate => { :these => :attrs })
         end
 
         it "should return json with status :ok and record attributes" do
-          @request.call
+          put(:update, :id => "39", :hourly_rate => { :these => :attrs })
           @response.body.should == { :status => :ok, :hourly_rate => 'json attributes' }.to_json
         end
       end
@@ -203,17 +206,15 @@ describe HourlyRatesController do
             :error_messages => 'Error messages'
           )
           HourlyRate.stub! :get => @hourly_rate
-          @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :update) }
+          put(:update, :id => "39")
         end
 
         it "should respond successfully" do
-          @request.call
-          @response.should be_successful
+          response.should be_successful
         end
 
         it "should return json with status :invalid and error messages" do
-          @request.call
-          @response.body.should == {
+          response.body.should == {
             :status => :invalid,
             :hourly_rate => { :error_messages => 'Error messages' }
           }.to_json
@@ -224,29 +225,29 @@ describe HourlyRatesController do
     context "if record of given :id didn't exist" do
       it "should raise NotFound error" do
         HourlyRate.stub! :get => nil
-        block_should(raise_not_found) { as(:admin).dispatch_to(HourlyRates, :update, :id => 39) }
+        put(:update, :id => 39).status.should == 404
       end
     end
   end
 
-  describe "#destroy" do
+  describe "DELETE 'destroy'" do
+    login(:admin)
 
     it "should look for the record of given id" do
       @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => true)
       HourlyRate.should_receive(:get).with('39').and_return(@hourly_rate)
 
-      @response = as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39)
+      delete(:destroy, :id => "39")
     end
 
     context "when record of given :id existed" do
 
       it "should set :operation_author attr of the record" do
-        admin = Employee.generate :admin
         @hourly_rate = mock('hourly rate', :destroy => true)
         HourlyRate.stub! :get => @hourly_rate
-        @hourly_rate.should_receive(:operation_author=).with(admin)
+        @hourly_rate.should_receive(:operation_author=).with(@current_user)
 
-        as(admin).dispatch_to(HourlyRates, :destroy, :id => 39)
+        delete(:destroy, :id => 39)
       end
 
       it "should attempt to destroy it" do
@@ -254,24 +255,22 @@ describe HourlyRatesController do
         HourlyRate.stub! :get => @hourly_rate
         @hourly_rate.should_receive(:destroy).and_return(true)
 
-        @response = as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39)
+        delete(:destroy, :id => 39)
       end
 
       context "and was successfully destroyed" do
         before :each do
           @hourly_rate = mock('hourly rate', :operation_author= => nil, :destroy => true)
           HourlyRate.stub! :get => @hourly_rate
-          @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :destroy) }
+          delete(:destroy, :id => "39")
         end
 
         it "should respond successfully" do
-          @request.call
-          @response.should be_successful
+          response.should be_successful
         end
 
         it "should return json with status :ok and record attributes" do
-          @request.call
-          @response.body.should == { :status => :ok }.to_json
+          response.body.should == { :status => :ok }.to_json
         end
       end
 
@@ -283,12 +282,11 @@ describe HourlyRatesController do
             :error_messages => 'Cannot destroy'
           )
           HourlyRate.stub! :get => @hourly_rate
-          @request = lambda { @response = as(:admin).dispatch_to(HourlyRates, :destroy) }
+          delete(:destroy, :id => "39")
         end
 
         it "should return json with status :error and error messages" do
-          @request.call
-          @response.body.should == {
+          response.body.should == {
             :status => :error,
             :hourly_rate => { :error_messages => 'Cannot destroy' }
           }.to_json
@@ -299,7 +297,7 @@ describe HourlyRatesController do
     context "when record of given :id didn't exist" do
       it "should raise NotFound error" do
         HourlyRate.stub! :get => nil
-        block_should(raise_not_found) { as(:admin).dispatch_to(HourlyRates, :destroy, :id => 39) }
+        delete(:destroy, :id => 39).status.should == 404
       end
     end
   end
