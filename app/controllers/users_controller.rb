@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  respond_to :json #,:xml, :yaml, :js
-  before_filter :ensure_authenticated, :exclude => [:request_password, :reset_password]
+  respond_to :json, :html #,:xml, :yaml, :js
+
+  before_filter :authenticate_user!, :except => [:request_password, :reset_password]
   before_filter :ensure_admin, :only => [:new, :create, :edit, :destroy, :index]
   before_filter :load_user, :only => [:edit, :update, :show, :destroy, :settings] 
   before_filter :load_users, :only => [:index, :create]
@@ -18,35 +19,37 @@ class UsersController < ApplicationController
               Employee.new
             end
             
-    display @users
+    respond_with @users
   end
 
   def with_activities
-    only_provides :json
     @users = if current_user.is_admin?
                Employee.all(:order => [:name]).with_activities
              elsif current_user.is_client_user?
                Employee.all(:order => [:name]).with_activities_for_client(current_user.client)
              else
-               raise Forbidden
+               forbidden and return
              end
-    display @users
+    respond_to do |format|
+      format.json { render :json => @users }
+    end
   end
 
   def show
-    display @user
+    respond_with @user
   end
 
   def edit
-    only_provides :html
-    render
+    respond_to do |format|
+      format.html { render }
+    end
   end
 
   def create
     class_name = params[:user].delete(:class_name)
     @user = (class_name == "Employee" ? Employee : ClientUser).new(params[:user])
     if @user.save
-      redirect url(:user, @user)
+      redirect_to user_path(@user)
     else
       render :index
     end
@@ -61,9 +64,9 @@ class UsersController < ApplicationController
     end
     if @user.save || !@user.dirty?
       if current_user.is_admin?
-        redirect url(:user, @user), :message => { :notice => "User has been updated" }
+        redirect_to user_path(@user), :message => { :notice => "User has been updated" }
       else
-        redirect url(:activities), :message => { :notice => "Your account information has been updated" }
+        redirect_to activities_path, :message => { :notice => "Your account information has been updated" }
       end
     else
       render(current_user.is_admin? ? :edit : :settings)
@@ -84,10 +87,11 @@ class UsersController < ApplicationController
 
   # Returns all users matching current selected roles
   def with_roles
-    raise Forbidden unless current_user.is_admin? || current_user.is_client_user?
-    only_provides :json
+    forbidden and return unless current_user.is_admin? || current_user.is_client_user?
+
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    display :options => @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } }
+    render :json => 
+      {:options => @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } } }
   end
   
   def request_password
@@ -95,10 +99,10 @@ class UsersController < ApplicationController
       user = User.first(:email => params[:email])
       if user
         user.generate_password_reset_token
-        redirect url(:login),
+        redirect_to new_user_session_path,
           :message => { :notice => "Email with password reset link has been sent to #{params[:email]}" }
       else
-        redirect resource(:users, :request_password),
+        redirect_to users_request_password_path,
           :message => { :error => "Couldn't find user with email #{params[:email]}" }
       end
     else
@@ -107,21 +111,20 @@ class UsersController < ApplicationController
   end
   
   def reset_password
-    token = params[:token] or raise BadRequest
-    user = User.first(:password_reset_token => token) or raise NotFound
+    bad_request and return unless token = params[:token]
+    not_found and return unless user = User.first(:password_reset_token => token)
     if user.password_reset_token_exp < DateTime.now
-      redirect resource(:users, :request_password), :message => { :notice => "Password reset token has expired" }
+      redirect_to request_password_users_path, :message => { :notice => "Password reset token has expired" }
     else
-      session.user = user
+      sign_in(:user, user)
       user.clear_password_reset_token!
-      redirect url(:settings_user, user.id), :message => { :notice => "Please set your password" }
+      redirect_to settings_user_path(user), :message => { :notice => "Please set your password" }
     end
   end
   
   # this is for API, to let the client check if credentials are correct
   def authenticate
-    only_provides :json
-    display(current_user, :methods => [:user_type])
+    render(:json => current_user, :methods => [:user_type])
   end
     
   
@@ -132,7 +135,7 @@ protected
   end
   
   def load_user
-    raise NotFound unless @user = User.get(params[:id]) 
+    not_found and return unless @user = User.get(params[:id]) 
   end
   
   def load_clients_and_roles
@@ -141,7 +144,7 @@ protected
   end
 
   def check_authorization
-    raise Forbidden unless @user.editable_by?(current_user)
+    forbidden and return unless @user.editable_by?(current_user)
   end
   
   def number_of_columns

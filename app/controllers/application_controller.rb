@@ -98,4 +98,7 @@ class ApplicationController < ActionController::Base
     render :nothing => true, :status => :forbidden
   end
 
+  def bad_request
+    render :nothing => true, :status => :bad_request
+  end
 end
