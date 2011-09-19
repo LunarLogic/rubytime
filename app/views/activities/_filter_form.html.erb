@@ -1,4 +1,4 @@
-<%= form_for @search_criteria, :action => "/activities", :method => :get do %>
+<%= form_tag "/activities", :method => :get do %>
 <fieldset>
 
   <% if current_user.can_see_clients? %>
@@ -21,20 +21,23 @@
   
   <p>
     <% date_from = @search_criteria.date_from ? @search_criteria.date_from.formatted(current_user.date_format) : "" %>
-    <%= text_field :date_from, :value => date_from, :label => "From", :class => 'datepicker', :size => 9 %>
+    <%= label_tag :date_from, "From" %>
+    <%= text_field :date_from, :value => date_from, :class => 'datepicker', :size => 9 %>
   </p>
   
   <p>
     <% date_to = @search_criteria.date_to ? @search_criteria.date_to.formatted(current_user.date_format) : "" %>
-    <%= text_field :date_to, :value => date_to, :label => "To", :class => 'datepicker', :size => 9  %>
+    <%= label_tag :date_to, "To" %>
+    <%= text_field :date_to, :value => date_to, :class => 'datepicker', :size => 9  %>
   </p>
   
   <p>
     <label>Include</label>
     <span class="radiobuttons">
-      <%= radio_group :invoiced, [{ :value => "all", :label => "All" }, 
-                                  { :value => "invoiced", :label => "Invoiced" }, 
-                                  { :value => "not_invoiced", :label => "Not invoiced" }] %>
+      <% ['all', 'invoiced', 'not_invoiced'].each do |invoice_state| %>
+        <%= radio_button_tag :invoice, invoice_state %>
+        <%= label_tag "invoice_#{invoice_state}", invoice_state.humanize %>
+      <% end %>
     </span>
   </p>
   

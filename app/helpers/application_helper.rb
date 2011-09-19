@@ -34,21 +34,21 @@ module ApplicationHelper
     main_menu = []
     
     selected = controller_name == 'activities'
-    main_menu << { :title => "Activities", :path => resource(:activities), :selected => selected }
+    main_menu << { :title => "Activities", :path => activities_path, :selected => selected }
     
     if current_user.is_client_user?
       selected = (controller_name == 'projects' && action_name == 'index' )
-      main_menu << { :title => "Projects", :path => resource(:projects), :selected => selected }
+      main_menu << { :title => "Projects", :path => projects_path, :selected => selected }
     end
 
     if current_user.is_admin? || current_user.is_client_user?
       selected = controller_name == 'invoices'
-      main_menu << { :title => "Invoices", :path => resource(:invoices), :selected => selected }
+      main_menu << { :title => "Invoices", :path => invoices_path, :selected => selected }
     end
     
     if current_user.is_admin?
       selected = MANAGE_PAGES.include?(controller_name)
-      main_menu << { :title => "Manage", :path => resource(:users), :selected => selected }
+      main_menu << { :title => "Manage", :path => users_path, :selected => selected }
     end
     
     main_menu
@@ -249,5 +249,9 @@ module ApplicationHelper
     message = errors.full_messages.reject { |m| m =~ /integer/ }.join(", ").split(' ')
     message.first.capitalize unless message.empty?
     message.join(' ')
+  end
+
+  def auto_link
+    javascript_include_tag(params[:controller] + ".js")
   end
 end

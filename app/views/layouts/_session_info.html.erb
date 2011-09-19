@@ -1,0 +1,9 @@
+<% if current_user %>
+  <dt>Welcome, <%= h current_user.name %></dt>
+  <dd>
+    <ul>
+      <li><%= link_to 'Preferences', settings_user_path(current_user) %></li>
+      <li><%= link_to 'Logout', destroy_user_session_path %></li>
+    </ul>
+  </dd>
+<% end %>

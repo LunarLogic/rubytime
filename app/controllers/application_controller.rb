@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :authenticate_user!
   before_filter :set_api_version_header
+  before_filter :set_number_of_columns
 
   JSON_API_VERSION = 4  # see CHANGELOG-API.txt
 
@@ -78,6 +79,10 @@ class ApplicationController < ActionController::Base
     if request.env["HTTP_X_API_VERSION"]
       headers["X-API-Version"] = JSON_API_VERSION.to_s
     end
+  end
+
+  def set_number_of_columns
+    @number_of_columns = number_of_columns
   end
 
   def send_api_version_error

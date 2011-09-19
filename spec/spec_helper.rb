@@ -14,9 +14,11 @@ RSpec.configure do |config|
   config.include(Rubytime::Test::SpecsHelper)
   config.include(Rubytime::Test::MailerHelper)
 
-  config.include(Devise::TestHelpers, :type => :controller)
-  config.extend(Rubytime::Test::ControllerHelper::ClassMethods, :type => :controller)
-  config.include(Rubytime::Test::ControllerHelper, :type => :controller)
+  for test_type in [:view, :controller]
+    config.include(Devise::TestHelpers, :type => test_type)
+    config.extend(Rubytime::Test::ControllerHelper::ClassMethods, :type => test_type )
+    config.include(Rubytime::Test::ControllerHelper, :type => test_type)
+  end
 
   config.include(Delorean)
 

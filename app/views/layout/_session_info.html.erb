@@ -1,9 +1,0 @@
-<% if session.user %>
-  <dt>Welcome, <%= h session.user.name %></dt>
-  <dd>
-    <ul>
-      <li><%= link_to 'Preferences', url(:settings_user, session.user) %></li>
-      <li><%= link_to 'Logout', url(:logout) %></li>
-    </ul>
-  </dd>
-<% end %>

@@ -178,6 +178,11 @@ class SearchCriteria
     Activity.all({:order => [:date.desc, :created_at.desc]}.merge(conditions))
   end
 
+  # Active support uses this inf form_for
+  def self.model_name
+    ActiveModel::Name.new(self)
+  end
+
   protected
   
   def get_ids(collection)

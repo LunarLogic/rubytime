@@ -23,4 +23,8 @@ class Date
     Date.parse("#{year}-#{month}-1")
   end
 
+  def formatted(format = :european)
+    to_s(Rubytime::DATE_FORMATS[format][:format])
+  end
+
 end

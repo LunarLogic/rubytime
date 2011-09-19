@@ -1,14 +1,64 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>RubytimeNew</title>
-  <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag :defaults %>
-  <%= csrf_meta_tag %>
-</head>
-<body>
-
-<%= yield %>
-
-</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+  <head>
+    <title>Rubytime</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="SHORTCUT ICON" href="<%= '/favicon.ico' %>" />
+    <link rel="icon" type="image/png" href="<%= '/favicon.png' %>" />
+    <%= stylesheet_link_tag Rails.env == :production ? 'master.min' : 'master' %>
+    <%= javascript_include_tag 'lib/jquery.min.js',
+                       'lib/jquery-ui-1.8.custom.min.js',
+                       'lib/jquery.validate.min.js',
+                       'lib/jquery-extensions.js',
+                       'lib/jquery-scrollto.js',
+                       'application.js',
+                       'lib/rubytime/input-filler.js',
+                       'lib/thickbox',
+                       'indicator.js'%>
+    <%= auto_link %>
+    <%= csrf_meta_tag %>
+    <% if current_user %>
+    <script type="text/javascript">
+      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[current_user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %>';
+    </script>
+    <% end %>
+  </head>
+  <body id="<%= params[:controller] %>_<%= params[:action] %>">
+    <div class="header header-expanded">
+      <div class="wrapper">
+        <h1 class="logo">
+          <a href="/">
+            <img src="/images/logo.png" alt="Rubytime" title="Rubytime, a simple time tracking application"/>
+          </a>
+        </h1>
+        <% if user_signed_in? && params[:controller] != 'exceptions' -%>
+        <dl id="userinfo">
+          <%= partial 'layouts/session_info' %>
+        </dl>
+        <%= partial 'layouts/navigation' %>
+        <% end -%>
+      </div>
+    </div>
+    <div id="content" class="wrapper clearfix">
+      <div id="add_activity" style="display: none">
+      </div>
+      <div id="flash" class="<%= flash.keys.first %>" style="<%= 'display: block' unless flash.keys.empty? %>">
+        <%= h flash[flash.keys.first] %>
+      </div>
+      <div id="primary">
+        <%= yield %>
+      </div>
+      <% if @number_of_columns == 2 %>
+        <div id="secondary">
+          <div class="box"><%= content_for :secondary %></div>
+        </div>
+      <% end %>
+    </div>
+    <div id="footer">
+      <a class="logo" href="http://lunarlogicpolska.com" title="Lunar Logic Polska -- Agile web experts">Lunar Logic Polska</a>
+      <a class="rails" href="http://rubyonrails.org" title="Ruby on Rails -- Web development that doesn't hurt">Powered by Ruby on Rails</a>
+    </div>
+    <div class="revision_info"></div>
+  </body>
 </html>
