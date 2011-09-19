@@ -47,7 +47,7 @@
         <%= h flash[flash.keys.first] %>
       </div>
       <div id="primary">
-        <%= yield %>
+        <%= content_for :layout %>
       </div>
       <% if @number_of_columns == 2 %>
         <div id="secondary">

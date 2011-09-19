@@ -16,7 +16,7 @@
   
   <%= partial(:grouped_activities) %>
 
-  <%= link_to "Export this list to CSV", url(:activities) + ".csv?" + params.reject { |k,v| k =~ /^(id|action|controller|format)$/}.to_params %>
+  <%= link_to "Export this list to CSV", activities_path + ".csv?" + params.reject { |k,v| k =~ /^(id|action|controller|format)$/}.to_param %>
   
   <% if show_invoice_form %>
     <%= partial(:invoice_forms) %>

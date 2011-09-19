@@ -22,7 +22,7 @@
   <p>
     <% date_from = @search_criteria.date_from ? @search_criteria.date_from.formatted(current_user.date_format) : "" %>
     <%= label_tag "search_criteria[date_from]", "From" %>
-    <%= text_field 'search_criteria[date_from]', date_from, :class => 'datepicker', :size => 9 %>
+    <%= text_field_tag 'search_criteria[date_from]', date_from, :class => 'datepicker', :size => 9 %>
   </p>
   
   <p>
@@ -35,8 +35,8 @@
     <label>Include</label>
     <span class="radiobuttons">
       <% ['all', 'invoiced', 'not_invoiced'].each do |invoice_state| %>
-        <%= radio_button_tag :invoice, invoice_state %>
-        <%= label_tag "invoice_#{invoice_state}", invoice_state.humanize %>
+        <%= radio_button_tag "search_criteria[invoice]", invoice_state, invoice_state == 'all' %>
+        <%= label_tag "search_criteria[invoice]_#{invoice_state}", invoice_state.humanize %>
       <% end %>
     </span>
   </p>

@@ -1,6 +1,6 @@
 <p class="<%= group %>">
   <%= label_tag "search_criteria_#{group}_id", group.to_s.humanize %>
-  <%= select_tag "search_criteria[#{group}_id][]", options_from_collection_for_select(@search_criteria.send("all_#{group.to_s.pluralize}"), :id, :name), :id => "search_criteria_#{group}_id", :class => "#{group}_combo", :prompt => "All" %>
+  <%= select_tag "search_criteria[#{group}_id][]", options_from_collection_for_select(@search_criteria.send("all_#{group.to_s.pluralize}"), :id, :name), :id => "search_criteria_#{group}_id", :class => "#{group}_combo", :include_blank => "All"%>
   <%= link_to(image_tag("icons/minus.png",  :alt => "-"), "#", :class => "remove_criterium") %>
   <%= link_to(image_tag("icons/plus.png", :alt => "+"), "#", :class => "add_criterium") %> 
 </p>
