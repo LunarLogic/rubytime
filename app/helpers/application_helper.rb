@@ -59,23 +59,23 @@ module ApplicationHelper
     case controller_name
     when *MANAGE_PAGES
       if current_user.is_admin?
-        sub_menu << { :title => "Users", :path => url(:users), :selected => controller_name == 'users' }
-        sub_menu << { :title => "Clients", :path => url(:clients), :selected => controller_name == 'clients' }
-        sub_menu << { :title => "Projects", :path => url(:projects), :selected => controller_name == 'projects' }
-        sub_menu << { :title => "Roles", :path => url(:roles), :selected => controller_name == 'roles' }
-        sub_menu << { :title => "Activity types", :path => url(:activity_types), :selected => controller_name == 'activity_types' }
-        sub_menu << { :title => "Custom activity properties", :path => url(:activity_custom_properties), :selected => controller_name == 'activity_custom_properties' }
-        sub_menu << { :title => "Currencies", :path => url(:currencies), :selected => controller_name == 'currencies' }
-        sub_menu << { :title => "Settings", :path => url(:edit_settings), :selected => controller_name == 'settings' }
+        sub_menu << { :title => "Users", :path => users_path, :selected => controller_name == 'users' }
+        sub_menu << { :title => "Clients", :path => clients_path, :selected => controller_name == 'clients' }
+        sub_menu << { :title => "Projects", :path => projects_path, :selected => controller_name == 'projects' }
+        sub_menu << { :title => "Roles", :path => roles_path, :selected => controller_name == 'roles' }
+        sub_menu << { :title => "Activity types", :path => activity_types_path, :selected => controller_name == 'activity_types' }
+        sub_menu << { :title => "Custom activity properties", :path => activity_custom_properties_path, :selected => controller_name == 'activity_custom_properties' }
+        sub_menu << { :title => "Currencies", :path => currencies_path, :selected => controller_name == 'currencies' }
+        sub_menu << { :title => "Settings", :path => edit_settings_path, :selected => controller_name == 'settings' }
       end
     when 'invoices'
-      sub_menu << { :title => "All", :path => url(:invoices), :selected => params[:filter].nil? }
-      sub_menu << { :title => "Issued", :path => url(:issued_invoices), :selected => params[:filter] == 'issued' }
-      sub_menu << { :title => "Pending", :path => url(:pending_invoices), :selected => params[:filter] == 'pending' }
+      sub_menu << { :title => "All", :path => invoices_path, :selected => params[:filter].nil? }
+      sub_menu << { :title => "Issued", :path => issued_invoices_path, :selected => params[:filter] == 'issued' }
+      sub_menu << { :title => "Pending", :path => pending_invoices_path, :selected => params[:filter] == 'pending' }
     when 'activities'
       if current_user.is_employee?
-        sub_menu << { :title => "List", :path => resource(:activities), :selected => action_name == 'index' }
-        sub_menu << { :title => "Calendar", :path => url(:user_calendar, current_user.id), :selected => action_name == 'calendar' }
+        sub_menu << { :title => "List", :path => activities_path, :selected => action_name == 'index' }
+        sub_menu << { :title => "Calendar", :path => user_calendar_path(current_user.id), :selected => action_name == 'calendar' }
       end
     end
     sub_menu
