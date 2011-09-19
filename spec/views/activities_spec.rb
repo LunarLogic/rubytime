@@ -11,3 +11,17 @@ describe "activities/index.html.erb" do
     render
   end
 end
+
+describe "activities/new.html.erb" do
+  before(:each) do
+    @activity = Activity.prepare
+    @recent_projects = [Project.generate]
+    @other_projects = [Project.generate]
+    @activity_custom_properties = [ActivityCustomProperty.generate]
+    login(:employee)
+  end
+
+  it "should render successfully" do
+    render
+  end
+end

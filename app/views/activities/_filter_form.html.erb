@@ -11,7 +11,7 @@
   
   <p<%= @search_criteria.found_projects_with_activities_without_types? ? '' : ' style="display: none"'%>>
     <%= label "Include activities without types", :for => :include_activities_without_types %>
-    <%= check_box :include_activities_without_types, :class => 'include_activities_without_types' %>
+    <%= check_box :search_criteria, :include_activities_without_types, :class => 'include_activities_without_types' %>
   </p>
   
   <% if current_user.can_see_users? %>
@@ -21,14 +21,14 @@
   
   <p>
     <% date_from = @search_criteria.date_from ? @search_criteria.date_from.formatted(current_user.date_format) : "" %>
-    <%= label_tag :date_from, "From" %>
-    <%= text_field :date_from, :value => date_from, :class => 'datepicker', :size => 9 %>
+    <%= label_tag "search_criteria[date_from]", "From" %>
+    <%= text_field 'search_criteria[date_from]', date_from, :class => 'datepicker', :size => 9 %>
   </p>
   
   <p>
     <% date_to = @search_criteria.date_to ? @search_criteria.date_to.formatted(current_user.date_format) : "" %>
-    <%= label_tag :date_to, "To" %>
-    <%= text_field :date_to, :value => date_to, :class => 'datepicker', :size => 9  %>
+    <%= label_tag "search_criteria[date_to]", "To" %>
+    <%= text_field_tag "search_criteria[date_to]", date_to, :class => 'datepicker', :size => 9  %>
   </p>
   
   <p>

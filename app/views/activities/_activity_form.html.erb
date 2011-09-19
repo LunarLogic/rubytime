@@ -1,30 +1,34 @@
 <div id="errors" style="display:none"></div>
 
-<%= form_for @activity, :action => @activity.new? ? url(:activities) : resource(@activity), :class => "activity_form #{@activity.new? ? 'dark': ''}" do %>
+<%= form_for @activity, :action => @activity.new? ? activities_path : activity_path(@activity), :class => "activity_form #{@activity.new? ? 'dark': ''}" do |f| %>
   <fieldset>
     <% if @activity.new? %><legend>New activity</legend><% end %>
     <% if current_user.is_admin? %>
       <p>
-        <%= select :user_id, :label => "User", :collection =>  @users.map { |u| [u.id, u.name] } %>
+        <%= f.select :user_id, @users.map { |u| [u.id, u.name] }, :label => "User" %>
       </p>
     <% end %>
     <p>
-      <%= text_field :date, :label => "Date", :class => 'datepicker', :value => @activity.date.formatted(current_user.date_format) %>
+      <%= f.label :date, "Date" %>
+      <%= f.text_field :date, :class => 'datepicker', :value => @activity.date.formatted(current_user.date_format) %>
     </p>
     <p>
-      <%= select :project_id, :label => "Project", :collection => { 
-        "Recent projects" => @recent_projects.map { |p| [p.id, p.name] }, 
-        "Other projects" => @other_projects.map { |p| [p.id, p.name] } } %>
+      <%= f.label :project_id, "Project" %>
+      <%= f.select :project_id, grouped_options_for_select({ "Recent projects" => @recent_projects.map { |p| [p.name, p.id] }, 
+        "Other projects" => @other_projects.map { |p| [p.name, p.id] } }) %>
     </p>
-    <%= hidden_field :main_activity_type_id, :value => nil %>
+    <%= f.hidden_field :main_activity_type_id, :value => nil %>
     <p<%= @activity.available_main_activity_types.any? ? '' : ' style="display: none"' %>>
-      <%= select :main_activity_type_id, :label => "Type", :collection => @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s, :disabled => @activity.available_main_activity_types.empty? %>
+      <%= f.label :main_activity_type_id, "Type" %>
+      <%= f.select :main_activity_type_id, @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s, :disabled => @activity.available_main_activity_types.empty? %>
     </p>
     <p<%= @activity.available_sub_activity_types.any? ? '' : ' style="display: none"' %>>
-      <%= select :sub_activity_type_id, :label => "Sub-type", :collection => @activity.available_sub_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.sub_activity_type_id.to_s, :disabled => @activity.available_sub_activity_types.empty? %>
+      <%= f.label :sub_activity_type_id, "Sub-type" %>
+      <%= f.select :sub_activity_type_id, @activity.available_sub_activity_types.map { |at| [at.name, at.id] }, :selected => @activity.sub_activity_type_id.to_s, :disabled => @activity.available_sub_activity_types.empty? %>
     </p>
     <p>
-      <%= text_field :hours, :label => "Time spent" %>
+      <%= f.label :hours, "Time spent" %>
+      <%= f.text_field :hours, :label => "Time spent" %>
       <span class="description">e.g. 7:30, 7.5, or 7.5h for seven hours and thirty minutes;
         0.5, .5h or 30m for half an hour</span>
     </p>
@@ -36,10 +40,11 @@
       </p>
     <% end %>
     <p>
-      <%= text_area :comments, :label => "Comments" %>
+      <%= label :comments, "Comments" %>
+      <%= f.text_area :comments %>
     </p>
     <p class="buttons">
-      <%= submit((@activity.new? ? "Add" : "Save"), :class => "button") %> or <%= link_to "Cancel", "#", :id => "close_activity_form" %>
+      <%= f.submit((@activity.new? ? "Add" : "Save"), :class => "button") %> or <%= link_to "Cancel", "#", :id => "close_activity_form" %>
     </p>
   </fieldset>
 <% end =%> 

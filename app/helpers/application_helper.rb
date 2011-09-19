@@ -252,6 +252,9 @@ module ApplicationHelper
   end
 
   def auto_link
-    javascript_include_tag(params[:controller] + ".js")
+    file = params[:controller].to_s.gsub("/", "") + ".js"
+    if File.exist?(File.join(Rails.root, "/public/javascripts/", file))
+      javascript_include_tag(file)
+    end
   end
 end

@@ -17,12 +17,12 @@ module MerbHelper
     content_for(name, content)
   end
 
-  def label(name, text)
+  def label(name, text, content_or_options = nil, options = nil)
     if text.is_a?(Hash)
+      # This is a Merb-style call
       super(text[:for], name)
     else
-      super(name, text)
+      super(name, text, content_or_options, options)
     end
   end
-
 end

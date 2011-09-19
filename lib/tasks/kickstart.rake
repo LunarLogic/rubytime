@@ -2,9 +2,9 @@
 
 desc "add testing users"
 namespace :rubytime do
-  task :kickstart => :merb_env do
+  task :kickstart => :environment do
     
-    Merb::Mailer.delivery_method = :test_send
+    ActionMailer::Base.delivery_method = :test
 
     # currencies
     [{:singular_name => 'dollar', :plural_name => 'dollars', :prefix => '$'   },
