@@ -171,16 +171,16 @@ class ActivitiesController < ApplicationController
     bad_request and return if (user_id && user_id.size > 1) || (project_id && project_id.size > 1)
 
     if current_user.is_client_user? || current_user.is_admin? && project_id
-      raise Forbidden unless user_id.nil?
-      @owner = Project.get(project_id.first) or raise NotFound
+      forbidden and return unless user_id.nil?
+      not_found and return unless @owner = Project.get(project_id.first)
     else
-      @owner = User.get(user_id.first) or raise NotFound
+      not_found and return unless @owner = User.get(user_id.first)
     end
     check_calendar_viewability
   end
   
   def check_deletable_by
-    @activity.deletable_by?(current_user) or raise Forbidden
+    forbidden and return unless @activity.deletable_by?(current_user)
   end
   
   def check_calendar_viewability
@@ -203,9 +203,9 @@ class ActivitiesController < ApplicationController
 
   def load_owner
     if params[:user_id]
-      @owner = User.get(params[:user_id]) or raise NotFound
+      not_found and return unless @owner = User.get(params[:user_id])
     else
-      @owner = Project.get(params[:project_id]) or raise NotFound
+      not_found and return unless @owner = Project.get(params[:project_id])
     end
   end
 

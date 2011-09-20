@@ -12,14 +12,14 @@ class ActivityTypesController < ApplicationController
   end
 
   def show
-    @activity_type = ActivityType.get(params[:id]) or raise NotFound
+    not_found and return unless @activity_type = ActivityType.get(params[:id])
     @new_activity_type = ActivityType.new(:parent => @activity_type)
     display @activity_type
   end
 
   def edit
     only_provides :html
-    @activity_type = ActivityType.get(params[:id]) or raise NotFound
+    not_found and return unless @activity_type = ActivityType.get(params[:id])
     display @activity_type
   end
 
@@ -44,7 +44,7 @@ class ActivityTypesController < ApplicationController
 
   def update
     new_position = params[:activity_type].delete(:position)
-    @activity_type = ActivityType.get(params[:id]) or raise NotFound
+    not_found and return unless @activity_type = ActivityType.get(params[:id])
     if @activity_type.update(params[:activity_type])
       @activity_type.move(:to => new_position) unless new_position == @activity_type.position
       if request.xhr?

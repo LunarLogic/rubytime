@@ -18,12 +18,12 @@ class CurrenciesController < ApplicationController
   end
 
   def edit
-    @currency = Currency.get(params[:id]) or raise NotFound
+    not_found and return unless @currency = Currency.get(params[:id])
     render
   end
 
   def update
-    @currency = Currency.get(params[:id]) or raise NotFound
+    not_found and return unless @currency = Currency.get(params[:id])
     if @currency.update(params[:currency]) || !@currency.dirty?
       redirect_to currencies_path
     else

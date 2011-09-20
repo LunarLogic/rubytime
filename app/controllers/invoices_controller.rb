@@ -71,7 +71,7 @@ class InvoicesController < ApplicationController
 
   protected
   def load_invoice
-    @invoice = Invoice.get(params[:id]) or raise NotFound
+    not_found and return unless @invoice = Invoice.get(params[:id])
   end
 
   def load_invoices

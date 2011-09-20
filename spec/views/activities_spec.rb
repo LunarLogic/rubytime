@@ -6,6 +6,8 @@ describe "activities/index.html.erb" do
     @search_criteria = SearchCriteria.new({:date_from => DateTime.now}, @current_user)
     @activities = [Activity.generate]
     @custom_properties = [ActivityCustomProperty.generate]
+    @column_properties = []
+    @non_column_properties = []
   end
 
   it "should render successfully" do

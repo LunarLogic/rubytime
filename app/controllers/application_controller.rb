@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_not_client_user
-    raise Forbidden if current_user.is_client_user?
+    forbidden and return if current_user.is_client_user?
   end
   
   def ensure_user_that_can_manage_financial_data
