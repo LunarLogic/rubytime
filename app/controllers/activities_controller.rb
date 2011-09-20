@@ -197,8 +197,7 @@ class ActivitiesController < ApplicationController
 
   def load_activity
     source = (current_user.is_admin?) ? Activity : current_user.activities
-    @activity = source.get(params[:id])
-    render "exceptions/not_found", :status => :not_found and return unless @activity
+    not_found and return unless @activity = source.get(params[:id])
   end
 
   def load_owner

@@ -8,14 +8,14 @@
     <link rel="icon" type="image/png" href="<%= '/favicon.png' %>" />
     <%= stylesheet_link_tag Rails.env == :production ? 'master.min' : 'master' %>
     <%= javascript_include_tag 'lib/jquery.min.js',
-                       'lib/jquery-ui-1.8.custom.min.js',
-                       'lib/jquery.validate.min.js',
-                       'lib/jquery-extensions.js',
-                       'lib/jquery-scrollto.js',
-                       'application.js',
-                       'lib/rubytime/input-filler.js',
-                       'lib/thickbox',
-                       'indicator.js'%>
+        'lib/jquery-ui-1.8.custom.min.js',
+        'lib/jquery.validate.min.js',
+        'lib/jquery-extensions.js',
+        'lib/jquery-scrollto.js',
+        'application.js',
+        'lib/rubytime/input-filler.js',
+        'lib/thickbox',
+        'indicator.js' %>
     <%= auto_link %>
     <%= csrf_meta_tag %>
     <% if current_user %>

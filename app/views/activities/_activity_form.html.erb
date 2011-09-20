@@ -14,7 +14,6 @@
     </p>
     <p>
       <%= f.label :project_id, "Project" %>
-      <%= @activity.project_id %>
       <%= f.select :project_id, grouped_options_for_select({ "Recent projects" => @recent_projects.map { |p| [p.name, p.id] }, 
         "Other projects" => @other_projects.map { |p| [p.name, p.id] } }, @activity.project_id) %>
     </p>
