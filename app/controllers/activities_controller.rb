@@ -123,12 +123,12 @@ class ActivitiesController < ApplicationController
       @projects = current_user.client.projects.all(:order => [:name.asc])
     end
     
-    date = if params.has_key?("year") && params.has_key?("month")
+    if params.has_key?("year") && params.has_key?("month")
       @year, @month = params[:year].to_i, params[:month].to_i
-      { :year => @year, :month => @month }
+      date = { :year => @year, :month => @month }
     else
       @year, @month = Date.today.year, Date.today.month
-      :this_month
+      date = :this_month
     end
 
     if @month == Date.today.month && @year == Date.today.year 
