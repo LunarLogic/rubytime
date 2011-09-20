@@ -96,7 +96,10 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    render "exceptions/not_found", :status => :not_found
+    respond_to do |format|
+      format.html { render "exceptions/not_found", :status => :not_found }
+      format.json { render :json => "", :status => :not_found }
+    end
   end
 
   def forbidden

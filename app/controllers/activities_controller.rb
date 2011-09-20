@@ -168,7 +168,7 @@ class ActivitiesController < ApplicationController
     user_id = params[:search_criteria][:user_id]
     project_id = params[:search_criteria][:project_id]
 
-    raise BadRequest if (user_id && user_id.size > 1) || (project_id && project_id.size > 1)
+    bad_request and return if (user_id && user_id.size > 1) || (project_id && project_id.size > 1)
 
     if current_user.is_client_user? || current_user.is_admin? && project_id
       raise Forbidden unless user_id.nil?

@@ -1,7 +1,9 @@
 class ActivityTypesController < ApplicationController
   
-  before_filter :ensure_admin, :exclude => [:available, :for_projects]
+  before_filter :ensure_admin, :except => [:available, :for_projects]
   before_filter :ensure_can_see_available, :only => [:available]
+
+  respond_to :json, :html
 
   def index
     @activity_types = ActivityType.roots
@@ -59,7 +61,7 @@ class ActivityTypesController < ApplicationController
   end
 
   def destroy
-    @activity_type = ActivityType.get(params[:id]) or raise NotFound
+    not_found and return unless @activity_type = ActivityType.get(params[:id])
     if @activity_type.destroy
       redirect resource(@activity_type.parent ? @activity_type.parent : :activity_types)
     else
@@ -68,21 +70,20 @@ class ActivityTypesController < ApplicationController
   end
 
   def available
-    provides :json
-    
-    project = Project.get(params[:project_id]) or raise NotFound
+    not_found and return unless project = Project.get(params[:project_id])
     activity_type = ActivityType.get(params[:activity_type_id])
     
     @activity_types = project.activity_types.all(:parent_id => activity_type ? activity_type.id : nil)
-    
-    display @activity_types
+
+    respond_to do |format|
+      format.json { render :json => @activity_types }
+    end
   end
   
   def for_projects
-    only_provides :json
     @search_criteria = SearchCriteria.new(params[:search_criteria], current_user)
-    display :options => @search_criteria.all_activity_types.map { |at| { :id => at.id, :name => at.name } }, 
-      :projects_with_activities_without_types_selected => @search_criteria.found_projects_with_activities_without_types?
+    render :json => { :options => @search_criteria.all_activity_types.map { |at| { :id => at.id, :name => at.name } }, 
+      :projects_with_activities_without_types_selected => @search_criteria.found_projects_with_activities_without_types? }
   end
   
   def number_of_columns
@@ -91,8 +92,8 @@ class ActivityTypesController < ApplicationController
   
   protected
   
-  def ensure_can_see_available
-    raise Forbidden unless current_user.is_admin? || current_user.is_employee? || (current_user.is_client_user? and current_user.client.projects.get(params[:project_id]))
+  def ensure_can_see_available    
+    forbidden and return unless current_user.is_admin? || current_user.is_employee? || (current_user.is_client_user? and current_user.client.projects.get(params[:project_id]))
   end
 
 end # ActivityTypes
