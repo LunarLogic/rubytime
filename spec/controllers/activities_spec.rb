@@ -424,12 +424,12 @@ describe ActivitiesController do
           Employee.any_instance.should_receive(:activities).and_return(@activities)
         end
 
-        it "should render calendar for current month if no date given in the request" do
+        it "current month if no date given in the request" do
           @activities.should_receive(:for).with(:this_month).and_return([])
           get(:calendar, { :user_id => @employee.id }).should be_successful
         end
       
-        it "should render calendar for given month" do
+        it "given month" do
           year, month = 2007, 10
           @activities.should_receive(:for).with(:year => year, :month => month).and_return([])
           get(:calendar, {:user_id => @employee.id,
@@ -437,6 +437,10 @@ describe ActivitiesController do
                 :year => year
               }).should be_successful
         end
+      end
+
+      it "should work as xhr" do
+        xhr(:get, :calendar, :user_id => @employee.id).should be_successful
       end
 
       it "should render bad request error for wrong date" do

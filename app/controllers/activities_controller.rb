@@ -149,7 +149,7 @@ class ActivitiesController < ApplicationController
     @activities_by_date = @activities.group_by { |activity| activity.date }
     
     if request.xhr?
-      render :text => activities_calendar(:activities => @activities_by_date, :year => @year, :month => @month, :owner => @owner), :layout => false
+      render :partial => "activities_calendar", :layout => false
     else
       render
     end
