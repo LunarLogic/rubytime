@@ -1,6 +1,6 @@
 <div id="errors" style="display:none"></div>
 
-<%= form_for @activity, :action => @activity.new? ? activities_path : activity_path(@activity), :class => "activity_form #{@activity.new? ? 'dark': ''}" do |f| %>
+<%= form_for @activity, :action => @activity.new? ? activities_path : activity_path(@activity), :html => { :class => "activity_form #{@activity.new? ? 'dark': ''}" } do |f| %>
   <fieldset>
     <% if @activity.new? %><legend>New activity</legend><% end %>
     <% if current_user.is_admin? %>
