@@ -1,6 +1,6 @@
 <div id="errors" style="display:none"></div>
 
-<%= form_for @activity, :action => @activity.new? ? activities_path : activity_path(@activity), :html => { :class => "activity_form #{@activity.new? ? 'dark': ''}" } do |f| %>
+<%= form_for @activity, :html => { :class => "activity_form #{@activity.new? ? 'dark': ''}" } do |f| %>
   <fieldset>
     <% if @activity.new? %><legend>New activity</legend><% end %>
     <% if current_user.is_admin? %>
@@ -14,8 +14,9 @@
     </p>
     <p>
       <%= f.label :project_id, "Project" %>
+      <%= @activity.project_id %>
       <%= f.select :project_id, grouped_options_for_select({ "Recent projects" => @recent_projects.map { |p| [p.name, p.id] }, 
-        "Other projects" => @other_projects.map { |p| [p.name, p.id] } }) %>
+        "Other projects" => @other_projects.map { |p| [p.name, p.id] } }, @activity.project_id) %>
     </p>
     <%= f.hidden_field :main_activity_type_id, :value => nil %>
     <% if @activity.available_main_activity_types.any? %>
