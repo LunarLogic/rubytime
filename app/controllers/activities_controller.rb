@@ -43,12 +43,12 @@ class ActivitiesController < ApplicationController
     @activities.roles
     @activities.projects.clients
     @activities.activity_custom_property_values
-    @activities.map(&:comments)    
+    @activities.map(&:comments)
 
     respond_to do |format|
       format.csv { render :text => convert_to_csv(@activities) }
       if request.xhr?
-        format.any { render :index, :layout => false }
+        format.html { render :index, :layout => false }
       else
         format.json { render(:json => @activities, :methods => [:locked?, :price_as_json, :role_name]) }
         format.html { render(:html => @activities, :methods => [:locked?, :price_as_json, :role_name]) }

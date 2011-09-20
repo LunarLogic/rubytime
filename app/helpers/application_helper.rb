@@ -137,37 +137,39 @@ module ApplicationHelper
     table_opts = { :class => 'activities list wide', :id => "#{options[:table_id]}"}
     table_opts.reject!{|k,v| v.blank?}
 
-    tag(:table, table_opts) do
-      html =  %(<tr>)
-      html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
-      html << %(<th>#{image_tag("icons/project.png", :alt => 'project') if options[:show_header_icons]} Project</th>) if options[:show_project]
-      html << %(<th>#{image_tag("icons/role.png", :alt => 'role') if options[:show_header_icons]} User</th>) if options[:show_users]
-      html << %(<th>Date</th>) if options[:show_date]
-      html << %(<th class="right">#{image_tag("icons/clock.png", :alt => 'clock') if options[:show_header_icons]} Hours</th>)
-      
-      options[:custom_properties_to_show_in_columns].each do |custom_property|
-        html << %(<th class="right">#{custom_property.name_with_unit}</th>)
-      end
-      
-      html << %(<th class="icons">)
-      html << link_to(image_tag("icons/magnifier.png", :title => "Toggle all details", :alt => 'I'), "#", :class => "toggle_all_comments_link") if options[:show_details_link]
-      html << %(</th>)
-      html << %(</tr>)
-      activities.each do |activity|
-        html << activities_table_row(activity, options)
-      end
-      html << %(<tr class="no_zebra">)
-      html << %(<td></td>) if options[:show_checkboxes]
-      html << %(<td></td>) if options[:show_project]
-      html << %(<td></td>) if options[:show_users]
-      html << %(<td class="right"><strong>Total:</strong></td>)
-      html << %(<td class="right"><strong>#{total_from(activities)}</strong></td>)
-      options[:custom_properties_to_show_in_columns].each do |custom_property|
-        html << %(<td class="right"><strong>#{format_number(Activity.custom_property_values_sum(activities, custom_property))}</strong></td>)
-      end
-      html << %(<td></td>)
-      html << %(</tr>)
+    html = %(#{tag(:table, table_opts)})
+    html <<  %(<tr>)
+    html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
+    html << %(<th>#{image_tag("icons/project.png", :alt => 'project') if options[:show_header_icons]} Project</th>) if options[:show_project]
+    html << %(<th>#{image_tag("icons/role.png", :alt => 'role') if options[:show_header_icons]} User</th>) if options[:show_users]
+    html << %(<th>Date</th>) if options[:show_date]
+    html << %(<th class="right">#{image_tag("icons/clock.png", :alt => 'clock') if options[:show_header_icons]} Hours</th>)
+    
+    options[:custom_properties_to_show_in_columns].each do |custom_property|
+      html << %(<th class="right">#{custom_property.name_with_unit}</th>)
     end
+    
+    html << %(<th class="icons">)
+    html << link_to(image_tag("icons/magnifier.png", :title => "Toggle all details", :alt => 'I'), "#", :class => "toggle_all_comments_link") if options[:show_details_link]
+    html << %(</th>)
+    html << %(</tr>)
+    activities.each do |activity|
+      html << activities_table_row(activity, options)
+    end
+    html << %(<tr class="no_zebra">)
+    html << %(<td></td>) if options[:show_checkboxes]
+    html << %(<td></td>) if options[:show_project]
+    html << %(<td></td>) if options[:show_users]
+    html << %(<td class="right"><strong>Total:</strong></td>)
+    html << %(<td class="right"><strong>#{total_from(activities)}</strong></td>)
+    options[:custom_properties_to_show_in_columns].each do |custom_property|
+      html << %(<td class="right"><strong>#{format_number(Activity.custom_property_values_sum(activities, custom_property))}</strong></td>)
+    end
+    html << %(<td></td>)
+    html << %(</tr>)
+    html << %(</table>)
+
+    html.html_safe
   end
 
   def activities_table_row(activity, options)
@@ -187,9 +189,9 @@ module ApplicationHelper
     # icons
     row << %(<td class="icons">)
     row << link_to(image_tag("icons/magnifier.png", :alt => "I", :title => "Toggle details"), "#", :class => "toggle_comments_link") if options[:show_details_link]
-    row << link_to(image_tag("icons/pencil.png", :alt => "E", :title => "Edit"), resource(activity, :edit)+"?height=400&amp;width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
-    row << link_to(image_tag("icons/cross.png", :alt => "R", :title => "Remove"), resource(activity), :class => "remove_activity_link") if options[:show_delete_link] && activity.deletable_by?(current_user) && !activity.locked?
-    row << link_to(image_tag("icons/notebook_minus.png", :alt => "-", :title => "Remove activity from this invoice"), resource(activity), :class => "remove_from_invoice_link") if options[:show_exclude_from_invoice_link] && !activity.locked?
+    row << link_to(image_tag("icons/pencil.png", :alt => "E", :title => "Edit"), edit_activity_path(activity)+"?height=400&amp;width=500", :class => "edit_activity_link", :title => "Editing activity") if options[:show_edit_link] && activity.deletable_by?(current_user) && !activity.locked?
+    row << link_to(image_tag("icons/cross.png", :alt => "R", :title => "Remove"), activity_path(activity), :class => "remove_activity_link") if options[:show_delete_link] && activity.deletable_by?(current_user) && !activity.locked?
+    row << link_to(image_tag("icons/notebook_minus.png", :alt => "-", :title => "Remove activity from this invoice"), activity_path(activity), :class => "remove_from_invoice_link") if options[:show_exclude_from_invoice_link] && !activity.locked?
     row << %(</td>)
 
     klass, visibility = (options[:expanded] ? ["", ""] : ["no_zebra", "display: none"])
@@ -201,7 +203,7 @@ module ApplicationHelper
       end
     end
     row << %(<p>#{h(activity.comments).gsub(/\n/, "<br/>")}</p></td></tr>)
-    row
+    row    
   end
 
   def full_activities_table(activities)
