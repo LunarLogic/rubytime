@@ -24,7 +24,7 @@ class Date
   end
 
   def formatted(format = :european)
-    to_s(Rubytime::DATE_FORMATS[format][:format])
+    strftime(Rubytime::DATE_FORMATS[format][:format])
   end
 
 end
