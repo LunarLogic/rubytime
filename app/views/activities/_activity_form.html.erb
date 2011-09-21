@@ -5,7 +5,8 @@
     <% if @activity.new? %><legend>New activity</legend><% end %>
     <% if current_user.is_admin? %>
       <p>
-        <%= f.select :user_id, @users.map { |u| [u.id, u.name] }, :label => "User" %>
+        <%= f.label :user_id, "User" %>
+        <%= f.select :user_id, options_from_collection_for_select(@users, :id, :name) %>
       </p>
     <% end %>
     <p>
