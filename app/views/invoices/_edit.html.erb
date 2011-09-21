@@ -1,19 +1,22 @@
 <h1>Edit invoice</h1>
 
 <%= error_messages_for(@invoice) %>
-<%= form_for @invoice, :action => resource(@invoice, filter_hash), :id => "invoice_form" do %>
+<%= form_for @invoice, :url => invoice_path(@invoice, filter_hash), :id => "invoice_form" do |f| %>
   <fieldset>
     <p>
-      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+      <%= f.label :client_id, "Client" %>
+      <%= f.select :client_id, options_from_collection_for_select(@clients, :id, :name, @invoice.client_id), :include_blank => "Select a client..." %>
     </p>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
     </p>
     <p>
-      <%= text_area :notes, :label => "Notes", :class => "text", :cols => "21", :rows => "5" %>
+      <%= f.label :notes, "Notes" %>
+      <%= f.text_area :notes, :class => "text", :cols => "21", :rows => "5" %>
     </p>
     <p class="buttons">
-      <%= submit 'Save', :class => "button" %>  or <%= link_to "Cancel", resource(@invoice, filter_hash) %>
+      <%= submit 'Save', :class => "button" %>  or <%= link_to "Cancel", invoice_path(@invoice, filter_hash) %>
     </p>
   </fieldset>
 <% end =%>

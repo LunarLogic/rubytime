@@ -17,13 +17,13 @@
   <% if @invoice.issued? %>
     This invoice has been issued at <%= @invoice.issued_at.to_time.to_date %>
   <% elsif current_user.is_admin? %>
-    <%= form_for @invoice, :action => resource(@invoice, :issue), :id => "issue_invoice_form" do %>
+    <%= form_for @invoice, :url => issue_invoice_path(@invoice), :id => "issue_invoice_form" do %>
       <%= submit "Issue this invoice", :class => "button" %>
     <% end =%>
   <% end %>
 <% end %>
 
 <p>
-  <%= link_to 'Back to invoices', url(:invoices, filter_hash) %>
-  <%= link_to('Edit', resource(@invoice, :edit, filter_hash))if current_user.is_admin? %>
+  <%= link_to 'Back to invoices', invoices_path(filter_hash) %>
+  <%= link_to('Edit', edit_invoice_path(@invoice, filter_hash))if current_user.is_admin? %>
 </p>
