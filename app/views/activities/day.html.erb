@@ -1,7 +1,7 @@
 <div class="day_header">
-  <%= link_to("&laquo; Previous", prev_day_url, :id => "prev_day_link") %>
+  <%= link_to("&laquo; Previous".html_safe, prev_day_url, :id => "prev_day_link") %>
   <span class="date"><%= @day %></span>
-  <%= link_to("Next &raquo;", next_day_url, :id => "next_day_link") %>
+  <%= link_to("Next &raquo;".html_safe, next_day_url, :id => "next_day_link") %>
 </div>
 <% if @activities.empty? %>
   <div class="activities_table_info">

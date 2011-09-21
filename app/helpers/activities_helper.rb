@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module ActivitiesHelper
   # TODO: use css instead of &nbsp; in activities_calendar, edit_activity and delete_activity
 
@@ -107,10 +106,10 @@ module ActivitiesHelper
     next_url = send(:"#{options[:owner_type]}_calendar_path", @owner.id, :month => h(@next_month), :year => h(@next_year))
     cal = %(<table id="#{options[:table_id]}" class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
     cal << %(<thead><tr class="#{options[:month_name_class]}"><th colspan="7">)
-    cal << link_to("« Previous", prev_url, :id => "previous_month")
+    cal << link_to("&laquo; Previous".html_safe, prev_url, :id => "previous_month")
     cal << %(<span class="date" data-current-year="#{options[:year]}" data-current-month="#{options[:month]}">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</span>)
     unless @next_month.nil? && @next_year.nil?
-      cal << link_to("Next »", next_url, :id => "next_month")
+      cal << link_to("Next &raquo;".html_safe, next_url, :id => "next_month")
     end
     cal << %(</th></tr><tr class="#{options[:day_name_class]}">)
     day_names.each {|d| cal << "<th>#{d[options[:abbrev]]}</th>"}

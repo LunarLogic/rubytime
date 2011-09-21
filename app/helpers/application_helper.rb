@@ -137,7 +137,7 @@ module ApplicationHelper
     table_opts = { :class => 'activities list wide', :id => "#{options[:table_id]}"}
     table_opts.reject!{|k,v| v.blank?}
 
-    html = %(#{tag(:table, table_opts)})
+    html = %(#{tag(:table, table_opts, true)})
     html <<  %(<tr>)
     html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
     html << %(<th>#{image_tag("icons/project.png", :alt => 'project') if options[:show_header_icons]} Project</th>) if options[:show_project]
