@@ -139,7 +139,7 @@ module ApplicationHelper
 
     html = %(#{tag(:table, table_opts, true)})
     html <<  %(<tr>)
-    html << %(<th class="checkbox">#{check_box :class => "activity_select_all"}</th>) if options[:show_checkboxes]
+    html << %(<th class="checkbox">#{check_box_tag 'all', :class => "activity_select_all"}</th>) if options[:show_checkboxes]
     html << %(<th>#{image_tag("icons/project.png", :alt => 'project') if options[:show_header_icons]} Project</th>) if options[:show_project]
     html << %(<th>#{image_tag("icons/role.png", :alt => 'role') if options[:show_header_icons]} User</th>) if options[:show_users]
     html << %(<th>Date</th>) if options[:show_date]
@@ -175,7 +175,7 @@ module ApplicationHelper
   def activities_table_row(activity, options)
     row = %(<tr>)
     if options[:show_checkboxes]
-      row << %(<td class="checkbox">#{check_box(:name => "activity_id[]", :value => activity.id, :id => "activity_id_#{activity.id}") unless activity.invoiced?}</td>)
+      row << %(<td class="checkbox">#{check_box_tag("activity_id[]", activity.id, :id => "activity_id_#{activity.id}") unless activity.invoiced?}</td>)
     end
     row << %(<td>#{h(activity.project.name)}</td>) if options[:show_project]
     row << %(<td>#{h(activity.user.name)}</td>) if options[:show_users]

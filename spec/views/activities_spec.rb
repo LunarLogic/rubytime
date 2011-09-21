@@ -1,18 +1,35 @@
 require 'spec_helper'
 
-
 describe "activities/index.html.erb" do
   before(:each) do
-    login(:employee)
-    @search_criteria = SearchCriteria.new({:date_from => DateTime.now}, @current_user)
     @activities = [Activity.generate]
     @custom_properties = [ActivityCustomProperty.generate]
     @column_properties = []
     @non_column_properties = []
   end
 
-  it "should render successfully" do
-    render
+  context "as employee" do
+    before(:each) do
+      login(:employee)
+      @search_criteria = SearchCriteria.new({:date_from => DateTime.now}, @current_user)      
+    end
+
+    it "should render successfully" do
+      render
+    end
+  end
+
+  context "as admin" do
+    before(:each) do
+      login(:admin)
+      @search_criteria = SearchCriteria.new({:date_from => DateTime.now}, @current_user)
+      @uninvoiced_activities = [Activity.generate]
+      @invoice = Invoice.prepare
+   end
+
+    it "should render successfully" do
+      render
+    end
   end
 end
 
