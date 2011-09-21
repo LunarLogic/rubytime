@@ -1,17 +1,13 @@
 Rubytime::Application.routes.draw do
 
   devise_for :users
-  
+
   match("/users/:user_id/calendar", :controller => "activities", :action => "calendar")
   match("/projects/:project_id/calendar", :controller => "activities", :action => "calendar")
 
-  match("/free_days/:access_key(.:format)", :method => 'get', :controller => "free_days", :action => "index", :as => :free_days_index)
-
   match("/invoices/issued", :controller => "invoices", :action => "index", :filter => "issued", :as => :issued_invoices)
   match("/invoices/pending", :controller => "invoices", :action => "index", :filter => "pending", :as => :pending_invoices)
-
-  match('/signin', :controller => 'exceptions', :action => 'unauthenticated', :as => :signin)
-
+  
   resources :users do
     member do
       get "settings"
@@ -39,9 +35,12 @@ Rubytime::Application.routes.draw do
     resources :activities
   end
   resources :roles
+  
   resources :free_days do
     collection { delete "delete" }
   end
+  match("/free_days/:access_key(.:format)", :method => 'get', :controller => "free_days", :action => "index", :as => :free_days_index)
+
   resources :hourly_rates
   resources :invoices do
     member { put "issue" }
