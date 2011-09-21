@@ -155,7 +155,7 @@ p.selection {
 #secondary .text, #secondary .password {
   width: 160px;
 }
-div.error {
+div.errorExplanation {
   margin-bottom: 20px;
 }
 #activities_filter select {

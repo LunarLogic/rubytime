@@ -207,21 +207,21 @@ div#flash.notice {
   background:#eeffee url(/images/icons/tick_circle.png) 10px center no-repeat;
   display:block;
 }
-div#flash.error, div.error {
+div#flash.error, div.error, div.errorExplanation {
   color:#cc0000;
   border: 1px solid #cc0000;
   background:#ffeeee url(/images/icons/minus_circle.png) 10px center no-repeat;
   display:block;
 }
-div.error {
+div.error, div.errorExplanation {
   padding:10px 10px 10px 40px;
 }
-div.error h2 {
+div.error h2, div.errorExplanation h2 {
   font-size:13px;
   font-weight:900;
   color:#880000;
 }
-div.error li {
+div.error li, div.errorExplanation li {
   margin-bottom: 5px;
 }
 #activities_calendar #primary {

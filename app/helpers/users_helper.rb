@@ -12,7 +12,9 @@ module UsersHelper
   end
 
   def radio_options(user, property, symbols)
-    radio_group(property, symbols.map { |s|
-                  { :value => s.to_s, :label => yield(s.to_s), :checked => user.attribute_get(property) == s }})
+    symbols.map do |symbol|
+      radio_button_tag(property, symbol, user.attribute_get(property) == symbol) +
+        label_tag("#{property}_#{symbol}", yield(symbol.to_s))
+    end.join.html_safe
   end
 end
