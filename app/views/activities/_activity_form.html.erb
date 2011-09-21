@@ -6,7 +6,7 @@
     <% if current_user.is_admin? %>
       <p>
         <%= f.label :user_id, "User" %>
-        <%= f.select :user_id, options_from_collection_for_select(@users, :id, :name) %>
+        <%= f.select :user_id, options_from_collection_for_select(@users, :id, :name, @activity.user_id) %>
       </p>
     <% end %>
     <p>
