@@ -58,10 +58,11 @@ class UsersController < ApplicationController
   def update
     class_name = params[:user].delete(:class_name)
     klass = Object.const_get(class_name) if ['Employee', 'ClientUser'].include?(class_name)
+    @user.attributes = params[:user]
     if klass && klass != @user.type
       @user = @user.becomes(klass)
     end
-    if @user.update(params[:user])
+    if @user.save || !@user.dirty?
       if current_user.is_admin?
         redirect_to user_path(@user), :notice => "User has been updated"
       else
