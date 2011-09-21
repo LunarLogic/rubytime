@@ -2,8 +2,8 @@
   <% clients_to_invoice = @uninvoiced_activities.map { |a| a.project.client }.uniq %>
   <% if clients_to_invoice.size == 1 %>
     <% client = clients_to_invoice.first %>
-    <%= form_for @invoice, :id => "create_invoice_form" do |f| %>
-      <%= hidden_field :client_id, :value => client.id %>
+    <%= form_for @invoice, :html => {:id => "create_invoice_form"} do |f| %>
+      <%= f.hidden_field :client_id, :value => client.id %>
       <fieldset class="new">
         <legend>
           <%= image_tag("icons/notebook_plus.png", :alt => "I") %> Create invoice for <%= client.name %> from selected activities
