@@ -8,7 +8,7 @@
 <% else %>
   <% if @users %>
     <p>
-      Calendar for user <%= select :name => "user_id", :id => "user_id", :collection => @users.map { |u| [u.id, u.name] }, :selected => @owner.id.to_s %>
+      Calendar for user <%= select_tag :user_id, options_from_collection_for_select(@users, :id, :name, @owner.id), :id => "user_id" %>
     </p>
   <% end %>
   <div id="users_<%= @owner.id %>_calendar">

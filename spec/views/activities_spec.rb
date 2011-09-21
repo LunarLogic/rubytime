@@ -84,10 +84,24 @@ describe "activities/calendar.html.erb" do
     @year = 2011
     @month = 9    
     @activities_by_date = @owner.activities.group_by(&:date)
-    login(@owner)
   end
 
-  it "should render successfully" do
-    render
+  context "as employee" do
+    login(:employee)
+
+    it "should render successfully" do
+      render
+    end
+  end
+
+  context "as admin" do
+    before(:each) do      
+      login(:admin)
+      @users = [User.generate]
+    end
+
+    it "should render successfully" do
+      render
+    end
   end
 end
