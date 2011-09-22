@@ -13,7 +13,7 @@ module UsersHelper
 
   def radio_options(user, property, symbols)
     symbols.map do |symbol|
-      radio_button_tag(property, symbol, user.attribute_get(property) == symbol) +
+      radio_button_tag("user[#{property}]", symbol, user.attribute_get(property) == symbol) +
         label_tag("#{property}_#{symbol}", yield(symbol.to_s))
     end.join.html_safe
   end
