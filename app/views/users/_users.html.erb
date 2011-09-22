@@ -9,13 +9,13 @@
   </tr>
   <% users.each do |user| %>
     <tr>
-      <td><%= link_to(user.name, url(:user, user)) %></td>
-      <td><%= type == 'employees' ? link_to(user.role.name, resource(user.role)) : link_to(user.client.name, resource(user.client)) %></td>
+      <td><%= link_to(user.name, user_path(user)) %></td>
+      <td><%= type == 'employees' ? link_to(user.role.name, role_path(user.role)) : link_to(user.client.name, client_path(user.client)) %></td>
       <td><%= user.active? ? 'Yes' : 'No' %></td>
       <td class="icons">
         <%= link_to_calendar user %>
-        <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), url(:edit_user,  user) %>
-        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), url(:user, user), :class => "delete_row" unless user == current_user %>
+        <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), edit_user_path(user) %>
+        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), user_path(user), :class => "delete_row" unless user == current_user %>
         </td>
     </tr>
   <% end %>

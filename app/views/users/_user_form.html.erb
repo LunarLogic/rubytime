@@ -1,48 +1,55 @@
 <h1><%= @user.new? ? "Add new user" : "User editing" %></h1>
 <%= error_messages_for @user %>
-<%= form_for(@user, :action => @user.new? ? url(:users) : url(:user, @user), :id => "user_form") do %>
+<%= form_for(@user, :as => :user, :url => users_path(@user), :html => {:id => "user_form"}) do |f| %>
   <fieldset>
-    <%= fields_for :user do %>
+    <p>
+      <%= f.label :name, "Type" %>
+      <%= f.select :class_name, options_from_collection_for_select([["Employee", "Employee"], ["ClientUser", "Client's user"]], :first, :last, @user.class_name) %>
+    </p>
+    <p style="display: <%= @user.class_name == 'Employee' ? 'block' : 'none' %>">
+      <%= f.label :name, "Role" %>
+      <%= f.select :role_id, select_options(@roles, :id, :name), :include_blank => "Select role..." %>
+    </p>
+    <p style="display: <%= @user.class_name == 'ClientUser' ? 'block' : 'none' %>">
+      <%= f.label :name, "Client" %>
+      <%= f.select :client_id, select_options(@clients.map, :id, :name), :include_blank => "Select a client..." %>
+    </p>
+    <p>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => :text %>
+    </p>
+    <p>
+      <%= f.label :name, "Login" %>
+      <%= f.text_field :login, :class => :text %>
+    </p>
+    <p>
+      <%= f.label :name, "LDAP Login" %>
+      <%= f.text_field :ldap_login, :autocomplete => "off", :class => :text %>
+    </p>
+    <p>
+      <%= f.label :name, "Email" %>
+      <%= f.text_field :email, :autocomplete => "off", :class => :text %>
+    </p>
+    <% if !@user.new? && @user != current_user%>
       <p>
-        <%= select :class_name, :label => "Type", :collection => [["Employee", "Employee"], ["ClientUser", "Client's user"]] %>
-      </p>
-      <p style="display: <%= @user.class_name == 'Employee' ? 'block' : 'none' %>">
-        <%= select :role_id, :label => "Role", :collection => @roles.map { |r| [r.id, r.name] }, :prompt => "Select role..." %>
-      </p>
-      <p style="display: <%= @user.class_name == 'ClientUser' ? 'block' : 'none' %>">
-        <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
-      </p>
-      <p>
-        <%= text_field :name, :label => "Name" %>
-      </p>
-      <p>
-        <%= text_field :login, :label => "Login" %>
-      </p>
-      <p>
-        <%= text_field :ldap_login, :label => "LDAP Login" %>
-      </p>
-      <p>
-        <%= text_field :email, :label => "Email" %>
-      </p>
-      <% if !@user.new? && @user != current_user%>
-        <p>
-          <label for="user_admin">Admin?</label>
-          <%= check_box :admin %>
-        </p>
-        <p>
-          <label for="user_active">Active?</label>
-          <%= check_box :active %>
-        </p>
-      <% end %>
-      <p>
-        <%= password_field :password, :label => "Password" %>
+        <%= f.label :name, "Admin?" %>
+        <%= f.check_box :admin %>
       </p>
       <p>
-        <%= password_field :password_confirmation, :label => "Password confirmation" %>
+        <%= f.label :name, "Active?" %>
+        <%= f.check_box :active %>
       </p>
-      <p class="buttons">
-        <%= submit @user.new? ? "Create" : "Update", :class => "button" %>
-      </p>
-    <% end =%>
+    <% end %>
+    <p>
+      <%= f.label :name, "Password" %>
+      <%= f.password_field :password, :autocomplete => "off", :class => :text %>
+    </p>
+    <p>
+      <%= f.label :name, "Password confirmation" %>
+      <%= f.password_field :password_confirmation, :autocomplete => "off", :class => :text %>
+    </p>
+    <p class="buttons">
+      <%= submit @user.new? ? "Create" : "Update", :class => "button" %>
+    </p>
   </fieldset>
 <% end =%>

@@ -1,7 +1,17 @@
 require 'spec_helper'
 
 describe "users/index.html.erb" do
-  pending
+  before(:each) do
+    @user = Employee.prepare
+    @users = [Employee.generate]
+    @roles = [Role.generate]
+    @clients = [Client.generate]
+    login(:admin)
+  end
+
+  it "should render successfully" do
+    render
+  end
 end
 
 describe "users/show.html.erb" do
