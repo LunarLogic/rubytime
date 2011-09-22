@@ -2,6 +2,22 @@ require 'spec_helper'
 
 describe HourlyRate do
 
+  describe "#as json" do
+    let(:hourly_rate) { HourlyRate.generate }
+
+    it "should include currency" do
+      json = hourly_rate.as_json
+      json[:currency].should == hourly_rate.currency
+    end
+
+    it "should include a formatted date" do
+      hourly_rate.date_format_for_json = "Format"
+      hourly_rate.takes_effect_at.should_receive(:formatted).with("Format").and_return("Something")
+      json = hourly_rate.as_json
+      json[:takes_effect_at].should == "Something"
+    end
+  end
+
   describe ":value accessor" do
     it "should work with numbers" do
       hr = HourlyRate.generate :value => 567.89

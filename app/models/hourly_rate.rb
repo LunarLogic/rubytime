@@ -61,7 +61,7 @@ class HourlyRate
     )
   end
 
-  def to_json
+  def as_json(options = nil)
     { :id => id,
       :project_id => project_id,
       :role_id => role_id,
@@ -70,7 +70,7 @@ class HourlyRate
       :value => value_formatted,
       :currency => currency,
       :error_messages => error_messages
-    }.to_json
+    }
   end
   
   def to_money

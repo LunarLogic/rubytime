@@ -230,7 +230,7 @@ module ApplicationHelper
   end
 
   def currency_options_for_hourly_rate
-    Currency.all.map { |c| [c.id, c.plural_name] }
+    select_options(Currency.all, :id, :plural_name)
   end
 
   def decimal_separator

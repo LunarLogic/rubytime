@@ -10,27 +10,27 @@
     
     <tr id="hourly_rate_form_template" class="hourly_rate form" style="display: none">
       <td class="takes_effect_at">
-        <%= form_for HourlyRate.new do %>
-          <%= text_field :takes_effect_at %>
+        <%= form_for HourlyRate.new do |f| %>
+          <%= f.text_field :takes_effect_at %>
         <% end =%>
       </td>
       <td class="value">
-        <%= form_for HourlyRate.new do %>
-          <%= text_field :value %>
+        <%= form_for HourlyRate.new do |f| %>
+          <%= f.text_field :value %>
         <% end =%>
       </td>
-      <td class="currency">
-        <%= form_for HourlyRate.new do %>
-          <%= select :currency_id, :collection => currency_options_for_hourly_rate, :prompt => "Select..." %>
+      <td class="currency">        
+        <%= form_for HourlyRate.new do |f| %>
+          <%= f.select :currency_id, currency_options_for_hourly_rate, :include_blank => "Select..." %>
         <% end =%>
       </td>
       <td class="buttons">
-        <%= form_for HourlyRate.new do %>
-          <%= button "OK", :class => 'submit' %>
-          <%= button "Cancel", :class => 'cancel' %>
+        <%= form_for HourlyRate.new do |f| %>
+          <%= submit "OK", :class => 'submit' %>
+          <%= submit "Cancel", :class => 'cancel' %>
           <input type="hidden" name="_method" value="put"/>
-          <%= hidden_field :project_id %>
-          <%= hidden_field :role_id %>
+          <%= f.hidden_field :project_id %>
+          <%= f.hidden_field :role_id %>
         <% end =%>
         <p class="error_messages" style="display: none"></p>
       </td>

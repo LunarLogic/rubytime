@@ -15,16 +15,16 @@
   </tr>
   <% @projects.each do |project| %>
     <tr>
-      <td><%= current_user.is_admin? ? link_to(project.name, resource(project)) : project.name %></td>
+      <td><%= current_user.is_admin? ? link_to(project.name, project_path(project)) : project.name %></td>
       <% if current_user.is_admin? %>
-        <td><%= link_to project.client.name, resource(project.client) %></td>
+        <td><%= link_to project.client.name, client_path(project.client) %></td>
       <% end %>
       <td><%= project.active ? 'Yes' : 'No' %></td>
       <td class="icons">
-        <%= link_to image_tag("icons/calendar.png", :title => "Show calendar for this project", :alt => "C"), resource(project, :calendar) %>
+        <%= link_to image_tag("icons/calendar.png", :title => "Show calendar for this project", :alt => "C"), project_calendar_path(project) %>
         <% if current_user.is_admin? %>
-          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(project, :edit) %>
-          <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), resource(project), :class => "delete_row" %>
+          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), edit_project_path(project) %>
+          <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), project_path(project), :class => "delete_row" %>
         <% end %>
       </td>
     </tr>

@@ -7,13 +7,13 @@
   Active: <%= @project.active %>
 </p>
 <p>
-  Client: <%= link_to @project.client.name, url(:client, @project.client) %>
+  Client: <%= link_to @project.client.name, client_path(@project.client) %>
 </p>
 <p>
   Created at: <%= @project.created_at.to_date.formatted(current_user.date_format) %>
 </p>
 <p>
-  <%= link_to "Edit", url(:edit_project, @project) %>
+  <%= link_to "Edit", edit_project_path(@project) %>
 </p>
 
 <% unless @activities_without_types.blank? %>
@@ -28,7 +28,7 @@
       to <%= @one ? 'it' : 'them' %>.
     </p>
 
-    <%= form_for @project, :action => resource(@project, :set_default_activity_type) do %>
+    <%= form_for @project do |f| %>
       <fieldset>
         <p>
           Default activity type:
@@ -46,12 +46,12 @@
 <div class="sections">
   <a class="head" href="#">Hourly rates</a>
   <div id="project_hourly_rates"<%= @expand_hourly_rates ? ' class="expanded_by_default"' : '' %>>
-    <%= partial 'projects/hourly_rates', :project => @project %>
+    <%= render 'projects/hourly_rates', :locals => {:project => @project} %>
   </div>
 </div>
 
 <script type="text/javascript">
   $(function() { 
-    new HourlyRates('#project_hourly_rates', '<%= url(:hourly_rates, :project_id => @project.id) %>', <%= @expand_hourly_rates ? 'true' : 'false' %>) 
+    new HourlyRates('#project_hourly_rates', '<%= hourly_rates_path(:project_id => @project.id) %>', <%= @expand_hourly_rates ? 'true' : 'false' %>) 
   });
 </script>

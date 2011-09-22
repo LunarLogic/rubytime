@@ -1,20 +1,23 @@
 <h1>Project editing</h1>
 
 <%= error_messages_for(@project) %>
-<%= form_for @project, :action => resource(@project), :id => "project_form" do %>
+<%= form_for @project, :html => {:id => "project_form"} do |f| %>
   <fieldset>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :label => "Name" %>
     </p>
     <p>
-      <%= text_area :description, :label => "Description" %>
+      <%= f.label :description, "Description" %>
+      <%= f.text_area :description, :rows => 5, :cols => 20 %>
     </p>
     <p>
-      <%= select :client_id, :label => "Client", :collection => @clients.map { |c| [c.id, c.name] }, :prompt => "Select a client..." %>
+      <%= f.label :client_id, "Client" %>
+      <%= f.select :client_id, select_options(@clients, :id, :name, @project.client_id), :include_blank => "Select a client..." %>
     </p>
     <p>
-      <label for="project_active">Active?</label>
-      <%= check_box :active %>
+      <%= f.label :active, "Active?" %>
+      <%= f.check_box :active %>
     </p>
     
     <div class="activity_types">
@@ -40,7 +43,7 @@
     </div>
     
     <p class="buttons">
-      <%= submit 'Save', :class => "button" %> or <%= link_to 'Cancel', resource(:projects) %>
+      <%= submit 'Save', :class => "button" %> or <%= link_to 'Cancel', projects_path %>
     </p>
   </fieldset>
 <% end =%>
