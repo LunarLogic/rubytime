@@ -49,5 +49,9 @@ module Rubytime
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    config.action_view.field_error_proc = Proc.new do |html_tag, instance| 
+      %Q(<span class="error">#{html_tag}</span>).html_safe
+    end
   end
 end

@@ -93,7 +93,7 @@ fieldset p.buttons .button {
   font-weight:900;
   text-transform:uppercase;
 }
-form input.error, form textarea.error  {
+form .error input, form .error textarea  {
   border: 1px solid #ff0000;
   color:#ff0000;
   background:#ffefef;
