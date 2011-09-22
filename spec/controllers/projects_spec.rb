@@ -119,7 +119,7 @@ describe ProjectsController do
           :description => "Jolanta",
           :client_id => Client.generate.id
         })
-        response.should redirect_to(projects_path(assigns[:project], :expand_hourly_rates => "yes"))
+        response.should redirect_to(project_path(assigns[:project], :expand_hourly_rates => "yes"))
       end
     end
 
@@ -154,7 +154,7 @@ describe ProjectsController do
         :name => "Misio",
         :description => "Misiaczek",
         :client_id => client.id
-      }).should redirect_to(projects_path(project))
+      }).should redirect_to(project_path(project))
 
       project.reload
       project.name.should == "Misio"
@@ -208,6 +208,10 @@ describe ProjectsController do
         @activities_with_types = (0..1).map { Activity.generate(:project => project, :activity_type => type2) }
 
         put(:set_default_activity_type, :id => project.id, :activity_type_id => type.id)
+      end
+
+      it "should redirect to the project" do
+        response.should redirect_to(project_path(project))
       end
 
       context "if activities have a type assigned" do

@@ -7,8 +7,8 @@ Rubytime::Application.routes.draw do
 
   match("/invoices/issued", :controller => "invoices", :action => "index", :filter => "issued", :as => :issued_invoices)
   match("/invoices/pending", :controller => "invoices", :action => "index", :filter => "pending", :as => :pending_invoices)
-  
-  resources :users do
+
+  def users_resources
     member do
       get "settings"
     end
@@ -21,6 +21,16 @@ Rubytime::Application.routes.draw do
     end
     resource :calendar
     resources :activities
+  end
+
+  resources :users do
+    users_resources
+  end
+  resources :employees, :controller => "users" do
+    users_resources
+  end
+  resources :client_users, :controller => "users" do
+    users_resources
   end
   
   resources :currencies

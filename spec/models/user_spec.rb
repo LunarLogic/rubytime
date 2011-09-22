@@ -60,6 +60,12 @@ describe User do
     User.authenticate("ldap_login", "ldap_password").should_not be_nil
   end
 
+  it "should be possible to create 2 users with empty ldap login" do
+    # Datamapper 1.1 trets "" as a legal value and thinks that validates uniqueness
+    Employee.generate(:ldap_login => "")
+    Employee.generate(:ldap_login => "")
+  end
+
   it "should send welcome email to new user" do
     block_should(change(ActionMailer::Base.deliveries, :size).by(1)) do
       Employee.generate

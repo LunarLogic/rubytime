@@ -1,6 +1,6 @@
 <h1><%= @user.new? ? "Add new user" : "User editing" %></h1>
 <%= error_messages_for @user %>
-<%= form_for(@user, :as => :user, :url => users_path(@user), :html => {:id => "user_form"}) do |f| %>
+<%= form_for(@user, :as => :user, :html => {:id => "user_form"}) do |f| %>
   <fieldset>
     <p>
       <%= f.label :name, "Type" %>
@@ -8,11 +8,11 @@
     </p>
     <p style="display: <%= @user.class_name == 'Employee' ? 'block' : 'none' %>">
       <%= f.label :name, "Role" %>
-      <%= f.select :role_id, select_options(@roles, :id, :name), :include_blank => "Select role..." %>
+      <%= f.select :role_id, select_options(@roles, :id, :name, @user.role_id), :include_blank => "Select role..." %>
     </p>
     <p style="display: <%= @user.class_name == 'ClientUser' ? 'block' : 'none' %>">
       <%= f.label :name, "Client" %>
-      <%= f.select :client_id, select_options(@clients.map, :id, :name), :include_blank => "Select a client..." %>
+      <%= f.select :client_id, select_options(@clients.map, :id, :name, @user.client_id), :include_blank => "Select a client..." %>
     </p>
     <p>
       <%= f.label :name, "Name" %>

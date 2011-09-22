@@ -29,7 +29,7 @@ class InvoicesController < ApplicationController
       if request.xhr?
         @invoice.to_json
       else
-        redirect_to invoices_path(@invoice, filter_hash), :message => { :notice => "Invoice has been updated" }
+        redirect_to invoice_path(@invoice, filter_hash), :notice => "Invoice has been updated"
       end
     else
       load_clients

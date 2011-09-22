@@ -64,7 +64,7 @@ class UsersController < ApplicationController
     end
     if @user.save || !@user.dirty?
       if current_user.is_admin?
-        redirect_to user_path(@user), :notice => "User has been updated"
+        redirect_to user_path(:id => @user.id), :notice => "User has been updated"
       else
         redirect_to activities_path, :notice => "Your account information has been updated"
       end

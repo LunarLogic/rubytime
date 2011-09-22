@@ -4,12 +4,12 @@
 </p>
 <% if @user.is_a?(Employee) %>
   <p>
-    Role: <%= link_to @user.role.name, resource(@user.role) %>
+    Role: <%= link_to @user.role.name, role_path(@user.role) %>
   </p>
 <% end %>
 <% if @user.is_a?(ClientUser) %>
   <p>
-    Client: <%= link_to @user.client.name, resource(@user.client) %>
+    Client: <%= link_to @user.client.name, client_path(@user.client) %>
   </p>
 <% end %>
 <p>
@@ -32,10 +32,10 @@
 </p>
 <% if @user.is_employee? %>
   <p>
-    <%= link_to "Show calendar", url(:user_calendar, @user) %>
+    <%= link_to "Show calendar", user_calendar_path(@user) %>
   </p>
 <% end %>
 <p>
-  <%= link_to 'Edit',  url(:edit_user,  @user) %> |
-  <%= link_to 'Back', url(:users) %>
+  <%= link_to 'Edit',  edit_user_path(@user) %> |
+  <%= link_to 'Back', users_path %>
 </p>

@@ -15,11 +15,27 @@ describe "users/index.html.erb" do
 end
 
 describe "users/show.html.erb" do
-  pending
+  before(:each) do
+    @user = Employee.generate
+    login(:admin)
+  end
+
+  it "should render successfully" do
+    render
+  end
 end
 
 describe "users/edit.html.erb" do
-  pending
+  before(:each) do
+    @user = Employee.generate
+    @roles = [Role.generate]
+    @clients = [Client.generate]
+    login(:admin)
+  end
+
+  it "should render successfully" do
+    render
+  end
 end
 
 describe "users/request_password.html.erb" do
@@ -36,9 +52,5 @@ describe "users/settings.html.erb" do
     it "should render successfully" do
       render
     end
-  end
-
-  context "as admin" do
-    pending
   end
 end

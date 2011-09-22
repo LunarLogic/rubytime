@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(params[:project])
     if @project.save
-      redirect_to projects_path(@project, :expand_hourly_rates => 'yes')
+      redirect_to project_path(@project, :expand_hourly_rates => 'yes')
     else
       render :index
     end
@@ -50,7 +50,7 @@ class ProjectsController < ApplicationController
   
   def update
     if @project.update(params[:project]) || !@project.dirty?
-      redirect_to projects_path(@project)
+      redirect_to project_path(@project)
     else
       @clients = Client.all
       render :edit
@@ -75,7 +75,7 @@ class ProjectsController < ApplicationController
       a.save
     end
 
-    redirect_to projects_path(@project)
+    redirect_to project_path(@project)
   end
   
   # Returns all projects matching current selected clients

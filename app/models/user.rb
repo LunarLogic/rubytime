@@ -35,6 +35,10 @@ class User
 
   devise :database_authenticatable
 
+  before :valid? do
+    self.ldap_login = nil if ldap_login == ""
+  end
+
   # Don't allow inactive users to authenticate
   def self.find_for_authentication(conditions = {})
     conditions[:active] = true
