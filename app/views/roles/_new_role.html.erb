@@ -1,13 +1,14 @@
 <h1>Create new role</h1>
 <%= error_messages_for(@role) %>
-<%= form_for @role, :action => resource(@role.id ? @role : :roles), :id => "role_form" do %>
+<%= form_for @role, :html => {:id => "role_form"} do |f| %>
   <fieldset>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
     </p>
     <p>
-      <label for="role_can_manage_financial_data">Can manage financial data</label>
-      <%= check_box :can_manage_financial_data %>
+      <%= f.label :can_manage_financial_data, "Can manage financial data" %>
+      <%= f.check_box :can_manage_financial_data %>
     </p>
     <p class="buttons">
       <%= submit 'Create', :class => "button" %>

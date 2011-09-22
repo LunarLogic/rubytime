@@ -84,7 +84,7 @@ describe InvoicesController do
         put(:update, {
           :id => invoice.id,
           :invoice => { :activity_id => [activity.id] }
-        }).should redirect_to(invoices_path(invoice))
+        }).should redirect_to(invoice_path(invoice))
       end
     end
   end
