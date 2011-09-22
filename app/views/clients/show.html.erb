@@ -12,7 +12,7 @@
   Active: <%= @client.active ? "Yes" : "No" %>
 </p>
 <p>
-  <%= link_to "Edit", url(:edit_client, @client) %>
+  <%= link_to "Edit", edit_client_path(@client) %>
 </p>
 
 <br/><br/>
@@ -21,14 +21,14 @@
   <% @client.projects.each do |project| %>
     <tr>
       <td><%= project.name %></td>
-      <td><%= link_to "Show", url(:project, project) %></td>
-      <td><%= link_to "Edit", url(:edit_project, project) %></td>
+      <td><%= link_to "Show", project_path(project) %></td>
+      <td><%= link_to "Edit", edit_project_path(project) %></td>
     </tr>
   <% end %>
 </table>
 
 <% if current_user.is_admin? %>
-  <p><%= link_to 'Create new project', resource(:projects, :client_id => @client.id) %></p>
+  <p><%= link_to 'Create new project', projects_path(:client_id => @client.id) %></p>
 <% end %>
 
 <br/><br/>
@@ -38,12 +38,12 @@
     <tr>
       <td><%= user.name %></td>
       <td><%= user.login %></td>
-      <td><%= link_to "Show", url(:user, user) %></td>
-      <td><%= link_to "Edit", url(:edit_user, user) %></td>
+      <td><%= link_to "Show", user_path(user) %></td>
+      <td><%= link_to "Edit", edit_user_path(user) %></td>
     </tr>
   <% end %>
 </table>
 
 <% if current_user.is_admin? %>
-  <p><%= link_to 'Create new user', resource(:users, :client_id => @client.id) %></p>
+  <p><%= link_to 'Create new user', users_path(:client_id => @client.id) %></p>
 <% end %>

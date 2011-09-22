@@ -1,20 +1,23 @@
 <%= error_messages_for @client %>
 <%= error_messages_for @client_user %>
-<%= form_for @client, :action => resource(@client), :id => "client_form" do %>
+<%= form_for @client, :id => "client_form" do |f| %>
   <fieldset>
     <legend>Client editing</legend>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
     </p>
     <p>
-      <%= text_area :description, :label => "Description" %>
+      <%= f.label :description, "Description" %>
+      <%= f.text_area :description, :rows => 5, :cols => 20, :class => "text" %>
     </p>
     <p>
-      <%= text_field :email, :label => "Email" %>
+      <%= f.label :email, "Email" %>
+      <%= f.text_field :email, :class => "text" %>
     </p>
     <p>
-      <label for="client_active">Active?</label>
-      <%= check_box :active %>
+      <%= f.label :active, "Active?" %>
+      <%= f.check_box :active, :class => "text" %>
     </p>
     <p class="buttons">
       <%= submit "Save", :class => "button" %>

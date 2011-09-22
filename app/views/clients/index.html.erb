@@ -7,5 +7,7 @@
     <th>Active</th>
     <th class="icons"></th>
   </tr>
-  <%= partial :client, :with => @clients %>
+  <% for client in @clients %>
+    <%= render :partial => "client", :locals => {:client => client} %>
+  <% end %>
 </table>

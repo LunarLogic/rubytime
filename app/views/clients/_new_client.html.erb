@@ -1,38 +1,46 @@
 <%= error_messages_for @client %>
 <%= error_messages_for @client_user %>
-<%= form_for @client, :action => resource(:clients), :id => "client_form" do %>
+<%= form_for @client, :html => {:id => "client_form"} do |f| %>
   <fieldset>
     <legend>Add new client</legend>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
     </p>
     <p>
-      <%= text_area :description, :label => "Description", :class => "text", :rows => 5, :cols => 20 %>
+      <%= f.label :description, "Description" %>
+      <%= f.text_area :description, :class => "text", :rows => 5, :cols => 20 %>
     </p>
     <p>
-      <%= text_field :email, :label => "Email" %>
+      <%= f.label :email, "Email" %>
+      <%= f.text_field :email, :class => "text" %>
     </p>
     <p>
       Default user for client:
     </p>
-    <%= fields_for @client_user do %>
+    <%= fields_for @client_user do |user_form| %>
       <p>
-        <%= text_field :name, :label => "Name" %>
+        <%= user_form.label :name, "Name" %>
+        <%= user_form.text_field :name, :class => "text" %>
       </p>
       <p>
-        <%= text_field :login, :label => "Login" %>
+        <%= user_form.label :login, "Login" %>
+        <%= user_form.text_field :login, :class => "text" %>
       </p>
       <p>
-        <%= text_field :email, :label => "Email" %>
+        <%= user_form.label :email, "Email" %>
+        <%= user_form.text_field :email, :class => "text" %>
       </p>
       <p>
-        <%= password_field :password, :label => "Password" %>
+        <%= user_form.label :password, "Password" %>
+        <%= user_form.password_field :password, :class => "text" %>
         <span id="generated_password">
           Generated password: <%= @client_user.password %>
         </span>
       </p>
       <p>
-        <%= password_field :password_confirmation, :label => "Confirm password" %>
+        <%= user_form.label :password_confirmation, "Confirm password" %>
+        <%= user_form.password_field :password_confirmation, :class => "text" %>
       </p>
     <% end =%>
     <p class="buttons">

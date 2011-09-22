@@ -5,6 +5,8 @@ module MerbHelper
   def partial(partial, locals = {})
     if locals[:with] && locals[:as]
       locals[locals.delete(:as)] = locals.delete(:with)
+    elsif locals[:with]
+      locals[partial.to_sym] = locals.delete(:with)
     end
     render :partial => partial.to_s, :locals => locals
   end
@@ -20,7 +22,7 @@ module MerbHelper
   def label(name, text, content_or_options = nil, options = nil)
     if text.is_a?(Hash)
       # This is a Merb-style call
-      super(text[:for], name)
+      super(text[:for], name)      
     else
       super(name, text, content_or_options, options)
     end
