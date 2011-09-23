@@ -95,12 +95,15 @@ describe "activities/calendar.html.erb" do
   end
 
   context "as admin" do
-    before(:each) do      
-      login(:admin)
+    login(:admin)
+
+    it "should successfully render a calendar for users" do
       @users = [User.generate]
+      render
     end
 
-    it "should render successfully" do
+    it "should successfully render a calendar for projects" do
+      @projects = [Project.generate]
       render
     end
   end

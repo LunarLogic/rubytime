@@ -1,6 +1,6 @@
 <% if @projects %>
   <p>
-    Calendar for project <%= select :name => "project_id", :id => "project_id", :collection => @projects.map { |p| [p.id, p.name] }, :selected => @owner.id.to_s %>
+    Calendar for project <%= select_tag :project_id, select_options(@projects, :id, :name, @owner.id), :id => "project_id" %>
   </p>
   <div id="projects_<%= @owner.id %>_calendar">
     <%= activities_calendar :activities => @activities_by_date, :year => @year, :month => @month, :owner => @owner %>
@@ -8,7 +8,7 @@
 <% else %>
   <% if @users %>
     <p>
-      Calendar for user <%= select_tag :user_id, options_from_collection_for_select(@users, :id, :name, @owner.id), :id => "user_id" %>
+      Calendar for user <%= select_tag :user_id, select_options(@users, :id, :name, @owner.id), :id => "user_id" %>
     </p>
   <% end %>
   <div id="users_<%= @owner.id %>_calendar">
