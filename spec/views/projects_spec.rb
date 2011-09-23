@@ -16,6 +16,9 @@ end
 describe "projects/show.html.erb" do
   before(:each) do
     @project = Project.generate
+    @project.activity_types << ActivityType.generate
+    @project.save
+    @activities_without_types = [Activity.generate]
     login(:admin)
   end
 

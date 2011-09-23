@@ -28,7 +28,7 @@
       to <%= @one ? 'it' : 'them' %>.
     </p>
 
-    <%= form_for @project do |f| %>
+    <%= form_for @project, :url => set_default_activity_type_project_path(@project) do |f| %>
       <fieldset>
         <p>
           Default activity type:

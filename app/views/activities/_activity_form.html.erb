@@ -22,13 +22,13 @@
     <% if @activity.available_main_activity_types.any? %>
       <p>
         <%= f.label :main_activity_type_id, "Type" %>
-        <%= f.select :main_activity_type_id, @activity.available_main_activity_types.map { |at| [at.id, at.name] }, :selected => @activity.main_activity_type_id.to_s, :disabled => @activity.available_main_activity_types.empty? %>
+        <%= f.select :main_activity_type_id, select_options(@activity.available_main_activity_types, :id, :name, @activity.main_activity_type_id), :disabled => @activity.available_main_activity_types.empty? %>
       </p>
     <% end %>
     <% if @activity.available_sub_activity_types.any? %>
       <p>
         <%= f.label :sub_activity_type_id, "Sub-type" %>
-        <%= f.select :sub_activity_type_id, @activity.available_sub_activity_types.map { |at| [at.name, at.id] }, :selected => @activity.sub_activity_type_id.to_s, :disabled => @activity.available_sub_activity_types.empty? %>
+        <%= f.select :sub_activity_type_id, select_options(@activity.available_sub_activity_types.map, :id, :name, @activity.sub_activity_type_id), :disabled => @activity.available_sub_activity_types.empty? %>
       </p>
     <% end %>
     <p>
