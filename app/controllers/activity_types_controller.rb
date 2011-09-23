@@ -2,6 +2,7 @@ class ActivityTypesController < ApplicationController
   
   before_filter :ensure_admin, :except => [:available, :for_projects]
   before_filter :ensure_can_see_available, :only => [:available]
+  before_filter :find_activity_type, :only => [:show, :edit, :update, :destroy]
 
   respond_to :json, :html
 
@@ -12,13 +13,11 @@ class ActivityTypesController < ApplicationController
   end
 
   def show
-    not_found and return unless @activity_type = ActivityType.get(params[:id])
     @new_activity_type = ActivityType.new(:parent => @activity_type)
     respond_with @activity_type
   end
 
   def edit
-    not_found and return unless @activity_type = ActivityType.get(params[:id])
     respond_to do |format|
       format.html { render :edit }
     end
@@ -44,8 +43,7 @@ class ActivityTypesController < ApplicationController
   end
 
   def update
-    not_found and return unless @activity_type = ActivityType.get(params[:id])
-    new_position = params[:activity_type].delete(:position)
+     new_position = params[:activity_type].delete(:position)
 
     if @activity_type.update(params[:activity_type])
       @activity_type.move(:to => new_position) unless new_position == @activity_type.position
@@ -63,7 +61,6 @@ class ActivityTypesController < ApplicationController
   end
 
   def destroy
-    not_found and return unless @activity_type = ActivityType.get(params[:id])
     if @activity_type.destroy
       redirect_to @activity_type.parent ? activity_type_path(@activity_type.parent) : activity_types_path
     else
@@ -96,6 +93,10 @@ class ActivityTypesController < ApplicationController
   
   def ensure_can_see_available    
     forbidden and return unless current_user.is_admin? || current_user.is_employee? || (current_user.is_client_user? and current_user.client.projects.get(params[:project_id]))
+  end
+
+  def find_activity_type
+    not_found and return unless @activity_type = ActivityType.get(params[:id])
   end
 
 end # ActivityTypes

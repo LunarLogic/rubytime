@@ -21,12 +21,12 @@ describe ActivityTypesController do
       [:employee, :client].each do |user|
         login(user)
 
-        get(:index).                               status.should == 403
-        post(:create).                             status.should == 403
-        get(:show, :id => 1).                      status.should == 403
-        get(:edit, :id => 1).                      status.should == 403
-        put(:update, :id => 1).                    status.should == 403
-        delete(:destroy, :id => 1).                status.should == 403
+        get(:index).                               should be_forbidden
+        post(:create).                             should be_forbidden
+        get(:show, :id => 1).                      should be_forbidden
+        get(:edit, :id => 1).                      should be_forbidden
+        put(:update, :id => 1).                    should be_forbidden
+        delete(:destroy, :id => 1).                should be_forbidden
       end
     end
   end
@@ -54,7 +54,7 @@ describe ActivityTypesController do
       end
       
       it "should not show activites for other clients projects" do
-        get(:available, :project_id => Project.generate.id, :format => :json).status.should == 403
+        get(:available, :project_id => Project.generate.id, :format => :json).should be_forbidden
       end
     end
     
@@ -150,7 +150,7 @@ describe ActivityTypesController do
     describe "GET 'show'" do
       let(:activity_type) { ActivityType.generate }
 
-      it { get(:show, :id => "no such id").status.should == 404 }
+      it { get(:show, :id => "no such id").should be_not_found }
 
       it { get(:show, :id => activity_type.id).should be_successful }
 
@@ -169,11 +169,11 @@ describe ActivityTypesController do
     describe "GET 'edit'" do
       let(:activity_type) { ActivityType.generate }
       
-      it { get(:edit, :id => "no such id").status.should == 404 }
+      it { get(:edit, :id => "no such id").should be_not_found }
 
       it { get(:edit, :id => activity_type.id).should be_successful }
 
-      it { get(:edit, :id => activity_type.id, :format => :json).status.should == 406 }
+      it { get(:edit, :id => activity_type.id, :format => :json).should be_not_acceptable }
 
       it "should show the activity edit form" do
         get(:edit, :id => activity_type.id).should render_template(:edit)
@@ -184,7 +184,7 @@ describe ActivityTypesController do
     describe "PUT 'update'" do
       let(:activity_type) { ActivityType.generate }
 
-      it { put(:update, :id => "no such id").status.should == 404 }
+      it { put(:update, :id => "no such id").should be_not_found }
 
       it { put(:update, :id => activity_type.id, :activity_type => {}).should redirect_to(activity_types_path) }
 
@@ -217,7 +217,7 @@ describe ActivityTypesController do
     describe "DELETE 'destroy'" do
       let(:activity_type) { ActivityType.generate }
       
-      it { delete(:destroy, :id => "no such id").status.should == 404 }
+      it { delete(:destroy, :id => "no such id").should be_not_found }
 
       it { delete(:destroy, :id => activity_type.id).should redirect_to(activity_types_path) }
 
