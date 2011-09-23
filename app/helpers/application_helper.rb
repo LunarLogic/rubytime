@@ -223,9 +223,9 @@ module ApplicationHelper
     return if number.nil?
 
     if options.has_key?(:precision)
-      number_with_precision(Rubytime::DECIMAL_FORMATS[decimal_separator].merge(options))
+      number_with_precision(number, Rubytime::DECIMAL_FORMATS[decimal_separator].merge(options))
     else
-      number_with_delimiter(Rubytime::DECIMAL_FORMATS[decimal_separator].merge(options))
+      number_with_delimiter(number, Rubytime::DECIMAL_FORMATS[decimal_separator].merge(options))
     end
   end
 

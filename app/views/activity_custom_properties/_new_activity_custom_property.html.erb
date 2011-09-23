@@ -1,12 +1,3 @@
 <h1>Create new custom property</h1>
 
-<%= error_messages_for(activity_custom_property) %>
-<%= form_for activity_custom_property, :action => resource(:activity_custom_properties), :id => "activity_custom_property_form" do %>
-  <fieldset>
-    <%= partial :fields %>
-    
-    <p class="buttons">
-      <%= submit 'Create', :class => "button" %>
-    </p>
-  </fieldset>
-<% end =%>
+<%= render :partial => "form", :locals => {:activity_custom_property => activity_custom_property} %>

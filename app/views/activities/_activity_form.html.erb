@@ -39,8 +39,8 @@
     </p>
     <% @activity_custom_properties.each do |activity_custom_property| %>
       <p class="custom-property">
-        <%= label activity_custom_property.name, :for => "activity[custom_properties][#{activity_custom_property.id}]" %>
-        <%= tag :input, nil, :name => "activity[custom_properties][#{activity_custom_property.id}]", :value => @activity.custom_properties[activity_custom_property.id], :class => (activity_custom_property.required ? 'required' : nil) %>
+        <%= f.label "activity[custom_properties][#{activity_custom_property.id}]", activity_custom_property.name %>
+        <%= text_field_tag "activity[custom_properties][#{activity_custom_property.id}]", @activity.custom_properties[activity_custom_property.id], :class => (activity_custom_property.required ? 'required' : nil) %>
         <span><%= activity_custom_property.unit %></span>
       </p>
     <% end %>
