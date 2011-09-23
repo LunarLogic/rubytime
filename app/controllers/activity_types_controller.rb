@@ -8,28 +8,29 @@ class ActivityTypesController < ApplicationController
   def index
     @activity_types = ActivityType.roots
     @new_activity_type = ActivityType.new
-    display @activity_types
+    respond_with @activity_types
   end
 
   def show
     not_found and return unless @activity_type = ActivityType.get(params[:id])
     @new_activity_type = ActivityType.new(:parent => @activity_type)
-    display @activity_type
+    respond_with @activity_type
   end
 
   def edit
-    only_provides :html
     not_found and return unless @activity_type = ActivityType.get(params[:id])
-    display @activity_type
+    respond_to do |format|
+      format.html { render :edit }
+    end
   end
 
   def create
     @new_activity_type = ActivityType.new(params[:activity_type])
     if @new_activity_type.save
       if @new_activity_type.parent
-        redirect resource(@new_activity_type.parent), :message => {:notice => "Sub-activity type was successfully created"}
+        redirect_to activity_type_path(@new_activity_type.parent), :notice => "Sub-activity type was successfully created"
       else
-        redirect resource(:activity_types), :message => {:notice => "Activity type was successfully created"}
+        redirect_to activity_types_path, :notice => "Activity type was successfully created"
       end
     else
       if @new_activity_type.parent
@@ -43,27 +44,28 @@ class ActivityTypesController < ApplicationController
   end
 
   def update
-    new_position = params[:activity_type].delete(:position)
     not_found and return unless @activity_type = ActivityType.get(params[:id])
+    new_position = params[:activity_type].delete(:position)
+
     if @activity_type.update(params[:activity_type])
       @activity_type.move(:to => new_position) unless new_position == @activity_type.position
       if request.xhr?
         render_success
       elsif @activity_type.parent
-        redirect resource(@activity_type.parent), :message => {:notice => "Sub-activity type was successfully updated"}
+        redirect_to activity_type_path(@activity_type.parent), :notice => "Sub-activity type was successfully updated"
       else
-        redirect resource(:activity_types), :message => {:notice => "Activity type was successfully updated"}
+        redirect_to activity_types_path, :notice => "Activity type was successfully updated"
       end
     else
       @old_name = @activity_type.original_attributes[ActivityType.properties[:name]]
-      display @activity_type, :edit
+      respond_with @activity_type
     end
   end
 
   def destroy
     not_found and return unless @activity_type = ActivityType.get(params[:id])
     if @activity_type.destroy
-      redirect resource(@activity_type.parent ? @activity_type.parent : :activity_types)
+      redirect_to @activity_type.parent ? activity_type_path(@activity_type.parent) : activity_types_path
     else
       raise InternalServerError
     end
