@@ -5,10 +5,11 @@
 <% end %>
 
 <%= error_messages_for(@activity_type) %>
-<%= form_for @activity_type, :action => resource(@activity_type), :id => "activity_type_form" do %>
+<%= form_for @activity_type, :html => {:id => "activity_type_form"} do |f| %>
   <fieldset>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
     </p>
     <p class="buttons">
       <%= submit 'Update', :class => "button" %>

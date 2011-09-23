@@ -13,13 +13,13 @@
   </tr>
   <% @activity_types.each do |activity_type| %>
     <tr id="activity-type-<%= activity_type.id %>" class="activity-type">
-      <td><%= link_to activity_type.name, resource(activity_type) %></td>
+      <td><%= link_to activity_type.name, activity_type_path(activity_type) %></td>
       <td><%= activity_type_children_summary(activity_type) %></td>
       <td class="icons">
         <% if current_user.is_admin? %>
-          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(activity_type, :edit) %>
+          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), edit_activity_type_path(activity_type) %>
           <% if activity_type.destroy_allowed? %>
-            <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), resource(activity_type), :class => "delete_row" %>
+            <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), activity_type_path(activity_type), :class => "delete_row" %>
           <% end %>
         <% end %>
       </td>

@@ -1,11 +1,12 @@
 <h1>Create new <%= activity_type.parent ? 'sub-activity' : 'activity' %> type</h1>
 
 <%= error_messages_for(activity_type) %>
-<%= form_for activity_type, :action => resource(:activity_types), :id => "activity_type_form" do %>
+<%= form_for activity_type, :html => {:id => "activity_type_form"} do |f| %>
   <fieldset>
-    <%= hidden_field :parent_id %>
+    <%= f.hidden_field :parent_id %>
     <p>
-      <%= text_field :name, :label => "Name" %>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
     </p>
     <p class="buttons">
       <%= submit 'Create', :class => "button" %>
