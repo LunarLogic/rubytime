@@ -1,17 +1,21 @@
 <%= error_messages_for(@currency) %>
-<%= form_for @currency, :action => resource(@currency.id ? @currency : :currencies), :id => "currency_form" do %>
+<%= form_for @currency, :html => {:id => "currency_form"} do |f| %>
   <fieldset>
     <p>
-      <%= text_field :singular_name, :label => "Singular name" %>
+      <%= f.label :singular_name, "Singular name" %>
+      <%= f.text_field :singular_name, :class => "text" %>
     </p>
     <p>
-      <%= text_field :plural_name, :label => "Plural name" %>
+      <%= f.label :plural_name, "Plural name" %>
+      <%= f.text_field :plural_name, :class => "text" %>
     </p>
     <p>
-      <%= text_field :prefix, :label => "Prefix" %>
+      <%= f.label :prefix, "Prefix" %>
+      <%= f.text_field :prefix, :class => "text" %>
     </p>
     <p>
-      <%= text_field :suffix, :label => "Suffix" %>
+      <%= f.label :suffix, "Suffix" %>
+      <%= f.text_field :suffix, :class => "text" %>
     </p>
     <p class="buttons">
       <%= submit(submit_name, :class => "button") %>

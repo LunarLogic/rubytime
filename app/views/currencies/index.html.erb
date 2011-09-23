@@ -21,8 +21,8 @@
       <td><%= currency.suffix %></td>
       <td><%= currency.render(12345.67) %></td>
       <td class="icons">
-        <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "Edit"), resource(currency, :edit) %>
-        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), resource(currency), :class => "delete_row" %>
+        <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "Edit"), edit_currency_path(currency) %>
+        <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), currency_path(currency), :class => "delete_row" %>
       </td>
     </tr>
   <% end %>
