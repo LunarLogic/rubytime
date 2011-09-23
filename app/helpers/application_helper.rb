@@ -97,7 +97,7 @@ module ApplicationHelper
       html << %( #{activity_custom_property.unit})
       html << %(</p>)
     end
-    html
+    html.html_safe
   end
   
   def activities_table(activities, options={})
