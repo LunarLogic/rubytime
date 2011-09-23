@@ -17,23 +17,19 @@ class User
   property :client_id,                     Integer, :index => true
   property :created_at,                    DateTime
   property :modified_at,                   DateTime  # not updated_at on purpose
-  property :password_reset_token,          String
-  property :password_reset_token_exp,      DateTime
   property :date_format,                   Enum[*Rubytime::DATE_FORMAT_NAMES],
                                              :required => true,
                                              :default => :european
   property :recent_days_on_list,           Enum[*Rubytime::RECENT_DAYS_ON_LIST],
                                              :required => true,
                                              :default => Rubytime::RECENT_DAYS_ON_LIST.first
-  property :remember_me_token_expiration,  DateTime
-  property :remember_me_token,             String
   property :remind_by_email,               Boolean, :required => true, :default => false
   property :activities_count,              Integer, :default => 0
   property :decimal_separator,             Enum[*Rubytime::DECIMAL_SEPARATORS],
                                              :required => true,
                                              :default => Rubytime::DECIMAL_SEPARATORS.first
 
-  devise :database_authenticatable
+  devise :database_authenticatable, :recoverable, :rememberable
 
   before :valid? do
     self.ldap_login = nil if ldap_login == ""
@@ -97,13 +93,6 @@ class User
   def self.authenticate_with_ldap(login, password)
     u = User.first(:ldap_login => login)
     u && u.authenticated_with_ldap?(password)? u : nil
-  end
-
-  def self.authenticate_with_token(token)
-    user = self.first(:remember_me_token => token)
-    if user
-      user.remember_me_token_expiration > DateTime.now ? user : nil
-    end
   end
 
   def recent_projects
@@ -172,33 +161,6 @@ class User
     if password.nil? && password_confirmation.nil?
       self.password = self.password_confirmation = Rubytime::Misc.generate_password 
     end
-  end
-
-  def remember_me!
-    self.remember_me_token_expiration = 2.weeks.from_now
-    self.remember_me_token = encrypt("#{email}--#{remember_me_token_expiration}")
-    save
-  end
-
-  def forget_me!
-    self.remember_me_token_expiration = self.remember_me_token = nil
-    save
-  end
-  
-  def reset_password!
-    generate_password!
-    save
-  end
-  
-  def generate_password_reset_token
-    now = Time.now
-    update(
-      :password_reset_token => Digest::SHA1.hexdigest("-#{login}-#{now}-"),
-      :password_reset_token_exp => now+Rubytime::PASSWORD_RESET_LINK_EXP_TIME)
-  end
-
-  def clear_password_reset_token!
-    update(:password_reset_token => nil, :password_reset_token_exp => nil)
   end
 
   def password_required?

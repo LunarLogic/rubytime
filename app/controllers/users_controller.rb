@@ -94,34 +94,6 @@ class UsersController < ApplicationController
       {:options => @search_criteria.all_users.map { |u| { :id => u.id, :name => u.name } } }
   end
   
-  def request_password
-    if params[:email]
-      user = User.first(:email => params[:email])
-      if user
-        user.generate_password_reset_token
-        redirect_to new_user_session_path,
-          :message => { :notice => "Email with password reset link has been sent to #{params[:email]}" }
-      else
-        redirect_to users_request_password_path,
-          :message => { :error => "Couldn't find user with email #{params[:email]}" }
-      end
-    else
-      render
-    end
-  end
-  
-  def reset_password
-    bad_request and return unless token = params[:token]
-    not_found and return unless user = User.first(:password_reset_token => token)
-    if user.password_reset_token_exp < DateTime.now
-      redirect_to request_password_users_path, :message => { :notice => "Password reset token has expired" }
-    else
-      sign_in(:user, user)
-      user.clear_password_reset_token!
-      redirect_to settings_user_path(user), :message => { :notice => "Please set your password" }
-    end
-  end
-  
   # this is for API, to let the client check if credentials are correct
   def authenticate
     render(:json => current_user, :methods => [:user_type])

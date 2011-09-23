@@ -4,12 +4,6 @@ class UserMailer < ActionMailer::Base
     @url = Rubytime::CONFIG[:site_url]
     render_mail(params)
   end
-  
-  def password_reset_link(params)
-    @user = params[:user]
-    @url = Rubytime::CONFIG[:site_url]
-    render_mail(params)
-  end
 
   def notice(params)
     @missed_days = params[:missed_days]

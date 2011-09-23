@@ -271,31 +271,4 @@ describe UsersController do
       it { get(:authenticate).should redirect_to(new_user_session_path) }
     end
   end
-
-  describe "GET 'reset_password'" do
-    before :each do
-      @user = Employee.generate
-      @user.generate_password_reset_token
-    end
-
-    it "should raise bad request if there is no token" do
-      get(:reset_password).status.should == 400
-    end
-
-    it "should raise error if token is incorrect" do
-      get(:reset_password, :token => 'i_can_has_password?').status.should == 404
-    end
-
-    it "should redirect to settings page" do
-      get(:reset_password, :token => @user.password_reset_token)
-      response.should redirect_to(settings_user_path(@user))
-    end
-
-    it 'should redirect to password_reset if a token has expired' do
-      @user.update :password_reset_token_exp => (DateTime.now - 1.hour)
-      get(:reset_password, :token => @user.password_reset_token)
-      response.should redirect_to(request_password_users_path)
-    end
-  end
-
 end

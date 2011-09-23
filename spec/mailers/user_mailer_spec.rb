@@ -16,14 +16,6 @@ describe UserMailer do
     last_delivered_mail.encoded.should include(Rubytime::CONFIG[:site_url])
   end
 
-  it "includes password_reset_token and site url in password reset mail" do
-    @user.password_reset_token = "1234asdjfggh3f2e44rtsdfhg"
-    UserMailer.password_reset_link(:user => @user).deliver
-    last_delivered_mail.encoded.should include("Hello, #{@user.name}")
-    last_delivered_mail.encoded.should include(@user.password_reset_token)
-    last_delivered_mail.encoded.should include(Rubytime::CONFIG[:site_url])
-  end
-
   it "includes login, missed days and site url" do
     UserMailer.notice(
       :user => @user,

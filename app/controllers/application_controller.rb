@@ -82,7 +82,11 @@ class ApplicationController < ActionController::Base
   end
 
   def set_number_of_columns
-    @number_of_columns = number_of_columns
+    if params[:controller] =~ /devise/
+      @number_of_columns = 1
+    else
+      @number_of_columns = number_of_columns
+    end
   end
 
   def send_api_version_error

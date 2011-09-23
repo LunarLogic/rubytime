@@ -25,10 +25,5 @@ class UserObserver
   before :destroy do
     versions.all.destroy!
   end
-
-  after :generate_password_reset_token do
-    UserMailer.password_reset_link(:user => self, :to => self.email,
-      :from => Rubytime::CONFIG[:mail_from], :subject => "Password reset request from Rubytime").deliver
-  end
   
 end
