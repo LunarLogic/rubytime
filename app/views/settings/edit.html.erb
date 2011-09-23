@@ -1,33 +1,30 @@
 <h1>Settings</h1>  
   
 <%= error_messages_for @setting %>
-<%= form_for(@setting, :action => resource(:settings), :id => "settings_form") do %>
+<%= form_for(@setting, :url => settings_path, :html => {:id => "settings_form"}) do |f| %>
   <fieldset>
-    <%= fields_for :setting do %>
-      <p>
-        <%= select :enable_notifications, :label => "Notifications:", :collection => [[true, "enabled"], [false, "disabled"]] %>
-      </p>
-      <p class="buttons">
-        <%= submit "Update", :class => "button" %>
-      </p>
-    <% end =%>
+    <p>
+      <%= f.label :enable_notifications, "Notifications" %>
+      <%= f.select :enable_notifications, select_options([[true, "enabled"], [false, "disabled"]], :first, :last, @setting.enable_notifications) %>
+    </p>
+    <p class="buttons">
+      <%= submit "Update", :class => "button" %>
+    </p>
   </fieldset>
 <% end =%>
 
 <h1>Security</h1>  
   
 <h3>Free days iCal feed:</h3>
-<p><%= site_url + url(:free_days_index, :access_key => @setting.free_days_access_key, :format => :ics) %></p>
+<p><%= site_url + free_days_path(:access_key => @setting.free_days_access_key, :format => :ics) %></p>
 
-<%= form_for(@setting, :action => resource(:settings), :id => "settings_form") do %>
+<%= form_for(@setting, :url => settings_path, :html => {:id => "settings_form"}) do |f| %>
   <fieldset>
-    <%= fields_for :setting do %>
-      <p>
-        <%= hidden_field :free_days_access_key, :value => '' %>
-      </p>
-      <p class="buttons">
-        <%= submit "Re-generate", :class => "button" %>
-      </p>
-    <% end =%>
+    <p>
+      <%= f.hidden_field :free_days_access_key, :value => '' %>
+    </p>
+    <p class="buttons">
+      <%= submit "Re-generate", :class => "button" %>
+    </p>
   </fieldset>
 <% end =%>
