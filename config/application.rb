@@ -24,9 +24,8 @@ module Rubytime
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
-    for file in Dir["#{config.root}/lib/**/*.rb"]
-      require file
-    end
+    Dir["#{config.root}/lib/**/*.rb"].each { |file| require file }
+
     require "#{config.root}/config/local_config.rb"
 
     # Activate observers that should always be running.

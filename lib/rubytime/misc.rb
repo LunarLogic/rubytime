@@ -51,12 +51,6 @@ module Rubytime
   CONFIG = {}
 end
 
-class DataMapper::Validate::ValidationErrors
-  def to_json
-    @errors.to_json
-  end
-end
-
 if RUBY_VERSION < "1.8.7"
   class Fixnum
     def pred
