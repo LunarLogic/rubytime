@@ -1,7 +1,7 @@
 desc "configure and install RubyTime"
 namespace :rubytime do
   
-  task :install => :merb_env do
+  task :install => :environment do
     Rake::Task['db:automigrate'].invoke
     puts "---------------- creating database structure \t [ \e[32mDONE\e[0m ]"
     Rake::Task['db:seed'].invoke
@@ -21,7 +21,7 @@ namespace :rubytime do
     puts 'Thank you for installing RubyTime'
   end
 
-  task :create_account do
+  task :create_account => :environment do
     print '- login for new account: '
     account_login = STDIN.gets.chomp
     print '- password for new account (6 characters at least): '
@@ -50,7 +50,7 @@ namespace :rubytime do
     puts new_user.save ? "[ \e[32mDONE\e[0m ]" : "[\e[31mFAILED\e[0m]"
   end
 
-  task :create_role do
+  task :create_role => :environment do
     print 'name of new role: '
     role_name = STDIN.gets.chomp
     role = Role.new(:name => role_name)
