@@ -208,10 +208,12 @@ var Activities = {
   },
 
   _createInvoiceActivityParams : function(ids) {
-    return $.makeArray(ids.map(function(i, f) {
-        return 'invoice['+f.name.replace('[]', '')+'][]='+f.value })).join('&');
+    var array = $.makeArray(ids.map(function(i, f) {
+      return 'invoice[' + f.name.replace('[]', '') + '][]=' + f.value;
+    }));
+    return array.join('&');
   },
-  
+
   _reloadSelects: function(url, group, feedback) {
     url += "?"+$("#activities_filter form").serialize();
     $.getJSON(url, function(json) {

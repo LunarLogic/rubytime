@@ -1,13 +1,13 @@
 $(function() {
   $('#project_form').validate({
-  rules: {
-    "project[name]": {
-    required: true
-    },
-    "project[client_id]": {
-    required: true
+    rules: {
+      "project[name]": {
+        required: true
+      },
+      "project[client_id]": {
+        required: true
+      }
     }
-  }
   });
 
   $('#project_form .activity_types a.toggler').click(function() { 
