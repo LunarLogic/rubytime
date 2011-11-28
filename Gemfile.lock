@@ -38,7 +38,6 @@ GEM
       builder (>= 2.1.2)
     cmdparse (2.0.3)
     columnize (0.3.4)
-    daemons (1.1.4)
     data_objects (0.10.6)
       addressable (~> 2.1)
     delorean (1.1.0)
@@ -59,11 +58,11 @@ GEM
       addressable (~> 2.2.4)
     dm-devise (1.5.0)
       devise (~> 1.3)
-      dm-core (< 1.3, >= 1.0.2)
-      dm-migrations (< 1.3, >= 1.0.2)
-      dm-rails (< 1.3, >= 1.0.3)
-      dm-serializer (< 1.3, >= 1.0.2)
-      dm-timestamps (< 1.3, >= 1.0.2)
+      dm-core (>= 1.0.2, < 1.3)
+      dm-migrations (>= 1.0.2, < 1.3)
+      dm-rails (>= 1.0.3, < 1.3)
+      dm-serializer (>= 1.0.2, < 1.3)
+      dm-timestamps (>= 1.0.2, < 1.3)
     dm-do-adapter (1.1.0)
       data_objects (~> 0.10.2)
       dm-core (~> 1.1.0)
@@ -104,7 +103,6 @@ GEM
       data_objects (= 0.10.6)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    eventmachine (0.12.10)
     factory_girl (2.1.0)
     factory_girl_rails (1.2.0)
       factory_girl (~> 2.1.0)
@@ -137,7 +135,6 @@ GEM
       rack (>= 1.0.0)
     rack-test (0.5.7)
       rack (>= 1.0)
-    rack_revision_info (0.3.5)
     rails (3.0.10)
       actionmailer (= 3.0.10)
       actionpack (= 3.0.10)
@@ -183,10 +180,6 @@ GEM
       archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.4)
     stringex (1.2.2)
-    thin (1.2.11)
-      daemons (>= 1.0.9)
-      eventmachine (>= 0.12.6)
-      rack (>= 1.0.0)
     thor (0.14.6)
     treetop (1.4.10)
       polyglot
@@ -233,13 +226,10 @@ DEPENDENCIES
   juicer
   mysql
   net-ldap
-  nokogiri (= 1.4.1)
-  rack_revision_info
   rails (~> 3.0)
   rcov
   rspec-rails
   ruby-debug19
-  thin
   vlad
   vlad-git
   whenever
