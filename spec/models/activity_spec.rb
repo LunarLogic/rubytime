@@ -600,7 +600,7 @@ describe Activity do
       activity = Activity.generate
 
       # TODO this seems out of date with Ruby 1.9.2 not having Object#id - verify
-      ActivityType.get(nil.object_id).destroy!
+      ActivityType.get(nil.object_id).try(:destroy!)
       type4 = ActivityType.generate :id => nil.object_id  # for testing if id isn't set to nil.id
       type4.id.should == 4
 
