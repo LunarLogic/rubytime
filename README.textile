@@ -38,7 +38,7 @@ h3. Running in development mode (on local machine)
 Create a development database (named @rubytime3_dev@ by default). Then fill it with tables and data:
 
 * run @bundle exec rake db:automigrate@ to create database structure (note: this destroys existing structure and data)
-* run @bundle exec rake rubytime:kickstart@ to populate database tables with initial data (admin account, example clients and projects)
+* run @bundle exec rake db:seed@ to populate database tables with initial data (admin account, example clients and projects)
 
 Run the application:
 
@@ -62,7 +62,7 @@ bc. bundle exec rake production vlad:deploy_with_db_reset
 
 Back on the server, populate the database with initial data (call from project's 'current' directory):
 
-bc. MERB_ENV=production bundle exec rake rubytime:kickstart
+bc. MERB_ENV=production bundle exec rake db:seed
 
 Your server should be ready. If it's not, try deploying once again:
 

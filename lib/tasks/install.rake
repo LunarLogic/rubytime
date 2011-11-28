@@ -4,7 +4,7 @@ namespace :rubytime do
   task :install => :merb_env do
     Rake::Task['db:automigrate'].invoke
     puts "---------------- creating database structure \t [ \e[32mDONE\e[0m ]"
-    Rake::Task['rubytime:kickstart'].invoke
+    Rake::Task['db:seed'].invoke
     puts "---------------- populate database tables with initial data \t [ \e[32mDONE\e[0m ]"
     puts 'Roles automatically created:'
     Role.all.each { |role| puts " - #{role.name}"}
