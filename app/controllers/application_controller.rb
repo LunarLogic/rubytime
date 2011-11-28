@@ -107,10 +107,10 @@ class ApplicationController < ActionController::Base
   end
 
   def forbidden
-    render :nothing => true, :status => :forbidden
+    head :forbidden
   end
 
   def bad_request
-    render :nothing => true, :status => :bad_request
+    head :bad_request
   end
 end

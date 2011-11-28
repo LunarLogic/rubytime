@@ -41,7 +41,11 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(params[:invoice].merge(:user_id => current_user.id))
     if @invoice.save
-      request.xhr? ? render(:nothing => true) : redirect_to(invoices_path)
+      if request.xhr?
+        head :ok
+      else
+        redirect_to(invoices_path)
+      end
     else
       if request.xhr?
         render_failure smart_errors_format(@invoice.errors)

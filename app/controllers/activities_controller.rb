@@ -144,7 +144,7 @@ class ActivitiesController < ApplicationController
     @activities = begin 
                     @owner.activities.for date
                   rescue ArgumentError
-                    render :nothing => true, :status => :bad_request and return
+                    head :bad_request and return
                   end
     @activities_by_date = @activities.group_by { |activity| activity.date }
     
@@ -185,7 +185,7 @@ class ActivitiesController < ApplicationController
   
   def check_calendar_viewability
     unless @owner.calendar_viewable?(current_user)
-      render :nothing => true, :status => :forbidden and return
+      head :forbidden and return
     end
   end
 
