@@ -1,3 +1,4 @@
+---
 development: &defaults
   adapter:  mysql
   database: rubytime3_dev
@@ -13,13 +14,3 @@ test:
 production:
   <<:       *defaults
   database: rubytime3_prod
-  repositories:
-    legacy:
-      adapter:  mysql
-      database: rubytime2_prod
-      username: root
-      password: 
-      host: localhost
-
-rake:
-  <<:       *defaults
