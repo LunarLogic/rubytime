@@ -13,7 +13,7 @@ function hoursFormat(value, element, params) {
 
 function selectOptions(collection, idAttr, labelAttr) {
   return $.map(collection, function(item) { 
-    return '<option value="' + item[idAttr] + '">' + item[labelAttr] + '</option>' 
+    return '<option value="' + item[idAttr] + '">' + item[labelAttr] + '</option>';
   }).join('');
 }
 
@@ -103,9 +103,9 @@ var Application = {
   initTables: function() {
     $("table").zebra();
     $("table.list tr").mouseover(function() {
-      $(this).addClass("hovered")
+      $(this).addClass("hovered");
     }).mouseout(function() {
-      $(this).removeClass("hovered")
+      $(this).removeClass("hovered");
     });
   },
 
@@ -118,17 +118,16 @@ var Application = {
   },
   
   initDeleteLinks: function() {
-    $(".delete_row").click(function(e) {
+    $(".delete_row").click(function deleteRowHandler(e) {
       if (confirm('Are you sure?')) {
         var target = $(this);
         var row = target.parents('tr');
-        var handler = arguments.callee;
 
         $.ajax({
           type: "DELETE",
           url: $(this).url(),
           beforeSend: function() {
-            target.unbind('click', handler);
+            target.unbind('click', deleteRowHandler);
             row.disableLinks();
           },
           success: function() {
@@ -138,7 +137,7 @@ var Application = {
             Application.notice('Deleted successfully');
           },
           error: function(xhr) {
-            target.click(handler);
+            target.click(deleteRowHandler);
             row.enableLinks();
             Application.errorFromXhr(xhr);
           }
@@ -184,7 +183,7 @@ var Application = {
       var originalValue = element.val();
       element.html(html);
       
-      if (element.html() == "") {
+      if (element.html() === "") {
         element.attr('disabled', 'disabled').parent('p').hide();
       } else {
         element.removeAttr('disabled').parent('p').show();

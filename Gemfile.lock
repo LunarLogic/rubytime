@@ -112,7 +112,7 @@ GEM
     fastercsv (1.5.4)
     i18n (0.5.0)
     icalendar (1.1.6)
-    jslint_on_rails (1.0.6)
+    jslint_on_rails (1.0.7)
     json (1.4.6)
     juicer (1.0.12)
       cmdparse

@@ -177,7 +177,7 @@ var Activities = {
       }
     
       var invoiceId = $("#invoice_id").val();
-      if (invoiceId == "") {
+      if (invoiceId === "") {
         Application.error('You need to select an invoice.');
         return false;
       }
@@ -266,7 +266,7 @@ var Activities = {
     if (criteria.length == 1) {
       // single criteria of this kind
     
-      if (first_select.val() == '') {
+      if (first_select.val() === '') {
         // 'All' selected - hiding '+' button
         first_select.siblings('a.add_criterium').hide();
       } else {
@@ -299,7 +299,7 @@ var Activities = {
   onSelectChanged: function(select) {
     var currentParagraph = select.parents("p");
     var group = currentParagraph.attr("class");
-    if (select.val() == '') { // "All" selected
+    if (select.val() === '') { // "All" selected
       // remove additional criteria of the same kind
       currentParagraph.siblings("p." + group).remove();
     }

@@ -11,7 +11,7 @@ $(function() {
   });
 
   $('#project_form .activity_types a.toggler').click(function() { 
-    $(this).parents('.activity_types').children('ul').toggle('fast') 
+    $(this).parents('.activity_types').children('ul').toggle('fast');
   });
   
   $('#project_form .activity_types input[type=checkbox]').click(function() { 

@@ -2,7 +2,7 @@ var Users = {
   init: function() {
     Users._initValidation();
     Users._initUserTypeCombo();
-    if ($('.box').html() == "") {
+    if ($('.box').html() === "") {
       $('#secondary .box').hide();
     }
   },
@@ -32,7 +32,7 @@ var Users = {
         },
         "user[password]": {
           required: function(element) {
-            var password_entered = element && element.value != "";
+            var password_entered = element && element.value !== "";
             var action = $("#user_form").attr("action");
             var editing = (/\d+$/).test(action);
             return password_entered || !editing;

@@ -7,7 +7,7 @@
 #   rake jslint paths=path1,path2,... exclude_paths=library1,library2,...
 
 paths:
-  - public/javascripts/**/*.js
+  - public/javascripts/*.js
 
 exclude_paths:
 
@@ -63,11 +63,11 @@ devel:    true      # true if functions like alert, confirm, console, prompt etc
 
 # ignores "missing semicolon" warning at the end of a function; this lets you write one-liners
 # like: x.map(function(i) { return i + 1 }); without having to put a second semicolon inside the function
-lastsemic: false
+lastsemic: true
 
 # allows you to use the 'new' expression as a statement (without assignment)
 # so you can call e.g. new Ajax.Request(...), new Effect.Highlight(...) without assigning to a dummy variable
-newstat: false
+newstat: true
 
 # ignores the "Expected an assignment or function call and instead saw an expression" warning,
 # if the expression contains a proper statement and makes sense; this lets you write things like:
@@ -77,4 +77,4 @@ newstat: false
 # although these will still cause a warning:
 #    element && link;
 #    selected ? 5 : 10;
-statinexp: false
+statinexp: true
