@@ -1,12 +1,11 @@
 require File.expand_path('../boot', __FILE__)
 
-# Pick the frameworks you want:
-# require "active_record/railtie"
 require "action_controller/railtie"
+require "action_dispatch/railtie"
 require "action_mailer/railtie"
-require "active_resource/railtie"
-require "rails/test_unit/railtie"
-require 'csv'
+require "action_view/railtie"
+require "active_model/railtie"
+require "active_support/railtie"
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
