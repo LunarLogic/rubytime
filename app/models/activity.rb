@@ -49,12 +49,12 @@ class Activity
   
   def available_main_activity_types
     return [] if project.nil?
-    project.activity_types.all(:parent_id => nil)
+    project.activity_types.all(:parent_id => nil).select { |at| at.active || at == main_activity_type }
   end
   
   def available_sub_activity_types
     return [] if main_activity_type.nil? or project.nil?
-    project.activity_types.all(:parent_id => main_activity_type.id)
+    project.activity_types.all(:parent_id => main_activity_type.id).select { |at| at.active || at == sub_activity_type }
   end
   
   def main_activity_type_id

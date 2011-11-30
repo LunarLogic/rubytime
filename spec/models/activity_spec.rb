@@ -847,4 +847,93 @@ describe Activity do
     end
   end
 
+  describe "#available_main_activity_types" do
+    before do
+      @type1 = ActivityType.generate :active => true
+      @type2 = ActivityType.generate :active => false
+      @type3 = ActivityType.generate :active => true
+
+      @project = Project.generate(:activity_types => [@type1, @type2])
+      @activity = Activity.prepare :project => @project
+    end
+
+    subject { @activity.available_main_activity_types }
+
+    context "if project isn't set" do
+      before { @activity.project = nil }
+
+      it { should == [] }
+    end
+
+    context "if project is set" do
+      it "should return active activity types assigned to its project" do
+        subject.should =~ [@type1]
+      end
+
+      context "if an inactive main activity type is currently assigned" do
+        before { @activity.activity_type = @type2 }
+
+        it "should include it on the list" do
+          subject.should =~ [@type1, @type2]
+        end
+      end
+    end
+  end
+
+  describe "#available_sub_activity_types" do
+    before do
+      @type1 = ActivityType.generate :active => true
+      @type2 = ActivityType.generate :active => true
+
+      @subtype11 = ActivityType.generate :active => true, :parent => @type1
+      @subtype12 = ActivityType.generate :active => false, :parent => @type1
+      @subtype13 = ActivityType.generate :active => true, :parent => @type1
+      @subtype14 = ActivityType.generate :active => true, :parent => @type1
+      @subtype21 = ActivityType.generate :active => true, :parent => @type2
+
+      @project = Project.generate(:activity_types => [@type1, @type2, @subtype11, @subtype12, @subtype14, @subtype21])
+      @activity = Activity.prepare :project => @project, :activity_type => @type1
+    end
+
+    subject { @activity.available_sub_activity_types }
+
+    context "if project isn't set" do
+      before { @activity.project = nil }
+
+      it { should == [] }
+    end
+
+    context "if project is set" do
+      context "and activity type isn't set" do
+        before { @activity.activity_type = nil }
+
+        it { should == [] }
+      end
+
+      context "and activity type is set to a main type" do
+        before { @activity.activity_type = @type1 }
+
+        it "should return active subtypes of selected main type which are assigned to the project" do
+          subject.should =~ [@subtype11, @subtype14]
+        end
+      end
+
+      context "and activity type is set to a subtype" do
+        before { @activity.activity_type = @subtype11 }
+
+        it "should return active subtypes of selected subtype's parent type which are assigned to the project" do
+          subject.should =~ [@subtype11, @subtype14]
+        end
+
+        context "and the subtype is inactive" do
+          before { @activity.activity_type = @subtype12 }
+
+          it "should also include the selected subtype" do
+            subject.should =~ [@subtype11, @subtype12, @subtype14]
+          end
+        end
+      end
+    end
+  end
+
 end

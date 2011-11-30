@@ -78,7 +78,7 @@ class ActivityTypes < Application
     project = Project.get(params[:project_id]) or raise NotFound
     activity_type = ActivityType.get(params[:activity_type_id])
     
-    @activity_types = project.activity_types.all(:parent_id => activity_type ? activity_type.id : nil)
+    @activity_types = project.activity_types.all(:parent_id => activity_type && activity_type.id, :active => true)
     
     display @activity_types
   end

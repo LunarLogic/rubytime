@@ -5,6 +5,7 @@ class ActivityType
   property :name,  String, :required => true, :index => true
   property :parent_id, Integer
   property :position, Integer
+  property :active, Boolean, :required => true, :default => true
   property :updated_at,  DateTime
   property :created_at,  DateTime
   
@@ -15,13 +16,17 @@ class ActivityType
   has n, :activities
   
   validates_is_unique :name, :scope => :parent_id
-  
-  def breadcrumb_name
-    parent ? "#{parent.breadcrumb_name} -> #{name}" : "#{name}"
-  end
-  
+
   before :destroy do
     children.each { |at| at.destroy }
+  end
+
+  def self.active
+    all(:active => true)
+  end
+
+  def breadcrumb_name
+    parent ? "#{parent.breadcrumb_name} -> #{name}" : "#{name}"
   end
 
   def parent_id=(id)

@@ -8,11 +8,13 @@
   <table id="activity_types" class="list wide">
   <tr>
     <th>Name</th>
+    <th class="active">Active</th>
     <th class="icons"></th>
   </tr>
   <% @activity_type.children.each do |activity_type| %>
     <tr id="activity-type-<%= activity_type.id %>" class="activity-type">
       <td><%= activity_type.name %></td>
+      <td><%= activity_type.active ? 'Yes' : 'No' %></td>
       <td class="icons">
         <% if current_user.is_admin? %>
           <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(activity_type, :edit) %>

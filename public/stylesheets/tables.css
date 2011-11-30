@@ -172,6 +172,9 @@ td.icons, th.icons {
   width: 1%;
   white-space: nowrap;
 }
+th.active {
+  width: 80px;
+}
 div.day_header {
   background:url(/images/header.png) 0 -100px repeat-x;
   color:#fff;

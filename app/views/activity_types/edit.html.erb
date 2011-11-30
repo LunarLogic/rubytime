@@ -10,6 +10,10 @@
     <p>
       <%= text_field :name, :label => "Name" %>
     </p>
+    <p>
+      <label for="project_active">Active?</label>
+      <%= check_box :active %>
+    </p>
     <p class="buttons">
       <%= submit 'Update', :class => "button" %>
     </p>
