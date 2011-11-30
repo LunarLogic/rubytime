@@ -1,6 +1,10 @@
 <% throw_content :secondary, partial(:new_project) if current_user.is_admin? %>
 <h1>List of projects</h1>
 
+<p class="filter">
+  Filter: <%= link_to "Active", '#active' %> | <%= link_to "All", '#all' %>
+</p>
+
 <% if @projects.empty? %>
   No projects found.
 <% else %>
@@ -10,16 +14,16 @@
     <% if current_user.is_admin? %>
       <th>Client</th>
     <% end %>
-    <th>Active</th>
+    <th class="active">Active</th>
     <th class="icons"></th>
   </tr>
   <% @projects.each do |project| %>
-    <tr>
+    <tr class="<%= 'inactive_record' if !project.active %>">
       <td><%= current_user.is_admin? ? link_to(project.name, resource(project)) : project.name %></td>
       <% if current_user.is_admin? %>
         <td><%= link_to project.client.name, resource(project.client) %></td>
       <% end %>
-      <td><%= project.active ? 'Yes' : 'No' %></td>
+      <td class="active"><%= project.active ? 'Yes' : 'No' %></td>
       <td class="icons">
         <%= link_to image_tag("icons/calendar.png", :title => "Show calendar for this project", :alt => "C"), resource(project, :calendar) %>
         <% if current_user.is_admin? %>

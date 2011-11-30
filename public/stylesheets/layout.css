@@ -299,6 +299,16 @@ li.role strong {
   color:#888;
 }
 
+.filter {
+  margin: 10px 0 20px;
+}
+
+.filter .selected {
+  font-weight: bold;
+  color: #222;
+  text-decoration: none;
+}
+
 .sections {
   width: 100%;
   margin-top: 10px;

@@ -44,8 +44,27 @@ var Application = {
     $(document).bind('tb:ajax_loaded', function() {
       Application._initActivityPopup($("#TB_ajaxContent"));
     });
+
+    $('#primary .filter a').click(function() {
+      var anchor = this.href.replace(/^.*#/, '');
+      Application.toggleFilterInTables(anchor);
+    });
+
+    if ($('#primary .filter').length > 0) {
+      Application.toggleFilterInTables(location.hash.substring(1) || 'active');
+    }
   },
-  
+
+  toggleFilterInTables: function(anchor) {
+    $('#primary .filter a').each(function() {
+      var linkAnchor = this.href.replace(/^.*#/, '');
+      $(this).toggleClass('selected', linkAnchor == anchor);
+    });
+
+    $('#primary table td.active').toggle(anchor == 'all');
+    $('#primary table tr.inactive_record').toggle(anchor == 'all');
+  },
+
   setupAjax: function() {
     $.ajaxSetup({
       error: function(xhr) {
