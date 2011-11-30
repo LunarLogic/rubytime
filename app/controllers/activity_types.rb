@@ -49,7 +49,7 @@ class ActivityTypes < Application
     new_position = params[:activity_type].delete(:position)
     @activity_type = ActivityType.get(params[:id]) or raise NotFound
     if @activity_type.update(params[:activity_type])
-      @activity_type.move(:to => new_position) unless new_position == @activity_type.position
+      @activity_type.move(:to => new_position) if new_position && new_position != @activity_type.position
       if request.xhr?
         render_success
       elsif @activity_type.parent
