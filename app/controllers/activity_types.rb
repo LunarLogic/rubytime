@@ -11,8 +11,13 @@ class ActivityTypes < Application
 
   def show
     @activity_type = ActivityType.get(params[:id]) or raise NotFound
-    @new_activity_type = ActivityType.new(:parent => @activity_type)
-    display @activity_type
+
+    if @activity_type.parent
+      redirect resource(@activity_type.parent)
+    else
+      @new_activity_type = ActivityType.new(:parent => @activity_type)
+      display @activity_type
+    end
   end
 
   def edit
