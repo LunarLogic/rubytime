@@ -56,13 +56,14 @@ var Application = {
   },
 
   toggleFilterInTables: function(anchor) {
-    $('#primary .filter a').each(function() {
+    var primary = $('#primary');
+    $('.filter a', primary).each(function() {
       var linkAnchor = this.href.replace(/^.*#/, '');
       $(this).toggleClass('selected', linkAnchor == anchor);
     });
 
-    $('#primary table td.active').toggle(anchor == 'all');
-    $('#primary table tr.inactive_record').toggle(anchor == 'all');
+    $('td.active, th.active', primary).toggle(anchor == 'all');
+    $('.inactive_record', primary).toggle(anchor == 'all');
   },
 
   setupAjax: function() {
