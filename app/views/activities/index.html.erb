@@ -8,8 +8,8 @@
 <% else %>
   <p>
     Found <%= @activities.size %> matching activities
-    <%= @search_criteria.date_from ? " from #{@search_criteria.date_from.formatted(current_user.date_format)}" : "" %>
-    <%= @search_criteria.date_to ? " till #{@search_criteria.date_to.formatted(current_user.date_format)}" : "" %>.
+    <%= "from #{date_in_users_format(@search_criteria.date_from)}" if @search_criteria.date_from %>
+    <%= "till #{date_in_users_format(@search_criteria.date_to)}" if @search_criteria.date_to %>.
     <br/>
     <br/>
   </p>

@@ -7,6 +7,20 @@ module ApplicationHelper
     format("%d:%.2d", minutes / 60, minutes % 60)
   end
 
+  def users_date_format_for_js
+    format = Rubytime::DATE_FORMATS[current_user.date_format][:format]
+    format.downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 }
+  end
+
+  def date_in_users_format(date)
+    if date
+      date = date.to_date unless date.instance_of?(Date)
+      date.to_s(current_user.date_format)
+    else
+      ""
+    end
+  end
+
   def site_url
     Rubytime::CONFIG[:site_url]
   end
@@ -161,7 +175,7 @@ module ApplicationHelper
     end
     row << %(<td>#{h(activity.project.name)}</td>) if options[:show_project]
     row << %(<td>#{h(activity.user.name)}</td>) if options[:show_users]
-    row << %(<td>#{activity.date.formatted(current_user.date_format)}</td>) if options[:show_date]
+    row << %(<td>#{date_in_users_format(activity.date)}</td>) if options[:show_date]
     row << %(<td class="right">#{activity.hours}</td>)
     
     options[:custom_properties_to_show_in_columns].each do |custom_property|

@@ -12,7 +12,7 @@ describe HourlyRate do
 
     it "should include a formatted date" do
       hourly_rate.date_format_for_json = "Format"
-      hourly_rate.takes_effect_at.should_receive(:formatted).with("Format").and_return("Something")
+      hourly_rate.takes_effect_at.should_receive(:to_s).with("Format").and_return("Something")
       json = hourly_rate.as_json
       json[:takes_effect_at].should == "Something"
     end

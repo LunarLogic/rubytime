@@ -22,9 +22,4 @@ class Date
   def first_day_of_month
     Date.parse("#{year}-#{month}-1")
   end
-
-  def formatted(format = :european)
-    strftime(Rubytime::DATE_FORMATS[format][:format])
-  end
-
 end

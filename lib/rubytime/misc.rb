@@ -38,8 +38,12 @@ module Rubytime
      :comma => { :number => { :delimiter => '', :separator => ',' } }
    }
   
-  DATE_FORMAT_NAMES = [:european, :american]
-  DATE_FORMATS = { :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" }, :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" } }
+  DATE_FORMATS = {
+    :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" },
+    :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" }
+  }
+  DATE_FORMAT_NAMES = DATE_FORMATS.keys
+
   RECENT_DAYS_ON_LIST = [7, 14, 30]
   PASSWORD_RESET_LINK_EXP_TIME = 86400 # One day
   DECIMAL_SEPARATORS = [:dot, :comma]

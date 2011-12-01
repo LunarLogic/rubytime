@@ -65,7 +65,7 @@ class HourlyRate
     { :id => id,
       :project_id => project_id,
       :role_id => role_id,
-      :takes_effect_at => (date_format_for_json ? takes_effect_at.formatted(date_format_for_json) : takes_effect_at),
+      :takes_effect_at => (date_format_for_json ? takes_effect_at.to_s(date_format_for_json) : takes_effect_at),
       :takes_effect_at_unformatted => takes_effect_at,
       :value => value_formatted,
       :currency => currency,

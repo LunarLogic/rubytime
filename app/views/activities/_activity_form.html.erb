@@ -11,7 +11,7 @@
     <% end %>
     <p>
       <%= f.label :date, "Date" %>
-      <%= f.text_field :date, :class => 'datepicker', :value => @activity.date.formatted(current_user.date_format) %>
+      <%= f.text_field :date, :class => 'datepicker', :value => date_in_users_format(@activity.date) %>
     </p>
     <p>
       <%= f.label :project_id, "Project" %>

@@ -19,9 +19,9 @@
     <%= auto_link %>
     <%= csrf_meta_tag %>
     <% if current_user %>
-    <script type="text/javascript">
-      rubytime_date_format = '<%= Rubytime::DATE_FORMATS[current_user.date_format][:format].downcase.delete("%").gsub(/[dmy]/) { |match| match * 2 } %>';
-    </script>
+      <script type="text/javascript">
+        rubytime_date_format = '<%= users_date_format_for_js %>';
+      </script>
     <% end %>
   </head>
   <body id="<%= params[:controller] %>_<%= params[:action] %>">

@@ -20,13 +20,13 @@
   <% end %>
   
   <p>
-    <% date_from = @search_criteria.date_from ? @search_criteria.date_from.formatted(current_user.date_format) : "" %>
+    <% date_from = date_in_users_format(@search_criteria.date_from) %>
     <%= label_tag "search_criteria[date_from]", "From" %>
     <%= text_field_tag 'search_criteria[date_from]', date_from, :class => 'datepicker', :size => 9 %>
   </p>
   
   <p>
-    <% date_to = @search_criteria.date_to ? @search_criteria.date_to.formatted(current_user.date_format) : "" %>
+    <% date_to = date_in_users_format(@search_criteria.date_to) %>
     <%= label_tag "search_criteria[date_to]", "To" %>
     <%= text_field_tag "search_criteria[date_to]", date_to, :class => 'datepicker', :size => 9  %>
   </p>

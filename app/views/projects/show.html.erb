@@ -10,7 +10,7 @@
   Client: <%= link_to @project.client.name, client_path(@project.client) %>
 </p>
 <p>
-  Created at: <%= @project.created_at.to_date.formatted(current_user.date_format) %>
+  Created at: <%= date_in_users_format(@project.created_at) %>
 </p>
 <p>
   <%= link_to "Edit", edit_project_path(@project) %>
