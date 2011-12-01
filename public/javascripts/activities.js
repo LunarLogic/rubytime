@@ -92,7 +92,14 @@ var Activities = {
         "search_criteria[date_from]": 'laterThanDateFrom'
       },
       submitHandler: function() {
-        $("#primary").load(form.url() + '?' + form.serialize(), null, function() {
+        var params = form.serializeArray();
+        $.each(params, function(i, param) {
+          if (param.name == 'search_criteria[date_from]' || param.name == 'search_criteria[date_to]') {
+            var date = $.datepicker.parseDate(rubytime_date_format, param.value);
+            param.value = $.datepicker.formatDate($.datepicker.W3C, date);
+          }
+        });
+        $("#primary").load(form.url() + '?' + $.param(params), null, function() {
           Activities._initActivitiesList();
         });
         return false;
