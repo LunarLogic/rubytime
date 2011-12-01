@@ -1,4 +1,4 @@
 Rubytime::CONFIG[:mail_from] = "rubytime@localhost"
-Rubytime::CONFIG[:site_url] = "http://localhost:4000"
+Rubytime::CONFIG[:site_url] = "http://localhost:3000"
 Rubytime::CONFIG[:timesheet_report_addressee_email] = "email@localhost"
 Rubytime::CONFIG[:exception_report_email] = "email@localhost"
