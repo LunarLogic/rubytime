@@ -2,6 +2,10 @@
 
 <h1>Sub-activity types of <%= @activity_type.name %></h1>
 
+<p class="filter">
+  Filter: <%= link_to "Active", '#active' %> | <%= link_to "All", '#all' %>
+</p>
+
 <% if @activity_type.children.empty? %>
   The list is empty.
 <% else %>
@@ -12,9 +16,10 @@
     <th class="icons"></th>
   </tr>
   <% @activity_type.children.each do |activity_type| %>
-    <tr id="activity-type-<%= activity_type.id %>" class="activity-type">
+    <tr id="activity-type-<%= activity_type.id %>"
+        class="activity-type <%= 'inactive_record' if !activity_type.active %>">
       <td><%= activity_type.name %></td>
-      <td><%= activity_type.active ? 'Yes' : 'No' %></td>
+      <td class="active"><%= activity_type.active ? 'Yes' : 'No' %></td>
       <td class="icons">
         <% if current_user.is_admin? %>
           <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), resource(activity_type, :edit) %>
