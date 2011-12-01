@@ -21,6 +21,7 @@ var Application = {
   init: function() {
     Application.setupAjax();
     Application.setupValidator();
+    Application.setupFilter();
     Application.initDatepickers();
     Application.initAddActivityButton();
     Application.initTables();
@@ -44,18 +45,27 @@ var Application = {
     $(document).bind('tb:ajax_loaded', function() {
       Application._initActivityPopup($("#TB_ajaxContent"));
     });
+  },
 
-    $('#primary .filter a').click(function() {
-      var anchor = this.href.replace(/^.*#/, '');
-      Application.toggleFilterInTables(anchor);
-    });
+  setupFilter: function() {
+    var filter = $('#primary .filter');
+    if (filter.length > 0) {
+      $('a', filter).click(function() {
+        var anchor = this.href.replace(/^.*#/, '');
+        Application.toggleFilter(anchor);
+      });
 
-    if ($('#primary .filter').length > 0) {
-      Application.toggleFilterInTables(location.hash.substring(1) || 'active');
+      var hashChangeHandler = function() {
+        Application.toggleFilter(location.hash.substring(1) || 'active');
+      };
+
+      $(window).bind('hashchange', hashChangeHandler);
+
+      hashChangeHandler();
     }
   },
 
-  toggleFilterInTables: function(anchor) {
+  toggleFilter: function(anchor) {
     var primary = $('#primary');
     $('.filter a', primary).each(function() {
       var linkAnchor = this.href.replace(/^.*#/, '');
