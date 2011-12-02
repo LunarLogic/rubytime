@@ -5,7 +5,7 @@ development: &defaults
   username: root
   password: 
   host: localhost
-  encoding: utf8
+  encoding: UTF-8
 
 test:
   <<:       *defaults
