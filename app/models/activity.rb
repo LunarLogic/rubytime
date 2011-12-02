@@ -307,10 +307,10 @@ class Activity
   
   def required_custom_properties_are_present
     required_custom_properties = ActivityCustomProperty.all(:required => true)
-    if required_custom_properties.map { |acp| acp.id }.none? { |id| custom_properties[id].blank? }
+    if required_custom_properties.map(&:id).none? { |id| custom_properties[id].blank? }
       true
     else
-      [false, "The following custom properties are required: " + required_custom_properties.map { |acp| acp.name }.join(', ')]
+      [false, "The following custom properties are required: " + required_custom_properties.map(&:name).join(', ')]
     end
   end
   

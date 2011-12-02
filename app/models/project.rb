@@ -60,7 +60,7 @@ class Project
   end
 
   def activity_type_ids
-    activity_types.map { |at| at.id }
+    activity_types.map(&:id)
   end
   
   def activity_type_ids=(activity_type_ids)
@@ -75,7 +75,7 @@ class Project
   end
   
   def used_activity_type_ids
-    used_activity_types.map { |at| at.id }
+    used_activity_types.map(&:id)
   end
 
 end

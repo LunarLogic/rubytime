@@ -223,7 +223,7 @@ class ActivitiesController < ApplicationController
   
   def convert_to_csv(activities)
     CSV.generate(:col_sep => ';') do |csv|
-      custom_columns = ActivityCustomProperty.all.map { |p| p.name_with_unit }
+      custom_columns = ActivityCustomProperty.all.map(&:name_with_unit)
       csv << %w(Client Project Role User Date Hours) + custom_columns + %w(Type SubType Comments)
 
       activities.each do |activity|

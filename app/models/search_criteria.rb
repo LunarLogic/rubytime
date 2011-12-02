@@ -186,7 +186,7 @@ class SearchCriteria
   protected
   
   def get_ids(collection)
-    collection.map { |o| o.id }
+    collection.map(&:id)
   end
 end
 
