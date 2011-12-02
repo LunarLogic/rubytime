@@ -21,7 +21,7 @@ class HourlyRate
   attr_accessor :date_format_for_json
   
   def value=(value)
-    attribute_set(:value, value.blank? ? nil : value)
+    attribute_set(:value, value.presence)
   end
 
   def value_formatted

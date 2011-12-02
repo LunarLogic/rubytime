@@ -15,7 +15,7 @@ class ActivityCustomPropertyValue
   validates_presence_of :value
   
   def value=(value)
-    self.numeric_value = value.blank? ? nil : value
+    self.numeric_value = value.presence
   end
   
   def value

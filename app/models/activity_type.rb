@@ -25,7 +25,7 @@ class ActivityType
   end
 
   def parent_id=(id)
-    self.attribute_set :parent_id, (id.blank?) ? nil : id
+    self.attribute_set :parent_id, id.presence
   end
 
   def destroy_allowed?
