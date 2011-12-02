@@ -14,3 +14,5 @@ Things to do (in any order):
 * fix minor bugs, implement new features
 
 * use 'whenever' for configuring scheduled tasks (timesheet reports etc.)
+
+* find a way of writing real migrations in DataMapper to migrate data

@@ -10,27 +10,6 @@ module Rubytime
       end
       r
     end
-
-    def self.check_activity_roles
-      return if ARGV.include?("db:autoupgrade")
-
-      begin
-        return unless Activity.first(:role_id => -1)
-      rescue Exception => e
-        p e
-        raise "*** Please run db:autoupgrade"
-      end
-
-      puts "*** Updating activity role_id fields - please wait..."
-      activities = Activity.all(:role_id => -1)
-      count = activities.count
-      activities.each_with_index do |a, i|
-        puts "#{i} / #{count}"
-        a.role = a.role_for_date
-        a.save! # saving without validations on purpose, because some activities may be invalid
-                # e.g. because types or properties were defined after they were created
-      end
-    end
   end
 
   DATE_FORMATS = {
