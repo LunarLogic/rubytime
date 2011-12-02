@@ -285,7 +285,8 @@ $.extend(HourlyRateForm.prototype, {
   },
   
   submit: function() {
-    this.hourly_rate_controller.update(this.node.find('input, select').serialize());
+    var params = this.node.find('input, select').serializeWithDates('hourly_rate[takes_effect_at]');
+    this.hourly_rate_controller.update(params);
   }
 });
 

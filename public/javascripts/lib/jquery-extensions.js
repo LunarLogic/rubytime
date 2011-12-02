@@ -59,6 +59,20 @@ jQuery.fn.extend((function() {
 
     positionInParent: function(childSelector) {
       return 1 + this.parent().children(childSelector).index(this);
+    },
+
+    serializeWithDates: function() {
+      var params = this.serializeArray();
+      var dateFields = $.makeArray(arguments);
+
+      $.each(params, function(i, param) {
+        if ($.inArray(param.name, dateFields) > -1) {
+          var date = $.datepicker.parseDate(rubytime_date_format, param.value);
+          param.value = $.datepicker.formatDate($.datepicker.W3C, date);
+        }
+      });
+
+      return $.param(params);
     }
   };
 })());

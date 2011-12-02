@@ -251,7 +251,7 @@ var Application = {
       $.ajax({
         url: form.url(),
         type: "POST",
-        data: form.serialize(),
+        data: form.serializeWithDates('activity[date]'),
         dataType: 'json',
         success: function(responseJson) {
           var date = responseJson.date;
