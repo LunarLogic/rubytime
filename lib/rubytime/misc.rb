@@ -33,11 +33,6 @@ module Rubytime
     end
   end
 
-   decimal_separator_formats = {
-     :dot   => { :number => { :delimiter => '', :separator => '.' } },
-     :comma => { :number => { :delimiter => '', :separator => ',' } }
-   }
-  
   DATE_FORMATS = {
     :european => { :format => "%d-%m-%Y", :description => "DD-MM-YYYY" },
     :american => { :format => "%m/%d/%Y", :description => "MM/DD/YYYY" }
@@ -46,11 +41,12 @@ module Rubytime
 
   RECENT_DAYS_ON_LIST = [7, 14, 30]
   PASSWORD_RESET_LINK_EXP_TIME = 86400 # One day
+
   DECIMAL_SEPARATORS = [:dot, :comma]
   DECIMAL_FORMATS = {
-    :dot => {:delimiter => "", :separator => "."},
-    :comma => {:delimiter => "", :separator => ","}
-   }
+    :dot   => { :delimiter => "", :separator => "." },
+    :comma => { :delimiter => "", :separator => "," }
+  }
 
   CONFIG = {}
 end
