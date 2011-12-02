@@ -595,13 +595,16 @@ describe Activity do
 
   describe "main- and sub- activity_type setters" do
 
+    # this checks if id isn't set to nil's object id (4) by mistake
+    # this is not possible on 1.9.2 where objects have object_id instead of id
+    # but it's still possible on 1.8.7 (although it prints a warning, but you could miss it)
+
     it "should set property to nil when nil is passed" do
       typeA = ActivityType.generate
       activity = Activity.generate
 
-      # TODO this seems out of date with Ruby 1.9.2 not having Object#id - verify
       ActivityType.get(nil.object_id).try(:destroy!)
-      type4 = ActivityType.generate :id => nil.object_id  # for testing if id isn't set to nil.id
+      type4 = ActivityType.generate :id => nil.object_id
       type4.id.should == 4
 
       activity.main_activity_type = typeA

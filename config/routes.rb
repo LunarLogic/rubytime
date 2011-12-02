@@ -55,7 +55,7 @@ Rubytime::Application.routes.draw do
   resources :invoices do
     member { put "issue" }
   end
-  resource :settings, :controller => 'settings' # TODO conflict with line 30, # .name(:settings)
+  resource :settings, :controller => 'settings'
   
   resources :activity_types do
     collection do
