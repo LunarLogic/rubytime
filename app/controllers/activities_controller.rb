@@ -97,7 +97,7 @@ class ActivitiesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json { render(:json => {:errors => @activity.errors.full_message }, :status => :bad_request) }
+        format.json { render(:json => {:errors => @activity.errors.full_messages }, :status => :bad_request) }
         format.html { render(:new, :status => :bad_request, :layout => false) }
       end
     end
