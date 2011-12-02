@@ -22,10 +22,10 @@
   Email: <%= @user.email %>
 </p>
 <p>
-  Active: <%= @user.active ? "Yes" : "No" %>
+  Active: <%= yes_no(@user.active) %>
 </p>
 <p>
-  Admin: <%= @user.admin ? "Yes" : "No" %>
+  Admin: <%= yes_no(@user.admin) %>
 </p>
 <p>
   Created at: <%= date_in_users_format(@user.created_at) %>

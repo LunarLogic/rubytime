@@ -256,6 +256,10 @@ module ApplicationHelper
     end
   end
 
+  def yes_no(value)
+    value ? 'Yes' : 'No'
+  end
+
   def select_options(collection, value_method, text_method, selected = nil)
     options_from_collection_for_select(collection, value_method, text_method, selected)
   end

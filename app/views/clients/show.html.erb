@@ -9,7 +9,7 @@
   Email: <%= @client.email %>
 </p>
 <p>
-  Active: <%= @client.active ? "Yes" : "No" %>
+  Active: <%= yes_no(@client.active) %>
 </p>
 <p>
   <%= link_to "Edit", edit_client_path(@client) %>

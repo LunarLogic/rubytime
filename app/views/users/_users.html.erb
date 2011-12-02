@@ -11,7 +11,7 @@
     <tr>
       <td><%= link_to(user.name, user_path(user)) %></td>
       <td><%= type == 'employees' ? link_to(user.role.name, role_path(user.role)) : link_to(user.client.name, client_path(user.client)) %></td>
-      <td><%= user.active? ? 'Yes' : 'No' %></td>
+      <td><%= yes_no(user.active?) %></td>
       <td class="icons">
         <%= link_to_calendar user %>
         <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), edit_user_path(user) %>

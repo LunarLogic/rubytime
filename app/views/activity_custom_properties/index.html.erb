@@ -17,8 +17,8 @@
     <tr>
       <td><%= custom_property.name %></td>
       <td><%= custom_property.unit %></td>
-      <td><%= custom_property.required ? 'Yes' : 'No' %></td>
-      <td><%= custom_property.show_as_column_in_tables ? 'Yes' : 'No' %></td>
+      <td><%= yes_no(custom_property.required) %></td>
+      <td><%= yes_no(custom_property.show_as_column_in_tables) %></td>
       <td class="icons">
         <% if current_user.is_admin? %>
           <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), edit_activity_custom_property_path(custom_property) %>

@@ -1,7 +1,7 @@
 <tr>
   <td><%= link_to client.name, client_path(client) %></td>
   <td><%= client.email %></td>
-  <td><%= client.active ? "Yes" : "No" %></td>
+  <td><%= yes_no(client.active) %></td>
   <td class="icons">
     <%= link_to image_tag("icons/pencil.png", :alt => "E"), edit_client_path(client) %>
     <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "Remove"), client_path(client), :class => "delete_row" %>
