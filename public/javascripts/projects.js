@@ -234,8 +234,8 @@ HourlyRateForm = function(hourly_rate_controller) {
   this.hourly_rate_controller = hourly_rate_controller;
   this.node = HourlyRateForm.template.clone(true);
   
-  this.submit_button = this.node.find('button.submit');
-  this.cancel_button = this.node.find('button.cancel');
+  this.submit_button = this.node.find('.submit');
+  this.cancel_button = this.node.find('.cancel');
   
   this.populate();
   this.bindEvents();
