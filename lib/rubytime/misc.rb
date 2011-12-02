@@ -29,20 +29,3 @@ module Rubytime
 
   CONFIG = {}
 end
-
-if RUBY_VERSION < "1.8.7"
-  class Fixnum
-    def pred
-      self - 1
-    end
-  end
-
-  class Array
-    def group_by
-      inject({}) do |groups, element|
-        (groups[yield(element)] ||= []) << element
-        groups
-      end
-    end
-  end
-end
