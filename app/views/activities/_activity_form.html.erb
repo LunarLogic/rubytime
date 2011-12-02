@@ -19,18 +19,18 @@
         "Other projects" => @other_projects.map { |p| [p.name, p.id] } }, @activity.project_id) %>
     </p>
     <%= f.hidden_field :main_activity_type_id, :value => nil %>
-    <% if @activity.available_main_activity_types.any? %>
-      <p>
-        <%= f.label :main_activity_type_id, "Type" %>
-        <%= f.select :main_activity_type_id, select_options(@activity.available_main_activity_types, :id, :name, @activity.main_activity_type_id), :disabled => @activity.available_main_activity_types.empty? %>
-      </p>
-    <% end %>
-    <% if @activity.available_sub_activity_types.any? %>
-      <p>
-        <%= f.label :sub_activity_type_id, "Sub-type" %>
-        <%= f.select :sub_activity_type_id, select_options(@activity.available_sub_activity_types.map, :id, :name, @activity.sub_activity_type_id), :disabled => @activity.available_sub_activity_types.empty? %>
-      </p>
-    <% end %>
+    <p style="<%= 'display: none' if @activity.available_main_activity_types.empty? %>">
+      <%= f.label :main_activity_type_id, "Type" %>
+      <%= f.select :main_activity_type_id,
+            select_options(@activity.available_main_activity_types, :id, :name, @activity.main_activity_type_id),
+            :disabled => @activity.available_main_activity_types.empty? %>
+    </p>
+    <p style="<%= 'display: none' if @activity.available_sub_activity_types.empty? %>">
+      <%= f.label :sub_activity_type_id, "Sub-type" %>
+      <%= f.select :sub_activity_type_id,
+            select_options(@activity.available_sub_activity_types.map, :id, :name, @activity.sub_activity_type_id),
+            :disabled => @activity.available_sub_activity_types.empty? %>
+    </p>
     <p>
       <%= f.label :hours, "Time spent" %>
       <%= f.text_field :hours, :label => "Time spent" %>
