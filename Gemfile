@@ -27,10 +27,6 @@ gem 'icalendar', '~>1.1.0'
 gem 'net-ldap'
 gem 'whenever', :require => false
 
-if RUBY_VERSION.include?('1.8')
-  gem 'fastercsv', '1.5.3'
-end
-
 # gem 'rack_revision_info'
 # gem 'nokogiri', '1.4.1'  # for rack_revision_info
 # TODO: revision info doesn't work on the production now (which was the whole point) because Vlad deletes .git

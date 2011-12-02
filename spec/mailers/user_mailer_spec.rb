@@ -105,10 +105,13 @@ describe UserMailer do
 
   describe '#timesheet_changes_notifier' do
     it "includes updater name, kind of change, activity details and site url" do
+      @project_manager = Employee.generate
+      @activity = Activity.generate
+
       UserMailer.timesheet_changes_notifier(
-        :project_manager => @project_manager = Employee.generate,
+        :project_manager => @project_manager,
         :kind_of_change => 'KindOfChange',
-        :activity => @activity = Activity.generate,
+        :activity => @activity
       ).deliver
 
       last_delivered_mail.encoded.should include("#{@project_manager.name}")
