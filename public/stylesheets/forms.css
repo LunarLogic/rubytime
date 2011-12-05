@@ -28,6 +28,12 @@ fieldset label {
 #account-settings .buttons {
   margin-left:138px;
 }
+#reset_password label {
+  width:140px;
+}
+#reset_password .buttons {
+  margin-left: 152px;
+}
 fieldset span.static_text {
   line-height:18px;
 }

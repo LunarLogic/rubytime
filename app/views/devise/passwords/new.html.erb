@@ -1,0 +1,25 @@
+<h1>Password reset</h1>
+
+<p>
+  If you have forgotten your Rubytime credentials please enter your e-mail address
+  and we will send you a password reset link.
+</p>
+
+<br />
+
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name),
+      :html => { :method => :post }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <fieldset>
+    <p>
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+    </p>
+    <p class="buttons">
+      <%= f.submit "Submit", :class => "button" %>
+    </p>
+  </fieldset>
+<% end %>
+
+<%= render :partial => "devise/shared/links" %>
