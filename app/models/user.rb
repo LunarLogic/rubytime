@@ -38,7 +38,7 @@ class User
   validates_length_of :name, :min => 3
 
   validates_length_of :password, :min => 6 , :if => :password_required?
-  #validates_is_confirmed :password, :if => :password_required?
+  validates_confirmation_of :password, :if => :password_required?
 
   validates_with_method :login, :method => :validates_login_globally_unique
   validates_with_method :name, :method => :validates_name_globally_unique
@@ -162,7 +162,7 @@ class User
   end
 
   def password_required?
-    new? || (password != password_confirmation)
+    new? || password.present? || password_confirmation.present?
   end
   
   def class_name
