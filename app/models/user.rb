@@ -35,12 +35,6 @@ class User
     self.ldap_login = nil if ldap_login == ""
   end
 
-  # Don't allow inactive users to authenticate
-  def self.find_for_authentication(conditions = {})
-    conditions[:active] = true
-    super
-  end
-
   validates_length_of :name, :min => 3
 
   validates_length_of :password, :min => 6 , :if => :password_required?
@@ -93,6 +87,10 @@ class User
   def self.authenticate_with_ldap(login, password)
     u = User.first(:ldap_login => login)
     u && u.authenticated_with_ldap?(password)? u : nil
+  end
+
+  def active_for_authentication?
+    super && active
   end
 
   def recent_projects
