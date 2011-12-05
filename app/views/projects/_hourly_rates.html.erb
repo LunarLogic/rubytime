@@ -26,8 +26,8 @@
       </td>
       <td class="buttons">
         <%= form_for HourlyRate.new do |f| %>
-          <%= submit "OK", :class => 'submit' %>
-          <%= submit "Cancel", :class => 'cancel' %>
+          <%= f.submit "OK", :class => 'submit' %>
+          <%= f.submit "Cancel", :class => 'cancel' %>
           <input type="hidden" name="_method" value="put"/>
           <%= f.hidden_field :project_id %>
           <%= f.hidden_field :role_id %>

@@ -16,7 +16,7 @@
       <%= f.text_area :notes, :class => "text", :cols => "21", :rows => "5" %>
     </p>
     <p class="buttons">
-      <%= submit 'Save', :class => "button" %>  or <%= link_to "Cancel", invoice_path(@invoice, filter_hash) %>
+      <%= f.submit 'Save', :class => "button" %>  or <%= link_to "Cancel", invoice_path(@invoice, filter_hash) %>
     </p>
   </fieldset>
 <% end =%>

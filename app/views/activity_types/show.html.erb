@@ -1,4 +1,4 @@
-<% throw_content :secondary, partial(:new_activity_type, :with => @new_activity_type, :as => :activity_type) if current_user.is_admin? %>
+<% content_for :secondary, partial(:new_activity_type, :with => @new_activity_type, :as => :activity_type) if current_user.is_admin? %>
 
 <h1>Sub-activity types of <%= @activity_type.name %></h1>
 

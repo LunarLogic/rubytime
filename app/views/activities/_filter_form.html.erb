@@ -10,7 +10,7 @@
   <%= partial(:criteria_group, :with => :activity_type, :as => :group) %>
   
   <p<%= @search_criteria.found_projects_with_activities_without_types? ? '' : ' style="display: none"'%>>
-    <%= label "Include activities without types", :for => :include_activities_without_types %>
+    <%= label :include_activities_without_types, "Include activities without types" %>
     <%= check_box :search_criteria, :include_activities_without_types, :class => 'include_activities_without_types' %>
   </p>
   
@@ -42,7 +42,7 @@
   </p>
   
   <p class="buttons">
-    <%= submit "Submit", :class => "button" %>
+    <%= submit_tag "Submit", :class => "button" %>
   </p>
   
 </fieldset>

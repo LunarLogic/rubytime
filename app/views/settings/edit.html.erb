@@ -8,7 +8,7 @@
       <%= f.select :enable_notifications, select_options([[true, "enabled"], [false, "disabled"]], :first, :last, @setting.enable_notifications) %>
     </p>
     <p class="buttons">
-      <%= submit "Update", :class => "button" %>
+      <%= f.submit "Update", :class => "button" %>
     </p>
   </fieldset>
 <% end =%>
@@ -24,7 +24,7 @@
       <%= f.hidden_field :free_days_access_key, :value => '' %>
     </p>
     <p class="buttons">
-      <%= submit "Re-generate", :class => "button" %>
+      <%= f.submit "Re-generate", :class => "button" %>
     </p>
   </fieldset>
 <% end =%>

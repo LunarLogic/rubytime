@@ -1,4 +1,4 @@
-<% throw_content :secondary, partial(:new_project) if current_user.is_admin? %>
+<% content_for :secondary, partial(:new_project) if current_user.is_admin? %>
 <h1>List of projects</h1>
 
 <% if @projects.empty? %>

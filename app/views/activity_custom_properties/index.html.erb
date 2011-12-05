@@ -1,4 +1,4 @@
-<% throw_content :secondary, partial(:new_activity_custom_property, :with => @new_activity_custom_property, :as => :activity_custom_property) if current_user.is_admin? %>
+<% content_for :secondary, partial(:new_activity_custom_property, :with => @new_activity_custom_property, :as => :activity_custom_property) if current_user.is_admin? %>
 
 <h1>List of custom activity properties</h1>
 

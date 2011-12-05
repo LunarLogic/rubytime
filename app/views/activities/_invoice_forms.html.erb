@@ -13,7 +13,7 @@
           <%= f.text_field :name %>
         </p>
         <p class="buttons">
-          <%= submit "Create", :class => "button", :id => "create_invoice_button" %>
+          <%= f.submit "Create", :class => "button", :id => "create_invoice_button" %>
         </p>
       </fieldset>
 
@@ -26,7 +26,7 @@
           <%= select_tag :invoice_id, options_from_collection_for_select(client.invoices.pending.all, :id, :name), :include_blank => "Select an invoice..." %>
         </p>
         <p class="buttons">
-          <%= submit "Add", :class => "button", :id => "update_invoice_button" %>
+          <%= f.submit "Add", :class => "button", :id => "update_invoice_button" %>
         </p>
       </fieldset>
     <% end =%>

@@ -1,4 +1,4 @@
-<% throw_content :secondary, partial(:filter) %>
+<% content_for :secondary, partial(:filter) %>
 <% show_invoice_form = current_user.is_admin? && !@uninvoiced_activities.empty? %>
 
 <h3>List of activities</h3>
