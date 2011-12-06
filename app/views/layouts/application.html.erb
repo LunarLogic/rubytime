@@ -32,11 +32,11 @@
             <img src="/images/logo.png" alt="Rubytime" title="Rubytime, a simple time tracking application"/>
           </a>
         </h1>
-        <% if user_signed_in? && params[:controller] != 'exceptions' -%>
-        <dl id="userinfo">
-          <%= partial 'layouts/session_info' %>
-        </dl>
-        <%= partial 'layouts/navigation' %>
+        <% if user_signed_in? -%>
+          <dl id="userinfo">
+            <%= partial 'layouts/session_info' %>
+          </dl>
+          <%= partial 'layouts/navigation' %>
         <% end -%>
       </div>
     </div>

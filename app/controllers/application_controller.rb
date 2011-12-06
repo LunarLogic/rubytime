@@ -95,16 +95,22 @@ class ApplicationController < ActionController::Base
 
   def not_found
     respond_to do |format|
-      format.html { render "exceptions/not_found", :status => :not_found }
+      format.html { raise ActionController::RoutingError.new('Not Found') }
       format.json { render :json => "", :status => :not_found }
     end
   end
 
   def forbidden
-    head :forbidden
+    respond_to do |format|
+      format.html { render :text => "Forbidden", :status => :forbidden }
+      format.json { render :json => "", :status => :forbidden }
+    end
   end
 
   def bad_request
-    head :bad_request
+    respond_to do |format|
+      format.html { render :text => "Bad request", :status => :bad_request }
+      format.json { render :json => "", :status => :bad_request }
+    end
   end
 end
