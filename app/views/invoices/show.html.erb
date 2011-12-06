@@ -12,12 +12,12 @@
     <br/>
   </p>
   
-  <%= partial("activities/grouped_activities") %>
+  <%= render "activities/grouped_activities" %>
   
   <% if @invoice.issued? %>
     This invoice has been issued at <%= @invoice.issued_at.to_time.to_date %>
   <% elsif current_user.is_admin? %>
-    <%= form_for @invoice, :url => issue_invoice_path(@invoice), :id => "issue_invoice_form" do %>
+    <%= form_for @invoice, :url => issue_invoice_path(@invoice), :id => "issue_invoice_form" do |f| %>
       <%= f.submit "Issue this invoice", :class => "button" %>
     <% end =%>
   <% end %>

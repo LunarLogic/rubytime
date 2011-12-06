@@ -1,5 +1,7 @@
-<% content_for :secondary, partial(:new_client) %>
+<% content_for :secondary, render('new_client') %>
+
 <h1>List of clients</h1>
+
 <table class="list wide">
   <tr>
     <th>Name</th>
@@ -7,7 +9,6 @@
     <th>Active</th>
     <th class="icons"></th>
   </tr>
-  <% for client in @clients %>
-    <%= render :partial => "client", :locals => {:client => client} %>
-  <% end %>
+
+  <%= render @clients %>
 </table>

@@ -1,7 +1,8 @@
 <ul class="clients">
 <% clients.each do |client| %>
   <li class="client">
-    <%= partial("activities/grouped_projects", :projects => unique_projects_from(@activities, client), :client => client) %>
+    <%= render 'activities/grouped_projects',
+          :projects => unique_projects_from(@activities, client), :client => client %>
     <strong class="total">Total for client: <%= total_from(activities_from(@activities, client)) %></strong>
     <%= total_custom_properties(@activities, client) %>
   </li>

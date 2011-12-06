@@ -1,2 +1,23 @@
-<% content_for :secondary, partial(:edit) if current_user.is_admin? %>
+<h1>Edit invoice</h1>
 
+<%= error_messages_for(@invoice) %>
+
+<%= form_for @invoice, :url => invoice_path(@invoice, filter_hash), :id => "invoice_form" do |f| %>
+  <fieldset>
+    <p>
+      <%= f.label :client_id, "Client" %>
+      <%= f.select :client_id, options_from_collection_for_select(@clients, :id, :name, @invoice.client_id), :include_blank => "Select a client..." %>
+    </p>
+    <p>
+      <%= f.label :name, "Name" %>
+      <%= f.text_field :name, :class => "text" %>
+    </p>
+    <p>
+      <%= f.label :notes, "Notes" %>
+      <%= f.text_area :notes, :class => "text", :cols => "21", :rows => "5" %>
+    </p>
+    <p class="buttons">
+      <%= f.submit 'Save', :class => "button" %>  or <%= link_to "Cancel", invoice_path(@invoice, filter_hash) %>
+    </p>
+  </fieldset>
+<% end =%>

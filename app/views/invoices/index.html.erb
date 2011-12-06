@@ -1,4 +1,4 @@
-<% content_for :secondary, partial(:new_invoice) if current_user.is_admin? %>
+<% content_for :secondary, render('new_invoice') if current_user.is_admin? %>
 <h1>List of <%= (params[:filter] || 'all').downcase %> invoices</h1>
 
 <% if @invoices.empty? %>

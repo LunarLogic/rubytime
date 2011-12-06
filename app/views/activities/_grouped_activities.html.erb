@@ -1,6 +1,8 @@
 <% if current_user.can_see_clients? %>
-  <%= partial("activities/grouped_clients", :clients => unique_clients_from(@activities)) %>
+  <%= render 'activities/grouped_clients', :clients => unique_clients_from(@activities) %>
 <% else %>
-  <%= partial("activities/grouped_projects", :projects => unique_projects_from(@activities, current_user.client), :client => current_user.client) %>
+  <%= render 'activities/grouped_projects',
+        :projects => unique_projects_from(@activities, current_user.client),
+        :client => current_user.client %>
 <% end %>
 <br/>

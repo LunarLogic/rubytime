@@ -1,4 +1,4 @@
-<% content_for :secondary, partial(:new_activity_type, :with => @new_activity_type, :as => :activity_type) if current_user.is_admin? %>
+<% content_for :secondary, render('new_activity_type', :activity_type => @new_activity_type) %>
 
 <h1>Sub-activity types of <%= @activity_type.name %></h1>
 
@@ -14,11 +14,11 @@
     <tr id="activity-type-<%= activity_type.id %>" class="activity-type">
       <td><%= activity_type.name %></td>
       <td class="icons">
-        <% if current_user.is_admin? %>
-          <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"), edit_activity_type_path(activity_type) %>
-          <% if activity_type.destroy_allowed? %>
-            <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"), activity_type_path(activity_type), :class => "delete_row" %>
-          <% end %>
+        <%= link_to image_tag("icons/pencil.png", :title => "Edit", :alt => "E"),
+              edit_activity_type_path(activity_type) %>
+        <% if activity_type.destroy_allowed? %>
+          <%= link_to image_tag("icons/cross.png", :title => "Remove", :alt => "R"),
+                activity_type_path(activity_type), :class => "delete_row" %>
         <% end %>
       </td>
     </tr>

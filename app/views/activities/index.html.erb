@@ -1,4 +1,5 @@
-<% content_for :secondary, partial(:filter) %>
+<% content_for :secondary, render('filter') %>
+
 <% show_invoice_form = current_user.is_admin? && !@uninvoiced_activities.empty? %>
 
 <h3>List of activities</h3>
@@ -14,11 +15,11 @@
     <br/>
   </p>
   
-  <%= partial(:grouped_activities) %>
+  <%= render 'grouped_activities' %>
 
   <%= link_to "Export this list to CSV", activities_path + ".csv?" + params.reject { |k,v| k =~ /^(id|action|controller|format)$/}.to_param %>
   
   <% if show_invoice_form %>
-    <%= partial(:invoice_forms) %>
+    <%= render 'invoice_forms' %>
   <% end %>
 <% end %>

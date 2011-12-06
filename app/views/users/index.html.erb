@@ -1,3 +1,4 @@
-<% content_for :secondary, partial(:user_form) %>
-<%= partial(:users, :users => @users.select { |u| u.is_employee? }, :type => "employees") %>
-<%= partial(:users, :users => @users.select { |u| u.is_client_user? }, :type => "clients' users") %>
+<% content_for :secondary, render('user_form') %>
+
+<%= render 'users', :users => @users.select(&:is_employee?), :type => "employees" %>
+<%= render 'users', :users => @users.select(&:is_client_user?), :type => "clients' users" %>

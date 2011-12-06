@@ -2,12 +2,12 @@
 <fieldset>
 
   <% if current_user.can_see_clients? %>
-    <%= partial(:criteria_group, :with => :client, :as => :group) %>
+    <%= render 'criteria_group', :group => :client %>
   <% end %>
   
-  <%= partial(:criteria_group, :with => :project, :as => :group) %>
+  <%= render 'criteria_group', :group => :project %>
   
-  <%= partial(:criteria_group, :with => :activity_type, :as => :group) %>
+  <%= render 'criteria_group', :group => :activity_type %>
   
   <p<%= @search_criteria.found_projects_with_activities_without_types? ? '' : ' style="display: none"'%>>
     <%= label :include_activities_without_types, "Include activities without types" %>
@@ -15,8 +15,8 @@
   </p>
   
   <% if current_user.can_see_users? %>
-    <%= partial(:criteria_group, :with => :role, :as => :group) %>
-    <%= partial(:criteria_group, :with => :user, :as => :group) %>
+    <%= render 'criteria_group', :group => :role %>
+    <%= render 'criteria_group', :group => :user %>
   <% end %>
   
   <p>

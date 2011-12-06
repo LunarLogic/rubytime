@@ -34,9 +34,9 @@
         </h1>
         <% if user_signed_in? -%>
           <dl id="userinfo">
-            <%= partial 'layouts/session_info' %>
+            <%= render 'layouts/session_info' %>
           </dl>
-          <%= partial 'layouts/navigation' %>
+          <%= render 'layouts/navigation' %>
         <% end -%>
       </div>
     </div>
