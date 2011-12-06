@@ -4,18 +4,26 @@
     <p>
       <%= f.label :singular_name, "Singular name" %>
       <%= f.text_field :singular_name, :class => "text" %>
+      <br>
+      <span class="description">e.g. dollar, euro</span>
     </p>
     <p>
       <%= f.label :plural_name, "Plural name" %>
       <%= f.text_field :plural_name, :class => "text" %>
+      <br>
+      <span class="description">e.g. dollars, euros</span>
     </p>
     <p>
       <%= f.label :prefix, "Prefix" %>
       <%= f.text_field :prefix, :class => "text" %>
+      <br>
+      <span class="description">e.g. $, €</span>
     </p>
     <p>
       <%= f.label :suffix, "Suffix" %>
       <%= f.text_field :suffix, :class => "text" %>
+      <br>
+      <span class="description">e.g. USD, EUR</span>
     </p>
     <p class="buttons">
       <%= f.submit(submit_name, :class => "button") %>

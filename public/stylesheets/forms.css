@@ -34,6 +34,12 @@ fieldset label {
 #reset_password .buttons {
   margin-left: 152px;
 }
+#currency_form label {
+  width: 90px;
+}
+#currency_form .description {
+  padding-left: 108px;
+}
 fieldset span.static_text {
   line-height:18px;
 }
