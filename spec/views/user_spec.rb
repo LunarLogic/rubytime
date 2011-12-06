@@ -38,10 +38,6 @@ describe "users/edit.html.erb" do
   end
 end
 
-describe "users/request_password.html.erb" do
-  pending
-end
-
 describe "users/settings.html.erb" do
   context "as employee" do
     before(:each) do
