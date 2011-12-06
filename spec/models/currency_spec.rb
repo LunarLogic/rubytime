@@ -27,7 +27,6 @@ describe Currency do
   context "with :singular_name" do
     before do 
       @valid_currencies = ["Zaïre","Złoty","Nuevo Peso"]
-      @invalid_currencies = ["0", "333,333", "_", "."]
     end
 
     it "should be valid" do
@@ -35,14 +34,6 @@ describe Currency do
         @currency = Currency.prepare(:singular_name => c)
         @currency.should be_valid
         @currency.errors.should be_empty
-      end
-    end
-
-    it "should not be valid" do
-      @invalid_currencies.each do |c|
-        @currency = Currency.prepare(:singular_name => c)
-        @currency.should_not be_valid
-        @currency.errors.on(:singular_name).should_not be_empty
       end
     end
   end
@@ -71,7 +62,6 @@ describe Currency do
   context "with :plural_name" do
     before do 
       @valid_currencies = ["Zaïre","Złoty","Nuevo Peso"]
-      @invalid_currencies = ["0", "333,333", "_", "."]
     end
 
     it "should be valid" do
@@ -79,14 +69,6 @@ describe Currency do
         @currency = Currency.prepare(:plural_name => c)
         @currency.should be_valid
         @currency.errors.should be_empty
-      end
-    end
-
-    it "should not be valid" do
-      @invalid_currencies.each do |c|
-        @currency = Currency.prepare(:plural_name => c)
-        @currency.should_not be_valid
-        @currency.errors.on(:plural_name).should_not be_empty
       end
     end
   end
@@ -100,30 +82,12 @@ describe Currency do
     end
   end
 
-  context "with :prefix that contains digits" do
-    before { @currency = Currency.prepare(:prefix => '34') }
-
-    it "should not be valid" do
-      @currency.should_not be_valid
-      @currency.errors.on(:prefix).should_not be_empty
-    end
-  end
-
   context "with empty :suffix" do
     before { @currency = Currency.prepare(:suffix => '') }
 
     it "should be valid" do
       @currency.should be_valid
       @currency.errors.on(:suffix).should be_nil
-    end
-  end
-
-  context "with :suffix that contains digits" do
-    before { @currency = Currency.prepare(:suffix => '34') }
-
-    it "should not be valid" do
-      @currency.should_not be_valid
-      @currency.errors.on(:suffix).should_not be_empty
     end
   end
 
