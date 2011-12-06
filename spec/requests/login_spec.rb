@@ -8,7 +8,7 @@ describe "Login" do
     end
 
     it "should be able to login" do
-      post user_session_path("user[email]" =>  @user.email,
+      post user_session_path("user[login]" => @user.login,
                              "user[password]" => Factory.attributes_for(:user)[:password])
       response.should be_redirect
     end
@@ -20,7 +20,7 @@ describe "Login" do
     end
 
     it "should not be able to login" do
-      post user_session_path("user[email]" => @user.email,
+      post user_session_path("user[login]" => @user.login,
                              "user[password]" => Factory.attributes_for(:user)[:password])
       response.should be_successful
     end
