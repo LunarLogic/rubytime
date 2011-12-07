@@ -224,8 +224,7 @@ describe HourlyRatesController do
 
     context "if record of given :id didn't exist" do
       it "should raise NotFound error" do
-        HourlyRate.stub! :get => nil
-        put(:update, :id => 39).status.should == 404
+        expect { put(:update, :id => "no such id") }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
   end
@@ -296,8 +295,7 @@ describe HourlyRatesController do
 
     context "when record of given :id didn't exist" do
       it "should raise NotFound error" do
-        HourlyRate.stub! :get => nil
-        delete(:destroy, :id => 39).status.should == 404
+        expect { delete(:destroy, :id => "no such id") }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
   end

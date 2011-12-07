@@ -7,7 +7,7 @@ class FreeDaysController < ApplicationController
   def index
     forbidden and return unless params[:access_key] == Setting.free_days_access_key
     respond_to do |format|
-      format.ics {render :text => FreeDay.to_ical}
+      format.ics { render :text => FreeDay.to_ical }
     end
   end
 

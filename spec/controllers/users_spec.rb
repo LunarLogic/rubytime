@@ -66,7 +66,7 @@ describe UsersController do
       it { get(:show, :id => @user.id).should be_successful }
       
       it "should render not found for nonexisting user id" do
-        get(:show, :id => 1234567).status.should == 404
+        expect { get(:show, :id => 1234567) }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
 

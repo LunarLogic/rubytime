@@ -140,7 +140,7 @@ describe ProjectsController do
     end
 
     it "shouldn't show edit project form for nonexistent project" do
-      get(:edit, :id => 12345678).status.should == 404
+      expect { get(:edit, :id => 12345678) }.to raise_error(DataMapper::ObjectNotFoundError)
     end
   end
 
@@ -170,7 +170,7 @@ describe ProjectsController do
     end
 
     it "shouldn't update nonexistent projects" do
-      put(:update, :id => 12345678, :project => {}).status.should == 404
+      expect { put(:update, :id => 12345678, :project => {}) }.to raise_error(DataMapper::ObjectNotFoundError)
     end
   end
 
@@ -181,13 +181,17 @@ describe ProjectsController do
 
     context "if project doesn't exist" do
       it "should raise not found" do
-        put(:set_default_activity_type, :id => 888, :activity_type_id => type.id).status.should == 404
+        expect {
+          put(:set_default_activity_type, :id => 888, :activity_type_id => type.id)
+        }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
 
     context "if activity type doesn't exist" do
       it "should raise not found" do
-        put(:set_default_activity_type, :id => project.id, :activity_type_id => 888).status.should == 404
+        expect {
+          put(:set_default_activity_type, :id => project.id, :activity_type_id => 888)
+        }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
 
@@ -238,7 +242,7 @@ describe ProjectsController do
     login(:admin)
 
     it "shouldn't delete nonexistent project" do
-      delete(:destroy, :id => 12345678).status.should == 404
+      expect { delete(:destroy, :id => 12345678) }.to raise_error(DataMapper::ObjectNotFoundError)
     end
   end
 

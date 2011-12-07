@@ -148,88 +148,139 @@ describe ActivityTypesController do
     end
 
     describe "GET 'show'" do
-      let(:activity_type) { ActivityType.generate }
+      subject { get(:show, :id => activity_type_id) }
 
-      it { get(:show, :id => "no such id").should be_not_found }
+      context "with an incorrect id" do
+        let(:activity_type_id) { "no such id" }
 
-      it { get(:show, :id => activity_type.id).should be_successful }
-
-      it "should show the activity type" do
-        get(:show, :id => activity_type.id).should render_template(:show)
-        assigns[:activity_type].should == activity_type        
+        it "should return 404" do
+          expect { subject }.to raise_error(DataMapper::ObjectNotFoundError)
+        end
       end
 
-      it "should prepare a new activity type for the form" do
-        get(:show, :id => activity_type.id)
-        assigns[:new_activity_type].should be_new
-        assigns[:new_activity_type].parent.should == activity_type
+      context "with a correct id" do
+        let(:activity_type) { ActivityType.generate }
+        let(:activity_type_id) { activity_type.id }
+
+        it { should be_successful }
+        it { should render_template(:show) }
+
+        it "should show the activity type" do
+          subject
+          assigns[:activity_type].should == activity_type
+        end
+
+        it "should prepare a new activity type for the form" do
+          subject
+          assigns[:new_activity_type].should be_new
+          assigns[:new_activity_type].parent.should == activity_type
+        end
       end
     end
 
     describe "GET 'edit'" do
-      let(:activity_type) { ActivityType.generate }
-      
-      it { get(:edit, :id => "no such id").should be_not_found }
+      subject { get(:edit, :id => activity_type_id) }
 
-      it { get(:edit, :id => activity_type.id).should be_successful }
+      context "with an incorrect id" do
+        let(:activity_type_id) { "no such id" }
 
-      it { get(:edit, :id => activity_type.id, :format => :json).should be_not_acceptable }
+        it "should return 404" do
+          expect { subject }.to raise_error(DataMapper::ObjectNotFoundError)
+        end
+      end
 
-      it "should show the activity edit form" do
-        get(:edit, :id => activity_type.id).should render_template(:edit)
-        assigns[:activity_type].should == activity_type
+      context "with a correct id" do
+        let(:activity_type) { ActivityType.generate }
+        let(:activity_type_id) { activity_type.id }
+
+        it { should be_successful }
+        it { should render_template(:edit) }
+
+        it "should show the activity edit form" do
+          subject
+          assigns[:activity_type].should == activity_type
+        end
+
+        context "with an incorrect format" do
+          subject { get(:edit, :id => activity_type_id, :format => :json) }
+
+          it { should be_not_acceptable }
+        end
       end
     end
 
     describe "PUT 'update'" do
-      let(:activity_type) { ActivityType.generate }
+      subject { put(:update, :id => activity_type_id, :activity_type => { :name => "New name" }) }
 
-      it { put(:update, :id => "no such id").should be_not_found }
+      context "with an incorrect id" do
+        let(:activity_type_id) { "no such id" }
 
-      it { put(:update, :id => activity_type.id, :activity_type => {}).should redirect_to(activity_types_path) }
+        it "should return 404" do
+          expect { subject }.to raise_error(DataMapper::ObjectNotFoundError)
+        end
+      end
 
-      it "should update the activity type" do
-        put(:update, :id => activity_type.id, :activity_type => {:name => "New name"})
-        activity_type.reload.name.should == "New name"
+      context "with a correct id" do
+        let(:activity_type) { ActivityType.generate }
+        let(:activity_type_id) { activity_type.id }
+
+        it { should redirect_to(activity_types_path) }
+
+        it "should update the activity type" do
+          subject
+          activity_type.reload.name.should == "New name"
+        end
+
+        context "with invalid attributes" do
+          subject { put(:update, :id => activity_type.id, :activity_type => { :name => nil }) }
+
+          it { should render_template(:edit) }
+
+          it "should not update" do
+            subject
+            activity_type.reload.name.should_not be_nil
+          end
+        end
       end
 
       context "updating a sub activity type" do
-        let(:sub_activity_type) { ActivityType.generate(:parent_id => activity_type.id) }
+        let(:parent_activity_type) { ActivityType.generate }
+        let(:activity_type) { ActivityType.generate(:parent_id => parent_activity_type.id) }
+        let(:activity_type_id) { activity_type.id }
 
-        it "should redirect to parent" do
-          put(:update, :id => sub_activity_type.id, :activity_type => {})
-          response.should redirect_to(activity_type_path(activity_type))
-        end
-      end
-
-      context "attributes are invalid" do
-        let(:invalid) { {:name => nil} }
-
-        it { put(:update, :id => activity_type.id, :activity_type => invalid).should render_template(:edit) }
-
-        it "should not update if attributes are invalid" do
-          put(:update, :id => activity_type.id, :activity_type => invalid)
-          activity_type.reload.name.should_not be_nil
-        end
+        it { should redirect_to(activity_type_path(parent_activity_type)) }
       end
     end
 
     describe "DELETE 'destroy'" do
-      let(:activity_type) { ActivityType.generate }
-      
-      it { delete(:destroy, :id => "no such id").should be_not_found }
+      subject { delete(:destroy, :id => activity_type_id) }
 
-      it { delete(:destroy, :id => activity_type.id).should redirect_to(activity_types_path) }
+      context "with an incorrect id" do
+        let(:activity_type_id) { "no such id" }
 
-      it "should destroy the activity type" do
-        delete(:destroy, :id => activity_type.id)
-        ActivityType.get(activity_type.id).should be_nil
+        it "should return 404" do
+          expect { subject }.to raise_error(DataMapper::ObjectNotFoundError)
+        end
       end
 
-      context "when destroying a sub activity type" do
-        let(:sub_activity_type) { ActivityType.generate(:parent_id => activity_type.id) }
+      context "with a correct id" do
+        let(:activity_type) { ActivityType.generate }
+        let(:activity_type_id) { activity_type.id }
 
-        it { delete(:destroy, :id => sub_activity_type.id).should redirect_to(activity_type_path(activity_type)) }
+        it { should redirect_to(activity_types_path) }
+
+        it "should destroy the activity type" do
+          subject
+          ActivityType.get(activity_type.id).should be_nil
+        end
+
+        context "when destroying a sub activity type" do
+          let(:sub_activity_type) { ActivityType.generate(:parent_id => activity_type.id) }
+
+          subject { delete(:destroy, :id => sub_activity_type.id) }
+
+          it { should redirect_to(activity_type_path(activity_type)) }
+        end
       end
     end
   end

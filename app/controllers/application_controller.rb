@@ -99,22 +99,22 @@ class ApplicationController < ActionController::Base
 
   def not_found
     respond_to do |format|
-      format.html { render :file => 'public/404.html', :status => 404, :layout => false }
       format.json { render :json => "", :status => :not_found }
+      format.any { render :file => 'public/404.html', :status => :not_found, :layout => false }
     end
   end
 
   def forbidden
     respond_to do |format|
-      format.html { render :text => "Forbidden", :status => :forbidden }
       format.json { render :json => "", :status => :forbidden }
+      format.any { render :text => "Forbidden", :status => :forbidden }
     end
   end
 
   def bad_request
     respond_to do |format|
-      format.html { render :text => "Bad request", :status => :bad_request }
       format.json { render :json => "", :status => :bad_request }
+      format.any { render :text => "Bad request", :status => :bad_request }
     end
   end
 end

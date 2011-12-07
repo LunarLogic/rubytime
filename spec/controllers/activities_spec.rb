@@ -249,7 +249,7 @@ describe ActivitiesController do
       login(:employee)
       
       it "shouldn't show edit form" do
-        get(:edit, :id => @activity.id).status.should == 404
+        expect { get(:edit, :id => @activity.id) }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
   end
@@ -314,8 +314,10 @@ describe ActivitiesController do
       login(:employee)
 
       it "shouldn't update other user's activity" do
-        put(:update, :id => @activity.id, :activity => {:comments => "updated again" })
-        response.status.should == 404
+        expect {
+          put(:update, :id => @activity.id, :activity => {:comments => "updated again" })
+        }.to raise_error(DataMapper::ObjectNotFoundError)
+
         @activity.reload.comments.should_not == "updated again"
       end
     end
@@ -384,7 +386,7 @@ describe ActivitiesController do
       end
 
       it "should raise not found for deleting activity with nonexistent id" do
-        delete(:destroy, { :id => 290384923 }).status.should == 404
+        expect { delete(:destroy, { :id => 290384923 }) }.to raise_error(DataMapper::ObjectNotFoundError)
       end
     end
 
@@ -405,7 +407,7 @@ describe ActivitiesController do
 
       it "shouldn't allow user to delete other's activities" do
         block_should_not(change(Activity, :count)) do
-          delete(:destroy, { :id => @activity.id }).status.should == 404
+          expect { delete(:destroy, { :id => @activity.id }) }.to raise_error(DataMapper::ObjectNotFoundError)
         end
       end
     end

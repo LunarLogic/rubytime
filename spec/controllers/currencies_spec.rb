@@ -148,8 +148,7 @@ describe CurrenciesController do
 
       context "when record of given :id didn't exist" do
         it "should set not found status" do
-          Currency.stub! :get => nil
-          delete(:destroy, :id => 39).status.should == 404
+          expect { delete(:destroy, :id => "no such id") }.to raise_error(DataMapper::ObjectNotFoundError)
         end
       end
     end
