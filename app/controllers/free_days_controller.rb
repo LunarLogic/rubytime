@@ -34,8 +34,7 @@ class FreeDaysController < ApplicationController
   private
 
   def prepare_source
-    user = Employee.get(params[:user_id]) if current_user.admin? && !params[:user_id].blank?
-    user ||= current_user
+    user = (current_user.admin? && params[:user_id].present?) ? Employee.get!(params[:user_id]) : current_user
     @free_days = user.free_days
   end
 end

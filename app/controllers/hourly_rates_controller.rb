@@ -5,7 +5,7 @@ class HourlyRatesController < ApplicationController
   respond_to :json
 
   def index
-    @project = Project.get(params[:project_id])
+    @project = Project.get!(params[:project_id])
     grouped_rates = @project.hourly_rates_grouped_by_roles
     @hourly_rates = grouped_rates.keys.sort_by { |role| role.name }.map do |role|
       {
@@ -30,8 +30,7 @@ class HourlyRatesController < ApplicationController
   end
 
   def update
-    @hourly_rate = HourlyRate.get(params[:id])
-    not_found and return unless @hourly_rate
+    @hourly_rate = HourlyRate.get!(params[:id])
     @hourly_rate.operation_author = current_user
     if @hourly_rate.update(params[:hourly_rate])
       @hourly_rate.date_format_for_json = current_user.date_format
@@ -42,8 +41,7 @@ class HourlyRatesController < ApplicationController
   end
 
   def destroy
-    @hourly_rate = HourlyRate.get(params[:id])
-    not_found and return unless @hourly_rate
+    @hourly_rate = HourlyRate.get!(params[:id])
     @hourly_rate.operation_author = current_user
     if @hourly_rate.destroy
       render :json => {:status => :ok}

@@ -12,7 +12,7 @@ class Setting
   end
     
   def self.get
-    first || create
+    first or create or raise DataMapper::ObjectNotFound
   end
   
   def self.enable_notifications

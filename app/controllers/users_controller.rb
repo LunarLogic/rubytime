@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
   def index
     @user = if params[:client_id]
-              ClientUser.new :client => Client.get(params[:client_id])
+              ClientUser.new :client => Client.get!(params[:client_id])
             else
               Employee.new
             end
@@ -107,7 +107,7 @@ protected
   end
   
   def load_user
-    not_found and return unless @user = User.get(params[:id]) 
+    @user = User.get!(params[:id])
   end
   
   def load_clients_and_roles

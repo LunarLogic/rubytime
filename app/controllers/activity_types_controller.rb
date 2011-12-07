@@ -69,10 +69,10 @@ class ActivityTypesController < ApplicationController
   end
 
   def available
-    not_found and return unless project = Project.get(params[:project_id])
+    project = Project.get!(params[:project_id])
     activity_type = ActivityType.get(params[:activity_type_id])
-    
-    @activity_types = project.activity_types.all(:parent_id => activity_type ? activity_type.id : nil)
+
+    @activity_types = project.activity_types.all(:parent_id => activity_type.try(:id))
 
     respond_to do |format|
       format.json { render :json => @activity_types }
@@ -96,7 +96,7 @@ class ActivityTypesController < ApplicationController
   end
 
   def find_activity_type
-    not_found and return unless @activity_type = ActivityType.get(params[:id])
+    @activity_type = ActivityType.get!(params[:id])
   end
 
 end # ActivityTypes

@@ -19,12 +19,12 @@ class RolesController < ApplicationController
   end
   
   def edit
-    not_found and return unless @role = Role.get(params[:id])
+    @role = Role.get!(params[:id])
     render
   end
   
   def update
-    not_found and return unless @role = Role.get(params[:id])
+    @role = Role.get!(params[:id])
 
     if @role.update(params[:role]) || !@role.dirty?
       redirect_to roles_path
@@ -34,7 +34,7 @@ class RolesController < ApplicationController
   end
   
   def destroy
-    not_found and return unless @role = Role.get(params[:id])
+    @role = Role.get!(params[:id])
 
     if @role.destroy
       render_success

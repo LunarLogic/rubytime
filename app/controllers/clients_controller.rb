@@ -49,7 +49,7 @@ class ClientsController < ApplicationController
   protected
   
   def load_client
-    not_found and return unless @client = Client.get(params[:id])
+    @client = Client.get!(params[:id])
   end
   
   def load_clients

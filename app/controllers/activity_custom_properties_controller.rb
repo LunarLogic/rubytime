@@ -48,7 +48,7 @@ class ActivityCustomPropertiesController < ApplicationController
   protected
   
   def load_activity_custom_property
-    not_found and return unless @activity_custom_property = ActivityCustomProperty.get(params[:id])
+    @activity_custom_property = ActivityCustomProperty.get!(params[:id])
   end
   
   def number_of_columns

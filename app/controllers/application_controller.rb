@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
   before_filter :set_api_version_header
   before_filter :set_number_of_columns
 
+  if Rails.env.production?
+    rescue_from DataMapper::ObjectNotFoundError, :with => :not_found
+  end
+
   JSON_API_VERSION = 4  # see CHANGELOG-API.txt
 
   private
@@ -95,7 +99,7 @@ class ApplicationController < ActionController::Base
 
   def not_found
     respond_to do |format|
-      format.html { raise ActionController::RoutingError.new('Not Found') }
+      format.html { render :file => 'public/404.html', :status => 404, :layout => false }
       format.json { render :json => "", :status => :not_found }
     end
   end

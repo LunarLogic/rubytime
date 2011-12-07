@@ -66,8 +66,7 @@ class ProjectsController < ApplicationController
   end
   
   def set_default_activity_type
-    @activity_type = ActivityType.get(params[:activity_type_id])
-    not_found and return unless @activity_type
+    @activity_type = ActivityType.get!(params[:activity_type_id])
 
     @activities = @project.activities.all(:activity_type_id => nil)
     @activities.each do |a|
@@ -93,9 +92,7 @@ protected
   end
 
   def load_project
-    unless @project = Project.get(params[:id])
-      not_found and return
-    end
+    @project = Project.get!(params[:id])
   end
   
   def load_projects

@@ -18,12 +18,12 @@ class CurrenciesController < ApplicationController
   end
 
   def edit
-    not_found and return unless @currency = Currency.get(params[:id])
+    @currency = Currency.get!(params[:id])
     render
   end
 
   def update
-    not_found and return unless @currency = Currency.get(params[:id])
+    @currency = Currency.get!(params[:id])
     if @currency.update(params[:currency]) || !@currency.dirty?
       redirect_to currencies_path
     else
@@ -47,7 +47,7 @@ class CurrenciesController < ApplicationController
   end
   
   def load_currency
-    not_found and return unless @currency = Currency.get(params[:id]) 
+    @currency = Currency.get!(params[:id])
   end
   
   def number_of_columns

@@ -57,8 +57,7 @@ class ActivitiesController < ApplicationController
   end
   
   def new
-    preselected_user = current_user.is_admin? && !params[:user_id].blank? && User.get(params[:user_id])
-    preselected_user ||= current_user
+    preselected_user = (current_user.is_admin? && !params[:user_id].blank?) ? User.get!(params[:user_id]) : current_user
     @activity = Activity.new(
       :date => params[:date] || Date.today,
       :user => preselected_user,
@@ -172,9 +171,9 @@ class ActivitiesController < ApplicationController
 
     if current_user.is_client_user? || current_user.is_admin? && project_id
       forbidden and return unless user_id.nil?
-      not_found and return unless @owner = Project.get(project_id.first)
+      @owner = Project.get!(project_id.first)
     else
-      not_found and return unless @owner = User.get(user_id.first)
+      @owner = User.get!(user_id.first)
     end
     check_calendar_viewability
   end
@@ -197,14 +196,14 @@ class ActivitiesController < ApplicationController
 
   def load_activity
     source = (current_user.is_admin?) ? Activity : current_user.activities
-    not_found and return unless @activity = source.get(params[:id])
+    @activity = source.get!(params[:id])
   end
 
   def load_owner
     if params[:user_id]
-      not_found and return unless @owner = User.get(params[:user_id])
+      @owner = User.get!(params[:user_id])
     else
-      not_found and return unless @owner = Project.get(params[:project_id])
+      @owner = Project.get!(params[:project_id])
     end
   end
 
