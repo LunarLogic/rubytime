@@ -62,6 +62,6 @@ class Invoice
 
   # Hooks should be called if only new_activities was updated
   def dirty_self?
-    super || !new_activities.blank?
+    super || new_activities.present?
   end
 end

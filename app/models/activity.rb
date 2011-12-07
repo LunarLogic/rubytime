@@ -178,7 +178,7 @@ class Activity
   
   def price=(money)
     self.price_value = money ? money.value.round_to_2_digits : nil
-    self.price_currency = money ? money.currency : nil
+    self.price_currency = money.try(:currency)
   end
   
   def role_name
