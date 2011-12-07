@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.0'
+gem 'rails', '3.1.3'
 gem 'mysql'
 
-dm_gems_version = '1.1.0'
+dm_gems_version = '1.2.0'
 
 gem 'dm-aggregates',    dm_gems_version
 gem 'dm-core',          dm_gems_version
