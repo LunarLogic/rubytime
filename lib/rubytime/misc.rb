@@ -12,7 +12,7 @@ module Rubytime
     end
 
     def self.check_activity_roles
-      return if ARGV.include?("db:autoupgrade")
+      return if ARGV.include?("db:autoupgrade") || ARGV.include?("db:automigrate")
 
       begin
         return unless Activity.first(:role_id => -1)

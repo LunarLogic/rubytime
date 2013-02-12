@@ -1,0 +1,6 @@
+---
+
+:host: ldap.yourcompany.com
+:port: 10389
+:base: ou=users,dc=yourcompany,dc=com
+:attr: uid

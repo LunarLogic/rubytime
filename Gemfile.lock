@@ -1,16 +1,16 @@
 GIT
-  remote: git://github.com/psionides/factory_girl_dm.git
-  revision: 0dc9acc
-  specs:
-    dm-factory_girl (1.2.3)
-
-GIT
-  remote: git://github.com/schwabsauce/merb_dm_xss_terminate.git
-  revision: 5ee5f92
+  remote: git://github.com/mikeymicrophone/merb_dm_xss_terminate.git
+  revision: 5ee5f92b61af29f5c79b89d677f27811800a639d
   specs:
     merb_dm_xss_terminate (0.6.1)
       html5 (>= 0.10.0)
       merb-core (>= 0.9.0)
+
+GIT
+  remote: git://github.com/psionides/factory_girl_dm.git
+  revision: 0dc9acc
+  specs:
+    dm-factory_girl (1.2.3)
 
 GEM
   remote: http://rubygems.org/
@@ -27,7 +27,7 @@ GEM
     ci_reporter (1.6.2)
       builder (>= 2.1.2)
     cmdparse (2.0.3)
-    columnize (0.3.3)
+    columnize (0.3.6)
     daemons (1.1.0)
     data_objects (0.10.2)
       addressable (~> 2.1)
@@ -69,7 +69,7 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     eventmachine (0.12.10)
-    extlib (0.9.15)
+    extlib (0.9.16)
     fastercsv (1.5.3)
     hoe (2.6.1)
       rake (>= 0.8.7)
