@@ -6,7 +6,7 @@ h2. Important: Project status
 
 RubyTime project is not maintained anymore. You can try to use it at your own risk, but don't expect any support.
 
-If you're really determined to give it a try, the [Rails 3 branch](https://github.com/LunarLogicPolska/rubytime/tree/rails3) is probably the best point to start at. The master branch is based on Merb, which itself hasn't been updated in a few years, so we started migrating the app to Rails 3.x. We didn't finish the migration, but we were pretty close, so it should be possible to get it to run without too much work, though there might be still some bugs lurking in the code.
+If you're really determined to give it a try, the "Rails 3 branch":https://github.com/LunarLogicPolska/rubytime/tree/rails3 is probably the best point to start at. The master branch is based on Merb, which itself hasn't been updated in a few years, so we started migrating the app to Rails 3.x. We didn't finish the migration, but we were pretty close, so it should be possible to get it to run without too much work, though there might be still some bugs lurking in the code.
 
 
 h2. Recent changes
