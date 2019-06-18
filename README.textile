@@ -2,6 +2,8 @@ h1. RubyTime
 
 RubyTime is a web application for time tracking and invoicing, written in Ruby using Merb framework. It's a complete rewrite of RubyTime 2.4 which was formerly a Ruby on Rails application.
 
+*RubyTime is no longer maintained*.
+
 h2. Important: Project status
 
 RubyTime project is not maintained anymore. You can try to use it at your own risk, but don't expect any support.
